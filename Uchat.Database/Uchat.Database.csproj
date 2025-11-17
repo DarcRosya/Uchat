@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Целевая платформа .NET 8.0 -->
+    <TargetFramework>net8.0</TargetFramework>
+    
+    <!-- Неявные using директивы (автоматически добавляет System, System.Linq и т.д.) -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- Nullable reference types (помогает избежать NullReferenceException) -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Пакеты NuGet для работы с Entity Framework Core и SQLite -->
+  <ItemGroup>
+    <!-- Основной пакет Entity Framework Core -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    
+    <!-- SQLite провайдер для EF Core (БЕЗ внешних зависимостей!) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    
+    <!-- Инструменты для создания миграций (dotnet ef migrations add) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <!-- Этот пакет нужен только во время разработки, не включается в билд -->
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

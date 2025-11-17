@@ -1,0 +1,255 @@
+/*
+ * ============================================================================
+ * ENTITY MODEL: USER (Пользователь)
+ * ============================================================================
+ * 
+ * ЧТО ЭТО?
+ * Это модель данных для пользователя в базе данных.
+ * В FastAPI это был бы класс с SQLAlchemy Base, например:
+ * 
+ *   class User(Base):
+ *       __tablename__ = "users"
+ *       id = Column(Integer, primary_key=True)
+ *       username = Column(String, unique=True)
+ * 
+ * В C# с Entity Framework Core мы делаем то же самое, но по-другому:
+ * - Свойства (properties) = колонки в таблице
+ * - Navigation properties = связи с другими таблицами (ForeignKey)
+ * 
+ * ============================================================================
+ * ЗАЧЕМ НУЖНЫ НАВИГАЦИОННЫЕ СВОЙСТВА?
+ * ============================================================================
+ * 
+ * В FastAPI/SQLAlchemy ты использовал relationship():
+ *   messages = relationship("Message", back_populates="sender")
+ * 
+ * В C# это делается через ICollection<T>:
+ *   public ICollection<Message> SentMessages { get; set; }
+ * 
+ * Это позволяет делать:
+ *   var user = await _context.Users.Include(u => u.SentMessages).FirstAsync();
+ *   // Теперь user.SentMessages содержит все сообщения пользователя!
+ * 
+ * ============================================================================
+ */
+
+namespace Uchat.Database.Entities;
+
+/// <summary>
+/// Модель пользователя в системе чата
+/// Представляет таблицу Users в базе данных SQLite
+/// </summary>
+public class User
+{
+    // ========================================================================
+    // ОСНОВНЫЕ ПОЛЯ (Primary Key и основная информация)
+    // ========================================================================
+    
+    /// <summary>
+    /// Уникальный идентификатор пользователя (Primary Key)
+    /// В SQLite это будет INTEGER PRIMARY KEY AUTOINCREMENT
+    /// </summary>
+    public int Id { get; set; }
+    
+    /// <summary>
+    /// Уникальное имя пользователя (логин)
+    /// Используется для входа в систему
+    /// В БД: VARCHAR(50), UNIQUE, NOT NULL
+    /// </summary>
+    public string Username { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Хеш пароля (НЕ ХРАНИМ ПАРОЛЬ В ОТКРЫТОМ ВИДЕ!)
+    /// Обычно используем SHA256, bcrypt или Argon2
+    /// В БД: VARCHAR(256), NOT NULL
+    /// 
+    /// Пример создания хеша:
+    ///   using System.Security.Cryptography;
+    ///   var hash = SHA256.HashData(Encoding.UTF8.GetBytes(password + salt));
+    /// </summary>
+    public string PasswordHash { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Соль для хеширования пароля (случайная строка)
+    /// Делает хеш уникальным даже для одинаковых паролей
+    /// В БД: VARCHAR(128), NOT NULL
+    /// 
+    /// Пример генерации соли:
+    ///   var salt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+    /// </summary>
+    public string Salt { get; set; } = string.Empty;
+    
+    // ========================================================================
+    // ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ
+    // ========================================================================
+    
+    /// <summary>
+    /// Email пользователя (опциональное поле)
+    /// string? означает nullable (может быть NULL в БД)
+    /// В БД: VARCHAR(255), NULL
+    /// </summary>
+    public string? Email { get; set; }
+    
+    /// <summary>
+    /// Отображаемое имя пользователя (то, что видят другие)
+    /// Может отличаться от Username
+    /// В БД: VARCHAR(100), NOT NULL
+    /// </summary>
+    public string DisplayName { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// URL аватара пользователя (путь к картинке)
+    /// Может быть локальный путь или URL из интернета
+    /// В БД: VARCHAR(500), NULL
+    /// </summary>
+    public string? AvatarUrl { get; set; }
+    
+    // ========================================================================
+    // ВРЕМЕННЫЕ МЕТКИ (Timestamps)
+    // ========================================================================
+    
+    /// <summary>
+    /// Дата и время создания аккаунта
+    /// В БД: DATETIME, DEFAULT CURRENT_TIMESTAMP
+    /// 
+    /// Сохраняем в UTC чтобы избежать проблем с часовыми поясами:
+    ///   CreatedAt = DateTime.UtcNow;
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+    
+    /// <summary>
+    /// Последнее время когда пользователь был онлайн
+    /// Обновляется при каждой активности
+    /// В БД: DATETIME, NULL
+    /// </summary>
+    public DateTime? LastSeenAt { get; set; }
+    
+    // ========================================================================
+    // СТАТУСЫ И ФЛАГИ
+    // ========================================================================
+    
+    /// <summary>
+    /// Текущий статус пользователя (Online, Offline, Away, DoNotDisturb)
+    /// Это enum - хранится в БД как число (0, 1, 2, 3)
+    /// В БД: INTEGER, NOT NULL, DEFAULT 0
+    /// </summary>
+    public UserStatus Status { get; set; }
+    
+    /// <summary>
+    /// Заблокирован ли пользователь (бан)
+    /// В БД: BOOLEAN (в SQLite это 0 или 1), NOT NULL, DEFAULT 0
+    /// </summary>
+    public bool IsBlocked { get; set; }
+    
+    // ========================================================================
+    // НАВИГАЦИОННЫЕ СВОЙСТВА (Relationships / Foreign Keys)
+    // ========================================================================
+    // Это НЕ хранится в таблице Users! Это виртуальные связи с другими таблицами.
+    // Entity Framework автоматически загружает эти данные когда нужно.
+    // ========================================================================
+    
+    /// <summary>
+    /// Все сообщения, которые ОТПРАВИЛ этот пользователь
+    /// 
+    /// Связь: User (1) -> Message (Many)
+    /// Foreign Key в таблице Messages: SenderId -> Users.Id
+    /// 
+    /// Как использовать:
+    ///   var user = await context.Users
+    ///       .Include(u => u.SentMessages)  // Загружаем сообщения
+    ///       .FirstAsync(u => u.Id == 1);
+    ///   
+    ///   foreach (var msg in user.SentMessages) {
+    ///       Console.WriteLine(msg.Content);
+    ///   }
+    /// </summary>
+    public ICollection<Message> SentMessages { get; set; } = new List<Message>();
+    
+    /// <summary>
+    /// Все ЛИЧНЫЕ сообщения, которые ПОЛУЧИЛ этот пользователь
+    /// (не включает групповые сообщения)
+    /// 
+    /// Связь: User (1) -> Message (Many)
+    /// Foreign Key в таблице Messages: ReceiverId -> Users.Id
+    /// </summary>
+    public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();
+    
+    /// <summary>
+    /// Все групповые чаты, в которых участвует пользователь
+    /// 
+    /// Связь: User (Many) -> ChatRoomMember (Many) -> ChatRoom (Many)
+    /// Это Many-to-Many связь через промежуточную таблицу ChatRoomMembers
+    /// 
+    /// Как использовать:
+    ///   var user = await context.Users
+    ///       .Include(u => u.ChatRoomMemberships)
+    ///           .ThenInclude(m => m.ChatRoom)  // Загружаем сами чаты
+    ///       .FirstAsync(u => u.Id == 1);
+    ///   
+    ///   foreach (var membership in user.ChatRoomMemberships) {
+    ///       Console.WriteLine($"В чате: {membership.ChatRoom.Name}");
+    ///       Console.WriteLine($"Роль: {membership.Role}");
+    ///   }
+    /// </summary>
+    public ICollection<ChatRoomMember> ChatRoomMemberships { get; set; } = new List<ChatRoomMember>();
+    
+    /// <summary>
+    /// Список контактов (друзей) этого пользователя
+    /// 
+    /// Связь: User (1) -> Contact (Many)
+    /// Foreign Key в таблице Contacts: OwnerId -> Users.Id
+    /// </summary>
+    public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+}
+
+// ============================================================================
+// ENUM: USER STATUS (Статус пользователя)
+// ============================================================================
+// Enum в C# - это именованные константы
+// В БД хранится как число: Offline = 0, Online = 1, Away = 2, DoNotDisturb = 3
+// ============================================================================
+
+/// <summary>
+/// Статус пользователя в системе
+/// Хранится в БД как INTEGER
+/// </summary>
+public enum UserStatus
+{
+    /// <summary>Пользователь оффлайн (не в сети)</summary>
+    Offline = 0,
+    
+    /// <summary>Пользователь онлайн (активен)</summary>
+    Online = 1,
+    
+    /// <summary>Пользователь отошел (неактивен некоторое время)</summary>
+    Away = 2,
+    
+    /// <summary>Не беспокоить (получает уведомления, но показывается как занят)</summary>
+    DoNotDisturb = 3
+}
+
+/*
+ * ============================================================================
+ * ЗАДАНИЕ ДЛЯ ТЕБЯ (ПРАКТИКА):
+ * ============================================================================
+ * 
+ * 1. Добавь новое поле в User:
+ *    - Bio (описание профиля, строка до 500 символов, может быть NULL)
+ *    - PhoneNumber (номер телефона, строка, может быть NULL)
+ * 
+ * 2. Добавь новый enum UserRole:
+ *    - User = 0 (обычный пользователь)
+ *    - Moderator = 1 (модератор)
+ *    - Admin = 2 (администратор)
+ *    Добавь свойство Role в класс User
+ * 
+ * 3. Подумай: что еще может быть полезно хранить о пользователе?
+ *    - Дата рождения?
+ *    - Язык интерфейса?
+ *    - Часовой пояс?
+ * 
+ * После добавления новых полей нужно будет создать миграцию:
+ *   dotnet ef migrations add AddUserBioAndPhone --project Uchat.Database
+ * 
+ * ============================================================================
+ */

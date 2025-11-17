@@ -1,0 +1,12 @@
+*.user
+
+.vscode/
+
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+*.json
+*.txt
+
