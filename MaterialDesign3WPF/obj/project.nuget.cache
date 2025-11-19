@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "9BWq4nekL30=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ivant\\Desktop\\MaterialDesign3WPF\\MaterialDesign3WPF\\MaterialDesign3WPF.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ivant\\.nuget\\packages\\materialdesigncolors\\5.3.0\\materialdesigncolors.5.3.0.nupkg.sha512",
+    "C:\\Users\\ivant\\.nuget\\packages\\materialdesignthemes\\5.3.0\\materialdesignthemes.5.3.0.nupkg.sha512",
+    "C:\\Users\\ivant\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.77\\microsoft.xaml.behaviors.wpf.1.1.77.nupkg.sha512"
+  ],
+  "logs": []
+}
