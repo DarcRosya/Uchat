@@ -140,23 +140,11 @@ public class ChatRoom
     ///   Console.WriteLine($"Создатель: {chatRoom.Creator.Username}");
     /// </summary>
     public User Creator { get; set; } = null!;
-    
-    /// <summary>
-    /// Все сообщения в этой группе
-    /// 
-    /// Связь: ChatRoom (1) -> Message (Many)
-    /// 
-    /// Использование:
-    ///   var chatRoom = await context.ChatRooms
-    ///       .Include(cr => cr.Messages.OrderByDescending(m => m.SentAt).Take(50))
-    ///           .ThenInclude(m => m.Sender)
-    ///       .FirstAsync(cr => cr.Id == 5);
-    ///   
-    ///   foreach (var msg in chatRoom.Messages) {
-    ///       Console.WriteLine($"[{msg.Sender.Username}]: {msg.Content}");
-    ///   }
-    /// </summary>
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
+
+    // ПРИМЕЧАНИЕ: Сообщения в этом чате хранятся в MongoDB!
+    // Связь: MongoMessage.ChatId == ChatRoom.Id
+    // Для получения сообщений используй MongoMessageRepository:
+    //   var messages = await mongoRepo.GetChatMessagesAsync(chatRoom.Id, limit: 50);
     
     /// <summary>
     /// Все участники этой группы
@@ -210,40 +198,3 @@ public enum ChatRoomType
     /// </summary>
     Public = 1
 }
-
-/*
- * ============================================================================
- * ЗАДАНИЕ ДЛЯ ТЕБЯ (ПРАКТИКА):
- * ============================================================================
- * 
- * 1. Добавь поддержку КАНАЛОВ (как в Telegram):
- *    Добавь новый тип в enum ChatRoomType:
- *    - Channel = 2
- *    
- *    Канал отличается от группы:
- *    - Только админы могут писать сообщения
- *    - Участники только читают
- *    - Подходит для новостей, объявлений
- * 
- * 2. Добавь настройки группы:
- *    - AllowMembersToInvite (bool) - могут ли участники приглашать других
- *    - AllowMembersToSendMessages (bool) - могут ли участники писать сообщения
- *    - AllowMembersToSendMedia (bool) - могут ли участники отправлять файлы
- *    - SlowModeSeconds (int?) - ограничение на частоту сообщений (1 раз в N секунд)
- * 
- * 3. Добавь КАТЕГОРИИ групп:
- *    Создай новую таблицу ChatRoomCategory:
- *    - Id (int)
- *    - Name (string) - например "Работа", "Хобби", "Образование"
- *    - Icon (string) - эмодзи или путь к иконке
- *    
- *    Добавь в ChatRoom:
- *    - CategoryId (int?, foreign key)
- * 
- * 4. Добавь СТАТИСТИКУ группы:
- *    - TotalMessagesCount (int) - сколько всего сообщений
- *    - LastActivityAt (DateTime?) - когда было последнее сообщение
- *    Эти поля можно обновлять при каждом новом сообщении
- * 
- * ============================================================================
- */
