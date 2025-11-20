@@ -86,6 +86,11 @@ public class UchatDbContext : DbContext
     /// Таблица контактов пользователей
     /// </summary>
     public DbSet<Contact> Contacts { get; set; } = null!;
+    
+    /// <summary>
+    /// Группы контактов (папки)
+    /// </summary>
+    public DbSet<ContactGroup> ContactGroups { get; set; } = null!;
 
     // ========================================================================
     // CONSTRUCTOR (Конструктор)
@@ -454,6 +459,18 @@ public class UchatDbContext : DbContext
             entity.Property(c => c.Nickname)
                 .HasMaxLength(100);
 
+            entity.Property(c => c.CustomRingtone)
+                .HasMaxLength(255);
+
+            entity.Property(c => c.MessageCount)
+                .HasDefaultValue(0);
+
+            entity.Property(c => c.ShowTypingIndicator)
+                .HasDefaultValue(true);
+
+            entity.Property(c => c.LastMessageAt)
+                .HasColumnType("TEXT");
+
             entity.Property(c => c.AddedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -462,6 +479,35 @@ public class UchatDbContext : DbContext
                 .WithMany()  // У User нет списка "кто меня добавил в контакты"
                 .HasForeignKey(c => c.ContactUserId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить контакты с ним
+
+            // Contact -> ContactGroup (опционально)
+            entity.HasOne(c => c.Group)
+                .WithMany(g => g.Contacts)
+                .HasForeignKey(c => c.GroupId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // Конфигурация ContactGroups
+        modelBuilder.Entity<ContactGroup>(entity =>
+        {
+            entity.ToTable("ContactGroups");
+            entity.HasKey(g => g.Id);
+
+            entity.Property(g => g.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(g => g.Color)
+                .HasMaxLength(50);
+
+            entity.HasIndex(g => new { g.OwnerId, g.Name })
+                .IsUnique()
+                .HasDatabaseName("IX_ContactGroups_Owner_Name");
+
+            entity.HasOne(g => g.Owner)
+                .WithMany()
+                .HasForeignKey(g => g.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
         // Seed admin пользователя
                 // ====================================================================

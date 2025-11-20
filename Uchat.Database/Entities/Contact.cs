@@ -116,6 +116,33 @@ public class Contact
     /// </summary>
     public bool NotificationsEnabled { get; set; } = true;
     
+    /// <summary>
+    /// ID группы контактов (ContactGroup.Id) — опционально
+    /// Позволяет группировать контакты по папкам
+    /// </summary>
+    public int? GroupId { get; set; }
+
+    /// <summary>
+    /// Время последнего сообщения с этим контактом
+    /// Полезно для сортировки по активности
+    /// </summary>
+    public DateTime? LastMessageAt { get; set; }
+
+    /// <summary>
+    /// Общее количество сообщений между владельцем и контактом
+    /// </summary>
+    public int MessageCount { get; set; }
+
+    /// <summary>
+    /// Пользовательский рингтон для этого контакта (опционально)
+    /// </summary>
+    public string? CustomRingtone { get; set; }
+
+    /// <summary>
+    /// Показывать ли индикатор "печатает..." для этого контакта
+    /// </summary>
+    public bool ShowTypingIndicator { get; set; } = true;
+    
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА
     // ========================================================================
@@ -149,6 +176,12 @@ public class Contact
     ///   }
     /// </summary>
     public User ContactUser { get; set; } = null!;
+
+    /// <summary>
+    /// Группа (папка), в которой находится этот контакт
+    /// Navigation property для GroupId
+    /// </summary>
+    public ContactGroup? Group { get; set; }
 }
 
 /*
