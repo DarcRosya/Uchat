@@ -33,11 +33,17 @@ namespace Uchat
             {
                 Dispatcher.Invoke(() =>
                 {
-                    User2.Text = $"{user}: {message}";
+                    MessageBox.Show("CLIENT GOT MESSAGE");
+                    User1.Text = $"{user}: {message}";
                 });
             });
 
             ConnectToServer();
+
+            _connection.Closed += async (error) =>
+            {
+                MessageBox.Show($"CONNECTION CLOSED: {error}");
+            };
         }
 
         private async void ConnectToServer()
@@ -45,6 +51,7 @@ namespace Uchat
             try
             {
                 await _connection.StartAsync();
+                MessageBox.Show("CONNECTED");
             }
             catch (Exception ex)
             {
@@ -81,9 +88,15 @@ namespace Uchat
 
         private async void sendButton_Click(object sender, RoutedEventArgs e)
         {
-            await _connection.InvokeAsync("SendMessage",
-                "Vasya",
-                chatTextBox.Text);
+            try
+            {
+                await _connection.InvokeAsync("SendMessage", "Vasya", chatTextBox.Text);
+                MessageBox.Show("SEND OK");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"SEND ERROR:\n{ex}");
+            }
         }
     }
 }
