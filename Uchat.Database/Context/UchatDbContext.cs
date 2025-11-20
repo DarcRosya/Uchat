@@ -52,6 +52,7 @@ namespace Uchat.Database.Context;
 /// </summary>
 public class UchatDbContext : DbContext
 {
+    public DbSet<Friendship> Friendships { get; set; } = null!;
     // ========================================================================
     // DBSETS (Таблицы в базе данных)
     // ========================================================================
@@ -164,17 +165,23 @@ public class UchatDbContext : DbContext
                 .IsUnique()  // UNIQUE constraint
                 .HasDatabaseName("IX_Users_Username");  // Имя индекса в БД
             
-            // Обычный INDEX на Email (не уникальный, т.к. Email может быть NULL)
+
+            // Обычный INDEX на Email (теперь NOT NULL, индексируется)
             entity.HasIndex(u => u.Email)
                 .HasDatabaseName("IX_Users_Email");
+
+            // INDEX на PhoneNumber (может быть NULL)
+            entity.HasIndex(u => u.PhoneNumber)
+                .HasDatabaseName("IX_Users_PhoneNumber");
 
             // ----------------------------------------------------------------
             // COLUMN CONSTRAINTS (ограничения на колонки)
             // ----------------------------------------------------------------
             
+
             entity.Property(u => u.Username)
-                .IsRequired()  // NOT NULL
-                .HasMaxLength(50);  // VARCHAR(50)
+                .IsRequired()
+                .HasMaxLength(50);
 
             entity.Property(u => u.PasswordHash)
                 .IsRequired()
@@ -189,13 +196,34 @@ public class UchatDbContext : DbContext
                 .HasMaxLength(100);
 
             entity.Property(u => u.Email)
-                .HasMaxLength(255);  // Не required, т.к. может быть NULL
+                .IsRequired()
+                .HasMaxLength(255);
 
             entity.Property(u => u.AvatarUrl)
                 .HasMaxLength(500);
 
+            entity.Property(u => u.Bio)
+                .HasMaxLength(190);
+
+            entity.Property(u => u.PhoneNumber)
+                .HasMaxLength(20);
+
+            entity.Property(u => u.BirthDate)
+                .HasColumnType("date");
+
+            entity.Property(u => u.Status)
+                .HasDefaultValue(UserStatus.Offline);
+
+            // UserLanguage хранится как строка (Code)
+            entity.OwnsOne(u => u.Language, lang =>
+            {
+                lang.Property(l => l.Code)
+                    .HasColumnName("LanguageCode")
+                    .HasMaxLength(10)
+                    .HasDefaultValue("en");
+            });
+
             // DEFAULT VALUE для CreatedAt
-            // SQL: CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             entity.Property(u => u.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -399,6 +427,14 @@ public class UchatDbContext : DbContext
         
         modelBuilder.Entity<Contact>(entity =>
         {
+            entity.Property(c => c.Notes)
+                .HasMaxLength(500);
+
+            entity.Property(c => c.NotificationsEnabled)
+                .HasDefaultValue(true);
+
+            entity.Property(c => c.IsFavorite)
+                .HasDefaultValue(false);
             entity.ToTable("Contacts");
             entity.HasKey(c => c.Id);
 
@@ -427,6 +463,56 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(c => c.ContactUserId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить контакты с ним
         });
+        // Seed admin пользователя
+                // ====================================================================
+                // КОНФИГУРАЦИЯ ТАБЛИЦЫ FRIENDSHIPS
+                // ====================================================================
+                modelBuilder.Entity<Friendship>(entity =>
+                {
+                    entity.ToTable("Friendships");
+                    entity.HasKey(f => f.Id);
+
+                    // Один пользователь не может отправить несколько запросов одному и тому же человеку
+                    entity.HasIndex(f => new { f.SenderId, f.ReceiverId })
+                        .IsUnique()
+                        .HasDatabaseName("IX_Friendships_Sender_Receiver");
+
+                    // Индексы для быстрого поиска
+                    entity.HasIndex(f => f.SenderId).HasDatabaseName("IX_Friendships_SenderId");
+                    entity.HasIndex(f => f.ReceiverId).HasDatabaseName("IX_Friendships_ReceiverId");
+
+                    entity.Property(f => f.Status)
+                        .HasDefaultValue(FriendshipStatus.Pending);
+
+                    entity.Property(f => f.CreatedAt)
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                    entity.Property(f => f.UpdatedAt)
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    // Навигационные свойства
+                    entity.HasOne(f => f.Sender)
+                        .WithMany()
+                        .HasForeignKey(f => f.SenderId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    entity.HasOne(f => f.Receiver)
+                        .WithMany()
+                        .HasForeignKey(f => f.ReceiverId)
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+        modelBuilder.Entity<User>().HasData(new User
+        {
+            Id = 1,
+            Username = "admin",
+            PasswordHash = "hash",
+            Salt = "salt",
+            DisplayName = "Administrator",
+            CreatedAt = DateTime.UtcNow,
+            Status = UserStatus.Offline
+        });
+
+        // Soft Delete: фильтруем удалённые сообщения
+        modelBuilder.Entity<Message>().HasQueryFilter(m => !m.IsDeleted);
     }
 }
 

@@ -84,11 +84,39 @@ public class User
     // ========================================================================
     
     /// <summary>
-    /// Email пользователя (опциональное поле)
-    /// string? означает nullable (может быть NULL в БД)
-    /// В БД: VARCHAR(255), NULL
+    /// Email пользователя (обязательное поле, индексируется)
+    /// В БД: VARCHAR(255), NOT NULL, INDEX
     /// </summary>
-    public string? Email { get; set; }
+    public string Email { get; set; } = string.Empty;
+        /// <summary>
+        /// Биография пользователя (максимум 190 символов)
+        /// В БД: VARCHAR(190), NULL
+        /// </summary>
+        public string? Bio { get; set; }
+
+        /// <summary>
+        /// Номер телефона пользователя (максимум 20 символов, nullable, индексируется)
+        /// В БД: VARCHAR(20), NULL, INDEX
+        /// </summary>
+        public string? PhoneNumber { get; set; }
+
+        /// <summary>
+        /// Дата рождения пользователя
+        /// В БД: DATE, NULL
+        /// </summary>
+        public DateTime? BirthDate { get; set; }
+
+        /// <summary>
+        /// Статус пользователя (Offline, Online, Away, DoNotDisturb)
+        /// В БД: INTEGER (enum), NOT NULL, DEFAULT Offline
+        /// </summary>
+        public UserStatus Status { get; set; } = UserStatus.Offline;
+
+        /// <summary>
+        /// Настройки языка пользователя (ISO code, например "en", "uk", "en-US")
+        /// Хранится как отдельный класс
+        /// </summary>
+        public UserLanguage Language { get; set; } = new UserLanguage { Code = "en" };
     
     /// <summary>
     /// Отображаемое имя пользователя (то, что видят другие)
@@ -160,4 +188,26 @@ public class User
     /// Foreign Key в таблице Contacts: OwnerId -> Users.Id
     /// </summary>
     public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+}
+
+/// <summary>
+/// Перечисление статусов пользователя
+/// </summary>
+public enum UserStatus
+{
+    Offline = 0,
+    Online = 1,
+    Away = 2,
+    DoNotDisturb = 3
+}
+
+/// <summary>
+/// Класс для хранения языка пользователя
+/// </summary>
+public class UserLanguage
+{
+    /// <summary>
+    /// Код языка (например, "en", "uk", "en-US")
+    /// </summary>
+    public string Code { get; set; } = "en";
 }
