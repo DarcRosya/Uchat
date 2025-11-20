@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- Целевая платформа .NET 8.0 -->
@@ -9,27 +9,30 @@
     
     <!-- Nullable reference types (помогает избежать NullReferenceException) -->
     <Nullable>enable</Nullable>
+    <UserSecretsId>2c8d7030-4f5b-455f-a76d-64f04a3d5131</UserSecretsId>
   </PropertyGroup>
 
-  <!-- Пакеты NuGet для работы с Entity Framework Core и SQLite -->
+  <!-- Пакеты NuGet для работы с Entity Framework Core -->
   <ItemGroup>
     <!-- Основной пакет Entity Framework Core -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     
-    <!-- SQLite провайдер для EF Core (БЕЗ внешних зависимостей!) -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    <!-- SQLite провайдер для EF Core (для локальной разработки) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
     
     <!-- Инструменты для создания миграций (dotnet ef migrations add) -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <!-- Этот пакет нужен только во время разработки, не включается в билд -->
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
+    
+    <!-- LiteDB для хранения сообщений (легковесная альтернатива MongoDB) -->
+    <PackageReference Include="LiteDB" Version="5.0.21" />
   </ItemGroup>
 
 </Project>

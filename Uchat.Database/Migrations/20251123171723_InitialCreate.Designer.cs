@@ -11,14 +11,14 @@ using Uchat.Database.Context;
 namespace Uchat.Database.Migrations
 {
     [DbContext(typeof(UchatDbContext))]
-    [Migration("20251117125949_InitialCreate")]
+    [Migration("20251123171723_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
             modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
                 {
@@ -26,24 +26,51 @@ namespace Uchat.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AvatarUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool?>("DefaultCanCustomizeGroup")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanInviteUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanPinMessages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendFiles")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendMessages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendMusic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendPhotos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendStickers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("DefaultCanSendVideos")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Description")
+                        .HasMaxLength(300)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("IconUrl")
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime?>("LastActivityAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("MaxMembers")
                         .HasColumnType("INTEGER");
@@ -53,6 +80,15 @@ namespace Uchat.Database.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("ParentChatRoomId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("SlowModeSeconds")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TotalMessagesCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("Type")
                         .HasColumnType("INTEGER");
 
@@ -61,8 +97,14 @@ namespace Uchat.Database.Migrations
                     b.HasIndex("CreatorId")
                         .HasDatabaseName("IX_ChatRooms_CreatorId");
 
-                    b.HasIndex("Name")
-                        .HasDatabaseName("IX_ChatRooms_Name");
+                    b.HasIndex("LastActivityAt")
+                        .HasDatabaseName("IX_ChatRooms_LastActivityAt");
+
+                    b.HasIndex("ParentChatRoomId")
+                        .HasDatabaseName("IX_ChatRooms_ParentChatRoomId");
+
+                    b.HasIndex("Type")
+                        .HasDatabaseName("IX_ChatRooms_Type");
 
                     b.ToTable("ChatRooms", (string)null);
                 });
@@ -85,10 +127,7 @@ namespace Uchat.Database.Migrations
                     b.Property<DateTime>("JoinedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<DateTime?>("LeftAt")
-                        .HasColumnType("TEXT");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<DateTime?>("MutedUntil")
                         .HasColumnType("TEXT");
@@ -113,6 +152,76 @@ namespace Uchat.Database.Migrations
                     b.ToTable("ChatRoomMembers", (string)null);
                 });
 
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMemberPermissions", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanBanUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanCustomizeGroup")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanDeleteMessages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanInviteUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanManageInviteLinks")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanManageTopics")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanPinMessages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanPromoteMembers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanRemoveUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanRestrictUsers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendFiles")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendMessages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendMusic")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendPhotos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendStickers")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("CanSendVideos")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ChatRoomMemberId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CustomTitle")
+                        .HasMaxLength(16)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatRoomMemberId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ChatRoomMemberPermissions_MemberId");
+
+                    b.ToTable("ChatRoomMemberPermissions", (string)null);
+                });
+
             modelBuilder.Entity("Uchat.Database.Entities.Contact", b =>
                 {
                     b.Property<int>("Id")
@@ -122,7 +231,7 @@ namespace Uchat.Database.Migrations
                     b.Property<DateTime>("AddedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasDefaultValueSql("NOW()");
 
                     b.Property<int>("ContactUserId")
                         .HasColumnType("INTEGER");
@@ -131,14 +240,31 @@ namespace Uchat.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsFavorite")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
+
+                    b.Property<DateTime?>("LastMessageAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("MessageCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Nickname")
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("NotificationsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("PrivateNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -152,89 +278,50 @@ namespace Uchat.Database.Migrations
                     b.ToTable("Contacts", (string)null);
                 });
 
-            modelBuilder.Entity("Uchat.Database.Entities.Message", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Friendship", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AttachmentFileName")
-                        .HasMaxLength(255)
+                    b.Property<DateTime?>("AcceptedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("AttachmentFileSize")
-                        .HasColumnType("INTEGER");
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("AttachmentUrl")
-                        .HasMaxLength(1000)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ChatRoomId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("EditedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsEdited")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ReadAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ReceiverId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("ReplyToMessageId")
+                    b.Property<int>("ReceiverId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("SenderId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("SentAt")
+                    b.Property<int>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ChatRoomId")
-                        .HasDatabaseName("IX_Messages_ChatRoomId");
-
                     b.HasIndex("ReceiverId")
-                        .HasDatabaseName("IX_Messages_ReceiverId");
+                        .HasDatabaseName("IX_Friendships_ReceiverId");
 
-                    b.HasIndex("ReplyToMessageId");
+                    b.HasIndex("Status")
+                        .HasDatabaseName("IX_Friendships_Status");
 
-                    b.HasIndex("SenderId")
-                        .HasDatabaseName("IX_Messages_SenderId");
+                    b.HasIndex("ReceiverId", "Status")
+                        .HasDatabaseName("IX_Friendships_Receiver_Status");
 
-                    b.HasIndex("SentAt")
-                        .HasDatabaseName("IX_Messages_SentAt");
+                    b.HasIndex("SenderId", "ReceiverId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Friendships_Sender_Receiver");
 
-                    b.HasIndex("ChatRoomId", "SentAt")
-                        .HasDatabaseName("IX_Messages_GroupChat");
+                    b.HasIndex("SenderId", "Status")
+                        .HasDatabaseName("IX_Friendships_Sender_Status");
 
-                    b.HasIndex("SenderId", "ReceiverId", "SentAt")
-                        .HasDatabaseName("IX_Messages_DirectChat");
-
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Friendships", (string)null);
                 });
 
             modelBuilder.Entity("Uchat.Database.Entities.User", b =>
@@ -247,10 +334,17 @@ namespace Uchat.Database.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Bio")
+                        .HasMaxLength(190)
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -258,19 +352,34 @@ namespace Uchat.Database.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsBlocked")
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime?>("LastSeenAt")
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("LanguageCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(5)
+                        .HasColumnType("TEXT")
+                        .HasDefaultValue("en");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Salt")
                         .IsRequired()
@@ -288,6 +397,7 @@ namespace Uchat.Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
+                        .IsUnique()
                         .HasDatabaseName("IX_Users_Email");
 
                     b.HasIndex("Username")
@@ -305,7 +415,14 @@ namespace Uchat.Database.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Uchat.Database.Entities.ChatRoom", "ParentChatRoom")
+                        .WithMany("Topics")
+                        .HasForeignKey("ParentChatRoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.Navigation("Creator");
+
+                    b.Navigation("ParentChatRoom");
                 });
 
             modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMember", b =>
@@ -334,6 +451,17 @@ namespace Uchat.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMemberPermissions", b =>
+                {
+                    b.HasOne("Uchat.Database.Entities.ChatRoomMember", "Member")
+                        .WithOne("Permissions")
+                        .HasForeignKey("Uchat.Database.Entities.ChatRoomMemberPermissions", "ChatRoomMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+                });
+
             modelBuilder.Entity("Uchat.Database.Entities.Contact", b =>
                 {
                     b.HasOne("Uchat.Database.Entities.User", "ContactUser")
@@ -353,34 +481,21 @@ namespace Uchat.Database.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Uchat.Database.Entities.Message", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Friendship", b =>
                 {
-                    b.HasOne("Uchat.Database.Entities.ChatRoom", "ChatRoom")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatRoomId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Uchat.Database.Entities.User", "Receiver")
-                        .WithMany("ReceivedMessages")
+                        .WithMany("ReceivedFriendshipRequests")
                         .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Uchat.Database.Entities.Message", "ReplyToMessage")
-                        .WithMany("Replies")
-                        .HasForeignKey("ReplyToMessageId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Uchat.Database.Entities.User", "Sender")
-                        .WithMany("SentMessages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ChatRoom");
+                    b.HasOne("Uchat.Database.Entities.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Receiver");
-
-                    b.Navigation("ReplyToMessage");
 
                     b.Navigation("Sender");
                 });
@@ -389,12 +504,12 @@ namespace Uchat.Database.Migrations
                 {
                     b.Navigation("Members");
 
-                    b.Navigation("Messages");
+                    b.Navigation("Topics");
                 });
 
-            modelBuilder.Entity("Uchat.Database.Entities.Message", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMember", b =>
                 {
-                    b.Navigation("Replies");
+                    b.Navigation("Permissions");
                 });
 
             modelBuilder.Entity("Uchat.Database.Entities.User", b =>
@@ -403,9 +518,7 @@ namespace Uchat.Database.Migrations
 
                     b.Navigation("Contacts");
 
-                    b.Navigation("ReceivedMessages");
-
-                    b.Navigation("SentMessages");
+                    b.Navigation("ReceivedFriendshipRequests");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,5 +1,6 @@
 *.user
 
+.vs/
 .vscode/
 
 [Bb]in/
@@ -8,3 +9,15 @@
 [Ll]ogs/
 
 
+secrets/
+*.db
+*.db-shm
+*.db-wal
+Data/
+
+redis-data/
+
+*.nupkg
+*.snupkg
+packages/
+.nuget/

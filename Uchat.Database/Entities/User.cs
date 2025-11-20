@@ -3,15 +3,6 @@
  * ENTITY MODEL: USER (Пользователь)
  * ============================================================================
  * 
- * ЧТО ЭТО?
- * Это модель данных для пользователя в базе данных.
- * В FastAPI это был бы класс с SQLAlchemy Base, например:
- * 
- *   class User(Base):
- *       __tablename__ = "users"
- *       id = Column(Integer, primary_key=True)
- *       username = Column(String, unique=True)
- * 
  * В C# с Entity Framework Core мы делаем то же самое, но по-другому:
  * - Свойства (properties) = колонки в таблице
  * - Navigation properties = связи с другими таблицами (ForeignKey)
@@ -19,9 +10,6 @@
  * ============================================================================
  * ЗАЧЕМ НУЖНЫ НАВИГАЦИОННЫЕ СВОЙСТВА?
  * ============================================================================
- * 
- * В FastAPI/SQLAlchemy ты использовал relationship():
- *   messages = relationship("Message", back_populates="sender")
  * 
  * В C# это делается через ICollection<T>:
  *   public ICollection<Message> SentMessages { get; set; }
@@ -35,28 +23,16 @@
 
 namespace Uchat.Database.Entities;
 
-/// <summary>
-/// Модель пользователя в системе чата
-/// Представляет таблицу Users в базе данных SQLite
-/// </summary>
 public class User
 {
     // ========================================================================
     // ОСНОВНЫЕ ПОЛЯ (Primary Key и основная информация)
     // ========================================================================
     
-    /// <summary>
-    /// Уникальный идентификатор пользователя (Primary Key)
-    /// В SQLite это будет INTEGER PRIMARY KEY AUTOINCREMENT
-    /// </summary>
     public int Id { get; set; }
-    
-    /// <summary>
-    /// Уникальное имя пользователя (логин)
-    /// Используется для входа в систему
-    /// В БД: VARCHAR(50), UNIQUE, NOT NULL
-    /// </summary>
-    public string Username { get; set; } = string.Empty;
+    public required string Username { get; set; } = string.Empty;
+    public required string Email { get; set; } = string.Empty;
+    public required string DisplayName { get; set; } = string.Empty;
     
     /// <summary>
     /// Хеш пароля (НЕ ХРАНИМ ПАРОЛЬ В ОТКРЫТОМ ВИДЕ!)
@@ -67,7 +43,7 @@ public class User
     ///   using System.Security.Cryptography;
     ///   var hash = SHA256.HashData(Encoding.UTF8.GetBytes(password + salt));
     /// </summary>
-    public string PasswordHash { get; set; } = string.Empty;
+    public required string PasswordHash { get; set; } = string.Empty;
     
     /// <summary>
     /// Соль для хеширования пароля (случайная строка)
@@ -77,83 +53,31 @@ public class User
     /// Пример генерации соли:
     ///   var salt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     /// </summary>
-    public string Salt { get; set; } = string.Empty;
+    public required string Salt { get; set; } = string.Empty;
     
     // ========================================================================
     // ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ
     // ========================================================================
-    
-    /// <summary>
-    /// Email пользователя (обязательное поле, индексируется)
-    /// В БД: VARCHAR(255), NOT NULL, INDEX
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
-        /// <summary>
-        /// Биография пользователя (максимум 190 символов)
-        /// В БД: VARCHAR(190), NULL
-        /// </summary>
-        public string? Bio { get; set; }
 
-        /// <summary>
-        /// Номер телефона пользователя (максимум 20 символов, nullable, индексируется)
-        /// В БД: VARCHAR(20), NULL, INDEX
-        /// </summary>
-        public string? PhoneNumber { get; set; }
-
-        /// <summary>
-        /// Дата рождения пользователя
-        /// В БД: DATE, NULL
-        /// </summary>
-        public DateTime? BirthDate { get; set; }
-
-        /// <summary>
-        /// Статус пользователя (Offline, Online, Away, DoNotDisturb)
-        /// В БД: INTEGER (enum), NOT NULL, DEFAULT Offline
-        /// </summary>
-        public UserStatus Status { get; set; } = UserStatus.Offline;
-
-        /// <summary>
-        /// Настройки языка пользователя (ISO code, например "en", "uk", "en-US")
-        /// Хранится как отдельный класс
-        /// </summary>
-        public UserLanguage Language { get; set; } = new UserLanguage { Code = "en" };
-    
-    /// <summary>
-    /// Отображаемое имя пользователя (то, что видят другие)
-    /// Может отличаться от Username
-    /// В БД: VARCHAR(100), NOT NULL
-    /// </summary>
-    public string DisplayName { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// URL аватара пользователя (путь к картинке)
-    /// Может быть локальный путь или URL из интернета
-    /// В БД: VARCHAR(500), NULL
-    /// </summary>
+    public string? Bio { get ; set; }
     public string? AvatarUrl { get; set; }
-    
+    public DateTime? DateOfBirth { get; set; } // Correct format is [ DD.MM.YYYY ]
+
     // ========================================================================
     // ВРЕМЕННЫЕ МЕТКИ (Timestamps)
     // ========================================================================
-    
-    /// <summary>
-    /// Дата и время создания аккаунта
-    /// В БД: DATETIME, DEFAULT CURRENT_TIMESTAMP
-    /// 
-    /// Сохраняем в UTC чтобы избежать проблем с часовыми поясами:
-    ///   CreatedAt = DateTime.UtcNow;
-    /// </summary>
+
     public DateTime CreatedAt { get; set; }
-    
+
     // ========================================================================
     // СТАТУСЫ И ФЛАГИ
     // ========================================================================
-    
-    /// <summary>
-    /// Заблокирован ли пользователь (бан)
-    /// В БД: BOOLEAN (в SQLite это 0 или 1), NOT NULL, DEFAULT 0
-    /// </summary>
-    public bool IsBlocked { get; set; }
+
+    public UserStatus Status { get; set; } // (Online, Offline, Away, DoNotDisturb)
+    public UserRole Role { get; set; } // (User, Admin) 
+    public string LanguageCode { get; set; } = "en";
+    public bool IsBlocked { get; set; } // Заблокирован ли пользователь (бан)
+    public bool IsDeleted { get; set; } // Мягкое удаление (soft delete)
     
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА (Relationships / Foreign Keys)
@@ -161,6 +85,10 @@ public class User
     // Это НЕ хранится в таблице Users! Это виртуальные связи с другими таблицами.
     // Entity Framework автоматически загружает эти данные когда нужно.
     // ========================================================================
+    
+    // ПРИМЕЧАНИЕ: Сообщения (Messages) хранятся в MongoDB!
+    // Связь с сообщениями: LiteDbMessage.Sender.UserId == User.Id
+    // Для получения сообщений пользователя используй MessageRepository
     
     /// <summary>
     /// Все групповые чаты, в которых участвует пользователь
@@ -188,26 +116,81 @@ public class User
     /// Foreign Key в таблице Contacts: OwnerId -> Users.Id
     /// </summary>
     public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+    
+    /// <summary>
+    /// Refresh tokens пользователя (активные сессии)
+    /// 
+    /// Связь: User (1) -> RefreshToken (Many)
+    /// Foreign Key в таблице RefreshTokens: UserId -> Users.Id
+    /// 
+    /// Использование:
+    ///   var user = await context.Users
+    ///       .Include(u => u.RefreshTokens.Where(t => !t.IsRevoked))
+    ///       .FirstAsync(u => u.Id == userId);
+    ///   
+    ///   Console.WriteLine($"Активных устройств: {user.RefreshTokens.Count}");
+    /// </summary>
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    
+    // ========================================================================
+    // НАВИГАЦИОННЫЕ СВОЙСТВА ДЛЯ ДРУЖБЫ
+    // ========================================================================
+    
+    // /// Запросы дружбы, ОТПРАВЛЕННЫЕ этим пользователем
+    // /// 
+    // /// Как использовать:
+    // ///   var user = await context.Users
+    // ///       .Include(u => u.SentFriendshipRequests)
+    // ///           .ThenInclude(f => f.Receiver)
+    // ///       .FirstAsync(u => u.Id == 1);
+    // ///   
+    // ///   // Кому я отправил запросы?
+    // ///   foreach (var request in user.SentFriendshipRequests.Where(f => f.Status == FriendshipStatus.Pending)) {
+    // ///       Console.WriteLine($"Ждет ответа от: {request.Receiver.Username}");
+    // ///   }
+    // public ICollection<Friendship> SentFriendshipRequests { get; set; } = new List<Friendship>();
+    
+    /// Запросы дружбы, ПОЛУЧЕННЫЕ этим пользователем
+    /// 
+    /// Как использовать:
+    ///   var user = await context.Users
+    ///       .Include(u => u.ReceivedFriendshipRequests)
+    ///           .ThenInclude(f => f.Sender)
+    ///       .FirstAsync(u => u.Id == 1);
+    ///   
+    ///   // Кто хочет со мной подружиться?
+    ///   foreach (var request in user.ReceivedFriendshipRequests.Where(f => f.Status == FriendshipStatus.Pending)) {
+    ///       Console.WriteLine($"Запрос от: {request.Sender.Username}");
+    ///   }
+    public ICollection<Friendship> ReceivedFriendshipRequests { get; set; } = new List<Friendship>();
 }
 
-/// <summary>
-/// Перечисление статусов пользователя
-/// </summary>
 public enum UserStatus
 {
-    Offline = 0,
-    Online = 1,
-    Away = 2,
-    DoNotDisturb = 3
+    Offline = 0, // Пользователь оффлайн (не в сети)
+    Online = 1, // Пользователь онлайн (активен)
+    Away = 2, // Пользователь отошел (неактивен некоторое время)
+    DoNotDisturb = 3 // Не беспокоить (получает уведомления, но показывается как занят)
 }
 
-/// <summary>
-/// Класс для хранения языка пользователя
-/// </summary>
-public class UserLanguage
+public enum UserRole
 {
-    /// <summary>
-    /// Код языка (например, "en", "uk", "en-US")
-    /// </summary>
-    public string Code { get; set; } = "en";
+    User = 0,
+    Admin = 1,
+}
+
+public static class SupportedLanguages
+{
+    public const string English = "en";
+    public const string Ukrainian = "uk";
+
+    public static readonly string[] All = new[]
+    {
+        English, Ukrainian, 
+    };
+    
+    public static bool IsSupported(string code)
+    {
+        return All.Contains(code);
+    }
 }

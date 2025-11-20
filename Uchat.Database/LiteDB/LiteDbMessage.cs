@@ -1,34 +1,45 @@
 /*
  * ============================================================================
- * MONGODB DOCUMENT: MESSAGE (Сообщение в чате)
+ * LITEDB DOCUMENT: MESSAGE (Сообщение в чате)
  * ============================================================================
  * 
- * ПОЧЕМУ MONGODB ДЛЯ СООБЩЕНИЙ?
+ * ПОЧЕМУ LITEDB ДЛЯ СООБЩЕНИЙ?
  * 
- * 1. SCHEMA-LESS ФОРМАТ
+ * 1. SCHEMA-LESS ФОРМАТ (NoSQL)
  *    - Разные типы сообщений (текст, фото, видео, опросы, системные)
  *    - Без JOIN-запросов для вложений и реакций
  *    - Вложенные документы (sender, attachments, reactions)
+ *    - Все данные сообщения в одном документе
  * 
- * 2. АТОМАРНЫЕ ОПЕРАЦИИ
- *    - $set для обновления полей
- *    - $push для добавления в массивы (readBy, reactions)
- *    - $pull для удаления из массивов
- *    - $inc для счетчиков
+ * 2. ВСТРАИВАЕМАЯ БАЗА ДАННЫХ
+ *    - Один файл messages.db (как SQLite для NoSQL)
+ *    - Не требует сервера (в отличие от MongoDB)
+ *    - Размер БД до 2 ТБ
+ *    - ACID транзакции
  * 
- *    Пример: добавить реакцию БЕЗ перезаписи всего документа:
- *      db.messages.updateOne(
- *        { _id: messageId },
- *        { $addToSet: { "reactions.👍": userId } }
- *      )
+ * 3. CURSOR-BASED PAGINATION (пагинация по времени)
+ *    - Клиент запоминает lastTimestamp последнего сообщения
+ *    - Загружает следующую порцию: WHERE sentAt < lastTimestamp
+ *    - Составной индекс (chatId + sentAt DESC) для мгновенной загрузки
  * 
- * 3. TTL INDEX (автоудаление старых сообщений)
- *    - Сообщения старше 30 дней удаляются автоматически
- *    - Не нужен CRON для очистки
+ *    Пример загрузки истории:
+ *      // Первая загрузка (последние 50 сообщений)
+ *      var messages = collection.Find(m => m.ChatId == 1)
+ *                               .OrderByDescending(m => m.SentAt)
+ *                               .Limit(50)
+ *                               .ToList();
+ *      
+ *      var lastTimestamp = messages.Last().SentAt;
+ *      
+ *      // Загрузить еще 50 (старые сообщения)
+ *      var olderMessages = collection.Find(m => m.ChatId == 1 && m.SentAt < lastTimestamp)
+ *                                    .OrderByDescending(m => m.SentAt)
+ *                                    .Limit(50)
+ *                                    .ToList();
  * 
- * 4. ГОРИЗОНТАЛЬНОЕ МАСШТАБИРОВАНИЕ
- *    - Sharding по ChatId или UserId
- *    - Миллионы сообщений распределяются по серверам
+ * 4. ПОДДЕРЖКА LINQ
+ *    - Привычный C# синтаксис
+ *    - Сложные запросы без изучения query language
  * 
  * ============================================================================
  * СРАВНЕНИЕ С SQL
@@ -68,44 +79,53 @@
  *       - N+1 problem для вложений
  *       - Сложная индексация
  * 
- * ✅ MongoDB (1 документ):
+ * ✅ LiteDB (1 документ):
  * 
  *    {
- *      _id: ObjectId("..."),
+ *      _id: ObjectId("6565f5a7b8c9d4e2f1a3b2c1"),
  *      chatId: 1,
- *      sender: { id: 100, username: "alice", avatarUrl: "/alice.jpg" },
+ *      sender: { 
+ *        userId: 100, 
+ *        username: "alice", 
+ *        displayName: "Alice Smith",
+ *        avatarUrl: "/alice.jpg" 
+ *      },
  *      content: "Check this photo",
+ *      type: "image",
  *      attachments: [
- *        { type: "image", url: "/photo.jpg", width: 1920, height: 1080 }
+ *        { type: "image", url: "/photo.jpg", size: 2048576, width: 1920, height: 1080 }
  *      ],
  *      reactions: {
  *        "👍": [100, 200],
  *        "❤️": [300]
  *      },
- *      sentAt: ISODate("2024-01-15T10:30:00Z")
+ *      readBy: [100, 200, 300],
+ *      sentAt: DateTime("2024-01-15T10:30:00Z"),
+ *      isDeleted: false
  *    }
  *    
- *    Запрос:
- *    db.messages
- *      .find({ chatId: 1 })
- *      .sort({ sentAt: -1 })
- *      .limit(50)
+ *    Запрос LiteDB (C# LINQ):
+ *    var messages = collection
+ *        .Find(m => m.ChatId == 1 && !m.IsDeleted)
+ *        .OrderByDescending(m => m.SentAt)
+ *        .Limit(50)
+ *        .ToList();
  *    
  *    ✅ ПЛЮСЫ:
  *       - Один запрос (БЕЗ JOIN!)
  *       - Все данные в одном документе
- *       - Атомарное обновление
+ *       - Привычный LINQ синтаксис
+ *       - Не требует сервера
+ *       - Составной индекс (chatId, sentAt DESC) для быстрой пагинации
  * 
  * ============================================================================
  */
 
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using LiteDB;
 
-namespace Uchat.Database.MongoDB;
+namespace Uchat.Database.LiteDB;
 
 /// <summary>
-/// Модель сообщения для MongoDB
 /// Представляет документ в коллекции "messages"
 /// 
 /// Каждый документ содержит:
@@ -113,12 +133,12 @@ namespace Uchat.Database.MongoDB;
 /// - Контент (content, type, attachments)
 /// - Вложенные данные (sender info, reactions, readBy)
 /// </summary>
-public class MongoMessage
+public class LiteDbMessage
 {
     // ========================================================================
-    // PRIMARY KEY (MongoDB ObjectId)
+    // PRIMARY KEY (LiteDB ObjectId)
     // ========================================================================
-    // MongoDB использует ObjectId вместо INT автоинкремента
+    // LiteDB использует ObjectId вместо INT автоинкремента
     // ObjectId = 12-байтовый уникальный идентификатор:
     //   - 4 байта: timestamp (время создания)
     //   - 5 байт: random value
@@ -138,8 +158,7 @@ public class MongoMessage
     /// Пример: "507f1f77bcf86cd799439011"
     /// </summary>
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+    public string Id { get; set; } = ObjectId.NewObjectId().ToString();
     
     // ========================================================================
     // FOREIGN KEYS (связи с SQL таблицами)
@@ -164,7 +183,7 @@ public class MongoMessage
     /// Для ГРУППОВЫХ сообщений:
     ///   - Реальный ChatRooms.Id из SQLite
     /// </summary>
-    [BsonElement("chatId")]
+    [BsonField("chatId")]
     public int ChatId { get; set; }
     
     // ========================================================================
@@ -199,7 +218,7 @@ public class MongoMessage
     ///   }
     /// }
     /// </summary>
-    [BsonElement("sender")]
+    [BsonField("sender")]
     public MessageSender Sender { get; set; } = null!;
     
     // ========================================================================
@@ -214,7 +233,7 @@ public class MongoMessage
     /// Для медиа: может быть пустым (если только картинка)
     /// Для системных: "Alice joined the chat"
     /// </summary>
-    [BsonElement("content")]
+    [BsonField("content")]
     public string Content { get; set; } = string.Empty;
     
     /// <summary>
@@ -230,7 +249,7 @@ public class MongoMessage
     /// - "poll" - опрос
     /// - "system" - системное ("Alice joined")
     /// </summary>
-    [BsonElement("type")]
+    [BsonField("type")]
     public string Type { get; set; } = "text";
     
     // ========================================================================
@@ -253,7 +272,7 @@ public class MongoMessage
     /// Пустой массив [] если нет вложений
     /// Может содержать несколько элементов (альбом фото)
     /// </summary>
-    [BsonElement("attachments")]
+    [BsonField("attachments")]
     public List<MessageAttachment> Attachments { get; set; } = new();
     
     // ========================================================================
@@ -296,7 +315,7 @@ public class MongoMessage
     /// - Добавить: $addToSet
     /// - Удалить: $pull
     /// </summary>
-    [BsonElement("reactions")]
+    [BsonField("reactions")]
     public Dictionary<string, List<int>> Reactions { get; set; } = new();
     
     // ========================================================================
@@ -321,7 +340,7 @@ public class MongoMessage
     /// Пустой массив [] = никто не прочитал
     /// Содержит userId из Users.Id (SQLite)
     /// </summary>
-    [BsonElement("readBy")]
+    [BsonField("readBy")]
     public List<int> ReadBy { get; set; } = new();
     
     // ========================================================================
@@ -338,8 +357,7 @@ public class MongoMessage
     /// 
     /// Пример: ISODate("2024-01-15T10:30:00Z")
     /// </summary>
-    [BsonElement("sentAt")]
-    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    [BsonField("sentAt")]
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
     
     /// <summary>
@@ -349,8 +367,7 @@ public class MongoMessage
     /// NULL = сообщение не редактировалось
     /// NOT NULL = сообщение было изменено
     /// </summary>
-    [BsonElement("editedAt")]
-    [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
+    [BsonField("editedAt")]
     public DateTime? EditedAt { get; set; }
     
     // ========================================================================
@@ -366,7 +383,7 @@ public class MongoMessage
     /// 
     /// Для полного удаления используй TTL Index
     /// </summary>
-    [BsonElement("isDeleted")]
+    [BsonField("isDeleted")]
     public bool IsDeleted { get; set; }
     
     // ========================================================================
@@ -386,8 +403,7 @@ public class MongoMessage
     ///   "content": "I agree!"
     /// }
     /// </summary>
-    [BsonElement("replyToMessageId")]
-    [BsonRepresentation(BsonType.ObjectId)]
+    [BsonField("replyToMessageId")]
     public string? ReplyToMessageId { get; set; }
 }
 
@@ -407,27 +423,27 @@ public class MessageSender
     /// <summary>
     /// ID пользователя из Users.Id (SQLite)
     /// </summary>
-    [BsonElement("userId")]
+    [BsonField("userId")]
     public int UserId { get; set; }
     
     /// <summary>
     /// Username из Users.Username (SQLite)
     /// Копия на момент отправки сообщения
     /// </summary>
-    [BsonElement("username")]
+    [BsonField("username")]
     public string Username { get; set; } = string.Empty;
     
     /// <summary>
     /// Отображаемое имя из Users.DisplayName (SQLite)
     /// </summary>
-    [BsonElement("displayName")]
+    [BsonField("displayName")]
     public string DisplayName { get; set; } = string.Empty;
     
     /// <summary>
     /// URL аватара из Users.AvatarUrl (SQLite)
     /// NULL = аватар по умолчанию
     /// </summary>
-    [BsonElement("avatarUrl")]
+    [BsonField("avatarUrl")]
     public string? AvatarUrl { get; set; }
 }
 
@@ -441,28 +457,28 @@ public class MessageAttachment
     /// Тип вложения
     /// "image" | "video" | "file" | "voice" | "audio"
     /// </summary>
-    [BsonElement("type")]
+    [BsonField("type")]
     public string Type { get; set; } = string.Empty;
     
     /// <summary>
     /// URL файла
     /// Пример: "/uploads/2024/01/photo_12345.jpg"
     /// </summary>
-    [BsonElement("url")]
+    [BsonField("url")]
     public string Url { get; set; } = string.Empty;
     
     /// <summary>
     /// Размер файла в байтах
     /// Используется для проверки лимитов и отображения
     /// </summary>
-    [BsonElement("size")]
+    [BsonField("size")]
     public long Size { get; set; }
     
     /// <summary>
     /// Оригинальное имя файла
     /// Пример: "vacation_photo.jpg"
     /// </summary>
-    [BsonElement("fileName")]
+    [BsonField("fileName")]
     public string? FileName { get; set; }
     
     // ========================================================================
@@ -473,28 +489,28 @@ public class MessageAttachment
     /// Ширина изображения/видео в пикселях
     /// NULL для файлов и аудио
     /// </summary>
-    [BsonElement("width")]
+    [BsonField("width")]
     public int? Width { get; set; }
     
     /// <summary>
     /// Высота изображения/видео в пикселях
     /// NULL для файлов и аудио
     /// </summary>
-    [BsonElement("height")]
+    [BsonField("height")]
     public int? Height { get; set; }
     
     /// <summary>
     /// Длительность видео/аудио в секундах
     /// NULL для изображений и файлов
     /// </summary>
-    [BsonElement("duration")]
+    [BsonField("duration")]
     public int? Duration { get; set; }
     
     /// <summary>
     /// URL превью (thumbnail) для видео
     /// NULL для остальных типов
     /// </summary>
-    [BsonElement("thumbnailUrl")]
+    [BsonField("thumbnailUrl")]
     public string? ThumbnailUrl { get; set; }
 }
 

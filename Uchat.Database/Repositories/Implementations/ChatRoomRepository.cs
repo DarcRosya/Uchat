@@ -34,7 +34,7 @@ public class ChatRoomRepository : IChatRoomRepository
     {
         return await _context.ChatRoomMembers
             .Include(m => m.ChatRoom)
-            .Where(m => m.UserId == userId && m.LeftAt == null)
+            .Where(m => m.UserId == userId)
             .Select(m => m.ChatRoom)
             .ToListAsync();
     }
@@ -47,8 +47,7 @@ public class ChatRoomRepository : IChatRoomRepository
 
         if (exists != null)
         {
-            // Если запись есть, и пользователь ушёл ранее — восстановим
-            exists.LeftAt = null;
+            // Если запись уже существует, обновим роль и статус мута
             exists.IsMuted = member.IsMuted;
             exists.Role = member.Role;
             exists.JoinedAt = DateTime.UtcNow;
@@ -65,13 +64,13 @@ public class ChatRoomRepository : IChatRoomRepository
     public async Task<bool> RemoveMemberAsync(int chatRoomId, int userId)
     {
         var member = await _context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId && m.LeftAt == null);
+            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
 
         if (member == null)
             return false;
 
-        // Soft remove: пометим время выхода
-        member.LeftAt = DateTime.UtcNow;
+        // Hard delete: удаляем участника из группы
+        _context.ChatRoomMembers.Remove(member);
         await _context.SaveChangesAsync();
         return true;
     }
@@ -79,7 +78,7 @@ public class ChatRoomRepository : IChatRoomRepository
     public async Task<bool> UpdateMemberRoleAsync(int chatRoomId, int userId, ChatRoomRole role)
     {
         var member = await _context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId && m.LeftAt == null);
+            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
 
         if (member == null)
             return false;
