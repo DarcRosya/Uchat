@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.AspNetCore.SignalR.Client;
+
 namespace Uchat
 {
     /// <summary>
@@ -16,9 +18,39 @@ namespace Uchat
     /// </summary>
     public partial class MainWindow : Window
     {
+        private HubConnection _connection;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _connection = new HubConnectionBuilder()
+            .WithUrl("https://localhost:7059/chatHub")
+            .WithAutomaticReconnect()
+            .Build();
+
+            _connection.On<string, string>("ReceiveMessage", (user, message) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    User2.Text = $"{user}: {message}";
+                });
+            });
+
+            ConnectToServer();
+        }
+
+        private async void ConnectToServer()
+        {
+            try
+            {
+                await _connection.StartAsync();
+                StatusLabel.Content = "Connected!";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка подключения: {ex.Message}");
+            }
         }
 
         private void closeButton_Click(object sender, RoutedEventArgs e)
@@ -48,8 +80,11 @@ namespace Uchat
             }
         }
 
-        private void sendButton_Click(object sender, RoutedEventArgs e)
+        private async void sendButton_Click(object sender, RoutedEventArgs e)
         {
+            await _connection.InvokeAsync("SendMessage",
+                "Vasya",
+                chatTextBox.Text);
         }
     }
 }
