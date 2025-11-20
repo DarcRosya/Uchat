@@ -19,43 +19,48 @@ namespace Uchat
     public partial class MainWindow : Window
     {
         private HubConnection _connection;
+        private string currentChatId = "TestChat"; // FOR DEBUG PURPOSE ONLY!!!
+        private string name = "Vadim"; // FOR DEBUG PURPOSE ONLY!!!
 
         public MainWindow()
         {
             InitializeComponent();
-
-            _connection = new HubConnectionBuilder()
-            .WithUrl("http://192.168.1.4:5191/chatHub")
-            .WithAutomaticReconnect()
-            .Build();
-
-            _connection.On<string, string>("ReceiveMessage", (user, message) =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    MessageBox.Show("CLIENT GOT MESSAGE");
-                    User1.Text = $"{user}: {message}";
-                });
-            });
-
+            
             ConnectToServer();
-
-            _connection.Closed += async (error) =>
-            {
-                MessageBox.Show($"CONNECTION CLOSED: {error}");
-            };
         }
 
         private async void ConnectToServer()
         {
-            try
+            // Server connection
+            _connection = new HubConnectionBuilder()
+                .WithUrl($"https://unghostly-bunglingly-elli.ngrok-free.dev/chatHub")
+                .WithAutomaticReconnect()
+                .Build();
+
+            _connection.On<string, string, string>("ReceiveMessage", (chatId, user, message) =>
             {
+                Dispatcher.Invoke(() =>
+                {
+                    if (chatId == currentChatId)
+                        User1.Text += $"{user}: {message}\n";
+                });
+            });
+
+            try
+            {   
                 await _connection.StartAsync();
+                // successful connection
                 MessageBox.Show("CONNECTED");
+
+                // joining chat
+                await _connection.InvokeAsync("JoinGroup", currentChatId);
+
+                // New user notification
+                await _connection.InvokeAsync("NewUserNotification", currentChatId, name);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка подключения: {ex.Message}");
+                MessageBox.Show($"CONNECTION ERROR: {ex.Message}");
             }
         }
 
@@ -90,12 +95,12 @@ namespace Uchat
         {
             try
             {
-                await _connection.InvokeAsync("SendMessage", "Vetal", chatTextBox.Text);
-                MessageBox.Show("SEND OK");
+                await _connection.InvokeAsync("SendMessage", currentChatId, name, chatTextBox.Text);
+                chatTextBox.Text = "";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"SEND ERROR:\n{ex}");
+                MessageBox.Show($"SENDING ERROR:\n{ex}");
             }
         }
     }
