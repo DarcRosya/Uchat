@@ -25,7 +25,7 @@ namespace Uchat
             InitializeComponent();
 
             _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7059/chatHub")
+            .WithUrl("http://192.168.1.4:5191/chatHub")
             .WithAutomaticReconnect()
             .Build();
 
