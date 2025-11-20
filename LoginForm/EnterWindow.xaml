@@ -1,0 +1,270 @@
+﻿<Window x:Class="LoginForm.EnterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:LoginForm"
+        mc:Ignorable="d"
+        Height="400" Width="800" WindowStartupLocation="CenterScreen"
+        Background="Transparent"
+        AllowsTransparency="True" 
+        WindowStyle="None"
+        Style="{StaticResource MaterialDesignWindow}"
+        >
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border CornerRadius="10 0 0 10">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#FF3CB371" Offset="0.0"/>
+                <GradientStop Color="#FF2E8B57" Offset="1.0"/>
+            </LinearGradientBrush>
+        </Border.Background>
+            <Grid>
+                <StackPanel>
+                    <TextBlock Margin="0 30 0 10" 
+                        Text="Welcome" 
+                        FontSize="50" 
+                        FontWeight="Bold" 
+                        Foreground="White" 
+                        HorizontalAlignment="Center"
+                    />
+                    
+                    <TextBlock Margin="0 10 0 10" 
+                        Text="To" 
+                        FontSize="50" 
+                        FontWeight="Bold" 
+                        Foreground="White" 
+                        HorizontalAlignment="Center"
+                    />
+
+                    <TextBlock Margin="0 10 0 10" 
+                        Text="Uchat" 
+                        FontSize="50" 
+                        FontWeight="Bold" 
+                        Foreground="White" 
+                        HorizontalAlignment="Center"
+                    />
+
+
+                </StackPanel>
+                <Button x:Name="GoToSignUpButton"
+                    Width="220"
+                    Height="40"
+                    FontSize="16"
+                    Background="SkyBlue"
+                    Foreground="Black" Click="GoToSignUpButton_Click"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 0 60"
+            
+                 >
+                    Sign Up
+                </Button>
+
+                <Button x:Name="GoToLogInButton" 
+                    Width="220"
+                    Height="40"
+                    FontSize="16"
+                    Background="SkyBlue"
+                    Foreground="Black" Click="GoToLogInButton_Click"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 0 60"
+                    Visibility="Collapsed"
+                >
+                    Log In
+                </Button>
+            </Grid>
+        </Border>
+
+        <Border x:Name="loginForm" 
+                CornerRadius="0 10 10 0" 
+                Background="White" 
+                Grid.Column="1"
+                
+        >
+            <Grid>
+                <StackPanel>
+                    <TextBlock Margin="0 30 0 10" 
+                            Text="Log In" 
+                            FontSize="50" 
+                            FontWeight="Bold" 
+                           Foreground="Black" 
+                           HorizontalAlignment="Center"/>
+
+                    <Grid Margin="80, 30, 80, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon
+                            Kind="AccountOutline"
+                            Width="22"
+                            Height="22"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            materialDesign:HintAssist.Hint="Username"
+                            FontSize="16"
+                            Padding="0"/>
+                    </Grid>
+
+                    <Grid Margin="80, 25, 80, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon
+                            Kind="LockOutline"
+                            Width="22"
+                            Height="22"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"/>
+
+                        <PasswordBox
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                            materialDesign:HintAssist.Hint="Password"
+                            FontSize="16"
+                            Padding="0"/>
+                    </Grid>
+
+                    <TextBlock 
+                       x:Name="ForgotPasswordButton"
+                       Text="Forgot password?"
+                       Margin="0,10,80,0"
+                       HorizontalAlignment="Right"
+                       Foreground="Gray"
+                       Cursor="Hand" MouseDown="ForgotPasswordButton_MouseDown"
+                    />
+
+
+                </StackPanel>
+                <Button Width="220"
+                        Height="40"
+                        FontSize="16"
+                        Background="SkyBlue"
+                        Foreground="Black" Click="Button_Click"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="0 0 0 60">
+                    Log In
+                </Button>
+            </Grid>
+            
+        </Border>
+
+        <Border x:Name="SignUpForm" 
+                CornerRadius="0 10 10 0" 
+                Background="White" 
+                Grid.Column="1"
+                Visibility="Collapsed"
+        >
+            <Grid>
+                <StackPanel>
+                    <TextBlock Margin="0 30 0 10" 
+                        Text="Sign Up" 
+                        FontSize="50" 
+                        FontWeight="Bold" 
+                        Foreground="Black" 
+                        HorizontalAlignment="Center"
+                     />
+
+                    <Grid Margin="80, 30, 80, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon
+                            Kind="AccountOutline"
+                            Width="22"
+                            Height="22"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                        />
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            materialDesign:HintAssist.Hint="Username"
+                            FontSize="16"
+                            Padding="0"
+                        />
+                    </Grid>
+
+                    <Grid Margin="80, 25, 80, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon
+                            Kind="LockOutline"
+                            Width="22"
+                            Height="22"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center"
+                        />
+
+                        <PasswordBox
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                            materialDesign:HintAssist.Hint="Password"
+                            FontSize="16"
+                            Padding="0"
+                         />
+                    </Grid>
+
+                    <Grid Margin="80, 25, 80, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="35"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <materialDesign:PackIcon
+                           Kind="EmailOutline"
+                           Width="22"
+                           Height="22"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                        />
+
+                        <TextBox
+                            Grid.Column="1"
+                            Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                            materialDesign:HintAssist.Hint="Email"
+                            FontSize="16"
+                            Padding="0"
+                        />
+                    </Grid>
+
+
+
+                </StackPanel>
+
+                <Button
+                    Width="220"
+                    Height="40"
+                    FontSize="16"
+                    Background="SkyBlue"
+                    Foreground="Black"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Margin="0 0 0 60">
+                    Sign Up
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
