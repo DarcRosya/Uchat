@@ -45,7 +45,6 @@ namespace Uchat
             try
             {
                 await _connection.StartAsync();
-                StatusLabel.Content = "Connected!";
             }
             catch (Exception ex)
             {
