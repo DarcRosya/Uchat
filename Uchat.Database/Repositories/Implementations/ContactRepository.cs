@@ -17,7 +17,7 @@ public class ContactRepository : IContactRepository
     public async Task<Contact> AddContactAsync(int ownerId, int contactUserId)
     {
         if (ownerId == contactUserId)
-            throw new InvalidOperationException("Нельзя добавить себя в контакты");
+            throw new InvalidOperationException("You cannot add yourself to contacts.");
 
         var exists = await _context.Contacts
             .FirstOrDefaultAsync(c => c.OwnerId == ownerId && c.ContactUserId == contactUserId);
@@ -39,43 +39,11 @@ public class ContactRepository : IContactRepository
         return contact;
     }
 
-    public async Task<Contact> AddContactAsync(int ownerId, int contactUserId, int? groupId = null)
+    public async Task<Contact?> GetByIdAsync(int contactId)
     {
-        if (ownerId == contactUserId)
-            throw new InvalidOperationException("Нельзя добавить себя в контакты");
-
-        var exists = await _context.Contacts
-            .FirstOrDefaultAsync(c => c.OwnerId == ownerId && c.ContactUserId == contactUserId);
-
-        if (exists != null)
-            return exists;
-
-        var contact = new Contact
-        {
-            OwnerId = ownerId,
-            ContactUserId = contactUserId,
-            AddedAt = DateTime.UtcNow,
-            IsBlocked = false,
-            IsFavorite = false,
-            GroupId = groupId
-        };
-
-        _context.Contacts.Add(contact);
-        await _context.SaveChangesAsync();
-        return contact;
-    }
-
-    public async Task<bool> RemoveContactAsync(int ownerId, int contactUserId)
-    {
-        var contact = await _context.Contacts
-            .FirstOrDefaultAsync(c => c.OwnerId == ownerId && c.ContactUserId == contactUserId);
-
-        if (contact == null)
-            return false;
-
-        _context.Contacts.Remove(contact);
-        await _context.SaveChangesAsync();
-        return true;
+        return await _context.Contacts
+            .Include(c => c.ContactUser)
+            .FirstOrDefaultAsync(c => c.Id == contactId);
     }
 
     public async Task<IEnumerable<Contact>> GetUserContactsAsync(int userId)
@@ -83,19 +51,62 @@ public class ContactRepository : IContactRepository
         return await _context.Contacts
             .Include(c => c.ContactUser)
             .Where(c => c.OwnerId == userId)
+            .OrderByDescending(c => c.LastMessageAt) 
+            .ThenBy(c => c.ContactUser.Username)  
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Contact>> GetUserContactsAsync(int userId, int? groupId = null)
+    public async Task<Contact?> FindContactAsync(int ownerId, int contactUserId)
     {
-        var q = _context.Contacts
+        return await _context.Contacts
             .Include(c => c.ContactUser)
-            .Where(c => c.OwnerId == userId);
+            .FirstOrDefaultAsync(c => 
+                c.OwnerId == ownerId && 
+                c.ContactUserId == contactUserId
+            );
+    }
+    
+    public async Task<IEnumerable<Contact>> GetFavoriteContactsAsync(int userId)
+    {
+        return await _context.Contacts
+            .Include(c => c.ContactUser)
+            .Where(c => c.IsFavorite && c.OwnerId == userId)
+            .OrderBy(c => c.ContactUser.Username)
+            .ToListAsync();
+    }
+    
+    public async Task<IEnumerable<Contact>> GetBlockedContactsAsync(int userId)
+    {
+        return await _context.Contacts
+            .Include(c => c.ContactUser)
+            .Where(c => c.IsBlocked && c.OwnerId == userId)
+            .OrderBy(c => c.ContactUser.Username)
+            .ToListAsync();
+    }
 
-        if (groupId.HasValue)
-            q = q.Where(c => c.GroupId == groupId.Value);
+    public async Task<IEnumerable<Contact>> SearchContactsAsync(int userId, string query)
+    {
+        var searchTerm = query.ToLower();
 
-        return await q.ToListAsync();
+        return await _context.Contacts
+            .Include(c => c.ContactUser)  // JOIN с таблицей Users
+            .Where(c => 
+                c.OwnerId == userId &&  // 1. Только контакты этого пользователя
+                (
+                    // 2. Ищем по username пользователя (частичное совпадение)
+                    c.ContactUser.Username.ToLower().Contains(searchTerm) ||
+                    
+                    // 3. Ищем по DisplayName (если установлено)
+                    (c.ContactUser.DisplayName != null && 
+                    c.ContactUser.DisplayName.ToLower().Contains(searchTerm)) ||
+                    
+                    // 4. Ищем по Nickname (если установлен в контакте)
+                    (c.Nickname != null && 
+                    c.Nickname.ToLower().Contains(searchTerm))
+                )
+            )
+            .OrderBy(c => c.ContactUser.Username)  // Сортировка по имени
+            .ToListAsync();
     }
 
     public async Task<bool> BlockContactAsync(int contactId, bool isBlocked)
@@ -103,6 +114,7 @@ public class ContactRepository : IContactRepository
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
         if (contact == null)
             return false;
+
         contact.IsBlocked = isBlocked;
         await _context.SaveChangesAsync();
         return true;
@@ -113,27 +125,18 @@ public class ContactRepository : IContactRepository
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
         if (contact == null)
             return false;
+
         contact.IsFavorite = isFavorite;
         await _context.SaveChangesAsync();
         return true;
     }
-
     public async Task<bool> SetNotesAsync(int contactId, string? notes)
     {
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
         if (contact == null)
             return false;
-        contact.Notes = notes;
-        await _context.SaveChangesAsync();
-        return true;
-    }
 
-    public async Task<bool> MoveToGroupAsync(int contactId, int? groupId)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
-            return false;
-        contact.GroupId = groupId;
+        contact.PrivateNotes = notes;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -143,82 +146,76 @@ public class ContactRepository : IContactRepository
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
         if (contact == null)
             return false;
+
         contact.LastMessageAt = lastMessageAt;
         await _context.SaveChangesAsync();
         return true;
     }
-
     public async Task<long> IncrementMessageCountAsync(int contactId, int increment = 1)
     {
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
+        if (contact == null) 
             return 0;
+
         contact.MessageCount += increment;
         await _context.SaveChangesAsync();
         return contact.MessageCount;
     }
+    
+    public async Task<bool> SetNicknameAsync(int contactId, string? nickname)
+    {
+        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.ContactUserId == contactId);
+        if (contact == null) 
+            return false;
 
-    public async Task<bool> SetCustomRingtoneAsync(int contactId, string? ringtone)
+        contact.Nickname = nickname;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SetNotificationsEnabledAsync(int contactId, bool enabled)
     {
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
+        if (contact == null) 
+            return false;
+        
+        contact.NotificationsEnabled = enabled;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> RemoveContactAsync(int ownerId, int contactUserId)
+    {
+        var contact = await _context.Contacts
+            .FirstOrDefaultAsync(c => 
+                c.OwnerId == ownerId && 
+                c.ContactUserId == contactUserId
+            );
+
         if (contact == null)
             return false;
-        contact.CustomRingtone = ringtone;
+
+        _context.Contacts.Remove(contact);
         await _context.SaveChangesAsync();
         return true;
     }
-
-    public async Task<bool> SetShowTypingIndicatorAsync(int contactId, bool show)
+    
+    public async Task<bool> ExistsAsync(int ownerId, int contactUserId)
     {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
-            return false;
-        contact.ShowTypingIndicator = show;
-        await _context.SaveChangesAsync();
-        return true;
+        return await _context.Contacts
+            .AnyAsync(c => 
+                c.OwnerId == ownerId && 
+                c.ContactUserId == contactUserId
+            );
     }
-
-    // ContactGroup management
-    public async Task<ContactGroup> CreateGroupAsync(int ownerId, string name, string? color = null)
+    
+    public async Task<bool> IsBlockedAsync(int ownerId, int contactUserId)
     {
-        var exists = await _context.ContactGroups.FirstOrDefaultAsync(g => g.OwnerId == ownerId && g.Name == name);
-        if (exists != null)
-            return exists;
-
-        var group = new ContactGroup { OwnerId = ownerId, Name = name, Color = color };
-        _context.ContactGroups.Add(group);
-        await _context.SaveChangesAsync();
-        return group;
-    }
-
-    public async Task<IEnumerable<ContactGroup>> GetUserGroupsAsync(int ownerId)
-    {
-        return await _context.ContactGroups.Where(g => g.OwnerId == ownerId).ToListAsync();
-    }
-
-    public async Task<bool> RenameGroupAsync(int groupId, string newName)
-    {
-        var group = await _context.ContactGroups.FirstOrDefaultAsync(g => g.Id == groupId);
-        if (group == null)
-            return false;
-        group.Name = newName;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> DeleteGroupAsync(int groupId)
-    {
-        var group = await _context.ContactGroups.FirstOrDefaultAsync(g => g.Id == groupId);
-        if (group == null)
-            return false;
-
-        // Before deleting, set GroupId = null for contacts in this group
-        var contacts = await _context.Contacts.Where(c => c.GroupId == groupId).ToListAsync();
-        foreach (var c in contacts)
-            c.GroupId = null;
-
-        _context.ContactGroups.Remove(group);
-        await _context.SaveChangesAsync();
-        return true;
+        return await _context.Contacts
+            .AnyAsync(c => 
+                c.OwnerId == ownerId && 
+                c.ContactUserId == contactUserId && 
+                c.IsBlocked
+            );
     }
 }

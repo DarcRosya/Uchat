@@ -28,7 +28,7 @@ public static class ChatRoomExtensions
     // ========================================================================
 
     /// <summary>
-    /// Получить эффективное значение AllowMembersToInvite
+    /// Получить эффективное значение DefaultCanInviteUsers
     /// 
     /// Для топиков проверяет ParentChatRoom, если собственное значение NULL
     /// </summary>
@@ -45,7 +45,7 @@ public static class ChatRoomExtensions
         }
 
         // Defaults по типу
-        return chatRoom.AllowMembersToInvite ?? chatRoom.Type switch
+        return chatRoom.DefaultCanInviteUsers ?? chatRoom.Type switch
         {
             ChatRoomType.Public => true,      // В публичных группах можно
             ChatRoomType.Private => false,    // В приватных только админы
@@ -55,7 +55,7 @@ public static class ChatRoomExtensions
     }
 
     /// <summary>
-    /// Получить эффективное значение AllowMembersToSendMessages
+    /// Получить эффективное значение DefaultCanSendMessages
     /// </summary>
     public static bool GetEffectiveAllowMembersToSendMessages(this ChatRoom chatRoom)
     {
@@ -70,32 +70,13 @@ public static class ChatRoomExtensions
         }
 
         // Defaults по типу
-        return chatRoom.AllowMembersToSendMessages ?? chatRoom.Type switch
+        return chatRoom.DefaultCanSendMessages ?? chatRoom.Type switch
         {
             ChatRoomType.Channel => false,    // ВАЖНО! В каналах только админы
             ChatRoomType.Public => true,
             ChatRoomType.Private => true,
             _ => true
         };
-    }
-
-    /// <summary>
-    /// Получить эффективное значение AllowMembersToSendMedia
-    /// </summary>
-    public static bool GetEffectiveAllowMembersToSendMedia(this ChatRoom chatRoom)
-    {
-        // DirectMessage - можно отправлять медиа
-        if (chatRoom.Type == ChatRoomType.DirectMessage)
-            return true;
-
-        // Топик - ВСЕГДА наследовать от родителя (свои настройки игнорируются)
-        if (chatRoom.Type == ChatRoomType.Topic && chatRoom.ParentChatRoom != null)
-        {
-            return chatRoom.ParentChatRoom.GetEffectiveAllowMembersToSendMedia();
-        }
-
-        // По умолчанию разрешено
-        return chatRoom.AllowMembersToSendMedia ?? true;
     }
 
     /// <summary>
@@ -196,9 +177,15 @@ public static class ChatRoomExtensions
                 }
 
                 // Topic не должен иметь своих настроек (наследуются от родителя)
-                if (chatRoom.AllowMembersToInvite.HasValue ||
-                    chatRoom.AllowMembersToSendMessages.HasValue ||
-                    chatRoom.AllowMembersToSendMedia.HasValue ||
+                if (chatRoom.DefaultCanInviteUsers.HasValue ||
+                    chatRoom.DefaultCanSendMessages.HasValue ||
+                    chatRoom.DefaultCanSendPhotos.HasValue ||
+                    chatRoom.DefaultCanSendVideos.HasValue ||
+                    chatRoom.DefaultCanSendStickers.HasValue ||
+                    chatRoom.DefaultCanSendMusic.HasValue ||
+                    chatRoom.DefaultCanSendFiles.HasValue ||
+                    chatRoom.DefaultCanPinMessages.HasValue ||
+                    chatRoom.DefaultCanCustomizeGroup.HasValue ||
                     chatRoom.SlowModeSeconds.HasValue)
                 {
                     throw new InvalidOperationException(
@@ -299,39 +286,6 @@ public static class ChatRoomQueryExtensions
 
         // Проверить настройки с учётом наследования
         return chatRoom.GetEffectiveAllowMembersToSendMessages();
-    }
-
-    /// <summary>
-    /// Проверить, может ли пользователь отправлять медиа в чат
-    /// </summary>
-    public static async Task<bool> CanUserSendMediaAsync(
-        this UchatDbContext context,
-        int chatRoomId,
-        int userId)
-    {
-        var chatRoom = await context.ChatRooms
-            .Include(cr => cr.ParentChatRoom)
-            .FirstOrDefaultAsync(cr => cr.Id == chatRoomId);
-
-        if (chatRoom == null)
-            return false;
-
-        var member = await context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
-
-        if (member == null)
-            return false;
-
-        // Админы всегда могут
-        if (member.Role == ChatRoomRole.Admin || member.Role == ChatRoomRole.Owner)
-            return true;
-
-        // Сначала проверить, может ли вообще писать сообщения
-        if (!chatRoom.GetEffectiveAllowMembersToSendMessages())
-            return false;
-
-        // Потом проверить права на медиа
-        return chatRoom.GetEffectiveAllowMembersToSendMedia();
     }
 
     /// <summary>
@@ -456,8 +410,14 @@ public static class ChatRoomQueryExtensions
  *        return BadRequest("You cannot send messages in this chat");
  *    }
  *    
- *    if (hasAttachment && !await context.CanUserSendMediaAsync(chatRoomId, userId)) {
- *        return BadRequest("You cannot send media in this chat");
+ *    // Для проверки медиа используй ChatRoomMemberPermissionsExtensions:
+ *    var member = await context.ChatRoomMembers
+ *        .Include(m => m.ChatRoom)
+ *        .Include(m => m.Permissions)
+ *        .FirstAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
+ *    
+ *    if (hasPhoto && !member.CanSendPhotos()) {
+ *        return BadRequest("You cannot send photos in this chat");
  *    }
  *    
  *    // Отправить сообщение...

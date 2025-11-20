@@ -30,8 +30,7 @@ public class FriendshipRepository : IFriendshipRepository
             SenderId = senderId,
             ReceiverId = receiverId,
             Status = FriendshipStatus.Pending,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow
         };
 
         _context.Friendships.Add(friendship);
@@ -68,7 +67,7 @@ public class FriendshipRepository : IFriendshipRepository
             return false; // only receiver can accept
 
         f.Status = FriendshipStatus.Accepted;
-        f.UpdatedAt = DateTime.UtcNow;
+        f.AcceptedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
         return true;
     }
@@ -83,7 +82,6 @@ public class FriendshipRepository : IFriendshipRepository
             return false; // only receiver can reject
 
         f.Status = FriendshipStatus.Rejected;
-        f.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
         return true;
     }

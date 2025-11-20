@@ -76,7 +76,29 @@ public class MongoDbContext
     // ========================================================================
     
     /// <summary>
-    /// Инициализация MongoDB контекста
+    /// Инициализация MongoDB контекста через настройки
+    /// 
+    /// Использование (с Dependency Injection):
+    ///   services.Configure<MongoDbSettings>(configuration.GetSection("MongoDb"));
+    ///   services.AddSingleton<MongoDbContext>();
+    /// </summary>
+    public MongoDbContext(MongoDbSettings settings)
+    {
+        // 1. Создаем клиента MongoDB (singleton)
+        _client = new MongoClient(settings.ConnectionString);
+        
+        // 2. Получаем ссылку на базу данных
+        //    Если БД не существует - создастся автоматически при первой вставке
+        _database = _client.GetDatabase(settings.DatabaseName);
+        
+        // 3. Создаем индексы для коллекций
+        //    Это нужно сделать ОДИН РАЗ при первом запуске
+        //    Повторный вызов безопасен (индексы не дублируются)
+        InitializeIndexes();
+    }
+    
+    /// <summary>
+    /// Инициализация MongoDB контекста (legacy)
     /// 
     /// Параметры:
     /// - connectionString: строка подключения к MongoDB
@@ -87,12 +109,6 @@ public class MongoDbContext
     /// 
     /// - databaseName: имя базы данных
     ///   Пример: "uchat" или "uchat_production"
-    /// 
-    /// Использование:
-    ///   var context = new MongoDbContext(
-    ///       "mongodb://localhost:27017",
-    ///       "uchat"
-    ///   );
     /// </summary>
     public MongoDbContext(string connectionString, string databaseName)
     {

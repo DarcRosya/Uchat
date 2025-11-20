@@ -21,6 +21,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using System;
 
 namespace Uchat.Database.Context;
 
@@ -41,16 +42,28 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
     /// <returns>Настроенный DbContext</returns>
     public UchatDbContext CreateDbContext(string[] args)
     {
-        // Создаем билдер опций
         var optionsBuilder = new DbContextOptionsBuilder<UchatDbContext>();
         
-        // Настраиваем SQLite с путем к файлу БД
-        // В реальном проекте путь берется из appsettings.json
-        // Здесь используем относительный путь для разработки
-        optionsBuilder.UseSqlite("Data Source=uchat.db");
+        // Попытка получить connection string из переменной окружения
+        var connectionString = Environment.GetEnvironmentVariable("UCHAT_CONNECTION_STRING");
         
-        // Опционально: можно добавить логирование для отладки
-        // optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+        if (!string.IsNullOrEmpty(connectionString))
+        {
+            // Определяем провайдер по строке подключения
+            if (connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase))
+            {
+                optionsBuilder.UseNpgsql(connectionString);
+            }
+            else
+            {
+                optionsBuilder.UseSqlite(connectionString);
+            }
+        }
+        else
+        {
+            // По умолчанию используем SQLite для локальной разработки
+            optionsBuilder.UseSqlite("Data Source=uchat.db");
+        }
         
         return new UchatDbContext(optionsBuilder.Options);
     }

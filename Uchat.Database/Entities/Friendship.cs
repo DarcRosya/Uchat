@@ -1,35 +1,64 @@
+/*
+ * ============================================================================
+ * ENTITY MODEL: FRIENDSHIP (Дружба между пользователями)
+ * ============================================================================
+ * 
+ * Это модель для ДВУСТОРОННЕЙ дружбы (как в Facebook, VK).
+ * 
+ * WORKFLOW:
+ * 1. User A отправляет запрос User B → Status = Pending
+ * 2. User B принимает → Status = Accepted, создаются 2 Contact'а с IsFriend=true
+ * 3. User B отклоняет → Status = Rejected
+ * 
+ * ============================================================================
+ */
+
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Uchat.Database.Entities
 {
-    /// <summary>
-    /// Система друзей (Friendship) — как в Discord
-    /// </summary>
-    public class Friendship
-    {
-        public int Id { get; set; }
+public class Friendship
+{
+    // ========================================================================
+    // PRIMARY KEY
+    // ========================================================================
 
-        // Кто отправил запрос
-        public int SenderId { get; set; }
-        public User Sender { get; set; } = null!;
+    public int Id { get; set; }
+    
+    // ========================================================================
+    // FOREIGN KEYS
+    // ========================================================================
 
-        // Кто получил запрос
-        public int ReceiverId { get; set; }
-        public User Receiver { get; set; } = null!;
+    public int SenderId { get; set; }
+    public int ReceiverId { get; set; }
+    
+    // ========================================================================
+    // СТАТУС ДРУЖБЫ
+    // ========================================================================
 
-        // Статус дружбы
-        public FriendshipStatus Status { get; set; } = FriendshipStatus.Pending;
+    public FriendshipStatus Status { get; set; }
+    
+    // ========================================================================
+    // ВРЕМЕННЫЕ МЕТКИ
+    // ========================================================================
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
-    }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? AcceptedAt { get; set; }
+    
+    // ========================================================================
+    // НАВИГАЦИОННЫЕ СВОЙСТВА
+    // ========================================================================
+
+    public User Sender { get; set; } = null!;
+    public User Receiver { get; set; } = null!;
+}
 
     public enum FriendshipStatus
     {
-        Pending = 0,
-        Accepted = 1,
-        Rejected = 2,
-        Blocked = 3
+        Pending = 0, // Ожидает подтверждения
+        Accepted = 1, // Дружба подтверждена (оба друзья)
+        Rejected = 2, // Запрос отклонен
+        Blocked = 3 // Один заблокировал другого
     }
 }

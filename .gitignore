@@ -8,3 +8,7 @@
 [Ll]ogs/
 
 
+secrets/
+*.db
+*.db-shm
+*.db-wal
