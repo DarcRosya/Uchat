@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Vetal\\source\\repos\\Uchat\\Uchat.csproj",
+      "projectUniqueName": "E:\\Uchat\\Uchat.csproj",
       "projectName": "Uchat",
-      "projectPath": "C:\\Users\\Vetal\\source\\repos\\Uchat\\Uchat.csproj",
+      "projectPath": "E:\\Uchat\\Uchat.csproj",
       "packagesPath": "C:\\Users\\Vetal\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Vetal\\source\\repos\\Uchat\\obj\\",
+      "outputPath": "E:\\Uchat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
