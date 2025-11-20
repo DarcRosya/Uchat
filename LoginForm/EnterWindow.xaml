@@ -1,0 +1,173 @@
+﻿<Window x:Class="LoginForm.EnterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Height="450" Width="800" WindowStartupLocation="CenterScreen"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="1.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border CornerRadius="15 0 0 15">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#FF43C6AC" Offset="0.0"/>
+                    <GradientStop Color="#FF191654" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+
+            <Grid>
+                <StackPanel VerticalAlignment="Top" Margin="0 70 0 0">
+                    <TextBlock Text="Welcome" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="to" FontSize="24" FontWeight="Light" Foreground="#DDFFFFFF" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Uchat" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Connect with friends perfectly" Foreground="#AAFFFFFF" FontSize="14" HorizontalAlignment="Center" Margin="0,20,0,0" Width="200" TextAlignment="Center" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,50">
+                    <Button x:Name="GoToSignUpButton" 
+                            Style="{StaticResource GhostButtonStyle}" 
+                            Width="180" Content="Sign Up" 
+                            Click="GoToSignUpButton_Click"/>
+                    <Button x:Name="GoToLogInButton" 
+                            Style="{StaticResource GhostButtonStyle}" 
+                            Width="180" Content="Log In" 
+                            Visibility="Collapsed" 
+                            Click="GoToLogInButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" 
+                Background="WhiteSmoke" 
+                CornerRadius="0 15 15 0">
+            <Grid>
+                <Button x:Name="CloseFormButton" 
+                        HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" Margin="5"
+                        Style="{StaticResource MaterialDesignIconForegroundButton}" 
+                        Foreground="Gray" 
+                        Click="CloseFormButton_Click">
+                    
+                    <materialDesign:PackIcon Kind="Close"/>
+                </Button>
+
+                <StackPanel x:Name="loginForm" 
+                            VerticalAlignment="Center" 
+                            Width="280">
+                    <TextBlock Text="Hello Again!" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="#333" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,30"/>
+
+                    <DockPanel Margin="0 0 0 20" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="AccountOutline" 
+                                                 Foreground="Gray" 
+                                                 Width="20" Height="20" 
+                                                 VerticalAlignment="Bottom"
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <TextBox materialDesign:HintAssist.Hint="Username" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0 0 0 10" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="LockOutline" 
+                                                 Foreground="Gray" 
+                                                 Width="20" Height="20" 
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <PasswordBox materialDesign:HintAssist.Hint="Password" 
+                                     Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" 
+                                     FontSize="16"/>
+                    </DockPanel>
+
+                    <TextBlock x:Name="ForgotPasswordButton" 
+                               Text="Forgot password?" 
+                               HorizontalAlignment="Right" 
+                               Foreground="Gray" 
+                               FontSize="12" 
+                               Cursor="Hand" 
+                               MouseDown="ForgotPasswordButton_MouseDown" 
+                               Margin="0,0,0,40"/>
+
+                    <Button Content="Log In" 
+                            Style="{StaticResource PrimaryActionButtonStyle}" 
+                            Click="Button_Click" 
+                            materialDesign:ButtonAssist.CornerRadius="25"/>
+                </StackPanel>
+
+                <StackPanel x:Name="SignUpForm" 
+                            Visibility="Collapsed" 
+                            VerticalAlignment="Center" 
+                            Width="280">
+                    <TextBlock Text="Create Account" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="#333" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,30"/>
+
+                    <DockPanel Margin="0 0 0 20" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="AccountOutline" 
+                                                 Foreground="Gray" 
+                                                 Width="20" 
+                                                 Height="20" 
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <TextBox materialDesign:HintAssist.Hint="Username" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0 0 0 20" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="LockOutline" 
+                                                 Foreground="Gray" 
+                                                 Width="20" 
+                                                 Height="20" 
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <PasswordBox materialDesign:HintAssist.Hint="Password" 
+                                     Style="{StaticResource MaterialDesignFloatingHintPasswordBox}" 
+                                     FontSize="16"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0 0 0 40" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="EmailOutline" 
+                                                 Foreground="Gray" 
+                                                 Width="20" 
+                                                 Height="20" 
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <TextBox materialDesign:HintAssist.Hint="Email" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <Button Content="Sign Up" 
+                            Style="{StaticResource PrimaryActionButtonStyle}" 
+                            materialDesign:ButtonAssist.CornerRadius="25"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
