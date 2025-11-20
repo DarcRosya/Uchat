@@ -90,7 +90,7 @@ namespace Uchat
         {
             try
             {
-                await _connection.InvokeAsync("SendMessage", "Vasya", chatTextBox.Text);
+                await _connection.InvokeAsync("SendMessage", "Vetal", chatTextBox.Text);
                 MessageBox.Show("SEND OK");
             }
             catch (Exception ex)

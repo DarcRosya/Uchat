@@ -143,25 +143,19 @@
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="100" />
                         <RowDefinition Height="100" />
                     </Grid.RowDefinitions>
-                    
+
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    
+
                 </Grid>
-                <TextBox x:Name="User1" Width="350"
-                         HorizontalAlignment="Right">
-                         Text="dfhsdjhfjksd"
-                </TextBox>
-                <TextBox x:Name="User2" Width="350"
-                         
-                         HorizontalAlignment="Left">
+                <TextBox x:Name="User1" Width="300"
+                         HorizontalAlignment="Center">
                     Message
                 </TextBox>
 
