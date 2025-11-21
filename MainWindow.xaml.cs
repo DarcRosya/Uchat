@@ -34,7 +34,7 @@ namespace Uchat
             // Server connection
             _connection = new HubConnectionBuilder()
                 .WithUrl($"https://unghostly-bunglingly-elli.ngrok-free.dev/chatHub")
-                .WithAutomaticReconnect()
+                //.WithAutomaticReconnect()
                 .Build();
 
             _connection.On<string, string, string>("ReceiveMessage", (chatId, user, message) =>
@@ -100,7 +100,8 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"SENDING ERROR:\n{ex}");
+                MessageBox.Show($"SENDING ERROR");
+                ConnectToServer();
             }
         }
     }
