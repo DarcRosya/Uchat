@@ -45,9 +45,9 @@ namespace Uchat
                         User1.Text += $"{user}: {message}\n";
                 });
             });
-
+            //Whet Server is need!!
             try
-            {   
+            {
                 await _connection.StartAsync();
                 // successful connection
                 MessageBox.Show("CONNECTED");

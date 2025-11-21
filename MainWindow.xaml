@@ -30,7 +30,7 @@
             <Border Grid.Row="0" Grid.Column="0"
                     BorderBrush="Transparent"
                     BorderThickness="0"
-                    Background="#FF1A2F2A">
+                    Background="#FF171D25">
 
             </Border>
 
@@ -38,9 +38,9 @@
                     Grid.Row="0" Grid.Column="1"
                     Height="17"
                     VerticalAlignment="Top"
-                    Background="#FF1A2F2A"
-                    Foreground="White"
                     BorderBrush="Transparent"
+                    Background="#FF171D25"
+                    Foreground="White"
                     BorderThickness="0"
                     FontFamily="Segoe MDL2 Assets" 
                     FontSize="10" HorizontalAlignment="Left" Width="50">
@@ -51,7 +51,7 @@
                     Grid.Row="0" Grid.Column="2"
                     Height="17"
                     VerticalAlignment="Top"
-                    Background="#FF1A2F2A"
+                    Background="#FF171D25"
                     Foreground="White"
                     BorderThickness="0"
                     BorderBrush="Transparent"
@@ -64,7 +64,7 @@
                     Grid.Row="0" Grid.Column="3"
                     Height="17"
                     VerticalAlignment="Top"
-                    Background="#FF1A2F2A"
+                    Background="#FF171D25"
                     Foreground="White"
                     BorderThickness="0"
                     BorderBrush="Transparent"
@@ -86,19 +86,83 @@
                 <RowDefinition Height="0.8*" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="0" Grid.Row="0"
-                    HorizontalContentAlignment="Center"
-                    Background="#FF00552E"
-                    Foreground="White">
-                1
-            </Button>
-            <Button Grid.Row="0" Grid.Column="1" 
-                    Foreground="White"
-                    Background="#FF00552E">
-                2
-            </Button>
+            <Grid Grid.Row="0" Grid.Column="0"
+                  Background="#FF171D25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" 
+                        Background="#FF3E4047"
+                        BorderThickness="0"
+                        CornerRadius="3"
+                        Margin="5">
+                    <TextBox Background="Transparent"
+                             BorderBrush="Transparent"
+                             Foreground="White"
+                             FontWeight="DemiBold"
+                             
+                             VerticalContentAlignment="Center">
+                        Search
+                    </TextBox>
+                </Border>
+
+
+            </Grid>
+
+            <Grid Grid.Row="0" Grid.Column="1"
+                  Background="#FF171D25">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="0.7*" />
+                    <ColumnDefinition Width="0.3*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Chat Name Example Bruh"
+                               FontSize="15"
+                               Foreground="White"
+                               Margin="5 4 0 0"
+                               />
+                    <TextBlock Text="10 members"
+                               FontSize="10"
+                               Foreground="#FF919191"
+                               Margin="5 0 0 0"
+                               />
+                </StackPanel>
+
+
+                <Border Grid.Column="1" 
+                        Background="#FF3E4047"
+                        BorderThickness="0"
+                        CornerRadius="3"
+                        Margin="5">
+                    <TextBox Background="Transparent"
+                             BorderBrush="Transparent"
+                             Foreground="#FFA4A4A4"
+                             FontWeight="DemiBold"
+                             Text="Search"
+                             HorizontalAlignment="Center"
+                             VerticalContentAlignment="Center">
+                    </TextBox>
+                </Border>
+
+                <Button Grid.Column="2"
+                        Background="Transparent"
+                        Foreground="White"
+                        BorderThickness="0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Height="20"
+                        Width="40">
+                    ->
+                </Button>
+            </Grid>
+
             <Button Grid.Row="0" Grid.Column="3" 
-                    Background="#FF00552E"
+                    BorderThickness="0"
+                    Background="#FF171D25"
                     Foreground="White">
                 3
             </Button>
@@ -115,10 +179,12 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Row="0" Grid.Column="0" Background="#FFAACC00">
+                    <Button Grid.Row="0" Grid.Column="0" 
+                            Background="#FF1A9FFF"
+                            Foreground="White">
                         Friends
                     </Button>
-                    <Button Grid.Row="0" Grid.Column="1" Background="#FF003C3A"
+                    <Button Grid.Row="0" Grid.Column="1" Background="#FF282828"
                             Foreground="White">
                         Groups
                     </Button>
@@ -129,7 +195,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <Button Grid.Row="0" Background="#FFD3F3DB">
+                        <Button Grid.Row="0" Foreground="White" Background="#FF333D4B">
                             Friends List
                         </Button>
                     </Grid>
@@ -138,9 +204,18 @@
             </Grid >
 
             <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF171D25" Offset="1"/>
+                        <GradientStop Color="White" Offset="0"/>
+                        <GradientStop Color="#FF5B5B5B"/>
+                        <GradientStop Color="#FF858585"/>
+                        <GradientStop Color="#FF383838"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="50"/>
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
 
@@ -154,27 +229,50 @@
                     </Grid.ColumnDefinitions>
 
                 </Grid>
-                <TextBox x:Name="User1" Width="300"
-                         HorizontalAlignment="Center">
-                    Message
+                <TextBox x:Name="User1" Width="500"
+                         HorizontalAlignment="Left"
+                         BorderThickness="0"
+                         Background="Transparent"
+                         Foreground="White"
+                         FontSize="18">
                 </TextBox>
 
-                <Grid Grid.Row="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="100" />
-                    </Grid.ColumnDefinitions>
+                <Border Grid.Row="1"
+                        Background="#FF373838"
+                        Margin="10 0 10 10"
+                        CornerRadius="5"
+                    >
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
 
-                    <TextBox x:Name="chatTextBox" VerticalContentAlignment="Center">
 
-                    </TextBox>
-                    <Button x:Name="sendButton" Grid.Column="1"
-                            Click="sendButton_Click"
+                        <TextBox x:Name="chatTextBox" Text="Write a massage..."
+                                VerticalContentAlignment="Center"
+                                BorderThickness="0"
+                                Foreground="#FFA4A4A4"
+                                Background="Transparent">
+
+                        </TextBox>
+
+                        <Border Grid.Column="1"
+                            CornerRadius="5"
                             Background="#FF55A630">
-                        Send
-                    </Button>
-                </Grid>
-                
+                            <Button x:Name="sendButton" 
+                                Click="sendButton_Click"
+                                Background="Transparent"
+                                Foreground="White"
+                                BorderThickness="0"
+                                >
+                                Send
+                            </Button>
+                        </Border>
+
+                    </Grid>
+                </Border>
+
             </Grid>
 
             <Grid Grid.Column="3" Grid.Row="1">
@@ -186,36 +284,21 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Background="#FFD3F3DB" Grid.ColumnSpan="4">
+                <Button Background="#FFD3F3DB">
                     Chat
                 </Button>
             </Grid >
 
             <Grid Grid.Column="3" Grid.Row="1"
-                  Background="Red">
+                  Background="#FF1F2936">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" MinHeight="100"/>
-                    <RowDefinition Height="5" />
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
-                    <Grid>
-                        <Button MinHeight="300" Background="#FFD3F3DB">
-                            CHANNELS
-                        </Button>
-                    </Grid>
-                </ScrollViewer>
-
-                <GridSplitter Grid.Row="1"
-                  Height="5"
-                  HorizontalAlignment="Stretch"
-                  VerticalAlignment="Center"
-                  Background="Gray"
-                  ShowsPreview="True" />
 
                 <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                     <Grid>
-                        <Button MinHeight="300" Background="#FFD3F3DB">
+                        <Button MinHeight="300" Background="#FF1F2936"
+                                Foreground="White">
                             MEMBERS
                         </Button>
                     </Grid>
