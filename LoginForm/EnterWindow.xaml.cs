@@ -32,6 +32,7 @@ namespace LoginForm
             SignUpForm.Visibility = Visibility.Collapsed;
             GoToLogInButton.Visibility = Visibility.Collapsed;
             GoToSignUpButton.Visibility = Visibility.Visible;
+            GoToLogInButtonForgottenForm.Visibility = Visibility.Collapsed;
         }
 
         private void GoToSignUpButton_Click(object sender, RoutedEventArgs e)
@@ -40,16 +41,44 @@ namespace LoginForm
             loginForm.Visibility = Visibility.Collapsed;
             GoToLogInButton.Visibility = Visibility.Visible;
             GoToSignUpButton.Visibility = Visibility.Collapsed;
+            ForgotPasswordForm.Visibility = Visibility.Collapsed;
+            GoToLogInButtonForgottenForm.Visibility = Visibility.Collapsed;
+            ResetPasswordForm.Visibility = Visibility.Collapsed;
         }
 
         private void ForgotPasswordButton_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("AHAHAHAHAHAHAHHAHAHAHAHH");
+            ForgotPasswordForm.Visibility = Visibility.Visible;
+            GoToLogInButtonForgottenForm.Visibility = Visibility.Visible;
+            loginForm.Visibility = Visibility.Collapsed;
         }
 
         private void CloseFormButton_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void GoToLogInButtonForgottenForm_Click(object sender, RoutedEventArgs e)
+        {
+            loginForm.Visibility = Visibility.Visible;
+            GoToSignUpButton.Visibility = Visibility.Visible;
+            ForgotPasswordForm.Visibility = Visibility.Collapsed;
+            GoToLogInButtonForgottenForm.Visibility = Visibility.Collapsed;
+            ResetPasswordForm.Visibility = Visibility.Collapsed;
+        }
+
+        private void ResetPasswordButton_Click(object sender, RoutedEventArgs e)
+        {
+            loginForm.Visibility = Visibility.Visible;
+            GoToSignUpButton.Visibility = Visibility.Visible;
+            ResetPasswordForm.Visibility = Visibility.Collapsed;
+            GoToLogInButtonForgottenForm.Visibility = Visibility.Collapsed;
+        }
+
+        private void ContinueToResetPasswordFormButton_Click(object sender, RoutedEventArgs e)
+        {
+            ResetPasswordForm.Visibility = Visibility.Visible;
+            ForgotPasswordForm.Visibility = Visibility.Collapsed;
         }
     }
 }

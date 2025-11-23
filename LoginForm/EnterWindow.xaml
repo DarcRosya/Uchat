@@ -31,6 +31,13 @@
                     <TextBlock Text="Connect with friends perfectly" Foreground="#AAFFFFFF" FontSize="14" HorizontalAlignment="Center" Margin="0,20,0,0" Width="200" TextAlignment="Center" TextWrapping="Wrap"/>
                 </StackPanel>
 
+                <Button x:Name="GoToLogInButtonForgottenForm" 
+                            Margin="0 170 0 0"
+                            Style="{StaticResource GhostButtonStyle}" 
+                            Width="180" Content="Log In" 
+                            Visibility="Collapsed"
+                            Click="GoToLogInButtonForgottenForm_Click"/>
+
                 <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,50">
                     <Button x:Name="GoToSignUpButton" 
                             Style="{StaticResource GhostButtonStyle}" 
@@ -60,7 +67,7 @@
                 </Button>
 
                 <StackPanel x:Name="loginForm" 
-                            VerticalAlignment="Center" 
+                            VerticalAlignment="Center"
                             Width="280">
                     <TextBlock Text="Hello Again!" 
                                FontSize="32" 
@@ -71,20 +78,20 @@
 
                     <DockPanel Margin="0 0 0 20" 
                                LastChildFill="True">
-                        <materialDesign:PackIcon Kind="AccountOutline" 
+                        <materialDesign:PackIcon Kind="Account" 
                                                  Foreground="Gray" 
                                                  Width="20" Height="20" 
                                                  VerticalAlignment="Bottom"
                                                  Margin="0,0,10,5" 
                                                  DockPanel.Dock="Left"/>
                         <TextBox materialDesign:HintAssist.Hint="Username" 
-                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  FontSize="16"/>
                     </DockPanel>
 
                     <DockPanel Margin="0 0 0 10" 
                                LastChildFill="True">
-                        <materialDesign:PackIcon Kind="LockOutline" 
+                        <materialDesign:PackIcon Kind="Lock" 
                                                  Foreground="Gray" 
                                                  Width="20" Height="20" 
                                                  VerticalAlignment="Bottom" 
@@ -107,12 +114,12 @@
                     <Button Content="Log In" 
                             Style="{StaticResource PrimaryActionButtonStyle}" 
                             Click="Button_Click" 
-                            materialDesign:ButtonAssist.CornerRadius="25"/>
+                            materialDesign:ButtonAssist.CornerRadius="21" Width="278"/>
                 </StackPanel>
 
                 <StackPanel x:Name="SignUpForm" 
-                            Visibility="Collapsed" 
                             VerticalAlignment="Center" 
+                            Visibility="Collapsed" 
                             Width="280">
                     <TextBlock Text="Create Account" 
                                FontSize="32" 
@@ -123,7 +130,7 @@
 
                     <DockPanel Margin="0 0 0 20" 
                                LastChildFill="True">
-                        <materialDesign:PackIcon Kind="AccountOutline" 
+                        <materialDesign:PackIcon Kind="Account" 
                                                  Foreground="Gray" 
                                                  Width="20" 
                                                  Height="20" 
@@ -137,7 +144,7 @@
 
                     <DockPanel Margin="0 0 0 20" 
                                LastChildFill="True">
-                        <materialDesign:PackIcon Kind="LockOutline" 
+                        <materialDesign:PackIcon Kind="Lock" 
                                                  Foreground="Gray" 
                                                  Width="20" 
                                                  Height="20" 
@@ -151,21 +158,111 @@
 
                     <DockPanel Margin="0 0 0 40" 
                                LastChildFill="True">
-                        <materialDesign:PackIcon Kind="EmailOutline" 
+                        <materialDesign:PackIcon Kind="Email" 
                                                  Foreground="Gray" 
                                                  Width="20" 
                                                  Height="20" 
                                                  VerticalAlignment="Bottom" 
                                                  Margin="0,0,10,5" 
                                                  DockPanel.Dock="Left"/>
-                        <TextBox materialDesign:HintAssist.Hint="Email" 
+                        <TextBox materialDesign:HintAssist.Hint="Email"
+                                 x:Name="signUpEmail"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                  FontSize="16"/>
                     </DockPanel>
 
                     <Button Content="Sign Up" 
                             Style="{StaticResource PrimaryActionButtonStyle}" 
-                            materialDesign:ButtonAssist.CornerRadius="25"/>
+                            materialDesign:ButtonAssist.CornerRadius="21"/>
+                </StackPanel>
+
+                <StackPanel x:Name="ForgotPasswordForm" 
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed"
+                            Width="280">
+                    <TextBlock Text="Email Verification" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="#333" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,30"/>
+
+                    <DockPanel Margin="0 0 0 20" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="Email" 
+                                                 Foreground="Gray" 
+                                                 Width="20"
+                                                 Height="20"
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <TextBox materialDesign:HintAssist.Hint="Email"
+                                 x:Name="emailForForgottedPassword"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0 0 0 40" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="Key" 
+                                                 Foreground="Gray" 
+                                                 Width="20" Height="20" 
+                                                 VerticalAlignment="Bottom"
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <TextBox materialDesign:HintAssist.Hint="Email code" 
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <Button Content="Continue"
+                            x:Name="ContinueToResetPasswordFormButton"
+                            Style="{StaticResource PrimaryActionButtonStyle}"
+                            materialDesign:ButtonAssist.CornerRadius="21" Width="278" Click="ContinueToResetPasswordFormButton_Click"/>
+                </StackPanel>
+
+                <StackPanel x:Name="ResetPasswordForm" 
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed"
+                            Width="280">
+                    <TextBlock Text="Reset Password" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="#333" 
+                               HorizontalAlignment="Center" 
+                               Margin="0,0,0,30"/>
+
+                    <DockPanel Margin="0 0 0 20" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="Lock" 
+                                                 Foreground="Gray" 
+                                                 Width="20"
+                                                 Height="20"
+                                                 VerticalAlignment="Bottom" 
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <PasswordBox materialDesign:HintAssist.Hint="New password" 
+                                 Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <DockPanel Margin="0 0 0 40" 
+                               LastChildFill="True">
+                        <materialDesign:PackIcon Kind="LockCheck" 
+                                                 Foreground="Gray" 
+                                                 Width="20" Height="20" 
+                                                 VerticalAlignment="Bottom"
+                                                 Margin="0,0,10,5" 
+                                                 DockPanel.Dock="Left"/>
+                        <PasswordBox materialDesign:HintAssist.Hint="Confirm password" 
+                                 Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
+                                 FontSize="16"/>
+                    </DockPanel>
+
+                    <Button Content="Reset" 
+                            x:Name="ResetPasswordButton"
+                            Style="{StaticResource PrimaryActionButtonStyle}"
+                            materialDesign:ButtonAssist.CornerRadius="21" Width="278" Click="ResetPasswordButton_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
