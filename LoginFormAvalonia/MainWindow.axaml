@@ -193,11 +193,22 @@
 						/>
 					</DockPanel>
 					
-					<Button x:Name="GoToCodeVerification"
-					Classes="LogIn"
-					Content="Continue"
-					Click="GoToCodeVerification_Click"
-					/>
+					<DockPanel>
+						<Button
+							Classes="LogIn"
+							Content="Back"
+							Width="100"
+							Click="GoToLogInButtonForgottenForm_Click"
+						/>
+						<Button
+							x:Name="GoToCodeVerification"
+							Classes="LogIn"
+							Content="Continue"
+							Width="150"
+							HorizontalAlignment="Right"
+							Click="GoToCodeVerification_Click"
+						/>
+					</DockPanel>
 				</StackPanel>
 
 				<StackPanel x:Name="CodeVerification"
