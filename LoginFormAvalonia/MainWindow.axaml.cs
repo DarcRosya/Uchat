@@ -69,5 +69,10 @@ namespace LoginFormAvalonia
             CodeVerification.IsVisible = true;
             EmailVerification.IsVisible = false;
         }
+
+        private void CloseLoginFormButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

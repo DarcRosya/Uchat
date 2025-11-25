@@ -57,8 +57,27 @@
 
 		</Border>
 
-		<Border Grid.Column="1" CornerRadius="0 15 15 0" Background="White">
+		<Border Grid.Column="1" CornerRadius="0 15 15 0" Background="WhiteSmoke">
 			<Grid>
+				<Button
+				Width="35"
+				Height="35"
+				BorderThickness="0"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Right"
+				Margin="0 15 15 0"
+				CornerRadius="4"
+				x:Name="CloseLoginFormButton"
+				Classes="closeLoginForm"
+				Click="CloseLoginFormButton_Click"
+				>
+					<Image Width="25" Height="25">
+						<Image.Source>
+							<SvgImage Source="avares://LoginFormAvalonia/icons/close.svg"/>
+						</Image.Source>
+					</Image>
+				</Button>
+
 				<StackPanel x:Name="loginForm"
 							VerticalAlignment="Center"
 							Width="280">
@@ -104,6 +123,7 @@
 							   Cursor="Hand"
 							   Margin="0,0,0,40"
 							   PointerPressed="ForgotPasswordButton_PointerPressed"
+							   TextDecorations="Underline"
 							   />
 
 					<Button
@@ -150,7 +170,7 @@
 						/>
 					</DockPanel>
 
-					<DockPanel Margin="0 0 0 50">
+					<DockPanel Margin="0 0 0 40">
 						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
 							<Image.Source>
 								<SvgImage Source="avares://LoginFormAvalonia/icons/email.svg"/>
@@ -173,14 +193,14 @@
 							VerticalAlignment="Center"
 							IsVisible="False"
 							Width="280">
-					<TextBlock Text="Email Verification"
+					<TextBlock Text="Recovery Email"
 							   FontSize="32"
 							   FontWeight="Bold"
 							   Foreground="#333"
 							   HorizontalAlignment="Center"
 							   Margin="0 0 0 40"/>
 
-					<DockPanel Margin="0 0 0 50">
+					<DockPanel Margin="0 0 0 40">
 						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
 							<Image.Source>
 								<SvgImage Source="avares://LoginFormAvalonia/icons/email.svg"/>
@@ -203,7 +223,7 @@
 						<Button
 							x:Name="GoToCodeVerification"
 							Classes="LogIn"
-							Content="Continue"
+							Content="Send code"
 							Width="150"
 							HorizontalAlignment="Right"
 							Click="GoToCodeVerification_Click"
@@ -222,7 +242,7 @@
 							   HorizontalAlignment="Center"
 							   Margin="0 0 0 40"/>
 
-					<DockPanel Margin="0 0 0 50">
+					<DockPanel Margin="0 0 0 40">
 						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
 							<Image.Source>
 								<SvgImage Source="avares://LoginFormAvalonia/icons/key.svg"/>
