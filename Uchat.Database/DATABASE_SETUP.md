@@ -58,12 +58,16 @@ LiteDB - это легковесная NoSQL база данных для .NET (
 
 ```json
 {
-  "LiteDb": {
-    "DatabasePath": "Data/messages.db",
-    "MessagesCollectionName": "messages"
-  }
+    "LiteDb": {
+        "DatabasePath": "Data/messages.db",
+        "MessagesCollectionName": "messages",
+        "RetentionDays": 30,
+        "CleanupIntervalMinutes": 60
+    }
 }
 ```
+
+`RetentionDays` и `CleanupIntervalMinutes` используются `MessageCleanupService`, поэтому обновите значения под вашу нагрузку (например, 7 дней для тестов, 60 минут между циклами).
 
 **Файл `messages.db` создастся автоматически при первом запуске!**
 
@@ -95,6 +99,7 @@ builder.Services.AddDbContext<UchatDbContext>(options =>
 builder.Services.Configure<LiteDbSettings>(
     builder.Configuration.GetSection("LiteDb"));
 builder.Services.AddSingleton<LiteDbContext>();
+builder.Services.AddHostedService<MessageCleanupService>();
 
 var app = builder.Build();
 ```
@@ -196,33 +201,18 @@ dotnet user-secrets set "LiteDb:DatabasePath" "Data/messages.db"
 
 ## 🗑️ Автоудаление старых сообщений
 
-LiteDB не поддерживает TTL индексы (как MongoDB), поэтому используйте Background Service для очистки:
+LiteDB не поддерживает TTL индексы (как MongoDB), поэтому реализован `MessageCleanupService` – `BackgroundService`, который:
+
+1. Читает параметры `LiteDb:RetentionDays` и `LiteDb:CleanupIntervalMinutes` из `LiteDbSettings`.
+2. Открывает временное подключение к `messages.db` (параметр `ConnectionType.Shared`).
+3. Удаляет документы `SentAt < DateTime.UtcNow - RetentionDays` через `DeleteMany`, логирует результат и спит `CleanupIntervalMinutes` минут.
+4. Отрабатывает безопасно при завершении (в `StopAsync` таймер автоматически отменяется).
+
+Это позволяет одновременно обрабатывать запросы из `MessageRepository`, не блокируя общий `LiteDbContext`. registure service в `Program.cs`:
 
 ```csharp
-public class MessageCleanupService : BackgroundService
-{
-    private readonly LiteDbContext _context;
-    
-    public MessageCleanupService(LiteDbContext context)
-    {
-        _context = context;
-    }
-    
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            // Удалить сообщения старше 30 дней
-            var deleted = _context.DeleteOldMessages(30);
-            Console.WriteLine($"Deleted {deleted} old messages");
-            
-            // Запускать раз в день
-            await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
-        }
-    }
-}
-
-// В Program.cs:
+builder.Services.Configure<LiteDbSettings>(builder.Configuration.GetSection("LiteDb"));
+builder.Services.AddSingleton<LiteDbContext>();
 builder.Services.AddHostedService<MessageCleanupService>();
 ```
 

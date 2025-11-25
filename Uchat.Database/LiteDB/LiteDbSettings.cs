@@ -38,4 +38,16 @@ public class LiteDbSettings
     /// По умолчанию: "messages"
     /// </summary>
     public string MessagesCollectionName { get; set; } = "messages";
+
+    /// <summary>
+    /// Максимальный возраст сообщений до удаления
+    /// По умолчанию 30 дней
+    /// </summary>
+    public int RetentionDays { get; set; } = 30;
+
+    /// <summary>
+    /// Интервал между проверками очистки в минутах
+    /// По умолчанию раз в час
+    /// </summary>
+    public int CleanupIntervalMinutes { get; set; } = 60;
 }
