@@ -49,15 +49,7 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
         
         if (!string.IsNullOrEmpty(connectionString))
         {
-            // Определяем провайдер по строке подключения
-            if (connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase))
-            {
-                optionsBuilder.UseNpgsql(connectionString);
-            }
-            else
-            {
-                optionsBuilder.UseSqlite(connectionString);
-            }
+            optionsBuilder.UseSqlite(connectionString);
         }
         else
         {

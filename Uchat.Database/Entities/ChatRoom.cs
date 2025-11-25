@@ -186,7 +186,7 @@ public class ChatRoom
 
     /// Общее количество сообщений в чате
     /// 
-    /// Обновляется при каждом новом сообщении через MongoMessageRepository:
+    /// Обновляется при каждом новом сообщении через MessageRepository:
     ///   await mongoRepo.SendMessageAsync(...);
     ///   await sqliteContext.ChatRooms
     ///       .Where(cr => cr.Id == chatId)
@@ -228,9 +228,8 @@ public class ChatRoom
     ///   Console.WriteLine($"Создатель: {chatRoom.Creator.Username}");
     public User Creator { get; set; } = null!;
     
-    // ПРИМЕЧАНИЕ: Сообщения в этом чате хранятся в MongoDB!
-    // Связь: MongoMessage.ChatId == ChatRoom.Id
-    // Для получения сообщений используй MongoMessageRepository:
+    // Связь: LiteDbMessage.ChatId == ChatRoom.Id
+    // Для получения сообщений используй MessageRepository:
     //   var messages = await mongoRepo.GetChatMessagesAsync(chatRoom.Id, limit: 50);
     
     /// Все участники этой группы

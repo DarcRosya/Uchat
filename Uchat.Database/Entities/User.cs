@@ -60,7 +60,6 @@ public class User
     // ========================================================================
 
     public string? Bio { get ; set; }
-    public string? PhoneNumber { get; set; }
     public string? AvatarUrl { get; set; }
     public DateTime? DateOfBirth { get; set; } // Correct format is [ DD.MM.YYYY ]
 
@@ -88,8 +87,8 @@ public class User
     // ========================================================================
     
     // ПРИМЕЧАНИЕ: Сообщения (Messages) хранятся в MongoDB!
-    // Связь с сообщениями: MongoMessage.Sender.UserId == User.Id
-    // Для получения сообщений пользователя используй MongoMessageRepository
+    // Связь с сообщениями: LiteDbMessage.Sender.UserId == User.Id
+    // Для получения сообщений пользователя используй MessageRepository
     
     /// <summary>
     /// Все групповые чаты, в которых участвует пользователь
@@ -117,6 +116,21 @@ public class User
     /// Foreign Key в таблице Contacts: OwnerId -> Users.Id
     /// </summary>
     public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+    
+    /// <summary>
+    /// Refresh tokens пользователя (активные сессии)
+    /// 
+    /// Связь: User (1) -> RefreshToken (Many)
+    /// Foreign Key в таблице RefreshTokens: UserId -> Users.Id
+    /// 
+    /// Использование:
+    ///   var user = await context.Users
+    ///       .Include(u => u.RefreshTokens.Where(t => !t.IsRevoked))
+    ///       .FirstAsync(u => u.Id == userId);
+    ///   
+    ///   Console.WriteLine($"Активных устройств: {user.RefreshTokens.Count}");
+    /// </summary>
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА ДЛЯ ДРУЖБЫ

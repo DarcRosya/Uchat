@@ -31,7 +31,7 @@ namespace Uchat.Database.Repositories.Interfaces;
 public interface IUserRepository
 {
     /// ПРИМЕЧАНИЕ: Проверяет уникальность username
-    Task<User> CreateUserAsync(string username, string passwordHash, string? email = null, string? phoneNumber = null);
+    Task<User> CreateUserAsync(string username, string passwordHash, string? email = null);
     
     /// ВАЖНО: Возвращает NULL если пользователь не найден
     Task<User?> GetByIdAsync(int userId);
@@ -42,9 +42,6 @@ public interface IUserRepository
     
     /// ЗАЧЕМ: Восстановление пароля, проверка при регистрации
     Task<User?> GetByEmailAsync(string email);
-    
-    /// ЗАЧЕМ: Вход по телефону, синхронизация контактов
-    Task<User?> GetByPhoneNumberAsync(string phoneNumber);
     
     /// Глобальный поиск пользователей
     /// ПОИСК ПО: Username, DisplayName, Bio
@@ -66,9 +63,6 @@ public interface IUserRepository
     /// ПРИМЕЧАНИЕ: Проверяет уникальность email
     Task<bool> UpdateEmailAsync(int userId, string email);
     
-    /// ПРИМЕЧАНИЕ: Проверяет уникальность телефона
-    Task<bool> UpdatePhoneNumberAsync(int userId, string phoneNumber);
-    
     /// Мягкое удаление (IsDeleted = true)
     /// ЗАЧЕМ: Возможность восстановления аккаунта
     Task<bool> SoftDeleteAsync(int userId);
@@ -80,8 +74,6 @@ public interface IUserRepository
     Task<bool> UsernameExistsAsync(string username);
     
     Task<bool> EmailExistsAsync(string email);
-    
-    Task<bool> PhoneNumberExistsAsync(string phoneNumber);
     
     /// Статистика
     Task<long> GetTotalUsersCountAsync();

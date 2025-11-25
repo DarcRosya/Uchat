@@ -4,82 +4,85 @@
 
 Uchat использует **гибридную архитектуру баз данных**:
 
-### PostgreSQL (Supabase) - для структурированных данных
+### SQLite - для структурированных данных
 - ✅ **Users** - пользователи
 - ✅ **ChatRooms** - чаты и группы
 - ✅ **ChatRoomMembers** - участники чатов
 - ✅ **Contacts** - контакты пользователей
 - ✅ **Friendships** - запросы в друзья
 
-### MongoDB (Atlas) - для сообщений
+### LiteDB - для сообщений
 - ✅ **Messages** - сообщения в чатах (высокая нагрузка)
 
 ---
 
-## 1️⃣ Настройка Supabase PostgreSQL
+## 1️⃣ Настройка SQLite
 
-### Шаг 1: Получите строку подключения
+### Шаг 1: Настройка подключения
 
-1. Откройте [Supabase Dashboard](https://app.supabase.com/)
-2. Выберите проект → **Settings** → **Database**
-3. Скопируйте **Connection String** (формат: URI)
+SQLite - это встраиваемая база данных, которая хранится в одном файле. Не требует установки сервера!
 
-Строка будет выглядеть так:
-```
-postgresql://postgres:[YOUR-PASSWORD]@db.xxx.supabase.co:5432/postgres
-```
-
-### Шаг 2: Добавьте в appsettings.json
-
-Откройте `.config/appsettings.json` и замените:
+Откройте `.config/appsettings.json`:
 
 ```json
 {
   "ConnectionStrings": {
-    "PostgreSQL": "Host=db.xxx.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=YOUR-PASSWORD;SSL Mode=Require;Trust Server Certificate=true"
+    "SQLite": "Data Source=uchat.db"
   }
 }
 ```
 
-**Важно**: Замените `YOUR-PASSWORD` на ваш пароль из Supabase!
+**Примечания:**
+- `uchat.db` - файл базы данных будет создан автоматически
+- Можно указать путь: `"Data Source=Data/uchat.db"`
+- Или абсолютный путь: `"Data Source=C:/Databases/uchat.db"`
 
-### Шаг 3: Примените миграции
+### Шаг 2: Примените миграции
 
-**Для локальной разработки (SQLite):**
 ```bash
 cd Uchat.Database
 dotnet ef database update
 ```
 
-Это создаст файл `uchat.db` в папке проекта.
-
-**Для Supabase PostgreSQL:**
-```bash
-cd Uchat.Database
-dotnet ef database update --connection "Host=db.xxx.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=YOUR-PASSWORD;SSL Mode=Require;Trust Server Certificate=true"
-```
-
-**Важно**: Замените `YOUR-PASSWORD` на ваш пароль из Supabase!
+Это создаст файл `uchat.db` с всеми таблицами!
 
 ---
 
-## 2️⃣ Настройка MongoDB Atlas
+## 2️⃣ Настройка LiteDB
 
-### Уже готово! ✅
+### Автоматическая настройка ✅
 
-Строка подключения уже добавлена в `.config/appsettings.json`:
+LiteDB - это легковесная NoSQL база данных для .NET (аналог SQLite для документов).
+
+Настройки уже добавлены в `.config/appsettings.json`:
 
 ```json
 {
-  "MongoDb": {
-    "ConnectionString": "mongodb+srv://darcrosya:u5IpEy5s8FvWw9ZS@uchat-dev.b4ajiop.mongodb.net/?appName=uchat-dev",
-    "DatabaseName": "uchat-dev",
-    "MessagesCollectionName": "messages"
-  }
+    "LiteDb": {
+        "DatabasePath": "Data/messages.db",
+        "MessagesCollectionName": "messages",
+        "RetentionDays": 30,
+        "CleanupIntervalMinutes": 60,
+        "BackupDirectory": "Backups",
+        "BackupRetention": 7,
+        "BackupIntervalMinutes": 1440,
+        "EnableSharding": false,
+        "ShardFilePattern": "messages-{chatId}.db"
+    }
 }
 ```
+`RetentionDays`, `CleanupIntervalMinutes`, `BackupDirectory`, `BackupRetention` и `BackupIntervalMinutes` используются соответствующими хост-сервисами; настраивайте их под нагрузку. `EnableSharding` и `ShardFilePattern` позволяют создавать отдельные файлы на чат (`messages-<chatId>.db`), если вы разделяете данные. Для этого заведите фабрику `LiteDbContext`, которая подставляет `ShardFilePattern.Replace("{chatId}", chatId.ToString())` при создании `LiteDatabase`.
 
-MongoDB создаст коллекцию `messages` автоматически при первой вставке.
+`RetentionDays` и `CleanupIntervalMinutes` используются `MessageCleanupService`, поэтому обновите значения под вашу нагрузку (например, 7 дней для тестов, 60 минут между циклами).
+
+**Файл `messages.db` создастся автоматически при первом запуске!**
+
+**Преимущества LiteDB:**
+- Один файл базы данных
+- Не требует установки сервера
+- Поддержка LINQ запросов
+- ACID транзакции
+- Размер БД до 2 ТБ
 
 ---
 
@@ -89,19 +92,22 @@ MongoDB создаст коллекцию `messages` автоматически 
 
 ```csharp
 using Uchat.Database.Context;
-using Uchat.Database.MongoDB;
+using Uchat.Database.LiteDB;
+using Uchat.Database.Services.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// PostgreSQL (Supabase) - для Users, ChatRooms и т.д.
+// SQLite - для Users, ChatRooms и т.д.
 builder.Services.AddDbContext<UchatDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
-// MongoDB (Atlas) - для Messages
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDb"));
-builder.Services.AddSingleton<MongoDbContext>();
+// LiteDB - для Messages
+builder.Services.Configure<LiteDbSettings>(
+    builder.Configuration.GetSection("LiteDb"));
+builder.Services.AddSingleton<LiteDbContext>();
+builder.Services.AddScoped<IMessagingCoordinator, MessagingCoordinator>();
+builder.Services.AddHostedService<MessageCleanupService>();
 
 var app = builder.Build();
 ```
@@ -111,22 +117,22 @@ var app = builder.Build();
 ```csharp
 public class ChatService
 {
-    private readonly UchatDbContext _pgContext;      // PostgreSQL
-    private readonly MongoDbContext _mongoContext;   // MongoDB
+    private readonly UchatDbContext _sqliteContext;     // SQLite
+    private readonly LiteDbContext _liteDbContext;      // LiteDB
     
-    public ChatService(UchatDbContext pgContext, MongoDbContext mongoContext)
+    public ChatService(UchatDbContext sqliteContext, LiteDbContext liteDbContext)
     {
-        _pgContext = pgContext;
-        _mongoContext = mongoContext;
+        _sqliteContext = sqliteContext;
+        _liteDbContext = liteDbContext;
     }
     
     public async Task SendMessageAsync(int chatId, int userId, string content)
     {
-        // 1. Получить данные пользователя из PostgreSQL
-        var user = await _pgContext.Users.FindAsync(userId);
+        // 1. Получить данные пользователя из SQLite
+        var user = await _sqliteContext.Users.FindAsync(userId);
         
-        // 2. Сохранить сообщение в MongoDB
-        var message = new MongoMessage
+        // 2. Сохранить сообщение в LiteDB
+        var message = new LiteDbMessage
         {
             ChatId = chatId,
             Sender = new MessageSender
@@ -141,12 +147,12 @@ public class ChatService
             SentAt = DateTime.UtcNow
         };
         
-        await _mongoContext.Messages.InsertOneAsync(message);
+        _liteDbContext.Messages.Insert(message);
         
-        // 3. Обновить LastActivityAt в PostgreSQL
-        var chatRoom = await _pgContext.ChatRooms.FindAsync(chatId);
+        // 3. Обновить LastActivityAt в SQLite
+        var chatRoom = await _sqliteContext.ChatRooms.FindAsync(chatId);
         chatRoom.LastActivityAt = DateTime.UtcNow;
-        await _pgContext.SaveChangesAsync();
+        await _sqliteContext.SaveChangesAsync();
     }
 }
 ```
@@ -156,30 +162,30 @@ public class ChatService
 ## Проверка подключения
 
 ```csharp
-// PostgreSQL
+// SQLite
 using (var scope = app.Services.CreateScope())
 {
-    var pgContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
-    var canConnect = await pgContext.Database.CanConnectAsync();
-    Console.WriteLine($"PostgreSQL: {(canConnect ? "✅ Connected" : "❌ Failed")}");
+    var sqliteContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
+    var canConnect = await sqliteContext.Database.CanConnectAsync();
+    Console.WriteLine($"SQLite: {(canConnect ? "✅ Connected" : "❌ Failed")}");
 }
 
-// MongoDB
-var mongoContext = app.Services.GetRequiredService<MongoDbContext>();
-var mongoConnected = await mongoContext.IsConnectedAsync();
-Console.WriteLine($"MongoDB: {(mongoConnected ? "✅ Connected" : "❌ Failed")}");
+// LiteDB
+var liteDbContext = app.Services.GetRequiredService<LiteDbContext>();
+var liteDbExists = liteDbContext.DatabaseExists();
+Console.WriteLine($"LiteDB: {(liteDbExists ? "✅ Database exists" : "❌ Database not found")}");
 ```
 
 ---
 
 ## 📋 Чеклист настройки
 
-- [ ] Создан проект в Supabase
-- [ ] Скопирована connection string для PostgreSQL
-- [ ] Обновлен `.config/appsettings.json`
+- [x] SQLite не требует установки сервера
+- [x] LiteDB не требует установки сервера
+- [x] Обновлен `.config/appsettings.json`
 - [ ] Применены миграции: `dotnet ef database update`
-- [ ] Проверено подключение к PostgreSQL
-- [ ] Проверено подключение к MongoDB Atlas
+- [ ] Проверено подключение к SQLite
+- [ ] Проверено подключение к LiteDB
 - [ ] Настроен Dependency Injection в `Program.cs`
 
 ---
@@ -188,13 +194,60 @@ Console.WriteLine($"MongoDB: {(mongoConnected ? "✅ Connected" : "❌ Failed")}
 
 ⚠️ **Никогда не коммитьте `appsettings.json` с паролями в Git!**
 
-Используйте **User Secrets** для локальной разработки:
+Для локальной разработки используйте **User Secrets**:
 
 ```bash
 cd Uchat.Database
 dotnet user-secrets init
-dotnet user-secrets set "ConnectionStrings:PostgreSQL" "Host=..."
-dotnet user-secrets set "MongoDb:ConnectionString" "mongodb+srv://..."
+dotnet user-secrets set "ConnectionStrings:SQLite" "Data Source=uchat.db"
+dotnet user-secrets set "LiteDb:DatabasePath" "Data/messages.db"
 ```
 
 Для production используйте **переменные окружения**.
+
+---
+
+## 🗑️ Автоудаление и бэкапы
+
+LiteDB не поддерживает TTL индексы (как MongoDB), поэтому реализованы:
+
+1. `MessageCleanupService` – `BackgroundService`, который через `LiteDbWriteGate` блокирует запись, открывает временное подключение `ConnectionType.Shared`, удаляет документы старше `LiteDb:RetentionDays` и ждёт `LiteDb:CleanupIntervalMinutes`.
+2. `LiteDbBackupService` – `BackgroundService`, который ежесуточно (или на любом другом интервале) копирует файл `messages.db` в `LiteDb:BackupDirectory/messages-{timestamp}.db.bak`, вызывает `ILiteDbBackupUploader` для опциональной загрузки и оставляет только `LiteDb:BackupRetention` последних копий.
+
+Оба используют `ILiteDbWriteGate`, чтобы на время операции приостановить мутации сообщений.
+
+```csharp
+builder.Services.Configure<LiteDbSettings>(builder.Configuration.GetSection("LiteDb"));
+builder.Services.AddSingleton<ILiteDbWriteGate, LiteDbWriteGate>();
+builder.Services.AddSingleton<LiteDbContext>();
+builder.Services.AddSingleton<ILiteDbBackupUploader, NoOpLiteDbBackupUploader>();
+builder.Services.AddHostedService<MessageCleanupService>();
+builder.Services.AddHostedService<LiteDbBackupService>();
+builder.Services.AddScoped<IMessagingCoordinator, MessagingCoordinator>();
+```
+
+Чтобы восстановить копию, вызовите `LiteDbBackupService.RestoreAsync("messages-20251125000000.db.bak")` до запуска приложения (или в рамках CLI/административной команды), предварительно остановив все хосты или дождитесь, пока `ILiteDbWriteGate` освободится.
+
+Шардирование (`EnableSharding = true`) пригодится на высокой нагрузке: создавайте `LiteDbContext` на лету с файлом по шаблону `ShardFilePattern.Replace("{chatId}", chatId.ToString())`, а репозитории для конкретного чата используют фабрику, чтобы работать с нужным файлом сообщений.
+
+---
+
+## Сравнение: Облачные vs Локальные базы данных
+
+| Характеристика | PostgreSQL (Supabase) | SQLite |
+|----------------|----------------------|---------|
+| Установка | Облачный сервис | Один файл |
+| Масштабирование | Отличное | Ограниченное |
+| Стоимость | Платный | Бесплатный |
+| Скорость | Сетевые задержки | Очень быстрый |
+| Подходит для | Production | Разработка, малые проекты |
+
+| Характеристика | MongoDB Atlas | LiteDB |
+|----------------|---------------|---------|
+| Установка | Облачный сервис | Один файл |
+| Масштабирование | Отличное | До 2 ТБ |
+| Стоимость | Платный | Бесплатный |
+| Скорость | Сетевые задержки | Очень быстрый |
+| Подходит для | Production | Разработка, малые проекты |
+
+**Вывод:** SQLite + LiteDB идеальны для разработки и малых проектов. Для production с большой нагрузкой лучше использовать PostgreSQL + MongoDB.

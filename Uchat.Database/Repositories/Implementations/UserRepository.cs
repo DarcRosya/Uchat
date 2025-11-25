@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
     }
 
     // CREATE
-    public async Task<User> CreateUserAsync(string username, string passwordHash, string? email = null, string? phoneNumber = null)
+    public async Task<User> CreateUserAsync(string username, string passwordHash, string? email = null)
     {
         // Проверка уникальности
         if (await UsernameExistsAsync(username))
@@ -24,9 +24,6 @@ public class UserRepository : IUserRepository
         
         if (email != null && await EmailExistsAsync(email))
             throw new InvalidOperationException($"Email '{email}' already exists");
-        
-        if (phoneNumber != null && await PhoneNumberExistsAsync(phoneNumber))
-            throw new InvalidOperationException($"Phone number '{phoneNumber}' already exists");
 
         var user = new User
         {
@@ -35,7 +32,6 @@ public class UserRepository : IUserRepository
             Salt = GenerateSalt(),
             DisplayName = username,
             Email = email ?? string.Empty,
-            PhoneNumber = phoneNumber,
             Status = UserStatus.Offline,
             IsBlocked = false,
             CreatedAt = DateTime.UtcNow
@@ -62,12 +58,6 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-    }
-
-    public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
-    {
-        return await _context.Users
-            .FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
     }
 
     public async Task<IEnumerable<User>> SearchUsersAsync(string query, int limit = 50)
@@ -152,22 +142,6 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<bool> UpdatePhoneNumberAsync(int userId, string phoneNumber)
-    {
-        // Проверка уникальности
-        var existingUser = await GetByPhoneNumberAsync(phoneNumber);
-        if (existingUser != null && existingUser.Id != userId)
-            throw new InvalidOperationException($"Phone number '{phoneNumber}' already in use");
-
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null)
-            return false;
-
-        user.PhoneNumber = phoneNumber;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     // DELETE
     public async Task<bool> SoftDeleteAsync(int userId)
     {
@@ -202,12 +176,6 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .AnyAsync(u => u.Email.ToLower() == email.ToLower());
-    }
-
-    public async Task<bool> PhoneNumberExistsAsync(string phoneNumber)
-    {
-        return await _context.Users
-            .AnyAsync(u => u.PhoneNumber == phoneNumber);
     }
 
     public async Task<long> GetTotalUsersCountAsync()

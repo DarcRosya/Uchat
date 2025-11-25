@@ -41,15 +41,6 @@ using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Entities;
 
 namespace Uchat.Database.Context;
-
-/// <summary>
-/// Контекст базы данных для приложения Uchat
-/// 
-/// Этот класс:
-/// - Определяет все таблицы через DbSet
-/// - Настраивает связи между таблицами (OnModelCreating)
-/// - Управляет подключением к SQLite
-/// </summary>
 public class UchatDbContext : DbContext
 {
     // ========================================================================
@@ -64,12 +55,12 @@ public class UchatDbContext : DbContext
     public DbSet<ChatRoomMemberPermissions> ChatRoomMemberPermissions { get; set; } = null!;
     public DbSet<Contact> Contacts { get; set; } = null!;
     public DbSet<Friendship> Friendships { get; set; } = null!;
+    public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
     // ========================================================================
     // CONSTRUCTOR (Конструктор)
     // ========================================================================
     
-    /// <summary>
     /// Конструктор DbContext
     /// 
     /// DbContextOptions содержит настройки подключения к БД:
@@ -82,7 +73,6 @@ public class UchatDbContext : DbContext
     /// 
     ///   services.AddDbContext&lt;UchatDbContext&gt;(options =>
     ///       options.UseSqlite("Data Source=uchat.db"));
-    /// </summary>
     public UchatDbContext(DbContextOptions<UchatDbContext> options) : base(options)
     {
         // base(options) передает настройки в родительский класс DbContext
@@ -102,16 +92,13 @@ public class UchatDbContext : DbContext
     // - Relationships (связи между таблицами)
     // ========================================================================
 
-    /// <summary>
     /// Настройка моделей базы данных (маппинг)
     /// 
-    /// В FastAPI/SQLAlchemy это делается прямо в моделях через Column(), relationship()
     /// В EF Core есть два подхода:
     /// 1. Data Annotations (атрибуты на свойствах) - проще
     /// 2. Fluent API (здесь в OnModelCreating) - мощнее и гибче
     /// 
     /// Мы используем Fluent API!
-    /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -170,9 +157,6 @@ public class UchatDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
 
-            entity.Property(u => u.PhoneNumber)
-                .HasMaxLength(20); 
-
             entity.Property(u => u.AvatarUrl)
                 .HasMaxLength(500);
 
@@ -210,6 +194,12 @@ public class UchatDbContext : DbContext
                 .WithOne(c => c.Owner)
                 .HasForeignKey(c => c.OwnerId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его контакты
+            
+            // User -> RefreshTokens (One-to-Many)
+            entity.HasMany(u => u.RefreshTokens)
+                .WithOne(t => t.User)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его токены
         });
 
         // ====================================================================
@@ -442,6 +432,48 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(f => f.ReceiverId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить запросы к нему
         });
+        
+        // ====================================================================
+        // КОНФИГУРАЦИЯ ТАБЛИЦЫ REFRESHTOKENS
+        // ====================================================================
+        
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.ToTable("RefreshTokens");
+            entity.HasKey(t => t.Id);
+            
+            // ----------------------------------------------------------------
+            // INDEXES
+            // ----------------------------------------------------------------
+            
+            // UNIQUE INDEX на TokenHash (для быстрого поиска при валидации)
+            entity.HasIndex(t => t.TokenHash)
+                .IsUnique()
+                .HasDatabaseName("IX_RefreshTokens_TokenHash");
+            
+            // INDEX на UserId (для получения всех токенов пользователя)
+            entity.HasIndex(t => t.UserId)
+                .HasDatabaseName("IX_RefreshTokens_UserId");
+            
+            // COMPOSITE INDEX для поиска активных токенов
+            // Query: WHERE UserId = X AND IsRevoked = false AND ExpiresAt > NOW()
+            entity.HasIndex(t => new { t.UserId, t.IsRevoked, t.ExpiresAt })
+                .HasDatabaseName("IX_RefreshTokens_UserId_IsRevoked_ExpiresAt");
+            
+            // ----------------------------------------------------------------
+            // COLUMNS
+            // ----------------------------------------------------------------
+            
+            entity.Property(t => t.TokenHash)
+                .IsRequired()
+                .HasMaxLength(64);  // SHA256 hash = 64 hex chars
+            
+            entity.Property(t => t.CreatedAt)
+                .HasDefaultValueSql("NOW()");
+            
+            entity.Property(t => t.IsRevoked)
+                .HasDefaultValue(false);
+        });
     }
 }
 
@@ -511,37 +543,6 @@ public class UchatDbContext : DbContext
  *    - Изменяешь User.cs (добавляешь поле)
  *    - Создаешь новую миграцию: dotnet ef migrations add AddUserBio
  *    - Применяешь: dotnet ef database update
- * 
- * ============================================================================
- * ЗАДАНИЕ ДЛЯ ТЕБЯ:
- * ============================================================================
- * 
- * 1. Добавь Seed данных (начальные данные):
- *    
- *    protected override void OnModelCreating(ModelBuilder modelBuilder)
- *    {
- *        base.OnModelCreating(modelBuilder);
- *        // ... вся конфигурация ...
- *        
- *        // Seed admin пользователя
- *        modelBuilder.Entity<User>().HasData(new User
- *        {
- *            Id = 1,
- *            Username = "admin",
- *            PasswordHash = "hash",
- *            Salt = "salt",
- *            DisplayName = "Administrator",
- *            CreatedAt = DateTime.UtcNow,
- *            Status = UserStatus.Offline
- *        });
- *    }
- * 
- * 2. Добавь Soft Delete глобально:
- *    Создай Query Filter чтобы IsDeleted сообщения не показывались:
- *    
- *    modelBuilder.Entity<Message>().HasQueryFilter(m => !m.IsDeleted);
- *    
- *    Теперь все запросы автоматически будут фильтровать удаленные сообщения!
  * 
  * ============================================================================
  */

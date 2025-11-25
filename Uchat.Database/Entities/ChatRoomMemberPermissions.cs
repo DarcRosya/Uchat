@@ -1,11 +1,5 @@
 namespace Uchat.Database.Entities;
 
-/// <summary>
-/// Individual permissions for chat room member
-/// Can be used for:
-/// 1. Admin permissions (detailed rights for each admin)
-/// 2. Member exceptions (override global restrictions)
-/// 
 /// Three-level permission system:
 /// - GLOBAL (ChatRoom) - default for all members
 /// - ADMIN (this table for admins) - what admins can do
