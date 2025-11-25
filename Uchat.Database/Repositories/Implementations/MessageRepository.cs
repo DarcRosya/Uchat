@@ -38,23 +38,13 @@ public class MessageRepository : IMessageRepository
     }
     
     // ========================================================================
-    // СОЗДАНИЕ СООБЩЕНИЙ
+    // ПОЛУЧЕНИЕ СООБЩЕНИЙ (READ OPERATIONS)
     // ========================================================================
-    
-    public async Task<string> SendMessageAsync(LiteDbMessage message)
-    {
-        using var gate = await _writeGate.AcquireAsync();
-
-        if (string.IsNullOrEmpty(message.Id))
-        {
-            message.Id = ObjectId.NewObjectId().ToString();
-        }
-
-        message.SentAt = DateTime.UtcNow;
-        _messages.Insert(message);
-
-        return await Task.FromResult(message.Id);
-    }
+    // 
+    // ⚠️ ВАЖНО:
+    // - READ операции: можно использовать напрямую
+    // - UPDATE/DELETE операции: требуют проверки прав в вызывающем коде
+    // - CREATE операции: ТОЛЬКО через MessageService (валидация + координация 2 БД)
     
     // ========================================================================
     // ПОЛУЧЕНИЕ СООБЩЕНИЙ
@@ -352,13 +342,13 @@ public class MessageRepository : IMessageRepository
  *    // ✅ Бесконечная прокрутка (нет ограничения по OFFSET)
  * 
  * 
- * 3. ДОБАВЛЕНИЕ РЕАКЦИИ:
+ * 2. ДОБАВЛЕНИЕ РЕАКЦИИ:
  * 
  *    await repo.AddReactionAsync(messageId, "👍", userId: 100);
  *    await repo.AddReactionAsync(messageId, "❤️", userId: 200);
  * 
  * 
- * 4. ПОМЕТИТЬ КАК ПРОЧИТАННОЕ:
+ * 3. ПОМЕТИТЬ КАК ПРОЧИТАННОЕ:
  * 
  *    // Одно сообщение
  *    await repo.MarkAsReadAsync(messageId, userId: 100);
@@ -368,19 +358,24 @@ public class MessageRepository : IMessageRepository
  *    Console.WriteLine($"Помечено {count} сообщений");
  * 
  * 
- * 5. РЕДАКТИРОВАНИЕ:
+ * 4. РЕДАКТИРОВАНИЕ (⚠️ с проверкой прав!):
  * 
- *    await repo.EditMessageAsync(messageId, "Updated message text");
+ *    // Проверка прав должна быть в Controller:
+ *    var message = await repo.GetMessageByIdAsync(messageId);
+ *    if (message.Sender.UserId == currentUserId)
+ *        await repo.EditMessageAsync(messageId, "Updated message text");
  * 
  * 
- * 6. УДАЛЕНИЕ (SOFT DELETE):
+ * 5. УДАЛЕНИЕ (⚠️ с проверкой прав!):
  * 
- *    await repo.DeleteMessageAsync(messageId);
+ *    // Проверка прав должна быть в Controller:
+ *    var message = await repo.GetMessageByIdAsync(messageId);
+ *    if (message.Sender.UserId == currentUserId || isAdmin)
+ *        await repo.DeleteMessageAsync(messageId);
  *    // Сообщение скрыто (isDeleted = true)
- *    // Физически удаляется вручную (можно настроить BackgroundService)
  * 
  * 
- * 7. ПОИСК:
+ * 6. ПОИСК:
  * 
  *    var results = await repo.SearchMessagesAsync(chatId: 1, "hello");
  *    Console.WriteLine($"Найдено {results.Count} сообщений");
@@ -394,7 +389,7 @@ public class MessageRepository : IMessageRepository
  *    Console.WriteLine($"Непрочитанных: {unreadCount}");
  * 
  * ============================================================================
- * CURSOR-BASED PAGINATION В WPF (C#)
+ * 9. CURSOR-BASED PAGINATION В WPF (C#)
  * ============================================================================
  * 
  * // ViewModel для чата с поддержкой бесконечной прокрутки

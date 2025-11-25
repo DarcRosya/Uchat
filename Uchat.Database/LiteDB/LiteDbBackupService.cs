@@ -14,26 +14,31 @@ public class LiteDbBackupService : BackgroundService
 {
     private readonly LiteDbSettings _settings;
     private readonly ILiteDbWriteGate _writeGate;
-    private readonly ILiteDbBackupUploader _uploader;
     private readonly ILogger<LiteDbBackupService> _logger;
     private readonly TimeSpan _interval;
 
     public LiteDbBackupService(
         IOptions<LiteDbSettings> settings,
         ILiteDbWriteGate writeGate,
-        ILiteDbBackupUploader uploader,
         ILogger<LiteDbBackupService> logger)
     {
         _settings = settings.Value;
         _writeGate = writeGate;
-        _uploader = uploader;
         _logger = logger;
         _interval = TimeSpan.FromMinutes(Math.Max(1, _settings.BackupIntervalMinutes));
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("LiteDB backup service running (interval {Interval})", _interval);
+        // Only run automatic backups if configured
+        if (_settings.BackupMode != "Automatic")
+        {
+            _logger.LogInformation("LiteDB backup service in Manual mode - backups will only run on demand");
+            await Task.Delay(Timeout.Infinite, stoppingToken);
+            return;
+        }
+
+        _logger.LogInformation("LiteDB backup service running in Automatic mode (interval {Interval})", _interval);
 
         while (!stoppingToken.IsCancellationRequested)
         {
@@ -70,7 +75,7 @@ public class LiteDbBackupService : BackgroundService
 
         Directory.CreateDirectory(_settings.BackupDirectory);
 
-        await using (await _writeGate.AcquireAsync(cancellationToken))
+        using (await _writeGate.AcquireAsync(cancellationToken))
         {
             var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             var backupFileName = $"messages-{timestamp}.db.bak";
@@ -79,7 +84,6 @@ public class LiteDbBackupService : BackgroundService
             File.Copy(sourcePath, destination, overwrite: true);
             _logger.LogInformation("Created LiteDB backup {BackupPath}", destination);
 
-            await _uploader.UploadAsync(destination, cancellationToken);
             RotateBackups();
         }
     }
@@ -118,7 +122,7 @@ public class LiteDbBackupService : BackgroundService
             throw new FileNotFoundException("Backup not found", backupPath);
         }
 
-        await using (await _writeGate.AcquireAsync(cancellationToken))
+        using (await _writeGate.AcquireAsync(cancellationToken))
         {
             var tempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".db");
             File.Copy(backupPath, tempPath, overwrite: true);
@@ -127,5 +131,14 @@ public class LiteDbBackupService : BackgroundService
 
             _logger.LogInformation("LiteDB restored from backup {BackupFile}", backupPath);
         }
+    }
+
+    /// <summary>
+    /// Creates a backup immediately (for manual backup mode)
+    /// </summary>
+    public async Task CreateBackupNowAsync(CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Manual backup requested");
+        await PerformBackupAsync(cancellationToken);
     }
 }

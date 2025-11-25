@@ -3,30 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using LiteDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
+using Uchat.Database.Extensions;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
 
 namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
-/// Orchestrates the flow that touches both SQLite metadata and LiteDB messages.
+/// Service for managing chat messages across SQLite (metadata) and LiteDB (content).
+/// Ensures transactional consistency between both databases.
 /// </summary>
-public sealed class MessagingCoordinator : IMessagingCoordinator
+public sealed class MessageService : IMessageService
 {
     private readonly UchatDbContext _context;
+    private readonly LiteDbContext _liteDbContext;
     private readonly IMessageRepository _messageRepository;
-    private readonly ILogger<MessagingCoordinator> _logger;
+    private readonly ILogger<MessageService> _logger;
 
-    public MessagingCoordinator(
+    private const int MaxMessageLength = 5000;
+    private const int MaxAttachments = 10;
+
+    public MessageService(
         UchatDbContext context,
+        LiteDbContext liteDbContext,
         IMessageRepository messageRepository,
-        ILogger<MessagingCoordinator> logger)
+        ILogger<MessageService> logger)
     {
         _context = context;
+        _liteDbContext = liteDbContext;
         _messageRepository = messageRepository;
         _logger = logger;
     }
@@ -36,6 +45,13 @@ public sealed class MessagingCoordinator : IMessagingCoordinator
         if (dto == null)
         {
             throw new ArgumentNullException(nameof(dto));
+        }
+
+        // Validate message content
+        var validationError = ValidateMessage(dto);
+        if (validationError != null)
+        {
+            return MessagingResult.Failure(validationError);
         }
 
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -53,9 +69,16 @@ public sealed class MessagingCoordinator : IMessagingCoordinator
                 return MessagingResult.Failure($"ChatRoom {dto.ChatRoomId} not found.");
             }
 
-            if (!chatRoom.Members.Any(m => m.UserId == dto.SenderId))
+            var senderMember = chatRoom.Members.FirstOrDefault(m => m.UserId == dto.SenderId);
+            if (senderMember == null)
             {
                 return MessagingResult.Failure("Sender is not a member of the chat.");
+            }
+
+            // Check if sender has permission to send messages
+            if (!senderMember.CanSendMessages())
+            {
+                return MessagingResult.Failure("You don't have permission to send messages in this chat.");
             }
 
             var sender = await _context.Users.FindAsync(new object[] { dto.SenderId }, cancellationToken: cancellationToken);
@@ -65,7 +88,17 @@ public sealed class MessagingCoordinator : IMessagingCoordinator
             }
 
             liteMessage = BuildLiteDbMessage(dto, sender);
-            messageId = await _messageRepository.SendMessageAsync(liteMessage);
+            
+            // Сохранение в LiteDB
+            if (string.IsNullOrEmpty(liteMessage.Id))
+            {
+                liteMessage.Id = ObjectId.NewObjectId().ToString();
+            }
+            liteMessage.SentAt = DateTime.UtcNow;
+            
+            var messages = _liteDbContext.Messages;
+            messages.Insert(liteMessage);
+            messageId = liteMessage.Id;
 
             chatRoom.LastActivityAt = liteMessage.SentAt;
             chatRoom.TotalMessagesCount++;
@@ -79,7 +112,7 @@ public sealed class MessagingCoordinator : IMessagingCoordinator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "MessagingCoordinator failed for chat {ChatId}", dto.ChatRoomId);
+            _logger.LogError(ex, "MessageService failed for chat {ChatId}", dto.ChatRoomId);
             await transaction.RollbackAsync(cancellationToken);
 
             if (!string.IsNullOrEmpty(messageId))
@@ -152,5 +185,25 @@ public sealed class MessagingCoordinator : IMessagingCoordinator
         {
             _logger.LogWarning(ex, "Failed to delete orphaned message {MessageId}", id);
         }
+    }
+
+    private static string? ValidateMessage(MessageCreateDto dto)
+    {
+        if (string.IsNullOrWhiteSpace(dto.Content) && (dto.Attachments == null || dto.Attachments.Count == 0))
+        {
+            return "Message must have either content or attachments.";
+        }
+
+        if (dto.Content != null && dto.Content.Length > MaxMessageLength)
+        {
+            return $"Message content exceeds maximum length of {MaxMessageLength} characters.";
+        }
+
+        if (dto.Attachments != null && dto.Attachments.Count > MaxAttachments)
+        {
+            return $"Message cannot have more than {MaxAttachments} attachments.";
+        }
+
+        return null;
     }
 }

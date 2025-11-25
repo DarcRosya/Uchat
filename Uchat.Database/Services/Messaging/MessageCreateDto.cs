@@ -4,7 +4,7 @@ using Uchat.Database.LiteDB;
 namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
-/// DTO for creating a new chat message through the MessagingCoordinator.
+/// DTO for creating a new chat message through the MessageService.
 /// </summary>
 public sealed class MessageCreateDto
 {
