@@ -87,6 +87,7 @@ LiteDB - это легковесная NoSQL база данных для .NET (
 ```csharp
 using Uchat.Database.Context;
 using Uchat.Database.LiteDB;
+using Uchat.Database.Services.Messaging;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -99,6 +100,7 @@ builder.Services.AddDbContext<UchatDbContext>(options =>
 builder.Services.Configure<LiteDbSettings>(
     builder.Configuration.GetSection("LiteDb"));
 builder.Services.AddSingleton<LiteDbContext>();
+builder.Services.AddScoped<IMessagingCoordinator, MessagingCoordinator>();
 builder.Services.AddHostedService<MessageCleanupService>();
 
 var app = builder.Build();
