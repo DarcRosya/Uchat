@@ -1,0 +1,325 @@
+<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		x:Class="LoginFormAvalonia.MainWindow"
+		Width="800" Height="450"
+		WindowStartupLocation="CenterScreen"
+		SystemDecorations="None"
+		Background="Transparent"
+		>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="1.2*"/>
+			<ColumnDefinition Width="1.5*"/>
+		</Grid.ColumnDefinitions>
+
+		<Border Grid.Column="0" CornerRadius="15 0 0 15">
+			<Border.Background>
+				<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+					<GradientStop Offset="0.0" Color="#FF43C6AC"/>
+					<GradientStop Offset="1.0" Color="#FF191654"/>
+				</LinearGradientBrush>
+			</Border.Background>
+
+			<Grid>
+				<StackPanel VerticalAlignment="Top" Margin="0 70 0 0">
+					<TextBlock Text="Welcome" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+					<TextBlock Text="to" FontSize="24" FontWeight="Light" Foreground="#DDFFFFFF" HorizontalAlignment="Center"/>
+					<TextBlock Text="Uchat" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+					<TextBlock Text="Connect with friends perfectly" Foreground="#AAFFFFFF" FontSize="14"
+							   HorizontalAlignment="Center" Margin="0,20,0,0" Width="200" TextAlignment="Center" TextWrapping="Wrap"/>
+				</StackPanel>
+
+				<Button x:Name="GoToLogInButtonForgottenForm"
+						Classes="LogOrSign"
+						Margin="0 190 0 0"
+						Content="Log In"
+						IsVisible="False"
+						Click="GoToLogInButtonForgottenForm_Click"
+						/>
+
+				<StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50">
+					<Button x:Name="GoToSignUpButton"
+							Classes="LogOrSign"
+							Content="Sign Up"
+							Click="GoToSignUpButton_Click"
+							/>
+					<Button x:Name="GoToLogInButton"
+							Classes="LogOrSign"
+							Content="Log In"
+							IsVisible="False"
+							Click="GoToLogInButton_Click"
+							/>
+				</StackPanel>
+			</Grid>
+
+		</Border>
+
+		<Border Grid.Column="1" CornerRadius="0 15 15 0" Background="WhiteSmoke">
+			<Grid>
+				<Button
+				Width="35"
+				Height="35"
+				BorderThickness="0"
+				VerticalAlignment="Top"
+				HorizontalAlignment="Right"
+				Margin="0 15 15 0"
+				CornerRadius="4"
+				x:Name="CloseLoginFormButton"
+				Classes="closeLoginForm"
+				Click="CloseLoginFormButton_Click"
+				>
+					<Image Width="25" Height="25">
+						<Image.Source>
+							<SvgImage Source="avares://LoginFormAvalonia/icons/close.svg"/>
+						</Image.Source>
+					</Image>
+				</Button>
+
+				<StackPanel x:Name="loginForm"
+							VerticalAlignment="Center"
+							Width="280">
+					<TextBlock Text="Hello Again!"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="#333"
+							   HorizontalAlignment="Center"
+							   Margin="0,0,0,50"/>
+
+					<DockPanel Margin="0 0 0 25">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/person.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Username"
+						/>
+					</DockPanel>
+
+					<DockPanel Margin="0 0 0 15">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/lock.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Password"
+						PasswordChar="*"
+						/>
+					</DockPanel>
+
+					<TextBlock x:Name="ForgotPasswordButton"
+							   Text="Forgot password?"
+							   HorizontalAlignment="Right"
+							   Foreground="Gray"
+							   FontSize="12"
+							   Cursor="Hand"
+							   Margin="0,0,0,40"
+							   PointerPressed="ForgotPasswordButton_PointerPressed"
+							   TextDecorations="Underline"
+							   />
+
+					<Button
+					Classes="LogIn"
+					Content="Log In"
+					/>
+				</StackPanel>
+
+				<StackPanel x:Name="signUpForm"
+							VerticalAlignment="Center"
+							IsVisible="False"
+							Width="280">
+					<TextBlock Text="Create Account"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="#333"
+							   HorizontalAlignment="Center"
+							   Margin="0,0,0,50"/>
+
+					<DockPanel Margin="0 0 0 25">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/person.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Username"
+						/>
+					</DockPanel>
+
+					<DockPanel Margin="0 0 0 25">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/lock.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Password"
+						PasswordChar="*"
+						/>
+					</DockPanel>
+
+					<DockPanel Margin="0 0 0 40">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/email.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Email"
+						/>
+					</DockPanel>
+
+					<Button
+					Classes="LogIn"
+					Content="Sign Up"
+					/>
+				</StackPanel>
+
+				<StackPanel x:Name="EmailVerification"
+							VerticalAlignment="Center"
+							IsVisible="False"
+							Width="280">
+					<TextBlock Text="Recovery Email"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="#333"
+							   HorizontalAlignment="Center"
+							   Margin="0 0 0 40"/>
+
+					<DockPanel Margin="0 0 0 40">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/email.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Email"
+						/>
+					</DockPanel>
+					
+					<DockPanel>
+						<Button
+							Classes="LogIn"
+							Content="Back"
+							Width="100"
+							Click="GoToLogInButtonForgottenForm_Click"
+						/>
+						<Button
+							x:Name="GoToCodeVerification"
+							Classes="LogIn"
+							Content="Send code"
+							Width="150"
+							HorizontalAlignment="Right"
+							Click="GoToCodeVerification_Click"
+						/>
+					</DockPanel>
+				</StackPanel>
+
+				<StackPanel x:Name="CodeVerification"
+							VerticalAlignment="Center"
+							IsVisible="False"
+							Width="280">
+					<TextBlock Text="Code Verification"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="#333"
+							   HorizontalAlignment="Center"
+							   Margin="0 0 0 40"/>
+
+					<DockPanel Margin="0 0 0 40">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/key.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Code"
+						/>
+					</DockPanel>
+					
+					<DockPanel>
+						<Button
+							x:Name="BackToEmailForm"
+							Classes="LogIn"
+							Content="Back"
+							Width="100"
+							Click="BackToEmailForm_Click"
+						/>
+						<Button
+							x:Name="GoToResetPasswordForm"
+							Classes="LogIn"
+							Content="Continue"
+							Width="150"
+							HorizontalAlignment="Right"
+							Click="GoToResetPasswordForm_Click"
+						/>
+					</DockPanel>
+				</StackPanel>
+
+				<StackPanel x:Name="ResetPasswordForm"
+							VerticalAlignment="Center"
+							IsVisible="False"
+							Width="280">
+					<TextBlock Text="Reset Password"
+							   FontSize="32"
+							   FontWeight="Bold"
+							   Foreground="#333"
+							   HorizontalAlignment="Center"
+							   Margin="0,0,0,50"/>
+
+					<DockPanel Margin="0 0 0 25">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 0">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/lock.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="New password"
+						PasswordChar="*"
+						/>
+					</DockPanel>
+
+					<DockPanel Margin="0 0 0 40">
+						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
+							<Image.Source>
+								<SvgImage Source="avares://LoginFormAvalonia/icons/lock.svg"/>
+							</Image.Source>
+						</Image>
+
+						<TextBox
+						Classes="DataBox"
+						Watermark="Confirm password"
+						PasswordChar="*"
+						/>
+					</DockPanel>
+
+					<Button x:Name="ChangePasswordButton"
+					Classes="LogIn"
+					Content="Change the password"
+					Click="ChangePasswordButton_Click"
+					/>
+				</StackPanel>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>
