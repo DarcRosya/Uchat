@@ -26,31 +26,19 @@ namespace Uchat.Database.Repositories.Interfaces;
 /// Интерфейс репозитория для работы с сообщениями в LiteDB
 /// 
 /// Предоставляет методы:
-/// - Создание сообщений
-/// - Получение истории чата
-/// - Обновление (редактирование, удаление)
-/// - Реакции
-/// - Статус прочтения
+/// - Получение истории чата (READ)
+/// - Обновление (редактирование, удаление) - требует проверки прав в вызывающем коде
+/// - Реакции - доступны всем участникам чата
+/// - Статус прочтения - доступен всем участникам
+/// 
+/// ⚠️ ВАЖНО: Создание новых сообщений ТОЛЬКО через MessageService!
+/// MessageService обеспечивает валидацию, проверку прав и координацию SQLite + LiteDB.
 /// </summary>
 public interface IMessageRepository
 {
     // ========================================================================
-    // СОЗДАНИЕ СООБЩЕНИЙ
+    // ПОЛУЧЕНИЕ СООБЩЕНИЙ (READ OPERATIONS)
     // ========================================================================
-    
-    /// <summary>
-    /// Отправить новое сообщение
-    /// 
-    /// Параметры:
-    /// - message: готовый объект LiteDbMessage
-    /// 
-    /// Возвращает: ID созданного сообщения
-    /// 
-    /// Пример:
-    ///   var message = new LiteDbMessage { ChatId = 1, Content = "Hello!" };
-    ///   var messageId = await repo.SendMessageAsync(message);
-    /// </summary>
-    Task<string> SendMessageAsync(LiteDbMessage message);
     
     // ========================================================================
     // ПОЛУЧЕНИЕ СООБЩЕНИЙ
@@ -158,30 +146,42 @@ public interface IMessageRepository
     /// <summary>
     /// Отредактировать текст сообщения
     /// 
+    /// ⚠️ ПРОВЕРКА ПРАВ: Вызывающий код ДОЛЖЕН проверить права перед вызовом!
+    /// - Только автор сообщения может редактировать
+    /// - Или админ чата с правом CanDeleteMessages()
+    /// 
     /// Параметры:
     /// - messageId: ID сообщения
     /// - newContent: новый текст
     /// 
     /// Возвращает: true если успешно, false если сообщение не найдено
     /// 
-    /// MongoDB операция:
-    ///   db.messages.updateOne(
-    ///     { _id: messageId },
-    ///     { 
-    ///       $set: { 
-    ///         content: newContent, 
-    ///         editedAt: new Date() 
-    ///       } 
-    ///     }
-    ///   )
-    /// 
-    /// Пример:
-    ///   await repo.EditMessageAsync(messageId, "Updated text!");
+    /// Пример использования в API:
+    ///   [HttpPatch("api/messages/{id}")]
+    ///   public async Task<IActionResult> EditMessage(string id, EditDto dto)
+    ///   {
+    ///       var message = await _messageRepo.GetMessageByIdAsync(id);
+    ///       if (message == null) return NotFound();
+    ///       
+    ///       var userId = GetCurrentUserId();
+    ///       if (message.Sender.UserId != userId)
+    ///       {
+    ///           var member = await _chatRepo.GetMemberAsync(message.ChatId, userId);
+    ///           if (member == null || !member.CanDeleteMessages()) return Forbid();
+    ///       }
+    ///       
+    ///       await _messageRepo.EditMessageAsync(id, dto.Content);
+    ///       return NoContent();
+    ///   }
     /// </summary>
     Task<bool> EditMessageAsync(string messageId, string newContent);
     
     /// <summary>
     /// Удалить сообщение (soft delete)
+    /// 
+    /// ⚠️ ПРОВЕРКА ПРАВ: Вызывающий код ДОЛЖЕН проверить права перед вызовом!
+    /// - Только автор сообщения может удалить
+    /// - Или админ/модератор чата с правом CanDeleteMessages()
     /// 
     /// Параметры:
     /// - messageId: ID сообщения
@@ -189,16 +189,26 @@ public interface IMessageRepository
     /// Возвращает: true если успешно
     /// 
     /// НЕ УДАЛЯЕТ физически! Устанавливает isDeleted = true
-    /// Сообщение будет автоматически удалено через 30 дней (TTL Index)
     /// 
-    /// MongoDB операция:
-    ///   db.messages.updateOne(
-    ///     { _id: messageId },
-    ///     { $set: { isDeleted: true } }
-    ///   )
-    /// 
-    /// Пример:
-    ///   await repo.DeleteMessageAsync(messageId);
+    /// Пример использования в API:
+    ///   [HttpDelete("api/messages/{id}")]
+    ///   public async Task<IActionResult> DeleteMessage(string id)
+    ///   {
+    ///       var message = await _messageRepo.GetMessageByIdAsync(id);
+    ///       if (message == null) return NotFound();
+    ///       
+    ///       var userId = GetCurrentUserId();
+    ///       var isAuthor = message.Sender.UserId == userId;
+    ///       
+    ///       if (!isAuthor)
+    ///       {
+    ///           var member = await _chatRepo.GetMemberAsync(message.ChatId, userId);
+    ///           if (member == null || !member.CanDeleteMessages()) return Forbid();
+    ///       }
+    ///       
+    ///       await _messageRepo.DeleteMessageAsync(id);
+    ///       return NoContent();
+    ///   }
     /// </summary>
     Task<bool> DeleteMessageAsync(string messageId);
     

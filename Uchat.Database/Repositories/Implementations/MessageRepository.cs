@@ -10,6 +10,8 @@
  * ============================================================================
  */
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using LiteDB;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
@@ -23,36 +25,26 @@ public class MessageRepository : IMessageRepository
 {
     private readonly LiteDbContext _context;
     private readonly ILiteCollection<LiteDbMessage> _messages;
+    private readonly ILiteDbWriteGate _writeGate;
     
     /// <summary>
     /// Конструктор
     /// </summary>
-    public MessageRepository(LiteDbContext context)
+    public MessageRepository(LiteDbContext context, ILiteDbWriteGate writeGate)
     {
         _context = context;
         _messages = context.Messages;
+        _writeGate = writeGate;
     }
     
     // ========================================================================
-    // СОЗДАНИЕ СООБЩЕНИЙ
+    // ПОЛУЧЕНИЕ СООБЩЕНИЙ (READ OPERATIONS)
     // ========================================================================
-    
-    public async Task<string> SendMessageAsync(LiteDbMessage message)
-    {
-        // Генерируем новый ID если не задан
-        if (string.IsNullOrEmpty(message.Id))
-        {
-            message.Id = ObjectId.NewObjectId().ToString();
-        }
-        
-        // Устанавливаем время отправки
-        message.SentAt = DateTime.UtcNow;
-        
-        // Вставляем документ в коллекцию
-        _messages.Insert(message);
-        
-        return await Task.FromResult(message.Id);
-    }
+    // 
+    // ⚠️ ВАЖНО:
+    // - READ операции: можно использовать напрямую
+    // - UPDATE/DELETE операции: требуют проверки прав в вызывающем коде
+    // - CREATE операции: ТОЛЬКО через MessageService (валидация + координация 2 БД)
     
     // ========================================================================
     // ПОЛУЧЕНИЕ СООБЩЕНИЙ
@@ -150,33 +142,36 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> EditMessageAsync(string messageId, string newContent)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
+
         message.Content = newContent;
         message.EditedAt = DateTime.UtcNow;
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<bool> DeleteMessageAsync(string messageId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // SOFT DELETE: устанавливаем isDeleted = true
+
         message.IsDeleted = true;
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
@@ -186,51 +181,51 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> AddReactionAsync(string messageId, string emoji, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Создаем массив для emoji если его нет
+
         if (!message.Reactions.ContainsKey(emoji))
         {
             message.Reactions[emoji] = new List<int>();
         }
-        
-        // Добавляем userId если его еще нет (предотвращаем дубликаты)
+
         if (!message.Reactions[emoji].Contains(userId))
         {
             message.Reactions[emoji].Add(userId);
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<bool> RemoveReactionAsync(string messageId, string emoji, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Удаляем userId из массива reactions[emoji]
+
         if (message.Reactions.ContainsKey(emoji))
         {
             message.Reactions[emoji].Remove(userId);
-            
-            // Удаляем ключ если массив пустой
+
             if (message.Reactions[emoji].Count == 0)
             {
                 message.Reactions.Remove(emoji);
             }
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
@@ -240,30 +235,32 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> MarkAsReadAsync(string messageId, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Добавляем userId в массив readBy если его еще нет
+
         if (!message.ReadBy.Contains(userId))
         {
             message.ReadBy.Add(userId);
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<long> MarkAllAsReadAsync(int chatId, int userId)
     {
-        // Находим все непрочитанные сообщения в чате
+        using var gate = await _writeGate.AcquireAsync();
+
         var unreadMessages = _messages
             .Find(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId))
             .ToList();
-        
+
         long count = 0;
         foreach (var message in unreadMessages)
         {
@@ -273,7 +270,7 @@ public class MessageRepository : IMessageRepository
                 count++;
             }
         }
-        
+
         return await Task.FromResult(count);
     }
     
@@ -345,13 +342,13 @@ public class MessageRepository : IMessageRepository
  *    // ✅ Бесконечная прокрутка (нет ограничения по OFFSET)
  * 
  * 
- * 3. ДОБАВЛЕНИЕ РЕАКЦИИ:
+ * 2. ДОБАВЛЕНИЕ РЕАКЦИИ:
  * 
  *    await repo.AddReactionAsync(messageId, "👍", userId: 100);
  *    await repo.AddReactionAsync(messageId, "❤️", userId: 200);
  * 
  * 
- * 4. ПОМЕТИТЬ КАК ПРОЧИТАННОЕ:
+ * 3. ПОМЕТИТЬ КАК ПРОЧИТАННОЕ:
  * 
  *    // Одно сообщение
  *    await repo.MarkAsReadAsync(messageId, userId: 100);
@@ -361,19 +358,24 @@ public class MessageRepository : IMessageRepository
  *    Console.WriteLine($"Помечено {count} сообщений");
  * 
  * 
- * 5. РЕДАКТИРОВАНИЕ:
+ * 4. РЕДАКТИРОВАНИЕ (⚠️ с проверкой прав!):
  * 
- *    await repo.EditMessageAsync(messageId, "Updated message text");
+ *    // Проверка прав должна быть в Controller:
+ *    var message = await repo.GetMessageByIdAsync(messageId);
+ *    if (message.Sender.UserId == currentUserId)
+ *        await repo.EditMessageAsync(messageId, "Updated message text");
  * 
  * 
- * 6. УДАЛЕНИЕ (SOFT DELETE):
+ * 5. УДАЛЕНИЕ (⚠️ с проверкой прав!):
  * 
- *    await repo.DeleteMessageAsync(messageId);
+ *    // Проверка прав должна быть в Controller:
+ *    var message = await repo.GetMessageByIdAsync(messageId);
+ *    if (message.Sender.UserId == currentUserId || isAdmin)
+ *        await repo.DeleteMessageAsync(messageId);
  *    // Сообщение скрыто (isDeleted = true)
- *    // Физически удаляется вручную (можно настроить BackgroundService)
  * 
  * 
- * 7. ПОИСК:
+ * 6. ПОИСК:
  * 
  *    var results = await repo.SearchMessagesAsync(chatId: 1, "hello");
  *    Console.WriteLine($"Найдено {results.Count} сообщений");
@@ -387,7 +389,7 @@ public class MessageRepository : IMessageRepository
  *    Console.WriteLine($"Непрочитанных: {unreadCount}");
  * 
  * ============================================================================
- * CURSOR-BASED PAGINATION В WPF (C#)
+ * 9. CURSOR-BASED PAGINATION В WPF (C#)
  * ============================================================================
  * 
  * // ViewModel для чата с поддержкой бесконечной прокрутки
