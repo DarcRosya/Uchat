@@ -7,11 +7,13 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="icons\close.svg" />
     <None Remove="icons\email.svg" />
     <None Remove="icons\key.svg" />
     <None Remove="icons\person.svg" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaResource Include="icons\close.svg" />
     <AvaloniaResource Include="icons\email.svg" />
     <AvaloniaResource Include="icons\key.svg" />
     <AvaloniaResource Include="icons\lock.svg" />
