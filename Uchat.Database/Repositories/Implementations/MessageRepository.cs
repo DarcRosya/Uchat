@@ -10,6 +10,8 @@
  * ============================================================================
  */
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using LiteDB;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
@@ -23,14 +25,16 @@ public class MessageRepository : IMessageRepository
 {
     private readonly LiteDbContext _context;
     private readonly ILiteCollection<LiteDbMessage> _messages;
+    private readonly ILiteDbWriteGate _writeGate;
     
     /// <summary>
     /// Конструктор
     /// </summary>
-    public MessageRepository(LiteDbContext context)
+    public MessageRepository(LiteDbContext context, ILiteDbWriteGate writeGate)
     {
         _context = context;
         _messages = context.Messages;
+        _writeGate = writeGate;
     }
     
     // ========================================================================
@@ -39,18 +43,16 @@ public class MessageRepository : IMessageRepository
     
     public async Task<string> SendMessageAsync(LiteDbMessage message)
     {
-        // Генерируем новый ID если не задан
+        using var gate = await _writeGate.AcquireAsync();
+
         if (string.IsNullOrEmpty(message.Id))
         {
             message.Id = ObjectId.NewObjectId().ToString();
         }
-        
-        // Устанавливаем время отправки
+
         message.SentAt = DateTime.UtcNow;
-        
-        // Вставляем документ в коллекцию
         _messages.Insert(message);
-        
+
         return await Task.FromResult(message.Id);
     }
     
@@ -150,33 +152,36 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> EditMessageAsync(string messageId, string newContent)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
+
         message.Content = newContent;
         message.EditedAt = DateTime.UtcNow;
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<bool> DeleteMessageAsync(string messageId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // SOFT DELETE: устанавливаем isDeleted = true
+
         message.IsDeleted = true;
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
@@ -186,51 +191,51 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> AddReactionAsync(string messageId, string emoji, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Создаем массив для emoji если его нет
+
         if (!message.Reactions.ContainsKey(emoji))
         {
             message.Reactions[emoji] = new List<int>();
         }
-        
-        // Добавляем userId если его еще нет (предотвращаем дубликаты)
+
         if (!message.Reactions[emoji].Contains(userId))
         {
             message.Reactions[emoji].Add(userId);
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<bool> RemoveReactionAsync(string messageId, string emoji, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Удаляем userId из массива reactions[emoji]
+
         if (message.Reactions.ContainsKey(emoji))
         {
             message.Reactions[emoji].Remove(userId);
-            
-            // Удаляем ключ если массив пустой
+
             if (message.Reactions[emoji].Count == 0)
             {
                 message.Reactions.Remove(emoji);
             }
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
@@ -240,30 +245,32 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> MarkAsReadAsync(string messageId, int userId)
     {
+        using var gate = await _writeGate.AcquireAsync();
+
         var message = _messages.FindById(messageId);
         if (message == null)
         {
             return false;
         }
-        
-        // Добавляем userId в массив readBy если его еще нет
+
         if (!message.ReadBy.Contains(userId))
         {
             message.ReadBy.Add(userId);
         }
-        
+
         var result = _messages.Update(message);
-        
+
         return await Task.FromResult(result);
     }
     
     public async Task<long> MarkAllAsReadAsync(int chatId, int userId)
     {
-        // Находим все непрочитанные сообщения в чате
+        using var gate = await _writeGate.AcquireAsync();
+
         var unreadMessages = _messages
             .Find(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId))
             .ToList();
-        
+
         long count = 0;
         foreach (var message in unreadMessages)
         {
@@ -273,7 +280,7 @@ public class MessageRepository : IMessageRepository
                 count++;
             }
         }
-        
+
         return await Task.FromResult(count);
     }
     

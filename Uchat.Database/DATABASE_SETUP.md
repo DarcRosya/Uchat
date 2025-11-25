@@ -62,10 +62,16 @@ LiteDB - это легковесная NoSQL база данных для .NET (
         "DatabasePath": "Data/messages.db",
         "MessagesCollectionName": "messages",
         "RetentionDays": 30,
-        "CleanupIntervalMinutes": 60
+        "CleanupIntervalMinutes": 60,
+        "BackupDirectory": "Backups",
+        "BackupRetention": 7,
+        "BackupIntervalMinutes": 1440,
+        "EnableSharding": false,
+        "ShardFilePattern": "messages-{chatId}.db"
     }
 }
 ```
+`RetentionDays`, `CleanupIntervalMinutes`, `BackupDirectory`, `BackupRetention` и `BackupIntervalMinutes` используются соответствующими хост-сервисами; настраивайте их под нагрузку. `EnableSharding` и `ShardFilePattern` позволяют создавать отдельные файлы на чат (`messages-<chatId>.db`), если вы разделяете данные. Для этого заведите фабрику `LiteDbContext`, которая подставляет `ShardFilePattern.Replace("{chatId}", chatId.ToString())` при создании `LiteDatabase`.
 
 `RetentionDays` и `CleanupIntervalMinutes` используются `MessageCleanupService`, поэтому обновите значения под вашу нагрузку (например, 7 дней для тестов, 60 минут между циклами).
 
@@ -201,22 +207,28 @@ dotnet user-secrets set "LiteDb:DatabasePath" "Data/messages.db"
 
 ---
 
-## 🗑️ Автоудаление старых сообщений
+## 🗑️ Автоудаление и бэкапы
 
-LiteDB не поддерживает TTL индексы (как MongoDB), поэтому реализован `MessageCleanupService` – `BackgroundService`, который:
+LiteDB не поддерживает TTL индексы (как MongoDB), поэтому реализованы:
 
-1. Читает параметры `LiteDb:RetentionDays` и `LiteDb:CleanupIntervalMinutes` из `LiteDbSettings`.
-2. Открывает временное подключение к `messages.db` (параметр `ConnectionType.Shared`).
-3. Удаляет документы `SentAt < DateTime.UtcNow - RetentionDays` через `DeleteMany`, логирует результат и спит `CleanupIntervalMinutes` минут.
-4. Отрабатывает безопасно при завершении (в `StopAsync` таймер автоматически отменяется).
+1. `MessageCleanupService` – `BackgroundService`, который через `LiteDbWriteGate` блокирует запись, открывает временное подключение `ConnectionType.Shared`, удаляет документы старше `LiteDb:RetentionDays` и ждёт `LiteDb:CleanupIntervalMinutes`.
+2. `LiteDbBackupService` – `BackgroundService`, который ежесуточно (или на любом другом интервале) копирует файл `messages.db` в `LiteDb:BackupDirectory/messages-{timestamp}.db.bak`, вызывает `ILiteDbBackupUploader` для опциональной загрузки и оставляет только `LiteDb:BackupRetention` последних копий.
 
-Это позволяет одновременно обрабатывать запросы из `MessageRepository`, не блокируя общий `LiteDbContext`. registure service в `Program.cs`:
+Оба используют `ILiteDbWriteGate`, чтобы на время операции приостановить мутации сообщений.
 
 ```csharp
 builder.Services.Configure<LiteDbSettings>(builder.Configuration.GetSection("LiteDb"));
+builder.Services.AddSingleton<ILiteDbWriteGate, LiteDbWriteGate>();
 builder.Services.AddSingleton<LiteDbContext>();
+builder.Services.AddSingleton<ILiteDbBackupUploader, NoOpLiteDbBackupUploader>();
 builder.Services.AddHostedService<MessageCleanupService>();
+builder.Services.AddHostedService<LiteDbBackupService>();
+builder.Services.AddScoped<IMessagingCoordinator, MessagingCoordinator>();
 ```
+
+Чтобы восстановить копию, вызовите `LiteDbBackupService.RestoreAsync("messages-20251125000000.db.bak")` до запуска приложения (или в рамках CLI/административной команды), предварительно остановив все хосты или дождитесь, пока `ILiteDbWriteGate` освободится.
+
+Шардирование (`EnableSharding = true`) пригодится на высокой нагрузке: создавайте `LiteDbContext` на лету с файлом по шаблону `ShardFilePattern.Replace("{chatId}", chatId.ToString())`, а репозитории для конкретного чата используют фабрику, чтобы работать с нужным файлом сообщений.
 
 ---
 

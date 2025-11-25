@@ -50,4 +50,34 @@ public class LiteDbSettings
     /// По умолчанию раз в час
     /// </summary>
     public int CleanupIntervalMinutes { get; set; } = 60;
+
+    /// <summary>
+    /// Папка для резервных копий LiteDB
+    /// По умолчанию: "Backups"
+    /// </summary>
+    public string BackupDirectory { get; set; } = "Backups";
+
+    /// <summary>
+    /// Количество свежих бэкапов, которые нужно хранить
+    /// По умолчанию: 7
+    /// </summary>
+    public int BackupRetention { get; set; } = 7;
+
+    /// <summary>
+    /// Интервал между полными бэкапами в минутах
+    /// По умолчанию: 1440 (раз в сутки)
+    /// </summary>
+    public int BackupIntervalMinutes { get; set; } = 1440;
+
+    /// <summary>
+    /// Включить шардирование файлов по chatId
+    /// По умолчанию: false
+    /// </summary>
+    public bool EnableSharding { get; set; } = false;
+
+    /// <summary>
+    /// Шаблон имени файла, если включено шардирование (например "messages-{chatId}.db").
+    /// Используйте {chatId}, {date} и другие шаблоны.
+    /// </summary>
+    public string ShardFilePattern { get; set; } = "messages.db";
 }
