@@ -215,6 +215,8 @@
 					
 					<DockPanel>
 						<Button
+							Background="black"
+							Foreground="white"
 							Classes="LogIn"
 							Content="Back"
 							Width="100"
@@ -258,6 +260,8 @@
 					<DockPanel>
 						<Button
 							x:Name="BackToEmailForm"
+							Background="black"
+							Foreground="white"
 							Classes="LogIn"
 							Content="Back"
 							Width="100"

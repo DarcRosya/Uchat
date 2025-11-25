@@ -32,20 +32,22 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0"/>
         </Style>
 
         <Style Selector="Button.LogOrSign:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background" Value="WhiteSmoke"/>
-            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderBrush" Value="white"/>
             <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
         </Style>
 
         <Style Selector="Button.LogOrSign /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.3" />
-                    <BrushTransition Property="Foreground" Duration="0:0:0.3" />
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" />
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
@@ -64,35 +66,35 @@
         </Style>
 
         <Style Selector="Button.LogIn">
-            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
             <Setter Property="CornerRadius" Value="21"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="FontSize" Value="17"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Background" Value="WhiteSmoke"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-        </Style>
-
-        <Style Selector="Button.LogIn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Background">
 				<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
 					<GradientStop Offset="0.0" Color="#FF43C6AC"/>
 					<GradientStop Offset="1.0" Color="#FF191654"/>
 				</LinearGradientBrush>
             </Setter>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
 
-            <Setter Property="BorderBrush" Value="Gray"/>
-            <Setter Property="Foreground" Value="WhiteSmoke"/>
+        <Style Selector="Button.LogIn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Black"/>
         </Style>
 
         <Style Selector="Button.LogIn /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.3" />
-                    <BrushTransition Property="Foreground" Duration="0:0:0.3" />
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.3" />
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
         </Style>
