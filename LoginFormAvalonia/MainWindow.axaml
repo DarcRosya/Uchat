@@ -65,13 +65,12 @@
 				BorderThickness="0"
 				VerticalAlignment="Top"
 				HorizontalAlignment="Right"
-				Margin="0 15 15 0"
-				CornerRadius="4"
+				CornerRadius="0 15 0 4"
 				x:Name="CloseLoginFormButton"
 				Classes="closeLoginForm"
 				Click="CloseLoginFormButton_Click"
 				>
-					<Image Width="25" Height="25">
+					<Image Width="20" Height="20">
 						<Image.Source>
 							<SvgImage Source="avares://LoginFormAvalonia/icons/close.svg"/>
 						</Image.Source>
@@ -80,6 +79,7 @@
 
 				<StackPanel x:Name="loginForm"
 							VerticalAlignment="Center"
+							IsVisible="True"
 							Width="280">
 					<TextBlock Text="Hello Again!"
 							   FontSize="32"
@@ -96,12 +96,13 @@
 						</Image>
 
 						<TextBox
+						x:Name="usernameTextBox"
 						Classes="DataBox"
 						Watermark="Username"
 						/>
 					</DockPanel>
 
-					<DockPanel Margin="0 0 0 15">
+					<DockPanel Margin="0 0 0 10">
 						<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 2">
 							<Image.Source>
 								<SvgImage Source="avares://LoginFormAvalonia/icons/lock.svg"/>
@@ -109,11 +110,18 @@
 						</Image>
 
 						<TextBox
+						x:Name="passwordTextBox"
 						Classes="DataBox"
 						Watermark="Password"
 						PasswordChar="*"
 						/>
 					</DockPanel>
+
+					<TextBlock 
+						x:Name="invalidDataInHelloAgain"
+						Margin="0 0 0 10"
+						Classes="invalidData"
+						/>
 
 					<TextBlock x:Name="ForgotPasswordButton"
 							   Text="Forgot password?"
@@ -127,8 +135,10 @@
 							   />
 
 					<Button
-					Classes="LogIn"
-					Content="Log In"
+						x:Name="LogInButton"
+						Classes="LogIn"
+						Content="Log In"
+						Click="LogInButton_Click"
 					/>
 				</StackPanel>
 
@@ -151,6 +161,7 @@
 						</Image>
 
 						<TextBox
+						x:Name="createUsernameTextBox"
 						Classes="DataBox"
 						Watermark="Username"
 						/>
@@ -164,6 +175,7 @@
 						</Image>
 
 						<TextBox
+						x:Name="createPasswordTextBox"
 						Classes="DataBox"
 						Watermark="Password"
 						PasswordChar="*"
@@ -178,14 +190,22 @@
 						</Image>
 
 						<TextBox
+						x:Name="createEmailTextBox"
 						Classes="DataBox"
 						Watermark="Email"
 						/>
 					</DockPanel>
 
+					<TextBlock
+					x:Name="invalidDataInCreateAccount"
+					Classes="invalidData"
+					/>
+
 					<Button
+					x:Name="CreateAccountButton"
 					Classes="LogIn"
 					Content="Sign Up"
+					Click="CreateAccountButton_Click"
 					/>
 				</StackPanel>
 
@@ -208,10 +228,16 @@
 						</Image>
 
 						<TextBox
+						x:Name="emailInRecoveryEmailTextBox"
 						Classes="DataBox"
 						Watermark="Email"
 						/>
 					</DockPanel>
+
+						<TextBlock 
+						x:Name="invalidDataInRecoveryEmail"
+						Classes="invalidData"
+						/>
 					
 					<DockPanel>
 						<Button
@@ -252,10 +278,16 @@
 						</Image>
 
 						<TextBox
+						x:Name="codeVerificationTextBox"
 						Classes="DataBox"
 						Watermark="Code"
 						/>
 					</DockPanel>
+
+						<TextBlock 
+						x:Name="invalidDataInCodeVerification"
+						Classes="invalidData"
+						/>
 					
 					<DockPanel>
 						<Button
@@ -297,6 +329,7 @@
 						</Image>
 
 						<TextBox
+						x:Name="newPasswordTextBox"
 						Classes="DataBox"
 						Watermark="New password"
 						PasswordChar="*"
@@ -311,11 +344,17 @@
 						</Image>
 
 						<TextBox
+						x:Name="confirmPasswordTextBox"
 						Classes="DataBox"
 						Watermark="Confirm password"
 						PasswordChar="*"
 						/>
 					</DockPanel>
+
+						<TextBlock 
+						x:Name="invalidDataInResetPassword"
+						Classes="invalidData"
+						/>
 
 					<Button x:Name="ChangePasswordButton"
 					Classes="LogIn"

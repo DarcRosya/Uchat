@@ -11,6 +11,7 @@
     <None Remove="icons\email.svg" />
     <None Remove="icons\key.svg" />
     <None Remove="icons\person.svg" />
+    <None Remove="icons\settings.svg" />
   </ItemGroup>
   <ItemGroup>
     <AvaloniaResource Include="icons\close.svg" />
@@ -18,6 +19,7 @@
     <AvaloniaResource Include="icons\key.svg" />
     <AvaloniaResource Include="icons\lock.svg" />
     <AvaloniaResource Include="icons\person.svg" />
+    <AvaloniaResource Include="icons\settings.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,5 +34,6 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.9" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
   </ItemGroup>
 </Project>

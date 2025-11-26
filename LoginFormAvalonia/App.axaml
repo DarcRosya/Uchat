@@ -14,9 +14,18 @@
         <Style Selector="Button.closeLoginForm /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.3" />
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
+        </Style>
+
+        <Style Selector="TextBlock.invalidData">
+			<Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Margin" Value="0 -30 0 30"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="IsVisible" Value="False"/>
         </Style>
 
         <Style Selector="Button.LogOrSign">
