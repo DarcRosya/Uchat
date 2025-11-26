@@ -1,0 +1,124 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="Uchat.MainWindow"
+        Width="1280" Height="720"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="17">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <!-- Title Bar -->
+    <Grid Grid.Row="0" Background="Black" ColumnDefinitions="*,50,50,50">
+      <Border Name="emptyBar" Grid.Column="0" Background="Black" PointerPressed="EmptyBar_PointerPressed"/>
+      <Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
+      <Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
+      <Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
+    </Grid>
+
+    <!-- Chat Layout -->
+    <Grid Grid.Row="1" ColumnDefinitions="*,0,*,0,*" RowDefinitions="40, *">
+
+      <!-- Left Search -->
+      <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#FF171D25" ColumnDefinitions="40,*">
+        <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,40,5" CornerRadius="3">
+          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
+                   Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
+        </Border>
+      </Grid>
+
+      <!-- Middle Top Bar -->
+      <Grid MinWidth="350" Grid.Column="2" Grid.Row="0" Background="#FF171D25"
+            ColumnDefinitions="200,0.7*,0.3*">
+        <StackPanel>
+          <TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
+          <TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
+          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
+                   Foreground="#FFA4A4A4" HorizontalAlignment="Stretch"/>
+        </Border>
+
+        <Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
+                BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+      </Grid>
+
+      <!-- Right small button -->
+      <Grid Grid.Column="4" Grid.Row="0" Background="#FF171D25"></Grid>
+
+      <!-- Contacts Left Menu -->
+      <Grid MinWidth="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
+        <Grid Background="#FF3E4047" ColumnDefinitions="*,*">
+          <Button Content="Friends" CornerRadius="0" Background="#FF1A9FFF" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+          <Button Grid.Column="1" Content="Groups" CornerRadius="0" Background="#FF282828" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <StackPanel Background="#FF333D4B">
+            <Button Content="Friends List" Background="#FF333D4B" Foreground="White" HorizontalAlignment="Stretch" MinHeight="1000" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+    <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                  Background="Transparent"
+                  ResizeDirection="Columns"
+                  ResizeBehavior="PreviousAndNext"
+                  ShowsPreview="False"/>
+
+      <!-- Chat Middle -->
+      <Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#FF171D25">
+        <Grid/>
+
+        <!-- Chat Container -->
+        <ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
+            <StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
+        </ScrollViewer>
+
+
+        <!-- Bottom Container -->
+        <Border Grid.Row="1" Background="Black" Margin="10,0,10,10" CornerRadius="5">
+          <Grid ColumnDefinitions="*,100">
+            <TextBox Name="chatTextBox" Watermark="Write a message..." Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center"
+                     Foreground="White"/>
+            <Border Grid.Column="1" Background="#FF55A630" CornerRadius="5">
+              <Button Name="sendButton" Content="Send" Background="Transparent" Foreground="White" BorderThickness="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="SendButton_Click"/>
+            </Border>
+          </Grid>
+        </Border>
+      </Grid>
+
+    <GridSplitter Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
+                Background="Transparent"
+                ResizeDirection="Columns"
+                ResizeBehavior="PreviousAndNext"
+                ShowsPreview="False"/>
+
+      <!-- Members Right Panel -->
+      <Grid Grid.Column="4" Grid.Row="1" Background="#FF1F2936">
+        <ScrollViewer>
+          <StackPanel>
+            <Button Content="MEMBERS" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#FF1F2936" Foreground="White" MinHeight="1000"/>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+    </Grid>
+  </Grid>
+</Window>
+
