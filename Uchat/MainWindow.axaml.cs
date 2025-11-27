@@ -77,6 +77,10 @@ namespace Uchat
 
                 menuItemAnswer.Click += (s, e) =>
                 {
+                    if(answerTheMessageBox.IsVisible)
+                    {
+                        chatTextBox.Text = "";
+                    }    
                     changeAnswerBox.IsVisible = false;
                     answerTheMessageBox.IsVisible = true;
                     answerTheMessage.Text = textBlock.Text;
