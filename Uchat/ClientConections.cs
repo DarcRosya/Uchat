@@ -174,6 +174,10 @@ namespace Uchat
                         editTheMessageBox.IsVisible = false;
                         replyTheMessageBox.IsVisible = false;
 
+                        editTheMessageButton.IsVisible = false;
+                        chatTextBoxForReplyAndEdit.IsVisible = false;
+
+                        chatTextBox.IsVisible = true;
                         ChatMessagesPanel.Children.Remove(grid);
                     };
                     contextMenu.Items.Add(menuItemDelete);
