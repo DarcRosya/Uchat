@@ -16,6 +16,7 @@ namespace Uchat
         }
 
         private TextBlock textBlockChange = new TextBlock();
+        private string tempChatTextBox = "";
 
         private void SendButton_Click(object? sender, RoutedEventArgs e)
         {
@@ -23,7 +24,7 @@ namespace Uchat
             var message = chatTextBox.Text?.Trim();
             if (!string.IsNullOrEmpty(message))
             {
-                answerTheMessageBox.IsVisible = false;
+                replyTheMessageBox.IsVisible = false;
 
                 var textBlock = new TextBlock
                 {
@@ -70,73 +71,97 @@ namespace Uchat
                 var contextMenu = new ContextMenu();
                 bubble.ContextMenu = contextMenu;
 
-                MenuItem menuItemAnswer = new MenuItem
+                MenuItem menuItemReply = new MenuItem
                 {
-                    Header = "Answer",
+                    Header = "Reply",
                 };
 
-                menuItemAnswer.Click += (s, e) =>
+                menuItemReply.Click += (s, e) =>
                 {
-                    if(answerTheMessageBox.IsVisible)
-                    {
-                        chatTextBox.Text = "";
-                    }    
-                    changeAnswerBox.IsVisible = false;
-                    answerTheMessageBox.IsVisible = true;
-                    answerTheMessage.Text = textBlock.Text;
-                    dontAnswerTheMessage.Click += (s, e) => answerTheMessageBox.IsVisible = false;
+                    chatTextBoxForReplyAndEdit.IsVisible = false;
+                    chatTextBox.IsVisible = true;
+                    editTheMessageBox.IsVisible = false;
+                    editTheMessageButton.IsVisible = false;
+                    replyTheMessageBox.IsVisible = true;
+                    replyTheMessage.Text = textBlock.Text;
                 };
-                contextMenu.Items.Add(menuItemAnswer);
+                contextMenu.Items.Add(menuItemReply);
 
-                MenuItem menuItemChange = new MenuItem
+                MenuItem menuItemEdit = new MenuItem
                 {
-                    Header = "Change the text",
+                    Header = "Edit"
                 };
 
-                menuItemChange.Click += (s, e) =>
+                menuItemEdit.Click += (s, e) =>
                 {
+                    tempChatTextBox = chatTextBox.Text;
+
+                    replyTheMessageBox.IsVisible = false;
+                    chatTextBox.IsVisible = false;
+
+                    editTheMessageBox.IsVisible = true;
+                    chatTextBoxForReplyAndEdit.IsVisible = true;
+                    editTheMessageButton.IsVisible = true;
+                    editTheMessage.Text = textBlock.Text;
+                    chatTextBoxForReplyAndEdit.Text = textBlock.Text;
+
                     textBlockChange = textBlock;
-                    chatTextBox.Text = textBlockChange.Text;
-                    changeAnswerBox.IsVisible = true;
-                    answerTheMessageBox.IsVisible = true;
-                    answerTheMessage.Text = textBlockChange.Text;
-
-                    dontAnswerTheMessage.Click += (s, e) =>
-                    {
-                        answerTheMessageBox.IsVisible = false;
-                        chatTextBox.Text = "";
-                    };
                 };
-                contextMenu.Items.Add(menuItemChange);
+                contextMenu.Items.Add(menuItemEdit);
 
                 MenuItem menuItemCopy = new MenuItem
                 {
-                    Header = "Copy",
+                    Header = "Copy"
                 };
 
-                menuItemCopy.Click += (s, e) => Clipboard.SetTextAsync(message);
+                menuItemCopy.Click += (s, e) =>
+                {
+                    Clipboard.SetTextAsync(textBlock.Text);
+                };
                 contextMenu.Items.Add(menuItemCopy);
 
                 MenuItem menuItemDelete = new MenuItem
                 {
                     Header = "Delete",
                 };
-                menuItemDelete.Click += (s, e) => ChatMessagesPanel.Children.Remove(grid);
+
+                menuItemDelete.Click += (s, e) =>
+                {
+                    editTheMessageBox.IsVisible = false;
+                    replyTheMessageBox.IsVisible = false;
+                    ChatMessagesPanel.Children.Remove(grid);
+                };
                 contextMenu.Items.Add(menuItemDelete);
             }
         }
 
-        private void changeAnswer_Click(object? sender, RoutedEventArgs e)
+        private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+        {
+            replyTheMessageBox.IsVisible = false;
+        }
+
+        private void DontEditTheMessage_Click(object? sender, RoutedEventArgs e)
+        {
+            CloseEditMode();
+        }
+
+        private void EditMessageButton_Click(object? sender, RoutedEventArgs e)
         {
             if (textBlockChange != null)
             {
-                textBlockChange.Text = chatTextBox.Text;
-                answerTheMessageBox.IsVisible = false;
-                chatTextBox.Text = "";
+                textBlockChange.Text = chatTextBoxForReplyAndEdit.Text;
+                CloseEditMode();
                 textBlockChange = null;
             }
+        }
 
-            changeAnswerBox.IsVisible = false;
+        private void CloseEditMode()
+        {
+            editTheMessageBox.IsVisible = false;
+            chatTextBoxForReplyAndEdit.IsVisible = false;
+            editTheMessageButton.IsVisible = false;
+            chatTextBox.Text = tempChatTextBox;
+            chatTextBox.IsVisible = true;
         }
 
         private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
@@ -170,6 +195,14 @@ namespace Uchat
         }
 
         private void answerTheMessage_ActualThemeVariantChanged_1(object? sender, System.EventArgs e)
+        {
+        }
+
+        private void EditMessageButton_ActualThemeVariantChanged(object? sender, System.EventArgs e)
+        {
+        }
+
+        private void editTheMessageBox_ActualThemeVariantChanged(object? sender, System.EventArgs e)
         {
         }
     }
