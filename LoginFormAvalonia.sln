@@ -1,9 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+<<<<<<<< HEAD:Uchat.sln
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11222.15 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uchat", "Uchat\Uchat.csproj", "{CA710BF8-9391-44A9-94CF-D8F8D1744395}"
+========
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoginFormAvalonia", "LoginFormAvalonia\LoginFormAvalonia.csproj", "{9D7D066A-BE65-452D-B74C-160513814D92}"
+>>>>>>>> front:LoginFormAvalonia.sln
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +18,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+<<<<<<<< HEAD:Uchat.sln
+		{CA710BF8-9391-44A9-94CF-D8F8D1744395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA710BF8-9391-44A9-94CF-D8F8D1744395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA710BF8-9391-44A9-94CF-D8F8D1744395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA710BF8-9391-44A9-94CF-D8F8D1744395}.Release|Any CPU.Build.0 = Release|Any CPU
+========
 		{9D7D066A-BE65-452D-B74C-160513814D92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9D7D066A-BE65-452D-B74C-160513814D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9D7D066A-BE65-452D-B74C-160513814D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D7D066A-BE65-452D-B74C-160513814D92}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>>> front:LoginFormAvalonia.sln
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+<<<<<<<< HEAD:Uchat.sln
+		SolutionGuid = {A6039161-83F9-4965-B155-411C80439704}
+========
 		SolutionGuid = {CBAA6C15-8468-4F8F-BD25-50A19389C99F}
+>>>>>>>> front:LoginFormAvalonia.sln
 	EndGlobalSection
 EndGlobal
