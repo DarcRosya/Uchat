@@ -37,8 +37,9 @@
       <!-- Left Search -->
       <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#FF171D25" ColumnDefinitions="40,*">
         <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,40,5" CornerRadius="3">
-          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
-                   Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
+          <TextBox Watermark="Search"
+                   Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
+                   Foreground="White" HorizontalContentAlignment="Center"/>
         </Border>
       </Grid>
 
@@ -51,8 +52,9 @@
         </StackPanel>
 
         <Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
-          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
-                   Foreground="#FFA4A4A4" HorizontalAlignment="Stretch"/>
+          <TextBox Watermark="Search"
+                   Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
+                   HorizontalAlignment="Stretch"/>
         </Border>
 
         <Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
@@ -128,7 +130,10 @@
 			            </Grid.ColumnDefinitions>
 
 			            <TextBlock x:Name="editTheMessage"
-					               Padding="5 7" Grid.Column="0"/>
+					               Padding="5 0 0 0" Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   FontSize="12"
+                                   />
 
 			            <Button Grid.Column="1"
 					            x:Name="DontEditTheMessage"
@@ -145,27 +150,27 @@
 
 
         <!-- Bottom Container -->
-        <Border Grid.Row="1" Background="Black" Margin="10,0,10,10" CornerRadius="5">
+        <Border Grid.Row="1"
+                Background="Black"
+                Margin="10,0,10,10"
+                CornerRadius="5"
+                >
             <Grid ColumnDefinitions="*,100">
 
             <TextBox Name="chatTextBox" 
-                     Watermark="Write a message..." 
-                     Background="Transparent" 
-                     BorderThickness="0" 
-                     VerticalContentAlignment="Center"
-                     Foreground="White"/>
+                     Classes="MessagesToSendOrEdit"
+                     Watermark="Write a message..."
+             />
             <Border Grid.Column="1" Background="#FF55A630" CornerRadius="5">
               <Button Name="sendButton" Content="Send" Background="Transparent" Foreground="White" BorderThickness="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Click="SendButton_Click"/>
             </Border>
 
 			    <TextBox 
                 Name="chatTextBoxForReplyAndEdit"
+                Classes="MessagesToSendOrEdit"
                 IsVisible="False"
                 Watermark="Edit the message..." 
-                Background="Transparent" 
-                BorderThickness="0" 
-                VerticalContentAlignment="Center"
-                Foreground="White"/>
+                />
 
 	        <Border IsVisible="False" x:Name="editTheMessageButton" Grid.Column="1" Background="#FF55A630" CornerRadius="5">
 
