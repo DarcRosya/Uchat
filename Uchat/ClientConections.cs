@@ -43,7 +43,7 @@ namespace Uchat
                     var textBlock = new TextBlock
                     {
                         Name = "MessageTextBlock",
-                        Text = message,
+                        Text = $"{user}: {message}" ,
                         HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
                         FontSize = 16,
                         Background = Brushes.Transparent,
