@@ -1,8 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using System.Threading;
 
 namespace Uchat
 {
@@ -13,12 +15,16 @@ namespace Uchat
             InitializeComponent();
         }
 
+        private TextBlock textBlockChange = new TextBlock();
+
         private void SendButton_Click(object? sender, RoutedEventArgs e)
         {
             int messagesCount = ChatMessagesPanel.Children.Count;
             var message = chatTextBox.Text?.Trim();
             if (!string.IsNullOrEmpty(message))
             {
+                answerTheMessageBox.IsVisible = false;
+
                 var textBlock = new TextBlock
                 {
                     Text = message,
@@ -56,13 +62,84 @@ namespace Uchat
                     bubble.Background = Brush.Parse("#FF1A9FFF");
                     bubble.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
                 }
-                    ChatMessagesPanel.Children.Add(grid);
+
+                ChatMessagesPanel.Children.Add(grid);
                 chatTextBox.Text = string.Empty;
                 ChatScrollViewer.ScrollToEnd();
+
+                var contextMenu = new ContextMenu();
+                bubble.ContextMenu = contextMenu;
+
+                MenuItem menuItemAnswer = new MenuItem
+                {
+                    Header = "Answer",
+                };
+
+                menuItemAnswer.Click += (s, e) =>
+                {
+                    if(answerTheMessageBox.IsVisible)
+                    {
+                        chatTextBox.Text = "";
+                    }    
+                    changeAnswerBox.IsVisible = false;
+                    answerTheMessageBox.IsVisible = true;
+                    answerTheMessage.Text = textBlock.Text;
+                    dontAnswerTheMessage.Click += (s, e) => answerTheMessageBox.IsVisible = false;
+                };
+                contextMenu.Items.Add(menuItemAnswer);
+
+                MenuItem menuItemChange = new MenuItem
+                {
+                    Header = "Change the text",
+                };
+
+                menuItemChange.Click += (s, e) =>
+                {
+                    textBlockChange = textBlock;
+                    chatTextBox.Text = textBlockChange.Text;
+                    changeAnswerBox.IsVisible = true;
+                    answerTheMessageBox.IsVisible = true;
+                    answerTheMessage.Text = textBlockChange.Text;
+
+                    dontAnswerTheMessage.Click += (s, e) =>
+                    {
+                        answerTheMessageBox.IsVisible = false;
+                        chatTextBox.Text = "";
+                    };
+                };
+                contextMenu.Items.Add(menuItemChange);
+
+                MenuItem menuItemCopy = new MenuItem
+                {
+                    Header = "Copy",
+                };
+
+                menuItemCopy.Click += (s, e) => Clipboard.SetTextAsync(message);
+                contextMenu.Items.Add(menuItemCopy);
+
+                MenuItem menuItemDelete = new MenuItem
+                {
+                    Header = "Delete",
+                };
+                menuItemDelete.Click += (s, e) => ChatMessagesPanel.Children.Remove(grid);
+                contextMenu.Items.Add(menuItemDelete);
             }
         }
 
-            private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
+        private void changeAnswer_Click(object? sender, RoutedEventArgs e)
+        {
+            if (textBlockChange != null)
+            {
+                textBlockChange.Text = chatTextBox.Text;
+                answerTheMessageBox.IsVisible = false;
+                chatTextBox.Text = "";
+                textBlockChange = null;
+            }
+
+            changeAnswerBox.IsVisible = false;
+        }
+
+        private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
@@ -86,6 +163,14 @@ namespace Uchat
             {
                 BeginMoveDrag(e);
             }
+        }
+
+        private void answerTheMessage_ActualThemeVariantChanged(object? sender, System.EventArgs e)
+        {
+        }
+
+        private void answerTheMessage_ActualThemeVariantChanged_1(object? sender, System.EventArgs e)
+        {
         }
     }
 }
