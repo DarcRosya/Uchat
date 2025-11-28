@@ -24,7 +24,6 @@ namespace Uchat.Database.LiteDB;
 /// </summary>
 public class LiteDbSettings
 {
-<<<<<<< HEAD
     /// <summary>
     /// Путь к файлу базы данных LiteDB
     /// Примеры:
@@ -39,13 +38,18 @@ public class LiteDbSettings
     /// По умолчанию: "messages"
     /// </summary>
     public string MessagesCollectionName { get; set; } = "messages";
-=======
-    public string DatabasePath { get; set; } = "messages.db";
-    public string MessagesCollectionName { get; set; } = "messages";
 
+    /// <summary>
+    /// Режим создания бэкапов:
     /// - "Manual" - бэкапы создаются только вручную через API
     /// - "Automatic" - автоматические бэкапы по расписанию
+    /// </summary>
     public string BackupMode { get; set; } = "Manual";
+    
+    /// <summary>
+    /// Директория для хранения бэкапов
+    /// По умолчанию: "Backups"
+    /// </summary>
     public string BackupDirectory { get; set; } = "Backups";
 
     /// <summary>
@@ -71,5 +75,4 @@ public class LiteDbSettings
     /// Используйте {chatId}, {date} и другие шаблоны.
     /// </summary>
     public string ShardFilePattern { get; set; } = "messages.db";
->>>>>>> hlib
 }

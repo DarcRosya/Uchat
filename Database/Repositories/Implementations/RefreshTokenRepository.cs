@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Database.Repositories.Interfaces;
 
 namespace Uchat.Database.Repositories;
 
@@ -69,7 +68,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         return tokens.Count;
     }
 
-    public async Task<int> CleanupExpiredTokensAsync();
+    public async Task<int> CleanupExpiredTokensAsync()
     {
         var now = DateTime.UtcNow;
 

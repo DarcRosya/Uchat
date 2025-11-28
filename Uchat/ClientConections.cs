@@ -16,7 +16,7 @@ namespace Uchat
         private string tempChatTextBox = "";
         
         private string currentChatId = "TestChat"; // FOR DEBUG PURPOSE ONLY!!!
-        private string name = "Vadim";             // FOR DEBUG PURPOSE ONLY!!!
+        private string name = "Vetal";             // FOR DEBUG PURPOSE ONLY!!!
         public MainWindow()
         {
             InitializeComponent();
