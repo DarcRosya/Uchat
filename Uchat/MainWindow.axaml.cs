@@ -42,7 +42,7 @@ namespace Uchat
                     Padding = new Thickness(8),
                     Margin = new Thickness(5, 0, 5, 0),
                     Child = textBlock,
-                    Background = Brushes.Green,
+                    Background = Brush.Parse("#358c8f"),
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
                 };
 
@@ -59,7 +59,7 @@ namespace Uchat
                 //Recieve message
                 if (messagesCount % 2 == 1)
                 {
-                    bubble.Background = Brush.Parse("#FF1A9FFF");
+                    bubble.Background = Brush.Parse("#264c6f");
                     bubble.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
                 }
 
