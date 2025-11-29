@@ -3,7 +3,10 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading;
@@ -65,6 +68,61 @@ namespace Uchat
             {
                 BeginMoveDrag(e);
             }
+        }
+
+        private void addFriend_Click(object? sender, RoutedEventArgs e)
+        {
+            var contactGrid = new Grid
+            {
+                Background = Brush.Parse("#171a20"),
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition(new GridLength(50, GridUnitType.Pixel)),
+                    new ColumnDefinition(new GridLength(1, GridUnitType.Star))
+                }
+            };
+
+            var uri = new Uri("avares://Uchat/Assets/Icons/avatar.png");
+            var avatarIcon = new Image
+            {
+                Source = new Bitmap(AssetLoader.Open(uri)),
+                Stretch = Stretch.UniformToFill
+            };
+
+            var contactPanel = new StackPanel
+            {
+                Height = 50
+            };
+
+            var contactName = new TextBlock
+            {
+                Text = "John Cena",
+                Foreground = Brush.Parse("#ffffff"),
+                FontSize = 15,
+                Margin = new Thickness(5,15,0,0),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            };
+
+            var lastMessage = new TextBlock
+            {
+                Text = "Do you see me?",
+                Foreground = Brush.Parse("#999999"),
+                FontSize = 10,
+                Margin = new Thickness(5,0,0,0),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
+            };
+            contactPanel.Children.Add(contactName);
+            contactPanel.Children.Add(lastMessage);
+
+            contactGrid.Children.Add(avatarIcon);
+
+            contactGrid.Children.Add(contactPanel);
+
+            Grid.SetColumn(avatarIcon, 0);
+            Grid.SetColumn(contactPanel, 1);
+
+            contanctList.Children.Add(contactGrid);
         }
 
         private void answerTheMessage_ActualThemeVariantChanged(object? sender, System.EventArgs e)

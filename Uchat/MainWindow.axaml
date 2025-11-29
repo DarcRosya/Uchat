@@ -35,11 +35,23 @@
 
 
       <!-- Left Search -->
-      <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*">
-        <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,40,5" CornerRadius="3">
+      <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
+        <Button Grid.Column="0" Background="Transparent" Foreground="White"
+                CornerRadius="5" Margin="0">
+			  <Image Source="avares://Uchat/Assets/Icons/options.png"/>
+        </Button>
+          
+        <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
           <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
                    Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
         </Border>
+
+        <Button Grid.Column="2" Background="Transparent" Foreground="White"
+                CornerRadius="5" Margin="0,5,5,5"
+                Click="addFriend_Click">
+			  <Image Source="avares://Uchat/Assets/Icons/add_friend.png"/>
+        </Button>
+
       </Grid>
 
       <!-- Middle Top Bar -->
@@ -70,8 +82,7 @@
         </Grid>
 
         <ScrollViewer Grid.Row="1">
-          <StackPanel Background="#2a2c31">
-            <TextBlock Text="Friends List" Background="Transparent" Foreground="White" HorizontalAlignment="Center" Padding="0,500,0,0" MinHeight="1000"></TextBlock>
+          <StackPanel Name="contanctList" Background="#20242d">
           </StackPanel>
         </ScrollViewer>
       </Grid>
