@@ -109,8 +109,21 @@ builder.Services.AddSingleton<LiteDbContext>();
 builder.Services.AddScoped<IMessagingCoordinator, MessagingCoordinator>();
 builder.Services.AddHostedService<MessageCleanupService>();
 
+// new chat & friendship services
+builder.Services.AddScoped<ITransactionRunner, TransactionRunner>();
+builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
+builder.Services.AddScoped<IFriendshipService, FriendshipService>();
+
 var app = builder.Build();
 ```
+
+### Сервисный слой и результаты
+
+`ITransactionRunner` обеспечивает, что операции с несколькими репозиториями (`ChatRoomService`, `FriendshipService`) либо коммитятся полностью, либо откатываются. Сервисы (регистрации выше) используют DTO и `Result`/`ChatResult`, чтобы сразу возвращать понятные ошибки без лишних транзакций.
+
+### Юнит-тесты сервисов
+
+Проект `tests/Uchat.Database.Tests` содержит `ChatRoomServiceTests` и `FriendshipServiceTests`, которые мокают репозитории и проверяют защиту от некорректных акторов/состояний до обращения к базе.
 
 ### Пример использования
 

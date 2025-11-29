@@ -16,15 +16,6 @@ public class FriendshipRepository : IFriendshipRepository
 
     public async Task<Friendship> CreateRequestAsync(int senderId, int receiverId)
     {
-        if (senderId == receiverId)
-            throw new InvalidOperationException("Нельзя отправлять запрос самому себе");
-
-        var exists = await _context.Friendships
-            .FirstOrDefaultAsync(f => f.SenderId == senderId && f.ReceiverId == receiverId);
-
-        if (exists != null)
-            return exists;
-
         var friendship = new Friendship
         {
             SenderId = senderId,
@@ -63,9 +54,6 @@ public class FriendshipRepository : IFriendshipRepository
         if (f == null)
             return false;
 
-        if (f.ReceiverId != acceptedById)
-            return false; // only receiver can accept
-
         f.Status = FriendshipStatus.Accepted;
         f.AcceptedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
@@ -77,9 +65,6 @@ public class FriendshipRepository : IFriendshipRepository
         var f = await _context.Friendships.FirstOrDefaultAsync(x => x.Id == friendshipId);
         if (f == null)
             return false;
-
-        if (f.ReceiverId != rejectedById)
-            return false; // only receiver can reject
 
         f.Status = FriendshipStatus.Rejected;
         await _context.SaveChangesAsync();
@@ -99,5 +84,13 @@ public class FriendshipRepository : IFriendshipRepository
     public async Task<bool> ExistsRequestAsync(int senderId, int receiverId)
     {
         return await _context.Friendships.AnyAsync(f => f.SenderId == senderId && f.ReceiverId == receiverId);
+    }
+
+    public async Task<Friendship?> GetBetweenAsync(int userA, int userB)
+    {
+        return await _context.Friendships
+            .FirstOrDefaultAsync(f =>
+                (f.SenderId == userA && f.ReceiverId == userB) ||
+                (f.SenderId == userB && f.ReceiverId == userA));
     }
 }

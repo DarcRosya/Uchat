@@ -3,35 +3,37 @@ using Uchat.Database.Entities;
 namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
-/// Интерфейс для работы с чатами и группами (ChatRoom)
+/// Repository surface for CRUD operations over chat rooms and memberships.
 /// </summary>
 public interface IChatRoomRepository
 {
-    /// ПРИМЕЧАНИЕ: Создатель автоматически добавляется как участник с ролью Owner
-    /// ВАЖНО: Устанавливает CreatedAt = DateTime.UtcNow
+    /// <summary>
+    /// Persists a new chat room with the current UTC timestamp.
+    /// </summary>
     Task<ChatRoom> CreateAsync(ChatRoom chatRoom);
-    
-    /// Добавить участника в чат
-    /// ПРИМЕЧАНИЕ: Проверяет, не является ли пользователь уже участником
-    /// ВАЖНО: По умолчанию роль Member, устанавливает JoinedAt
+
+    /// <summary>
+    /// Persists a membership record with the supplied join metadata.
+    /// </summary>
     Task AddMemberAsync(ChatRoomMember member);
-    
-    /// ОПТИМИЗАЦИЯ: Включает данные участников через Include
-    /// ВАЖНО: Возвращает NULL если чат не найден
+
+    /// <summary>
+    /// Includes chat members when the room is loaded.
+    /// </summary>
     Task<ChatRoom?> GetByIdAsync(int id);
-    
-    /// Получить все чаты пользователя
-    /// ОПТИМИЗАЦИЯ: Включает данные о чате и последнем сообщении
-    /// СОРТИРОВКА: По времени последнего сообщения (недавние сверху)
+
+    /// <summary>
+    /// Loads rooms for a specific user (joins handled via the repository).
+    /// </summary>
     Task<IEnumerable<ChatRoom>> GetUserChatRoomsAsync(int userId);
-    
-    /// Изменить роль участника чата
-    /// ПРАВА: Обычно только владелец (Owner) может менять роли
-    /// ВАЖНО: Нельзя изменить роль владельца (Owner защищен)
+
+    /// <summary>
+    /// Updates the role for a particular membership row (returns false if not found).
+    /// </summary>
     Task<bool> UpdateMemberRoleAsync(int chatRoomId, int userId, ChatRoomRole role);
-    
-    /// Удалить участника из чата (кикнуть)
-    /// ПРАВА: Админы с правом CanRemoveUsers
-    /// ВАЖНО: Hard delete (полное удаление записи), можно пригласить снова
+
+    /// <summary>
+    /// Removes a membership row from the chat (hard delete).
+    /// </summary>
     Task<bool> RemoveMemberAsync(int chatRoomId, int userId);
 }
