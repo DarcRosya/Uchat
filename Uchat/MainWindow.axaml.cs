@@ -10,6 +10,7 @@ using Avalonia.Platform;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Uchat
 {

@@ -7,6 +7,21 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Icons\copy.svg" />
+    <None Remove="Icons\copy1.svg" />
+    <None Remove="Icons\copy2.svg" />
+    <None Remove="Icons\copy23423.svg" />
+    <None Remove="Icons\delete.svg" />
+    <None Remove="Icons\edit.svg" />
+    <None Remove="Icons\reply.svg" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Icons\copy.svg" />
+    <AvaloniaResource Include="Icons\delete.svg" />
+    <AvaloniaResource Include="Icons\edit.svg" />
+    <AvaloniaResource Include="Icons\reply.svg" />
+  </ItemGroup>
 
   <ItemGroup>
 	<AvaloniaResource Include="Assets\**" />
