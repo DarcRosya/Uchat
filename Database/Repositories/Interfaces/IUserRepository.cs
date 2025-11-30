@@ -53,10 +53,6 @@ public interface IUserRepository
     /// ЗАЧЕМ: Настройки профиля
     Task<bool> UpdateProfileAsync(int userId, string? displayName = null, string? bio = null, string? avatarUrl = null);
     
-    /// ЗАЧЕМ: Показывать "онлайн" / "был(а) в сети X минут назад"
-    /// КОГДА НУЖНА: При каждом действии пользователя
-    Task<bool> UpdateLastSeenAsync(int userId);
-    
     /// ВАЖНО: Принимает УЖЕ хешированный новый пароль
     Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
     

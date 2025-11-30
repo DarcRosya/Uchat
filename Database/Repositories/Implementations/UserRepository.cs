@@ -29,11 +29,8 @@ public class UserRepository : IUserRepository
         {
             Username = username,
             PasswordHash = passwordHash,
-            Salt = GenerateSalt(),
             DisplayName = username,
             Email = email ?? string.Empty,
-            Status = UserStatus.Offline,
-            IsBlocked = false,
             CreatedAt = DateTime.UtcNow
         };
 
@@ -101,19 +98,6 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<bool> UpdateLastSeenAsync(int userId)
-    {
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null)
-            return false;
-
-        // LastSeenAt можно добавить в модель User позже
-        // Пока просто обновляем Status на Online
-        user.Status = UserStatus.Online;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
     {
         var user = await _context.Users.FindAsync(userId);
@@ -121,7 +105,6 @@ public class UserRepository : IUserRepository
             return false;
 
         user.PasswordHash = newPasswordHash;
-        user.Salt = GenerateSalt();
         await _context.SaveChangesAsync();
         return true;
     }
