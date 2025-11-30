@@ -83,10 +83,10 @@ namespace Uchat
                 }
             };
 
-            var uri = new Uri("avares://Uchat/Assets/Icons/avatar.png");
+            var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
             var avatarIcon = new Image
             {
-                Source = new Bitmap(AssetLoader.Open(uri)),
+                Source = new Bitmap(AssetLoader.Open(imageURL)),
                 Stretch = Stretch.UniformToFill
             };
 
@@ -113,6 +113,7 @@ namespace Uchat
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
             };
+
             contactPanel.Children.Add(contactName);
             contactPanel.Children.Add(lastMessage);
 
