@@ -1,10 +1,16 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
+using System;
 using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Uchat
@@ -17,12 +23,24 @@ namespace Uchat
         }
 
         private TextBlock textBlockChange = new TextBlock();
+        private bool isReplied = false;
         private string tempChatTextBox = "";
+        private string tempReplyTextBox = "";
 
         private void SendButton_Click(object? sender, RoutedEventArgs e)
         {
             int messagesCount = ChatMessagesPanel.Children.Count;
-            var message = chatTextBox.Text?.Trim();
+            string message;
+
+            if (isReplied)
+            {
+                message = chatTextBoxForReply.Text?.Trim() ?? "";
+            }
+            else
+            {
+                message = chatTextBox.Text?.Trim() ?? "";
+            }
+
             if (!string.IsNullOrEmpty(message))
             {
                 replyTheMessageBox.IsVisible = false;
@@ -38,12 +56,80 @@ namespace Uchat
                     TextWrapping = TextWrapping.Wrap
                 };
 
+                var timeTextBlock = new TextBlock
+                {
+                    Text = DateTime.Now.ToString("HH:mm"),
+                    Foreground = Brush.Parse("#C1E1C1"),
+                    FontSize = 10,
+                    Margin = new Thickness(0, 3, 0, 0),
+                    Padding = new Thickness(0, 0, 3, 0),
+                };
+
+                var editedTextBlock = new StackPanel();
+                var timeAndEditTextBlock = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+
+                if (isReplied)
+                {
+                    if (string.IsNullOrEmpty(chatTextBoxForReply.Text?.Trim()))
+                    {
+                        return;
+                    }
+
+                    var replyToMessageInfo = new StackPanel();
+                    var replyToMessageBorder = new Border
+                    {
+                        Background = Brush.Parse("#20000000"),
+                        BorderBrush = Brush.Parse("#8FBC8F"),
+                        BorderThickness = Thickness.Parse("4,0,0,0"),
+                        CornerRadius = new CornerRadius(5),
+                        Padding = new Thickness(8, 5),
+                        Margin = new Thickness(5, 0, 5, 5),
+                        Child = replyToMessageInfo,
+                        Name = "ReplyToMessage",
+                        MinWidth = 120,
+                        MaxWidth = 500
+                    };
+
+                    replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = textBlock });
+
+                    var replyUserName = new TextBlock
+                    {
+                        Text = "User Name",
+                        Foreground = Brush.Parse("#D0F0C0"),
+                        FontWeight = FontWeight.SemiBold,
+                        FontSize = 12
+                    };
+
+                    var replyText = new TextBlock
+                    {
+                        Text = tempReplyTextBox,
+                        Foreground = Brush.Parse("#E0E0E0"),
+                        FontWeight = FontWeight.SemiBold,
+                        FontSize = 12,
+                        MaxLines = 1,
+                        TextTrimming = TextTrimming.CharacterEllipsis,
+                    };
+
+                    replyToMessageInfo.Children.Add(replyUserName);
+                    replyToMessageInfo.Children.Add(replyText);
+
+                    editedTextBlock.Children.Add(replyToMessageBorder);
+                }
+
+                timeAndEditTextBlock.Children.Add(timeTextBlock);
+                editedTextBlock.Children.Add(textBlock);
+                editedTextBlock.Children.Add(timeAndEditTextBlock);
+
                 var bubble = new Border
                 {
                     CornerRadius = new CornerRadius(5),
                     Padding = new Thickness(8),
                     Margin = new Thickness(5, 0, 5, 0),
-                    Child = textBlock,
+                    Child = editedTextBlock,
                     Background = Brush.Parse("#358c8f"),
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
                 };
@@ -58,6 +144,7 @@ namespace Uchat
 
                 Grid.SetColumn(bubble, 0);
                 grid.Children.Add(bubble);
+
                 //Recieve message
                 if (messagesCount % 2 == 1)
                 {
@@ -85,12 +172,23 @@ namespace Uchat
 
                 menuItemReply.Click += (s, e) =>
                 {
-                    chatTextBoxForReplyAndEdit.IsVisible = false;
-                    chatTextBox.IsVisible = true;
+                    chatTextBoxForEdit.IsVisible = false;
+                    chatTextBox.IsVisible = false;
                     editTheMessageBox.IsVisible = false;
                     editTheMessageButton.IsVisible = false;
+
+                    chatTextBoxForReply.IsVisible = true;
                     replyTheMessageBox.IsVisible = true;
                     replyTheMessage.Text = textBlock.Text;
+                    tempReplyTextBox = textBlock.Text;
+                    replyTheMessageUsername.Text = "Replying to User Name";
+
+                    if (!isReplied)
+                    {
+                        chatTextBoxForReply.Text = chatTextBox.Text;
+                    }
+
+                    isReplied = true;
                 };
                 contextMenu.Items.Add(menuItemReply);
 
@@ -111,12 +209,13 @@ namespace Uchat
 
                     replyTheMessageBox.IsVisible = false;
                     chatTextBox.IsVisible = false;
+                    chatTextBoxForReply.IsVisible = false;
 
                     editTheMessageBox.IsVisible = true;
-                    chatTextBoxForReplyAndEdit.IsVisible = true;
+                    chatTextBoxForEdit.IsVisible = true;
                     editTheMessageButton.IsVisible = true;
                     editTheMessage.Text = textBlock.Text;
-                    chatTextBoxForReplyAndEdit.Text = textBlock.Text;
+                    chatTextBoxForEdit.Text = textBlock.Text;
 
                     textBlockChange = textBlock;
                 };
@@ -154,20 +253,35 @@ namespace Uchat
                 {
                     editTheMessageBox.IsVisible = false;
                     replyTheMessageBox.IsVisible = false;
+
                     editTheMessageButton.IsVisible = false;
-                    chatTextBoxForReplyAndEdit.IsVisible = false;
+                    chatTextBoxForEdit.IsVisible = false;
+
+                    chatTextBoxForReply.IsVisible = false;
+
                     ChatMessagesPanel.Children.Remove(grid);
-                    
                     chatTextBox.IsVisible = true;
                 };
                 contextMenu.Items.Add(menuItemDelete);
+
+                chatTextBox.Text = "";
+                chatTextBoxForReply.Text = "";
+                chatTextBox.IsVisible = true;
+                chatTextBoxForReply.IsVisible = false;
+                isReplied = false;
             }
         }
 
         private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
         {
             replyTheMessageBox.IsVisible = false;
+            chatTextBoxForReply.IsVisible = false;
+            chatTextBox.Text = chatTextBoxForReply.Text;
+            chatTextBox.IsVisible = true;
+            isReplied = false;
+            chatTextBoxForReply.Text = "";
         }
+
 
         private void DontEditTheMessage_Click(object? sender, RoutedEventArgs e)
         {
@@ -176,9 +290,49 @@ namespace Uchat
 
         private void EditMessageButton_Click(object? sender, RoutedEventArgs e)
         {
+            if ((textBlockChange.Text == chatTextBoxForEdit.Text)
+                || string.IsNullOrEmpty(chatTextBoxForEdit.Text))
+            {
+                CloseEditMode();
+                textBlockChange = null;
+                return;
+            }
+
             if (textBlockChange != null)
             {
-                textBlockChange.Text = chatTextBoxForReplyAndEdit.Text;
+                var editedText = new TextBlock
+                {
+                    Text = "edited",
+                    Foreground = Brush.Parse("#C1E1C1"),
+                    FontSize = 10,
+                    Padding = new Thickness(0, 0, 3, 0),
+                    Margin = new Thickness(0, 3, 0, 0),
+                    FontStyle = FontStyle.Italic,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                };
+
+
+                textBlockChange.Text = chatTextBoxForEdit.Text;
+
+                if (textBlockChange.Parent is StackPanel textBlockAndTime)
+                {
+                    int lastIndex = textBlockAndTime.Children.Count - 1;
+                    var time = textBlockAndTime.Children[lastIndex];
+
+                    if (time is StackPanel timeAndEdit)
+                    {
+                        if (timeAndEdit.Children.Count == 1)
+                        {
+                            int childrenIndex = timeAndEdit.Children.Count - 1;
+                            var saveTime = timeAndEdit.Children[childrenIndex];
+                            timeAndEdit.Children.Remove(timeAndEdit.Children[childrenIndex]);
+
+                            timeAndEdit.Children.Add(editedText);
+                            timeAndEdit.Children.Add(saveTime);
+                        }
+                    }
+                }
+
                 CloseEditMode();
                 textBlockChange = null;
             }
@@ -187,7 +341,7 @@ namespace Uchat
         private void CloseEditMode()
         {
             editTheMessageBox.IsVisible = false;
-            chatTextBoxForReplyAndEdit.IsVisible = false;
+            chatTextBoxForEdit.IsVisible = false;
             editTheMessageButton.IsVisible = false;
             chatTextBox.Text = tempChatTextBox;
             chatTextBox.IsVisible = true;
@@ -232,6 +386,10 @@ namespace Uchat
         }
 
         private void editTheMessageBox_ActualThemeVariantChanged(object? sender, System.EventArgs e)
+        {
+        }
+
+        private void TextBlock_ActualThemeVariantChanged(object? sender, EventArgs e)
         {
         }
     }

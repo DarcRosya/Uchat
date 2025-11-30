@@ -8,19 +8,25 @@
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Icons\cancel.svg" />
     <None Remove="Icons\copy.svg" />
     <None Remove="Icons\copy1.svg" />
     <None Remove="Icons\copy2.svg" />
     <None Remove="Icons\copy23423.svg" />
     <None Remove="Icons\delete.svg" />
     <None Remove="Icons\edit.svg" />
+    <None Remove="Icons\like.svg" />
     <None Remove="Icons\reply.svg" />
+    <None Remove="Icons\send.svg" />
+    <None Remove="Icons\smiling.svg" />
   </ItemGroup>
   <ItemGroup>
+    <AvaloniaResource Include="Icons\cancel.svg" />
     <AvaloniaResource Include="Icons\copy.svg" />
     <AvaloniaResource Include="Icons\delete.svg" />
     <AvaloniaResource Include="Icons\edit.svg" />
     <AvaloniaResource Include="Icons\reply.svg" />
+    <AvaloniaResource Include="Icons\send.svg" />
   </ItemGroup>
 
   <ItemGroup>
