@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Database.Services.Shared;
+using Uchat.Server.Services.Shared;
 
-namespace Uchat.Database.Services.Friendships;
+namespace Uchat.Server.Services.Friendships;
 
 public sealed class FriendshipService : IFriendshipService
 {

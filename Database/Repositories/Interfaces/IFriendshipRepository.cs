@@ -3,35 +3,52 @@ using Uchat.Database.Entities;
 namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
-/// Интерфейс для работы с дружбой и заявками в друзья (Friendship)
+/// Data access contract for friendship records.
 /// </summary>
 public interface IFriendshipRepository
 {
-    /// ПРИМЕЧАНИЕ: Проверяет, не отправлена ли заявка уже
-    /// ВАЖНО: Создает запись со статусом Pending
+    /// <summary>
+    /// Inserts a friendship record with the supplied sender/receiver IDs.
+    /// </summary>
     Task<Friendship> CreateRequestAsync(int senderId, int receiverId);
-    
-    /// ВАЖНО: Возвращает NULL если заявка не найдена
+
+    /// <summary>
+    /// Loads a record by its PK.
+    /// </summary>
     Task<Friendship?> GetByIdAsync(int id);
-    
-    /// ОПТИМИЗАЦИЯ: Включает данные пользователей через Include
+
+    /// <summary>
+    /// Searches for a record between two users regardless of direction.
+    /// </summary>
+    Task<Friendship?> GetBetweenAsync(int userA, int userB);
+
+    /// <summary>
+    /// Loads accepted friendships for a user.
+    /// </summary>
     Task<IEnumerable<Friendship>> GetUserFriendshipsAsync(int userId);
-    
-    /// Получить входящие заявки в друзья (статус Pending)
+
+    /// <summary>
+    /// Loads pending inbound requests.
+    /// </summary>
     Task<IEnumerable<Friendship>> GetPendingReceivedAsync(int userId);
-    
-    /// Принять заявку в друзья
-    /// ВАЖНО: Меняет статус на Accepted, устанавливает AcceptedAt
+
+    /// <summary>
+    /// Marks a request as accepted and stamps AcceptedAt.
+    /// </summary>
     Task<bool> AcceptRequestAsync(int friendshipId, int acceptedById);
-    
-    /// Отклонить заявку в друзья
-    /// ВАЖНО: Меняет статус на Rejected
+
+    /// <summary>
+    /// Marks a request as rejected.
+    /// </summary>
     Task<bool> RejectRequestAsync(int friendshipId, int rejectedById);
-    
-    /// Удалить дружбу / отменить заявку
+
+    /// <summary>
+    /// Deletes the friendship record.
+    /// </summary>
     Task<bool> DeleteAsync(int friendshipId);
-    
-    /// Проверить, существует ли заявка между пользователями
-    /// ОПТИМИЗАЦИЯ: Использует AnyAsync (быстрее чем получение объекта)
+
+    /// <summary>
+    /// Checks if a record exists in the specified direction.
+    /// </summary>
     Task<bool> ExistsRequestAsync(int senderId, int receiverId);
 }

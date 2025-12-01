@@ -1,6 +1,6 @@
 using System;
 
-namespace Uchat.Database.Services.Shared;
+namespace Uchat.Server.Services.Shared;
 
 public class Result
 {

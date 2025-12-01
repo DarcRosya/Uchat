@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Uchat.Database.Entities;
-using Uchat.Database.Services.Shared;
+using Uchat.Server.Services.Shared;
 
-namespace Uchat.Database.Services.Chat;
+namespace Uchat.Server.Services.Chat;
 
 /// <summary>
 /// Service contract that encapsulates chat life-cycle operations and permission enforcement.

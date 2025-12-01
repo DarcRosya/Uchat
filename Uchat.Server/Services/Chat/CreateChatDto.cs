@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Uchat.Database.Entities;
 
-namespace Uchat.Database.Services.Chat;
+namespace Uchat.Server.Services.Chat;
 
 public sealed class CreateChatDto
 {

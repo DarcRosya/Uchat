@@ -8,7 +8,7 @@ using Uchat.Database.Context;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Server.Services;
+using Uchat.Server.Services.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,8 +61,12 @@ builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 // 3. СЕРВИСЫ 
 // ============================================================================
 
+
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<ITransactionRunner, TransactionRunner>();
+
 // JwtService - генерация JWT токенов
-builder.Services.AddScoped<JwtService>();
+// builder.Services.AddScoped<JwtService>();
 
 // TODO: UserStatusService - работа со статусами через Redis
 // builder.Services.AddScoped<IUserStatusService, UserStatusService>();
@@ -71,52 +75,52 @@ builder.Services.AddScoped<JwtService>();
 // 4. JWT АУТЕНТИФИКАЦИЯ
 // ============================================================================
 
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+// var jwtSettings = builder.Configuration.GetSection("Jwt");
+// var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // как проверять токен (через JWT)
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // что делать если токена нет (вернуть 401 Unauthorized)
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,          // Проверять кто выдал токен
-        ValidateAudience = true,        // Проверять для кого токен
-        ValidateLifetime = true,        // Проверять не истёк ли
-        ValidateIssuerSigningKey = true,// Проверять подпись
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-        ClockSkew = TimeSpan.Zero       // Без допуска по времени
-    };
+// builder.Services.AddAuthentication(options =>
+// {
+//     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // как проверять токен (через JWT)
+//     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // что делать если токена нет (вернуть 401 Unauthorized)
+// })
+// .AddJwtBearer(options =>
+// {
+//     options.TokenValidationParameters = new TokenValidationParameters
+//     {
+//         ValidateIssuer = true,          // Проверять кто выдал токен
+//         ValidateAudience = true,        // Проверять для кого токен
+//         ValidateLifetime = true,        // Проверять не истёк ли
+//         ValidateIssuerSigningKey = true,// Проверять подпись
+//         ValidIssuer = jwtSettings["Issuer"],
+//         ValidAudience = jwtSettings["Audience"],
+//         IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+//         ClockSkew = TimeSpan.Zero       // Без допуска по времени
+//     };
 
-    // Проблема: 
-    // HTTP запросы отправляют токен в заголовке Authorization: Bearer 
-    // SignalR не может отправлять custom headers
+//     // Проблема: 
+//     // HTTP запросы отправляют токен в заголовке Authorization: Bearer 
+//     // SignalR не может отправлять custom headers
 
-    // Решение:
-    // SignalR отправляет токен в query string
-    // Middleware извлекает токен из query параметра
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var accessToken = context.Request.Query["access_token"];
-            var path = context.HttpContext.Request.Path;
+//     // Решение:
+//     // SignalR отправляет токен в query string
+//     // Middleware извлекает токен из query параметра
+//     options.Events = new JwtBearerEvents
+//     {
+//         OnMessageReceived = context =>
+//         {
+//             var accessToken = context.Request.Query["access_token"];
+//             var path = context.HttpContext.Request.Path;
             
-            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
-            {
-                context.Token = accessToken;
-            }
-            return Task.CompletedTask;
-        }
-    };
-});
+//             if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+//             {
+//                 context.Token = accessToken;
+//             }
+//             return Task.CompletedTask;
+//         }
+//     };
+// });
 
-builder.Services.AddAuthorization();
+// builder.Services.AddAuthorization();
 
 // Регистрация Controllers
 builder.Services.AddControllers();

@@ -41,23 +41,12 @@ public class ChatRoomRepository : IChatRoomRepository
 
     public async Task AddMemberAsync(ChatRoomMember member)
     {
-        // Проверим, не существует ли уже запись
-        var exists = await _context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == member.ChatRoomId && m.UserId == member.UserId);
-
-        if (exists != null)
-        {
-            // Если запись уже существует, обновим роль и статус мута
-            exists.IsMuted = member.IsMuted;
-            exists.Role = member.Role;
-            exists.JoinedAt = DateTime.UtcNow;
-        }
-        else
+        if (member.JoinedAt == default)
         {
             member.JoinedAt = DateTime.UtcNow;
-            _context.ChatRoomMembers.Add(member);
         }
 
+        _context.ChatRoomMembers.Add(member);
         await _context.SaveChangesAsync();
     }
 
