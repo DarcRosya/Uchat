@@ -89,5 +89,36 @@
             <Setter Property="Margin" Value="0,3,0,0"/>
             <Setter Property="Padding" Value="0,0,3,0"/>
         </Style>
+
+    <!-- Style for reply box -->
+       <Style Selector="Border.replyToMessageBorder">
+            <Setter Property="Background" Value="#20000000"/>
+            <Setter Property="BorderBrush" Value="#8FBC8F"/>
+            <Setter Property="BorderThickness" Value="4,0,0,0"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Margin" Value="5,0,5,5"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="MaxWidth" Value="500"/>
+        </Style>
+
+    <!-- Style for user name in reply box -->
+        <Style Selector="TextBlock.replyUserName">
+            <Setter Property="Text" Value="User Name"/>
+            <Setter Property="Foreground" Value="#D0F0C0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+    <!-- Style for message text in reply box -->
+        <Style Selector="TextBlock.replyTextBlock">
+            <Setter Property="Text" Value="tempReplyTextBox"/>
+            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="MaxLines" Value="1"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+
     </Application.Styles>
 </Application>
