@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Uchat.Database.Context;
 
@@ -10,9 +11,11 @@ using Uchat.Database.Context;
 namespace Uchat.Database.Migrations
 {
     [DbContext(typeof(UchatDbContext))]
-    partial class UchatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251130173500_ExpandUserEntityAndDeleteUselessFields")]
+    partial class ExpandUserEntityAndDeleteUselessFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -395,7 +398,7 @@ namespace Uchat.Database.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsBlocked")
+                    b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
@@ -416,14 +419,6 @@ namespace Uchat.Database.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -440,6 +435,35 @@ namespace Uchat.Database.Migrations
                         .HasDatabaseName("IX_Users_Username");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("Uchat.Database.Entities.UserSecurityToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsUsed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSecurityToken");
                 });
 
             modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
@@ -546,6 +570,17 @@ namespace Uchat.Database.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Uchat.Database.Entities.UserSecurityToken", b =>
+                {
+                    b.HasOne("Uchat.Database.Entities.User", "User")
+                        .WithMany("SecurityTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
                 {
                     b.Navigation("Members");
@@ -567,6 +602,8 @@ namespace Uchat.Database.Migrations
                     b.Navigation("ReceivedFriendshipRequests");
 
                     b.Navigation("RefreshTokens");
+
+                    b.Navigation("SecurityTokens");
                 });
 #pragma warning restore 612, 618
         }
