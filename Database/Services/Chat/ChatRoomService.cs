@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Database.Entities;
-using Database.Repositories.Interfaces;
-using Database.Services.Shared;
+using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.Services.Shared;
 
-namespace Database.Services.Chat;
+namespace Uchat.Database.Services.Chat;
 
 public sealed class ChatRoomService : IChatRoomService
 {

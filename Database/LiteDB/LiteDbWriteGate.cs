@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Database.LiteDB;
+namespace Uchat.Database.LiteDB;
 
 public sealed class LiteDbWriteGate : ILiteDbWriteGate
 {

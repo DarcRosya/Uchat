@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Database.Context;
-using Database.Entities;
-using Database.Repositories.Interfaces;
+using Uchat.Database.Context;
+using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
 
-namespace Database.Repositories;
+namespace Uchat.Database.Repositories;
 
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
@@ -13,6 +13,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     {
         _context = context;
     }
+    
     public async Task<RefreshToken> CreateAsync(RefreshToken token)
     {
         if (token == null)
@@ -80,5 +81,13 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         await _context.SaveChangesAsync();
 
         return expiredTokens.Count;
+    }
+    
+    public async Task<List<RefreshToken>> GetUserTokensAsync(int userId)
+    {
+        return await _context.RefreshTokens
+            .Include(t => t.User)
+            .Where(t => t.UserId == userId && !t.IsRevoked && t.ExpiresAt > DateTime.UtcNow)
+            .ToListAsync();
     }
 }

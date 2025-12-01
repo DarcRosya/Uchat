@@ -15,12 +15,6 @@
  * ОТЛИЧИЕ ОТ MONGODB
  * ============================================================================
  * 
- * MongoDB:
- *   - Серверная база данных (требует MongoDB Server)
- *   - Облачное решение (MongoDB Atlas)
- *   - Подключение через connection string
- *   - TTL индексы для автоудаления
- * 
  * LiteDB:
  *   - Встраиваемая база данных (один файл .db)
  *   - Локальное решение (как SQLite)
@@ -42,9 +36,9 @@
  */
 
 using LiteDB;
-using Database.LiteDB;
+using Uchat.Database.LiteDB;
 
-namespace Database.LiteDB;
+namespace Uchat.Database.LiteDB;
 
 /// <summary>
 /// Контекст для работы с LiteDB

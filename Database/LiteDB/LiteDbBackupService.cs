@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Database.LiteDB;
+using Uchat.Database.LiteDB;
 
-namespace Database.LiteDB;
+namespace Uchat.Database.LiteDB;
 
 public class LiteDbBackupService : BackgroundService
 {

@@ -13,10 +13,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LiteDB;
-using Database.LiteDB;
-using Database.Repositories.Interfaces;
+using Uchat.Database.LiteDB;
+using Uchat.Database.Repositories.Interfaces;
 
-namespace Database.Repositories;
+namespace Uchat.Database.Repositories;
 
 /// <summary>
 /// Репозиторий для работы с сообщениями в LiteDB
@@ -259,6 +259,31 @@ public class MessageRepository : IMessageRepository
 
         var unreadMessages = _messages
             .Find(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId))
+            .ToList();
+
+        long count = 0;
+        foreach (var message in unreadMessages)
+        {
+            message.ReadBy.Add(userId);
+            if (_messages.Update(message))
+            {
+                count++;
+            }
+        }
+
+        return await Task.FromResult(count);
+    }
+    
+    public async Task<long> MarkAsReadUntilAsync(int chatId, int userId, DateTime untilTimestamp)
+    {
+        using var gate = await _writeGate.AcquireAsync();
+
+        // Находим все непрочитанные сообщения до указанного времени
+        var unreadMessages = _messages
+            .Find(m => m.ChatId == chatId 
+                    && !m.IsDeleted 
+                    && m.SentAt <= untilTimestamp 
+                    && !m.ReadBy.Contains(userId))
             .ToList();
 
         long count = 0;

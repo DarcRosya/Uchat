@@ -1,4 +1,4 @@
-namespace Database.Entities;
+namespace Uchat.Database.Entities;
 
 /// Three-level permission system:
 /// - GLOBAL (ChatRoom) - default for all members

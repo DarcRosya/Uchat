@@ -1,10 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Database.Context;
-using Database.Repositories.Interfaces;
+using Uchat.Database.Context;
+using Uchat.Database.Repositories.Interfaces;
 
-namespace Database.Repositories;
+namespace Uchat.Database.Repositories;
 
 public sealed class TransactionRunner : ITransactionRunner
 {

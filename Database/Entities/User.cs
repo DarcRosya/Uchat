@@ -2,26 +2,9 @@
  * ============================================================================
  * ENTITY MODEL: USER (Пользователь)
  * ============================================================================
- * 
- * В C# с Entity Framework Core мы делаем то же самое, но по-другому:
- * - Свойства (properties) = колонки в таблице
- * - Navigation properties = связи с другими таблицами (ForeignKey)
- * 
- * ============================================================================
- * ЗАЧЕМ НУЖНЫ НАВИГАЦИОННЫЕ СВОЙСТВА?
- * ============================================================================
- * 
- * В C# это делается через ICollection<T>:
- *   public ICollection<Message> SentMessages { get; set; }
- * 
- * Это позволяет делать:
- *   var user = await _context.Users.Include(u => u.SentMessages).FirstAsync();
- *   // Теперь user.SentMessages содержит все сообщения пользователя!
- * 
- * ============================================================================
  */
 
-namespace Database.Entities;
+namespace Uchat.Database.Entities;
 
 public class User
 {
@@ -33,27 +16,7 @@ public class User
     public required string Username { get; set; } = string.Empty;
     public required string Email { get; set; } = string.Empty;
     public required string DisplayName { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Хеш пароля (НЕ ХРАНИМ ПАРОЛЬ В ОТКРЫТОМ ВИДЕ!)
-    /// Обычно используем SHA256, bcrypt или Argon2
-    /// В БД: VARCHAR(256), NOT NULL
-    /// 
-    /// Пример создания хеша:
-    ///   using System.Security.Cryptography;
-    ///   var hash = SHA256.HashData(Encoding.UTF8.GetBytes(password + salt));
-    /// </summary>
     public required string PasswordHash { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Соль для хеширования пароля (случайная строка)
-    /// Делает хеш уникальным даже для одинаковых паролей
-    /// В БД: VARCHAR(128), NOT NULL
-    /// 
-    /// Пример генерации соли:
-    ///   var salt = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-    /// </summary>
-    public required string Salt { get; set; } = string.Empty;
     
     // ========================================================================
     // ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ
@@ -73,22 +36,14 @@ public class User
     // СТАТУСЫ И ФЛАГИ
     // ========================================================================
 
-    public UserStatus Status { get; set; } // (Online, Offline, Away, DoNotDisturb)
-    public UserRole Role { get; set; } // (User, Admin) 
+    public bool EmailConfirmed { get; set; } = false; 
+    public UserRole Role { get; set; } = UserRole.User; // (User, Admin) 
     public string LanguageCode { get; set; } = "en";
-    public bool IsBlocked { get; set; } // Заблокирован ли пользователь (бан)
-    public bool IsDeleted { get; set; } // Мягкое удаление (soft delete)
+    public bool IsDeleted { get; set; } = false; // Мягкое удаление (soft delete)
     
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА (Relationships / Foreign Keys)
     // ========================================================================
-    // Это НЕ хранится в таблице Users! Это виртуальные связи с другими таблицами.
-    // Entity Framework автоматически загружает эти данные когда нужно.
-    // ========================================================================
-    
-    // ПРИМЕЧАНИЕ: Сообщения (Messages) хранятся в MongoDB!
-    // Связь с сообщениями: LiteDbMessage.Sender.UserId == User.Id
-    // Для получения сообщений пользователя используй MessageRepository
     
     /// <summary>
     /// Все групповые чаты, в которых участвует пользователь
@@ -101,11 +56,6 @@ public class User
     ///       .Include(u => u.ChatRoomMemberships)
     ///           .ThenInclude(m => m.ChatRoom)  // Загружаем сами чаты
     ///       .FirstAsync(u => u.Id == 1);
-    ///   
-    ///   foreach (var membership in user.ChatRoomMemberships) {
-    ///       Console.WriteLine($"В чате: {membership.ChatRoom.Name}");
-    ///       Console.WriteLine($"Роль: {membership.Role}");
-    ///   }
     /// </summary>
     public ICollection<ChatRoomMember> ChatRoomMemberships { get; set; } = new List<ChatRoomMember>();
     
@@ -121,16 +71,9 @@ public class User
     /// Refresh tokens пользователя (активные сессии)
     /// 
     /// Связь: User (1) -> RefreshToken (Many)
-    /// Foreign Key в таблице RefreshTokens: UserId -> Users.Id
-    /// 
-    /// Использование:
-    ///   var user = await context.Users
-    ///       .Include(u => u.RefreshTokens.Where(t => !t.IsRevoked))
-    ///       .FirstAsync(u => u.Id == userId);
-    ///   
-    ///   Console.WriteLine($"Активных устройств: {user.RefreshTokens.Count}");
     /// </summary>
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public ICollection<UserSecurityToken> SecurityTokens { get; set; }
     
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА ДЛЯ ДРУЖБЫ
@@ -144,10 +87,6 @@ public class User
     // ///           .ThenInclude(f => f.Receiver)
     // ///       .FirstAsync(u => u.Id == 1);
     // ///   
-    // ///   // Кому я отправил запросы?
-    // ///   foreach (var request in user.SentFriendshipRequests.Where(f => f.Status == FriendshipStatus.Pending)) {
-    // ///       Console.WriteLine($"Ждет ответа от: {request.Receiver.Username}");
-    // ///   }
     // public ICollection<Friendship> SentFriendshipRequests { get; set; } = new List<Friendship>();
     
     /// Запросы дружбы, ПОЛУЧЕННЫЕ этим пользователем
@@ -165,13 +104,31 @@ public class User
     public ICollection<Friendship> ReceivedFriendshipRequests { get; set; } = new List<Friendship>();
 }
 
-public enum UserStatus
+public class UserSecurityToken
 {
-    Offline = 0, // Пользователь оффлайн (не в сети)
-    Online = 1, // Пользователь онлайн (активен)
-    Away = 2, // Пользователь отошел (неактивен некоторое время)
-    DoNotDisturb = 3 // Не беспокоить (получает уведомления, но показывается как занят)
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; }
+    
+    public TokenType Type { get; set; } // EmailConfirmation, PasswordReset
+    public required string Token { get; set; }
+    public DateTime ExpiresAt { get; set; }
+    public bool IsUsed { get; set; } = false;
 }
+
+public enum TokenType
+{
+    EmailConfirmation = 1,
+    PasswordReset = 2
+}
+
+// public enum UserStatus
+// {
+//     Offline = 0, // Пользователь оффлайн (не в сети)
+//     Online = 1, // Пользователь онлайн (активен)
+//     Away = 2, // Пользователь отошел (неактивен некоторое время)
+//     DoNotDisturb = 3 // Не беспокоить (получает уведомления, но показывается как занят)
+// }
 
 public enum UserRole
 {

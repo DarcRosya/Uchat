@@ -28,7 +28,7 @@
  * ============================================================================
  */
 
-namespace Database.Entities;
+namespace Uchat.Database.Entities;
 
 
 // Эта таблица соединяет Users и ChatRooms в отношении Many-to-Many

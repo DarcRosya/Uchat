@@ -1,6 +1,6 @@
-using Database.Entities;
+using Uchat.Database.Entities;
 
-namespace Database.Repositories.Interfaces;
+namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
 /// Repository surface for CRUD operations over chat rooms and memberships.

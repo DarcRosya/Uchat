@@ -1,11 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Database.Entities;
-using Database.Repositories.Interfaces;
-using Database.Services.Shared;
+using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.Services.Shared;
 
-namespace Database.Services.Friendships;
+namespace Uchat.Database.Services.Friendships;
 
 public sealed class FriendshipService : IFriendshipService
 {

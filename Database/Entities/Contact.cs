@@ -1,4 +1,4 @@
-namespace Database.Entities;
+namespace Uchat.Database.Entities;
 
 public class Contact
 {

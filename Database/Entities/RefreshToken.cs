@@ -67,7 +67,7 @@
  * ============================================================================
  */
 
-namespace Database.Entities;
+namespace Uchat.Database.Entities;
 
 /// <summary>
 /// Refresh Token для JWT авторизации

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Database.LiteDB;
+using Uchat.Database.LiteDB;
 
-namespace Database.Services.Messaging;
+namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
 /// DTO for creating a new chat message through the MessageService.

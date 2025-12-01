@@ -23,7 +23,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using System;
 
-namespace Database.Context;
+namespace Uchat.Database.Context;
 
 /// <summary>
 /// Фабрика для создания DbContext во время разработки (миграции)
