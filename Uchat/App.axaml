@@ -104,7 +104,6 @@
 
     <!-- Style for user name in reply box -->
         <Style Selector="TextBlock.replyUserName">
-            <Setter Property="Text" Value="User Name"/>
             <Setter Property="Foreground" Value="#D0F0C0"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -112,7 +111,6 @@
 
     <!-- Style for message text in reply box -->
         <Style Selector="TextBlock.replyTextBlock">
-            <Setter Property="Text" Value="tempReplyTextBox"/>
             <Setter Property="Foreground" Value="#E0E0E0"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>

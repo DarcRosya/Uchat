@@ -11,13 +11,11 @@ using static Uchat.MainWindow.Chat;
 
 namespace Uchat
 {
-
 	public partial class MainWindow : Window
 	{
 		private TextBlock textBlockChange = new TextBlock();
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
-		private string tempReplyTextBox = "";
 
 		private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -128,7 +126,6 @@ namespace Uchat
             grid.Children.Add(bubble);
 
             ChatMessagesPanel.Children.Add(grid);
-			chatTextBox.Text = string.Empty;
 			ChatScrollViewer.ScrollToEnd();
 
 			var messageContextMenu = new MessageContextMenu(this, newMessage, grid);

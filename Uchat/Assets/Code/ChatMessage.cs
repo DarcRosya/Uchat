@@ -5,104 +5,89 @@ using Avalonia.Media;
 
 namespace Uchat
 {
-
 	public partial class MainWindow : Window
 	{
 		public class Chat
 		{
 			static int counter = 0;
-			public class Message
-			{
-				private int id;
-				private string content;
-				private string time;
-				private bool isGuest;
-				private bool isEdited;
-				private bool isReply;
+            static string selectedMessageText = "";
+            public class Message
+            {
+                private int id;
+                private string content;
+                private string time;
+                private bool isGuest;
+                private bool isEdited;
+                private bool isReply;
 
-				private Border messageBorder = new Border();
-				private StackPanel messageStackPanel = new StackPanel();
-				private TextBlock contentTextBlock = new TextBlock();
-				private StackPanel timeStackPanel = new StackPanel();
-				private TextBlock timeTextBlock = new TextBlock();
+                private Border messageBorder = new Border();
+                private StackPanel messageStackPanel = new StackPanel();
+                private TextBlock contentTextBlock = new TextBlock();
+                private StackPanel timeStackPanel = new StackPanel();
+                private TextBlock timeTextBlock = new TextBlock();
 
-				public Message(bool isReply,string text, string timestamp, bool type)
-				{
-					id = counter++;
-					content = text;
-					time = timestamp;
-					isGuest = type;
-					isEdited = false;
+                private Border replyToMessageBorder = new Border();
+                private StackPanel replyStackPanel = new StackPanel();
+                private TextBlock replyUserName = new TextBlock();
+                private TextBlock replyTextBlock = new TextBlock();
+
+                public Message(bool isReply, string text, string timestamp, bool type)
+                {
+                    id = counter++;
+                    content = text;
+                    time = timestamp;
+                    isGuest = type;
+                    isEdited = false;
                     this.isReply = isReply;
 
-					if (!isGuest)
-					{ 
+                    if (!isGuest)
+                    {
                         messageBorder.Classes.Add("guestMessageBorder");
                     }
-					else
-					{
+                    else
+                    {
                         messageBorder.Classes.Add("messageBorder");
                     }
-					messageBorder.Child = messageStackPanel;
+                    messageBorder.Child = messageStackPanel;
 
-					timeStackPanel.Classes.Add("timeStackPanel");
-					timeStackPanel.Children.Add(timeTextBlock);
+                    timeStackPanel.Classes.Add("timeStackPanel");
+                    timeStackPanel.Children.Add(timeTextBlock);
 
-					timeTextBlock.Classes.Add("timeTextBlock");
-					timeTextBlock.Text = time;
+                    timeTextBlock.Classes.Add("timeTextBlock");
+                    timeTextBlock.Text = time;
 
                     contentTextBlock.Classes.Add("chatMessage");
-					contentTextBlock.Text = content;
+                    contentTextBlock.Text = content;
 
-					if (isReply)
-					{
-						var replyBox = new ReplyBox();
-						messageStackPanel.Children.Add(replyBox.replyBox);
-					}
+                    if (this.isReply)
+                    {
+                        replyToMessageBorder.Classes.Add("replyToMessageBorder");
+                        replyToMessageBorder.Child = replyStackPanel;
+                        //replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = contentTextBlock });
+
+                        replyUserName.Classes.Add("replyUserName");
+                        replyUserName.Text = (isGuest) ? "Guest" : "Me";
+                        replyTextBlock.Classes.Add("replyTextBlock");
+                        replyTextBlock.Text = selectedMessageText;
+
+                        replyStackPanel.Children.Add(replyUserName);
+                        replyStackPanel.Children.Add(replyTextBlock);
+
+                        messageStackPanel.Children.Add(replyToMessageBorder);
+                    }
                     messageStackPanel.Children.Add(contentTextBlock);
                     messageStackPanel.Children.Add(timeStackPanel);
                 }
 
-				public void ShowReplyMessage(string replyMessage)
-				{
-
-				}
-
-				public int Id { get { return id; } }
-				public string Content { get { return content; } }
-				public string Time { get { return time; } }
-				public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
-				public bool IsAnswer { get { return isReply; } set { isReply = value; } }
-				public Border Bubble { get { return messageBorder; } }
+                public int ID { get { return id; } }
+                public string Content { get { return content; } }
+                public string Time { get { return time; } }
+                public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
+                public bool IsAnswer { get { return isReply; } set { isReply = value; } }
+                public Border Bubble { get { return messageBorder; } }
+                public TextBlock repy { get { return replyTextBlock; } set { replyTextBlock = value; } }
                 public TextBlock ContentTextBlock { get { return contentTextBlock; } }
-
-                private class ReplyBox
-				{
-					string userName;
-
-                    private Border replyToMessageBorder = new Border();
-                    private StackPanel replyStackPanel = new StackPanel();
-					private TextBlock replyUserName = new TextBlock();
-					private TextBlock replyTextBlock = new TextBlock();
-
-                    public ReplyBox()
-					{
-						//userName = string.Empty;
-
-						replyToMessageBorder.Classes.Add("replyToMessageBorder");
-						replyToMessageBorder.Child = replyStackPanel;
-						//replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = contentTextBlock });
-
-						replyUserName.Classes.Add("replyUserName");
-						replyTextBlock.Classes.Add("replyTextBlock");
-
-                        replyStackPanel.Children.Add(replyUserName);
-                        replyStackPanel.Children.Add(replyTextBlock);
-                    }
-
-					public Border replyBox { get { return replyToMessageBorder;  } }
-                }
-			}
+            }
 
 			public class MessageContextMenu
 			{
@@ -139,6 +124,7 @@ namespace Uchat
                         },
                         Header = "Edit"
                     };
+                    menuItemEdit.Click += MenuItemEdit_Click;
                     contextMenu.Items.Add(menuItemEdit);
 
                     MenuItem menuItemCopy = new MenuItem
@@ -151,6 +137,7 @@ namespace Uchat
                         },
                         Header = "Copy"
                     };
+                    menuItemCopy.Click += MenuItemCopy_Click;
                     contextMenu.Items.Add(menuItemCopy);
 
                     MenuItem menuItemDelete = new MenuItem
@@ -163,6 +150,7 @@ namespace Uchat
                         },
                         Header = "Delete"
                     };
+
                     contextMenu.Items.Add(menuItemDelete);
                 }
 
@@ -176,7 +164,7 @@ namespace Uchat
                     mainWindow.chatTextBoxForReply.IsVisible = true;
                     mainWindow.replyTheMessageBox.IsVisible = true;
                     mainWindow.replyTheMessage.Text = chatMessage.Content;
-                    mainWindow.tempReplyTextBox = chatMessage.Content;
+                    selectedMessageText = chatMessage.Content;
                     mainWindow.replyTheMessageUsername.Text = "Replying to User Name";
 
 					if (!mainWindow.isReplied)
