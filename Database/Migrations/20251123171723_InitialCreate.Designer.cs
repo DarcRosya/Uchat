@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Database.Context;
+using Uchat.Database.Context;
 
 #nullable disable
 
-namespace Database.Migrations
+namespace Uchat.Database.Migrations
 {
     [DbContext(typeof(UchatDbContext))]
     [Migration("20251123171723_InitialCreate")]
@@ -20,7 +20,7 @@ namespace Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
-            modelBuilder.Entity("Database.Entities.ChatRoom", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,7 +109,7 @@ namespace Database.Migrations
                     b.ToTable("ChatRooms", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoomMember", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMember", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -152,7 +152,7 @@ namespace Database.Migrations
                     b.ToTable("ChatRoomMembers", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoomMemberPermissions", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMemberPermissions", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -222,7 +222,7 @@ namespace Database.Migrations
                     b.ToTable("ChatRoomMemberPermissions", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.Contact", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Contact", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -278,7 +278,7 @@ namespace Database.Migrations
                     b.ToTable("Contacts", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.Friendship", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Friendship", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,7 +324,7 @@ namespace Database.Migrations
                     b.ToTable("Friendships", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.User", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -407,15 +407,15 @@ namespace Database.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoom", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
                 {
-                    b.HasOne("Database.Entities.User", "Creator")
+                    b.HasOne("Uchat.Database.Entities.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Database.Entities.ChatRoom", "ParentChatRoom")
+                    b.HasOne("Uchat.Database.Entities.ChatRoom", "ParentChatRoom")
                         .WithMany("Topics")
                         .HasForeignKey("ParentChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -425,20 +425,20 @@ namespace Database.Migrations
                     b.Navigation("ParentChatRoom");
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoomMember", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMember", b =>
                 {
-                    b.HasOne("Database.Entities.ChatRoom", "ChatRoom")
+                    b.HasOne("Uchat.Database.Entities.ChatRoom", "ChatRoom")
                         .WithMany("Members")
                         .HasForeignKey("ChatRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Database.Entities.User", "InvitedBy")
+                    b.HasOne("Uchat.Database.Entities.User", "InvitedBy")
                         .WithMany()
                         .HasForeignKey("InvitedById")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("Database.Entities.User", "User")
+                    b.HasOne("Uchat.Database.Entities.User", "User")
                         .WithMany("ChatRoomMemberships")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -451,26 +451,26 @@ namespace Database.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoomMemberPermissions", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMemberPermissions", b =>
                 {
-                    b.HasOne("Database.Entities.ChatRoomMember", "Member")
+                    b.HasOne("Uchat.Database.Entities.ChatRoomMember", "Member")
                         .WithOne("Permissions")
-                        .HasForeignKey("Database.Entities.ChatRoomMemberPermissions", "ChatRoomMemberId")
+                        .HasForeignKey("Uchat.Database.Entities.ChatRoomMemberPermissions", "ChatRoomMemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Member");
                 });
 
-            modelBuilder.Entity("Database.Entities.Contact", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Contact", b =>
                 {
-                    b.HasOne("Database.Entities.User", "ContactUser")
+                    b.HasOne("Uchat.Database.Entities.User", "ContactUser")
                         .WithMany()
                         .HasForeignKey("ContactUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Database.Entities.User", "Owner")
+                    b.HasOne("Uchat.Database.Entities.User", "Owner")
                         .WithMany("Contacts")
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -481,15 +481,15 @@ namespace Database.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Database.Entities.Friendship", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.Friendship", b =>
                 {
-                    b.HasOne("Database.Entities.User", "Receiver")
+                    b.HasOne("Uchat.Database.Entities.User", "Receiver")
                         .WithMany("ReceivedFriendshipRequests")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Database.Entities.User", "Sender")
+                    b.HasOne("Uchat.Database.Entities.User", "Sender")
                         .WithMany()
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -500,19 +500,19 @@ namespace Database.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoom", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoom", b =>
                 {
                     b.Navigation("Members");
 
                     b.Navigation("Topics");
                 });
 
-            modelBuilder.Entity("Database.Entities.ChatRoomMember", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.ChatRoomMember", b =>
                 {
                     b.Navigation("Permissions");
                 });
 
-            modelBuilder.Entity("Database.Entities.User", b =>
+            modelBuilder.Entity("Uchat.Database.Entities.User", b =>
                 {
                     b.Navigation("ChatRoomMemberships");
 

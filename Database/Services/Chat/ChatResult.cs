@@ -1,6 +1,6 @@
-using Database.Entities;
+using Uchat.Database.Entities;
 
-namespace Database.Services.Chat;
+namespace Uchat.Database.Services.Chat;
 
 public sealed class ChatResult
 {

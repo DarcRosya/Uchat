@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Database.Repositories.Interfaces;
+namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
 /// A lightweight helper that wraps EF Core transactions so services can coordinate multiple repository calls.

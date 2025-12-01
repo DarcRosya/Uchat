@@ -12,10 +12,10 @@
  */
 
 using Microsoft.EntityFrameworkCore;
-using Database.Context;
-using Database.Entities;
+using Uchat.Database.Context;
+using Uchat.Database.Entities;
 
-namespace Database.Extensions;
+namespace Uchat.Database.Extensions;
 
 /// <summary>
 /// Extension методы для ChatRoom

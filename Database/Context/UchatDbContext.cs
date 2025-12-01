@@ -38,9 +38,9 @@
  */
 
 using Microsoft.EntityFrameworkCore;
-using Database.Entities;
+using Uchat.Database.Entities;
 
-namespace Database.Context;
+namespace Uchat.Database.Context;
 public class UchatDbContext : DbContext
 {
     // ========================================================================
@@ -144,10 +144,6 @@ public class UchatDbContext : DbContext
             entity.Property(u => u.PasswordHash)
                 .IsRequired()
                 .HasMaxLength(256);
-
-            entity.Property(u => u.Salt)
-                .IsRequired()
-                .HasMaxLength(128);
 
             entity.Property(u => u.DisplayName)
                 .IsRequired()

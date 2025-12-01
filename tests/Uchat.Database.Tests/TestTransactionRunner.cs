@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using Database.Repositories.Interfaces;
+using Uchat.Database.Repositories.Interfaces;
 
-namespace Database.Tests;
+namespace Uchat.Database.Tests;
 
 internal sealed class TestTransactionRunner : ITransactionRunner
 {

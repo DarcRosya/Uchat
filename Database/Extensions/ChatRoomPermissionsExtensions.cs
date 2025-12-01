@@ -1,6 +1,6 @@
-using Database.Entities;
+using Uchat.Database.Entities;
 
-namespace Database.Extensions;
+namespace Uchat.Database.Extensions;
 
 /// <summary>
 /// Extension methods for three-level permission system:

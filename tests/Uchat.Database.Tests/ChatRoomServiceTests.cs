@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Database.Entities;
-using Database.Repositories.Interfaces;
-using Database.Services.Chat;
+using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.Services.Chat;
 using Xunit;
 
-namespace Database.Tests;
+namespace Uchat.Database.Tests;
 
 public class ChatRoomServiceTests
 {

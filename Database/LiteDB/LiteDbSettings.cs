@@ -9,7 +9,7 @@
  * ============================================================================
  */
 
-namespace Database.LiteDB;
+namespace Uchat.Database.LiteDB;
 
 /// <summary>
 /// Настройки подключения к LiteDB
@@ -25,15 +25,31 @@ namespace Database.LiteDB;
 public class LiteDbSettings
 {
     /// <summary>
-    /// Шаблон имени файла, если включено шардирование (например "messages-{chatId}.db").
-    /// Используйте {chatId}, {date} и другие шаблоны.
+    /// Путь к файлу базы данных LiteDB
+    /// Примеры:
+    /// - "messages.db" (в корне приложения)
+    /// - "Data/messages.db" (в папке Data)
+    /// - "C:/Databases/messages.db" (абсолютный путь)
+    /// </summary>
+    public string DatabasePath { get; set; } = "messages.db";
+    
+    /// <summary>
+    /// Имя коллекции для хранения сообщений
+    /// По умолчанию: "messages"
     /// </summary>
     public string MessagesCollectionName { get; set; } = "messages";
-    public string DatabasePath { get; set; } = "messages.db";
 
+    /// <summary>
+    /// Режим создания бэкапов:
     /// - "Manual" - бэкапы создаются только вручную через API
     /// - "Automatic" - автоматические бэкапы по расписанию
+    /// </summary>
     public string BackupMode { get; set; } = "Manual";
+    
+    /// <summary>
+    /// Директория для хранения бэкапов
+    /// По умолчанию: "Backups"
+    /// </summary>
     public string BackupDirectory { get; set; } = "Backups";
 
     /// <summary>

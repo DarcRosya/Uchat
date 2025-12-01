@@ -6,32 +6,41 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Uchat.Database.Migrations
 {
     /// <inheritdoc />
-    public partial class RemovePhoneNumberAddRefreshTokens : Migration
+    public partial class ExpandUserEntityAndDeleteUselessFields : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PhoneNumber",
+                name: "IsBlocked",
                 table: "Users");
 
+            migrationBuilder.DropColumn(
+                name: "Salt",
+                table: "Users");
+
+            migrationBuilder.RenameColumn(
+                name: "Status",
+                table: "Users",
+                newName: "EmailConfirmed");
+
             migrationBuilder.CreateTable(
-                name: "RefreshTokens",
+                name: "UserSecurityToken",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    TokenHash = table.Column<string>(type: "TEXT", maxLength: 64, nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "NOW()"),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    Token = table.Column<string>(type: "TEXT", nullable: false),
                     ExpiresAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsRevoked = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false)
+                    IsUsed = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.PrimaryKey("PK_UserSecurityToken", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RefreshTokens_Users_UserId",
+                        name: "FK_UserSecurityToken_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -39,34 +48,36 @@ namespace Uchat.Database.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshTokens_TokenHash",
-                table: "RefreshTokens",
-                column: "TokenHash",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RefreshTokens_UserId",
-                table: "RefreshTokens",
+                name: "IX_UserSecurityToken_UserId",
+                table: "UserSecurityToken",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RefreshTokens_UserId_IsRevoked_ExpiresAt",
-                table: "RefreshTokens",
-                columns: new[] { "UserId", "IsRevoked", "ExpiresAt" });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                name: "UserSecurityToken");
+
+            migrationBuilder.RenameColumn(
+                name: "EmailConfirmed",
+                table: "Users",
+                newName: "Status");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsBlocked",
+                table: "Users",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AddColumn<string>(
-                name: "PhoneNumber",
+                name: "Salt",
                 table: "Users",
                 type: "TEXT",
-                maxLength: 20,
-                nullable: true);
+                maxLength: 128,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Database.Entities;
-using Database.Repositories.Interfaces;
-using Database.Services.Friendships;
+using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.Services.Friendships;
 using Xunit;
 
-namespace Database.Tests;
+namespace Uchat.Database.Tests;
 
 public class FriendshipServiceTests
 {
