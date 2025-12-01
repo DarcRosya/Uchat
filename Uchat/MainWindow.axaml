@@ -1,0 +1,231 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="Uchat.MainWindow"
+        Width="1280" Height="720"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="17">
+
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="23"/>
+      <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <!-- Title Bar -->
+    <Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
+      <Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
+      <Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
+      <Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
+      <Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+              Background="Transparent" Foreground="White" BorderThickness="0"
+              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
+    </Grid>
+
+    <!-- Chat Layout -->
+    <Grid Grid.Row="1" ColumnDefinitions="0.4*,0,*,0,0.3*" RowDefinitions="40, *">
+
+
+      <!-- Left Search -->
+      <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
+        <Button Grid.Column="0" Background="Transparent" Foreground="White"
+                CornerRadius="5" Margin="0">
+			  <Image Source="avares://Uchat/Assets/Icons/options.png"/>
+        </Button>
+          
+        <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
+          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
+                   Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
+        </Border>
+
+        <Button Grid.Column="2" Background="Transparent" Foreground="White"
+                CornerRadius="5" Margin="0,5,5,5"
+                Click="addFriend_Click">
+			  <Image Source="avares://Uchat/Assets/Icons/add_friend.png"/>
+        </Button>
+
+      </Grid>
+
+      <!-- Middle Top Bar -->
+      <Grid MinWidth="350" Grid.Column="2" Grid.Row="0" Background="#0e1013"
+            ColumnDefinitions="200,0.7*,0.3*">
+        <StackPanel>
+          <TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
+          <TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
+          <TextBox Watermark="Search"
+                   Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
+                   HorizontalAlignment="Stretch"/>
+        </Border>
+
+        <Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
+                BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+      </Grid>
+
+      <!-- Right Top bar -->
+      <Grid Grid.Column="4" Grid.Row="0" Background="#0e1013"></Grid>
+
+      <!-- Contacts Left Menu -->
+      <Grid MinWidth="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
+        <Grid Background="#3e4042" ColumnDefinitions="*,*">
+          <Button Content="Friends" CornerRadius="0" Background="#5e81ac" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+          <Button Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1">
+          <StackPanel Name="contanctList" Background="#20242d">
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+    <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+                  Background="Transparent"
+                  ResizeDirection="Columns"
+                  ResizeBehavior="PreviousAndNext"
+                  ShowsPreview="False"/>
+
+      <!-- Chat Middle -->
+      <Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#12151a">
+        <Grid/>
+
+        <!-- Chat Container -->
+        <ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5" />
+        </ScrollViewer>
+
+	    <Grid x:Name="replyTheMessageBox"
+              IsVisible="False"
+              Background="Gray"
+		      VerticalAlignment="Bottom"
+		      Height="30">
+		        <Grid.ColumnDefinitions>
+			        <ColumnDefinition/>
+			        <ColumnDefinition Width="Auto"/>
+		        </Grid.ColumnDefinitions>
+
+		        <TextBlock x:Name="replyTheMessage"
+				    Padding="5 7" Grid.Column="0"/>
+
+		        <Button Grid.Column="1"
+		            x:Name="DontReplyTheMessage"
+                    Background="white"
+		            HorizontalAlignment="Right"
+                    Width="30"
+                    Height="30"
+                    Foreground="black"
+                    Content="X"
+                    HorizontalContentAlignment="Center"
+                    Click="DontReplyTheMessage_Click"
+		            />
+            </Grid>
+
+          		<Grid x:Name="editTheMessageBox"
+		            IsVisible="False"
+		            Background="Gray"
+		            VerticalAlignment="Bottom"
+		            Height="30">
+			            <Grid.ColumnDefinitions>
+				            <ColumnDefinition/>
+				            <ColumnDefinition Width="Auto"/>
+			            </Grid.ColumnDefinitions>
+
+			            <TextBlock x:Name="editTheMessage"
+					               Padding="5 0 0 0" Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   FontSize="12"
+                                   />
+
+			            <Button Grid.Column="1"
+					            x:Name="DontEditTheMessage"
+					            Background="white"
+					            HorizontalAlignment="Right"
+					            Width="30"
+					            Height="30"
+					            Foreground="black"
+					            Content="X"
+					            HorizontalContentAlignment="Center"
+                                Click="DontEditTheMessage_Click"
+					            />
+		        </Grid>
+
+
+        <!-- Bottom Container -->
+<Border Grid.Row="1"
+                Background="Black"
+                Margin="10,0,10,10"
+                CornerRadius="5">
+            <Grid ColumnDefinitions="*,100">
+
+                <TextBox Name="chatTextBox" 
+                         Classes="MessagesToSendOrEdit"
+                         Watermark="Write a message..."/>
+
+                <Border Grid.Column="1" Background="#5e81ac" CornerRadius="5">
+                    <Button Name="sendButton" 
+                            Content="Send" 
+                            Background="Transparent" 
+                            Foreground="White" 
+                            BorderThickness="0" 
+                            VerticalAlignment="Stretch" 
+                            HorizontalAlignment="Stretch" 
+                            VerticalContentAlignment="Center" 
+                            HorizontalContentAlignment="Center" 
+                            Click="SendButton_Click"/>
+                </Border>
+
+                <TextBox Name="chatTextBoxForReplyAndEdit"
+                         Classes="MessagesToSendOrEdit"
+                         IsVisible="False"
+                         Watermark="Edit the message..."/>
+
+                <Border IsVisible="False" x:Name="editTheMessageButton" Grid.Column="1" Background="#FF55A630" CornerRadius="5">
+                    <Button Name="EditMessageButton"
+                            Content="Edit"
+                            Background="Blue"
+                            Foreground="White"
+                            BorderThickness="0"
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            VerticalContentAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            Click="EditMessageButton_Click"/>
+                </Border>
+            </Grid>
+        </Border>
+      </Grid>
+
+    <GridSplitter Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
+                Background="Transparent"
+                ResizeDirection="Columns"
+                ResizeBehavior="PreviousAndNext"
+                ShowsPreview="False"/>
+
+      <!-- Members Right Panel -->
+      <Grid Grid.Column="4" Grid.Row="1" Background="#0e1115">
+        <ScrollViewer>
+          <StackPanel>
+            <TextBlock Text="Members" 
+                       Background="Transparent"
+                       Foreground="White"
+                       HorizontalAlignment="Center"
+                       Padding="0,500,0,0"
+                       MinHeight="1000">
+            </TextBlock>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+
+    </Grid>
+  </Grid>
+</Window>
+
