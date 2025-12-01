@@ -169,7 +169,7 @@ namespace Uchat
                 private void MenuItemReply_Click(object sender, RoutedEventArgs e)
                 {
                     mainWindow.chatTextBoxForEdit.IsVisible = false;
-                    mainWindow.IsVisible = false;
+                    mainWindow.chatTextBox.IsVisible = false;
                     mainWindow.editTheMessageBox.IsVisible = false;
                     mainWindow.editTheMessageButton.IsVisible = false;
 
@@ -222,6 +222,11 @@ namespace Uchat
                     mainWindow.ChatMessagesPanel.Children.Remove(messageGrid);
                     mainWindow.chatTextBox.IsVisible = true;
 				}
+
+                public ContextMenu Result()
+                {
+                    return contextMenu;
+                }
 			}
 		}
 	}
