@@ -8,7 +8,9 @@
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="17">
+        ExtendClientAreaTitleBarHeightHint="17"
+        KeyDown="MainWindow_KeyDown"
+        >
 
   <Grid>
     <Grid.RowDefinitions>

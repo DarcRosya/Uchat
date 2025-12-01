@@ -6,25 +6,25 @@
     <Application.Styles>
         <FluentTheme />
 
-    <Style Selector="TextBox.MessagesToSendOrEdit">
-        <Setter Property="Margin" Value="0 0 15 0"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style Selector="TextBox.MessagesToSendOrEdit">
+            <Setter Property="Margin" Value="0 0 15 0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
 
-        <Style.Resources>
-            <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
-            <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
-            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
-            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
-            <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
-            <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="White"/>
-            <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="White"/>
-            <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="White"/>
-            <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="White"/>
-        </Style.Resources>
-    </Style>
+            <Style.Resources>
+                <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="Transparent"/>
+                <SolidColorBrush x:Key="TextControlForegroundFocused" Color="White"/>
+                <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="White"/>
+                <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="White"/>
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="White"/>
+                <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="White"/>
+            </Style.Resources>
+        </Style>
 
         <Style Selector="ContextMenu">
             <Setter Property="RenderTransformOrigin" Value="0,0" />
@@ -46,6 +46,48 @@
                 
                 </Animation>
             </Style.Animations>
+        </Style>
+
+            <!-- Style for message text  -->
+       <Style Selector="TextBlock.chatMessage">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+    <!-- Style for sended messages in chat  -->
+        <Style Selector ="Border.messageBorder">
+            <Setter Property="Background" Value="#358c8f"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+    <!-- Style for received messages in chat  -->
+        <Style Selector ="Border.guestMessageBorder">
+            <Setter Property="Background" Value="#264C6F"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
+    <!-- Style for time panel -->
+        <Style Selector ="StackPanel.timeStackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+        </Style>
+
+    <!-- Style for time text  -->
+        <Style Selector ="TextBlock.timeTextBlock">
+            <Setter Property="Foreground" Value="#C1E1C1"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="0,3,0,0"/>
+            <Setter Property="Padding" Value="0,0,3,0"/>
         </Style>
     </Application.Styles>
 </Application>
