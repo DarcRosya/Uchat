@@ -153,6 +153,13 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
+// Автоматически применяем миграции при запуске
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
+    dbContext.Database.Migrate();
+}
+
 app.UseMiddleware<ExceptionHandlerMiddleware>(); 
 
 if (app.Environment.IsDevelopment())

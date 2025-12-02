@@ -1,6 +1,6 @@
 using System;
 
-namespace LoginFormAvalonia.Services;
+namespace Uchat.Services;
 
 /// <summary>
 /// Singleton для хранения данных текущего пользователя и JWT токенов

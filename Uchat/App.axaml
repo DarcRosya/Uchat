@@ -135,6 +135,14 @@
             <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         </Style>
 
+        <Style Selector="Button.dontReplyOrEditMessage:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#bf616a"/>
+        </Style>
+
+        
+        <Style Selector="Button.dontReplyOrEditMessage:focus /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="#bf616a"/>
+        </Style>
 
         <!-- LOGIN FORM -->
 

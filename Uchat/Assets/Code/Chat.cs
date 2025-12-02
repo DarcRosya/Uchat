@@ -13,7 +13,7 @@ namespace Uchat
 {
 	public partial class MainWindow : Window
 	{
-		private TextBlock textBlockChange = new TextBlock();
+		private TextBlock? textBlockChange = new TextBlock();
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 
@@ -73,13 +73,9 @@ namespace Uchat
 			contanctList.Children.Add(contactGrid);
 		}
 
-		private void SendButton_Click(object? sender, RoutedEventArgs e)
+		private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{
-			Chat.Message newMessage;
-            int messagesCount = ChatMessagesPanel.Children.Count;
 			string text;
-			string timestamp = DateTime.Now.ToString("HH:mm");
-
 
             if (isReplied)
 			{
@@ -90,45 +86,26 @@ namespace Uchat
                 text = chatTextBox.Text?.Trim() ?? "";
 			}
 
-			if (string.IsNullOrEmpty(text)) { return; }
-			replyTheMessageBox.IsVisible = false;
+		if (string.IsNullOrEmpty(text)) { return; }
+		replyTheMessageBox.IsVisible = false;
 
-			var grid = new Grid
-			{
-				ColumnDefinitions =
-				{
-					new ColumnDefinition(new GridLength(1, GridUnitType.Star))
-				}
-			};
-
-			//Recieve message
-			if (messagesCount % 2 == 0)
-			{
-				newMessage = new Chat.Message(isReplied, text, timestamp, false);		
-			}
-			else
-			{
-                newMessage = new Chat.Message(isReplied, text, timestamp, true);
-            }
-			Border bubble = newMessage.Bubble;
-
-            Grid.SetColumn(bubble, 0);
-            grid.Children.Add(bubble);
-
-            ChatMessagesPanel.Children.Add(grid);
-			ChatScrollViewer.ScrollToEnd();
-
-			var messageContextMenu = new MessageContextMenu(this, newMessage, grid);
-			bubble.ContextMenu = messageContextMenu.Result();
-
+		// Отправляем сообщение на сервер через SignalR
+		try
+		{
+			await SendMessageToServerAsync(text);
+			
+			// Очищаем поля после успешной отправки
 			chatTextBox.Text = "";
 			chatTextBoxForReply.Text = "";
 			chatTextBox.IsVisible = true;
 			chatTextBoxForReply.IsVisible = false;
 			isReplied = false;
 		}
-
-		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+		catch (Exception)
+		{
+			// Если не удалось отправить, оставляем текст в поле
+		}
+	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;
