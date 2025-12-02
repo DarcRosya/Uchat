@@ -11,6 +11,7 @@ using Uchat.Database.Context;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.Services.Chat;
 using Uchat.Server.Hubs;
 using Uchat.Server.Middleware;
 using Uchat.Server.Services;
@@ -52,10 +53,12 @@ builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<ITransactionRunner, TransactionRunner>();
 
 // Services
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
 
 // TODO: UserStatusService - работа со статусами через Redis
 // builder.Services.AddScoped<IUserStatusService, UserStatusService>();

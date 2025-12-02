@@ -5,20 +5,43 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LoginFormAvalonia;
 using LoginFormAvalonia.Services;
+using Uchat.Services;
 
 namespace Uchat
 {
+    public class ChatMessage
+    {
+        public string Id { get; set; } = string.Empty;
+        public int ChatId { get; set; }
+        public MessageSender Sender { get; set; } = new();
+        public string Content { get; set; } = string.Empty;
+        public string Type { get; set; } = "text";
+        public DateTime SentAt { get; set; }
+        public DateTime? EditedAt { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+
+    public class MessageSender
+    {
+        public int UserId { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string? AvatarUrl { get; set; }
+    }
+
     public partial class MainWindow : Window
     {
         private HubConnection _connection;
+        private ChatApiService _chatApiService;
 
         private TextBlock textBlockChange = new TextBlock();
         private string tempChatTextBox = "";
         
-        private string currentChatId = "1"; // FOR DEBUG PURPOSE ONLY!!!
+        private string? currentChatId = null; // Текущий активный чат
         private string name; // Инициализируется в конструкторе после парсинга аргументов
         
         private TextBlock _connectionStatusIndicator;     
@@ -32,6 +55,10 @@ namespace Uchat
             
             // Находим контрол ПОСЛЕ InitializeComponent
             _connectionStatusIndicator = this.FindControl<TextBlock>("ConnectionStatusText");
+            
+            // Инициализируем API сервис
+            _chatApiService = new ChatApiService();
+            _chatApiService.SetAuthToken(UserSession.Instance.AccessToken ?? string.Empty);
             
             ConnectToServer();
         }
@@ -230,8 +257,6 @@ namespace Uchat
                 });
                 
                 await _connection.StartAsync();
-                await _connection.InvokeAsync("JoinGroup", currentChatId);
-                await _connection.InvokeAsync("NewUserNotification", currentChatId, name);
                 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -241,6 +266,9 @@ namespace Uchat
                         _connectionStatusIndicator.Foreground = Brushes.Green;
                     }
                 });
+                
+                // Загружаем список чатов пользователя
+                await LoadUserChats();
             }
             catch (Exception ex)
             {
@@ -264,9 +292,128 @@ namespace Uchat
             }
         }
 
+        private async Task LoadUserChats()
+        {
+            try
+            {
+                var chats = await _chatApiService.GetUserChatsAsync();
+                
+                Dispatcher.UIThread.Post(() =>
+                {
+                    System.Diagnostics.Debug.WriteLine($"Loaded {chats.Count} chats for user {name}");
+                    
+                    // Отображаем информацию о чатах
+                    foreach (var chat in chats)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Chat: {chat.Name} (ID: {chat.Id}, Type: {chat.Type}, Members: {chat.MemberCount})");
+                    }
+                    
+                    // Подключаемся к первому чату (обычно это "Заметки")
+                    if (chats.Count > 0)
+                    {
+                        var firstChat = chats[0];
+                        currentChatId = firstChat.Id.ToString();
+                        System.Diagnostics.Debug.WriteLine($"Joining chat: {firstChat.Name} (ID: {currentChatId})");
+                        
+                        // Присоединяемся к чату и загружаем историю
+                        Task.Run(async () =>
+                        {
+                            await _connection.InvokeAsync("JoinGroup", currentChatId);
+                            await _connection.InvokeAsync("NewUserNotification", currentChatId, name);
+                            await LoadChatHistory(currentChatId);
+                        });
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine("No chats found for user");
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load chats: {ex.Message}");
+            }
+        }
+
+        private async Task LoadChatHistory(string chatId)
+        {
+            try
+            {
+                var messages = await _connection.InvokeAsync<List<ChatMessage>>("GetChatHistory", chatId, 50);
+                
+                Dispatcher.UIThread.Post(() =>
+                {
+                    System.Diagnostics.Debug.WriteLine($"Loaded {messages.Count} messages for chat {chatId}");
+                    
+                    // Очищаем текущие сообщения
+                    ChatMessagesPanel.Children.Clear();
+                    
+                    // Отображаем загруженные сообщения
+                    foreach (var msg in messages)
+                    {
+                        DisplayMessage(chatId, msg.Sender.Username, msg.Content);
+                    }
+                    
+                    ChatScrollViewer.ScrollToEnd();
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to load chat history: {ex.Message}");
+            }
+        }
+
+        private void DisplayMessage(string chatId, string user, string message)
+        {
+            if (currentChatId == null || chatId != currentChatId || string.IsNullOrEmpty(message))
+                return;
+
+            var textBlock = new TextBlock
+            {
+                Name = "MessageTextBlock",
+                Text = $"{user}: {message}",
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+                FontSize = 16,
+                Background = Brushes.Transparent,
+                Foreground = Brushes.White,
+                MaxWidth = 500,
+                TextWrapping = TextWrapping.Wrap
+            };
+
+            var bubble = new Border
+            {
+                CornerRadius = new CornerRadius(5),
+                Padding = new Thickness(8),
+                Margin = new Thickness(5, 0, 5, 0),
+                Child = textBlock,
+                Background = Brush.Parse("#358c8f"),
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
+            };
+
+            var grid = new Grid
+            {
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition(new GridLength(1, GridUnitType.Star))
+                }
+            };
+
+            Grid.SetColumn(bubble, 0);
+            grid.Children.Add(bubble);
+
+            // Received message from other user
+            if (user != name)
+            {
+                bubble.Background = Brush.Parse("#264c6f");
+                bubble.HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left;
+            }
+
+            ChatMessagesPanel.Children.Add(grid);
+        }
+
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(chatTextBox.Text))
+            if (string.IsNullOrWhiteSpace(chatTextBox.Text) || currentChatId == null)
                 return;
                 
             var messageText = chatTextBox.Text;

@@ -32,8 +32,16 @@ public class AuthApiService
             
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Registration failed: {error}");
+                try
+                {
+                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                    throw new Exception(errorResponse?.Error ?? "Registration failed");
+                }
+                catch (Exception)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    throw new Exception($"Registration failed: {error}");
+                }
             }
 
             return await response.Content.ReadFromJsonAsync<AuthResponse>();
@@ -58,8 +66,15 @@ public class AuthApiService
             
             if (!response.IsSuccessStatusCode)
             {
-                var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Login failed: {error}");
+                try
+                {
+                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                    throw new Exception(errorResponse?.Error ?? "Invalid credentials");
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Invalid credentials");
+                }
             }
 
             return await response.Content.ReadFromJsonAsync<AuthResponse>();
@@ -113,4 +128,9 @@ public class AuthResponse
     public string Username { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public DateTime ExpiresAt { get; set; }
+}
+
+public class ErrorResponse
+{
+    public string Error { get; set; } = string.Empty;
 }

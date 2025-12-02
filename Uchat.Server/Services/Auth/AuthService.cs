@@ -9,15 +9,18 @@ public class AuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
+    private readonly IChatRoomRepository _chatRoomRepository;
     private readonly JwtService _jwtService;
 
     public AuthService(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
+        IChatRoomRepository chatRoomRepository,
         JwtService jwtService)
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
+        _chatRoomRepository = chatRoomRepository;
         _jwtService = jwtService;
     }
 
@@ -34,6 +37,9 @@ public class AuthService
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
         var createdUser = await _userRepository.CreateUserAsync(dto.Username, passwordHash, dto.Email);
+
+        // Создаем личный чат "Заметки" для нового пользователя
+        await CreatePersonalNotesChat(createdUser.Id, createdUser.Username);
 
         var accessToken = _jwtService.GenerateAccessToken(
             createdUser.Id,
@@ -155,5 +161,38 @@ public class AuthService
     public async Task<int> LogoutAllAsync(int userId)
     {
         return await _refreshTokenRepository.RevokeAllUserTokensAsync(userId);
+    }
+
+    private async Task CreatePersonalNotesChat(int userId, string username)
+    {
+        try
+        {
+            var notesChat = new ChatRoom
+            {
+                Name = "Notes",
+                Description = "Личный чат для заметок",
+                Type = ChatRoomType.Private,
+                CreatorId = userId,
+                CreatedAt = DateTime.UtcNow,
+                DefaultCanSendMessages = true,
+                MaxMembers = 1
+            };
+
+            var createdChat = await _chatRoomRepository.CreateAsync(notesChat);
+
+            // Добавляем пользователя как Owner
+            await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
+            {
+                ChatRoomId = createdChat.Id,
+                UserId = userId,
+                Role = ChatRoomRole.Owner,
+                JoinedAt = DateTime.UtcNow
+            });
+        }
+        catch (Exception ex)
+        {
+            // Логируем ошибку, но не прерываем регистрацию
+            Console.WriteLine($"Failed to create notes chat for user {username}: {ex.Message}");
+        }
     }
 }

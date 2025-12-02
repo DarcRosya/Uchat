@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 using Uchat.Database.LiteDB;
+using Uchat.Database.Repositories.Interfaces;
 using Uchat.Database.Services.Messaging;
 
 namespace Uchat.Server.Hubs;
@@ -11,11 +12,19 @@ public class ChatHub : Hub
 {
     private readonly ILiteDbWriteGate _writeGate;
     private readonly LiteDbContext _liteDbContext;
+    private readonly IMessageRepository _messageRepository;
+    private readonly IChatRoomRepository _chatRoomRepository;
 
-    public ChatHub(ILiteDbWriteGate writeGate, LiteDbContext liteDbContext)
+    public ChatHub(
+        ILiteDbWriteGate writeGate, 
+        LiteDbContext liteDbContext,
+        IMessageRepository messageRepository,
+        IChatRoomRepository chatRoomRepository)
     {
         _writeGate = writeGate;
         _liteDbContext = liteDbContext;
+        _messageRepository = messageRepository;
+        _chatRoomRepository = chatRoomRepository;
     }
 
     public override async Task OnConnectedAsync()
@@ -58,14 +67,58 @@ public class ChatHub : Hub
 
         var userId = GetUserId();
         var username = GetUsername();
+        
+        // Проверяем, что пользователь является участником чата
+        if (int.TryParse(chatId, out var chatRoomId))
+        {
+            var chatRoom = await _chatRoomRepository.GetByIdAsync(chatRoomId);
+            if (chatRoom == null || !chatRoom.Members.Any(m => m.UserId == userId))
+            {
+                return;
+            }
+        }
 
         // Сохранить сообщение в LiteDB
         await SaveMessageToLiteDb(chatId, userId, username, message);
 
         // Отправить сообщение всем в группе
         await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message);
-
-        Console.WriteLine($"[{chatId}] {user}: {message}");
+    }
+    
+    public async Task<List<object>> GetChatHistory(string chatId, int limit = 50)
+    {
+        if (!int.TryParse(chatId, out var chatRoomId))
+            return new List<object>();
+            
+        var userId = GetUserId();
+        
+        // Проверяем, что пользователь является участником чата
+        var chatRoom = await _chatRoomRepository.GetByIdAsync(chatRoomId);
+        if (chatRoom == null || !chatRoom.Members.Any(m => m.UserId == userId))
+        {
+            return new List<object>();
+        }
+        
+        var messages = await _messageRepository.GetChatMessagesAsync(chatRoomId, limit);
+        
+        // Конвертируем в простые объекты для сериализации
+        return messages.Select(m => new
+        {
+            id = m.Id,
+            chatId = m.ChatId,
+            sender = new
+            {
+                userId = m.Sender.UserId,
+                username = m.Sender.Username,
+                displayName = m.Sender.DisplayName,
+                avatarUrl = m.Sender.AvatarUrl
+            },
+            content = m.Content,
+            type = m.Type,
+            sentAt = m.SentAt,
+            editedAt = m.EditedAt,
+            isDeleted = m.IsDeleted
+        }).Cast<object>().ToList();
     }
 
     private async Task SaveMessageToLiteDb(string chatId, int senderId, string senderName, string content)
@@ -94,9 +147,9 @@ public class ChatHub : Hub
                 _liteDbContext.Messages.Insert(message);
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Console.WriteLine($"Failed to save message: {ex.Message}");
+            // Ошибка сохранения сообщения
         }
     }
 

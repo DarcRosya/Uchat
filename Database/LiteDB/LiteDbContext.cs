@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using LiteDB;
 using Uchat.Database.LiteDB;
 
@@ -12,11 +14,19 @@ public class LiteDbContext : IDisposable
     private readonly LiteDatabase _database;
     private readonly string _databasePath;
     private static readonly object _indexLock = new object();
-    private static bool _indexesInitialized = false;
+    private static string? _lastInitializedPath = null;
     
     public LiteDbContext(LiteDbSettings settings)
     {
         _databasePath = settings.DatabasePath;
+        
+        // Создаем директорию если не существует
+        var directory = Path.GetDirectoryName(_databasePath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
         var connectionString = $"Filename={_databasePath};Connection=shared";
         _database = new LiteDatabase(connectionString);
         InitializeIndexes();
@@ -25,6 +35,14 @@ public class LiteDbContext : IDisposable
     public LiteDbContext(string databasePath)
     {
         _databasePath = databasePath;
+        
+        // Создаем директорию если не существует
+        var directory = Path.GetDirectoryName(_databasePath);
+        if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+        
         _database = new LiteDatabase(_databasePath);
         InitializeIndexes();
     }
@@ -48,25 +66,21 @@ public class LiteDbContext : IDisposable
     /// <summary>
     /// Создать все необходимые индексы для коллекций
     /// 
-    /// Вызывается ОДИН РАЗ при инициализации контекста
-    /// Повторный вызов безопасен (не создает дубликаты)
-    /// Thread-safe благодаря lock и статическому флагу
+    /// Вызывается при инициализации контекста
+    /// Thread-safe благодаря lock
+    /// Повторно инициализирует индексы если файл БД был пересоздан
     /// </summary>
     private void InitializeIndexes()
     {
-        // Проверяем флаг БЕЗ lock (быстрая проверка)
-        if (_indexesInitialized)
-            return;
-        
-        // Блокируем для thread-safe инициализации
         lock (_indexLock)
         {
-            // Повторная проверка ВНУТРИ lock (double-check locking)
-            if (_indexesInitialized)
-                return;
-            
-            CreateMessagesIndexes();
-            _indexesInitialized = true;
+            // Проверяем, нужно ли переинициализировать индексы
+            // (если это новый файл БД или первый запуск)
+            if (_lastInitializedPath != _databasePath)
+            {
+                CreateMessagesIndexes();
+                _lastInitializedPath = _databasePath;
+            }
         }
     }
     
