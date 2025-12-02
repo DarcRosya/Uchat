@@ -16,7 +16,7 @@ namespace Uchat
         /// 3. Скопируйте URL из ngrok (например: https://abc123.ngrok-free.app)
         /// 4. Вставьте сюда вместо значения ниже
         /// </summary>
-        public const string NgrokUrl = "https://unghostly-bunglingly-elli.ngrok-free.app";
+        public const string NgrokUrl = "https://unghostly-bunglingly-elli.ngrok-free.dev";
         
         /// <summary>
         /// Локальный URL для разработки
@@ -26,7 +26,7 @@ namespace Uchat
         /// <summary>
         /// Использовать ngrok (true) или локальный сервер (false)
         /// </summary>
-        public const bool UseNgrok = false;
+        public const bool UseNgrok = true;
         
         /// <summary>
         /// Текущий активный URL сервера
