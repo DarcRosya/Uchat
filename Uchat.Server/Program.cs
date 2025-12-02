@@ -11,6 +11,7 @@ using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Middleware;
 using Uchat.Server.Services;
 using Uchat.Server.Services.Auth;
+using Uchat.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -128,14 +129,15 @@ builder.Services.AddControllers();
 // Регистрация SignalR
 builder.Services.AddSignalR();
 
-// CORS для клиента
+// CORS для клиента и SignalR
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.SetIsOriginAllowed(_ => true)
               .AllowAnyMethod()
-              .AllowAnyHeader();
+              .AllowAnyHeader()
+              .AllowCredentials(); // Важно для SignalR!
     });
 });
 
@@ -157,7 +159,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Отключаем HTTPS redirect для локальной разработки
+// app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
@@ -166,8 +169,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// TODO: Добавить маппинг SignalR Hub
-// app.MapHub<ChatHub>("/chatHub");
+// SignalR Hub для чата
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
 

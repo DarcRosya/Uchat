@@ -1,13 +1,20 @@
 using Avalonia.Controls;
 using System.Net.Mail;
+using System;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using LoginFormAvalonia.Services;
 
 namespace LoginFormAvalonia
 {
     public partial class MainWindow : Window
     {
+        private readonly AuthApiService _authService;
+
         public MainWindow()
         {
             InitializeComponent();
+            _authService = new AuthApiService();
         }
 
         private void GoToSignUpButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -56,11 +63,11 @@ namespace LoginFormAvalonia
         {
             string code = codeVerificationTextBox.Text;
 
-            /* ÏĞÎÂÅĞÈÒÜ ÎÒÏĞÀÂËÅÍÍÛÉ ÊÎÄ Ñ İÒÈÌ. ÅÑËÈ ÂÑ¨ ÍÎĞÌ -- ÏÓÑÒÈÒÜ, ÅÑËÈ ÍÅÒ -- ÇÍÀ×ÈÒ ÍÅÒ)
-            if ( íåâåğíûé êîä )
+            /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¨ ï¿½ï¿½ï¿½ï¿½ -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
+            if ( ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ )
             {
                 invalidDataInCodeVerification.IsVisible = true;
-                invalidDataInCodeVerification.Text = "Invalid code ÷òî-òî òàì. ÏĞÈÄÓÌÀÒÜ ÍÀÇÂÀÍÈÅ ÎØÈÁÊÈ"
+                invalidDataInCodeVerification.Text = "Invalid code ï¿½ï¿½ï¿½-ï¿½ï¿½ ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"
 
                 return;
             }
@@ -145,7 +152,7 @@ namespace LoginFormAvalonia
         {
         }
 
-        private void LogInButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async void LogInButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             string username = usernameTextBox.Text;
             string password = passwordTextBox.Text;
@@ -158,20 +165,35 @@ namespace LoginFormAvalonia
                 return;
             }
 
-            /*
-              ÍÓÆÍÎ ÑÄÅËÀÒÜ ÏĞÎÂÅĞÊÓ ÍÀ ÑÎÎÒÂÅÒÑÒÂÈÅ ÄÀÍÍÛÕ È ÇÀÏÈÕÍÓÒÜ ÒÎ, ×ÒÎ ÍÀÕÎÄÈÒÜÑß ÏÎÄ IF
-            if ( åñëè íåò ñîîòâåòñòâèé )
-            {
-                invalidDataInHelloAgain.Text = "Incorrect username or password";
-
-                return;
-            }
-             */
-
-            invalidDataInHelloAgain.IsVisible = false;
+            await HandleLoginAsync(username, password);
         }
 
-        private void CreateAccountButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async Task HandleLoginAsync(string username, string password)
+        {
+            try
+            {
+                var response = await _authService.LoginAsync(username, password);
+
+                if (response != null)
+                {
+                    UserSession.Instance.SetSession(response);
+                    invalidDataInHelloAgain.IsVisible = false;
+
+                    // Ğ—Ğ°Ğ¿ÑƒÑĞºĞ°ĞµĞ¼ Ñ‡Ğ°Ñ‚
+                    OpenChatWindow();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                invalidDataInHelloAgain.IsVisible = true;
+                invalidDataInHelloAgain.Text = ex.Message.Contains("401")
+                    ? "Incorrect username or password"
+                    : $"Login failed: {ex.Message}";
+            }
+        }
+
+        private async void CreateAccountButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text;
             string password = createPasswordTextBox.Text;
@@ -184,16 +206,6 @@ namespace LoginFormAvalonia
 
                 return;
             }
-
-            /*
-            if ( ñóùåñòâóåò ïîëüçîâàòåëü ñ òàêèì íèêîì )
-            {
-                invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "This username is already taken";
-
-                return;
-            }
-             */
 
             if (password.Length < 6)
             {
@@ -219,7 +231,76 @@ namespace LoginFormAvalonia
                 return;
             }
 
-            invalidDataInCreateAccount.IsVisible = false;
+            await HandleRegisterAsync(username, email, password);
+        }
+
+        private async Task HandleRegisterAsync(string username, string email, string password)
+        {
+            try
+            {
+                var response = await _authService.RegisterAsync(username, email, password);
+
+                if (response != null)
+                {
+                    UserSession.Instance.SetSession(response);
+                    invalidDataInCreateAccount.IsVisible = false;
+
+                    // Ğ—Ğ°Ğ¿ÑƒÑĞºĞ°ĞµĞ¼ Ñ‡Ğ°Ñ‚
+                    OpenChatWindow();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                invalidDataInCreateAccount.IsVisible = true;
+                invalidDataInCreateAccount.Text = ex.Message.Contains("already exists")
+                    ? "This username is already taken"
+                    : $"Registration failed: {ex.Message}";
+            }
+        }
+
+        private void OpenChatWindow()
+        {
+            try
+            {
+                var chatExePath = System.IO.Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory,
+                    "..", "..", "..", "..",
+                    "Uchat", "bin", "Debug", "net9.0-windows", "Uchat.exe"
+                );
+
+                chatExePath = System.IO.Path.GetFullPath(chatExePath);
+
+                if (System.IO.File.Exists(chatExePath))
+                {
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = chatExePath,
+                        UseShellExecute = true
+                    });
+                }
+                else
+                {
+                    // Fallback: Ğ·Ğ°Ğ¿ÑƒÑĞºĞ°ĞµĞ¼ Ñ‡ĞµÑ€ĞµĞ· dotnet run
+                    var uchatProjectPath = System.IO.Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        "..", "..", "..", "..",
+                        "Uchat"
+                    );
+
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = "run --project Uchat.csproj",
+                        WorkingDirectory = System.IO.Path.GetFullPath(uchatProjectPath),
+                        UseShellExecute = true
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to open chat window: {ex.Message}");
+            }
         }
     }
 }

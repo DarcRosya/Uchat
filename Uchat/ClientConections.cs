@@ -5,6 +5,9 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Threading.Tasks;
+using LoginFormAvalonia;
+using LoginFormAvalonia.Services;
 
 namespace Uchat
 {
@@ -25,10 +28,13 @@ namespace Uchat
 
         private async void ConnectToServer()
         {
-            // Server connection
+            // Server connection с JWT токеном из UserSession
             _connection = new HubConnectionBuilder()
-            .WithUrl("https://unghostly-bunglingly-elli.ngrok-free.dev/chatHub")
-            //.WithAutomaticReconnect()
+            .WithUrl($"{ServerConfig.ServerUrl}/chatHub", options =>
+            {
+                options.AccessTokenProvider = () => Task.FromResult(UserSession.Instance.AccessToken);
+            })
+            .WithAutomaticReconnect()
             .Build();
 
             _connection.On<string, string, string>("ReceiveMessage", (chatId, user, message) =>
