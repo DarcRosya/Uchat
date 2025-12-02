@@ -12,7 +12,7 @@ using Uchat.Database.Extensions;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
 
-namespace Uchat.Server.Services.Messaging;
+namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
 /// Service for managing chat messages across SQLite (metadata) and LiteDB (content).

@@ -1,6 +1,6 @@
 using System;
 
-namespace Uchat.Server.Services.Messaging;
+namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
 /// Represents the outcome of a coordinated messaging operation.

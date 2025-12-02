@@ -57,6 +57,12 @@ public class UserRepository : IUserRepository
             .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
     }
 
+    public async Task<User?> GetByUsernameOrEmailAsync(string identifier)
+    {
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == identifier || u.Email.ToLower() == identifier.ToLower());
+    }
+
     public async Task<IEnumerable<User>> SearchUsersAsync(string query, int limit = 50)
     {
         var searchTerm = query.ToLower();

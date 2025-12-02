@@ -16,12 +16,11 @@ namespace Uchat
         private string tempChatTextBox = "";
         
         private string currentChatId = "TestChat"; // FOR DEBUG PURPOSE ONLY!!!
-        private string name = "Vadim";             // FOR DEBUG PURPOSE ONLY!!!
+        private string name = "Vetal";             // FOR DEBUG PURPOSE ONLY!!!
         public MainWindow()
         {
             InitializeComponent();
             ConnectToServer();
-            GetMyGroups();
         }
 
         private async void ConnectToServer()
@@ -188,7 +187,8 @@ namespace Uchat
             try
             {
                 await _connection.StartAsync();
-                await  _connection.InvokeAsync("JoinAndNotify", currentChatId ,name);
+                await _connection.InvokeAsync("JoinGroup", currentChatId); //in futute use actual chat id
+                await _connection.InvokeAsync("NewUserNotification", currentChatId, name); //in futute use actual chat id
             }
             catch (Exception ex)
             {
@@ -208,11 +208,6 @@ namespace Uchat
                 //MessageBox.Show($"SENDING ERROR");
                 //ConnectToServer();
             }
-        }
-
-        private async void GetMyGroups()
-        {
-            await _connection.InvokeAsync("GetClientChats", name);
         }
     }
 }

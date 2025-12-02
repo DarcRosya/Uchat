@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Uchat.Server.Services.Messaging;
+namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
 /// Service for managing chat messages across SQLite (metadata) and LiteDB (content).

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using Uchat.Database.Entities;
-using Uchat.Server.Services.Shared;
+using Uchat.Database.Services.Shared;
 
-namespace Uchat.Server.Services.Friendships;
+namespace Uchat.Database.Services.Friendships;
 
 /// <summary>
 /// Encapsulates friendship workflows while enforcing actor validation.

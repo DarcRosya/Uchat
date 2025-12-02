@@ -42,6 +42,8 @@ public interface IUserRepository
     
     /// ЗАЧЕМ: Восстановление пароля, проверка при регистрации
     Task<User?> GetByEmailAsync(string email);
+
+    Task<User?> GetByUsernameOrEmailAsync(string identifier);
     
     /// Глобальный поиск пользователей
     /// ПОИСК ПО: Username, DisplayName, Bio

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Server.Services.Shared;
+using Uchat.Database.Services.Shared;
 
-namespace Uchat.Server.Services.Chat;
+namespace Uchat.Database.Services.Chat;
 
 public sealed class ChatRoomService : IChatRoomService
 {
