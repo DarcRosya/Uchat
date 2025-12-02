@@ -6,7 +6,9 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Threading.Tasks;
 using static Uchat.MainWindow.Chat;
 
 namespace Uchat
@@ -14,8 +16,10 @@ namespace Uchat
 	public partial class MainWindow : Window
 	{
 		private TextBlock? textBlockChange = new TextBlock();
+		private Message? messageBeingEdited = null; // Сохраняем ссылку на Message для редактирования
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
+		public string replyToMessageContent = "";
 
 		private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -121,53 +125,77 @@ namespace Uchat
 			CloseEditMode();
 		}
 
-		private void EditMessageButton_Click(object? sender, RoutedEventArgs e)
+		private async void EditMessageButton_Click(object? sender, RoutedEventArgs e)
 		{
-			if ((textBlockChange.Text == chatTextBoxForEdit.Text)
+			if ((textBlockChange?.Text == chatTextBoxForEdit.Text)
 				|| string.IsNullOrEmpty(chatTextBoxForEdit.Text))
 			{
 				CloseEditMode();
 				textBlockChange = null;
+				messageBeingEdited = null;
 				return;
 			}
 
-			if (textBlockChange != null)
+			if (textBlockChange != null && messageBeingEdited != null)
 			{
-				var editedText = new TextBlock
+				var newContent = chatTextBoxForEdit.Text;
+				
+				// Отправляем изменения на сервер
+				if (!string.IsNullOrEmpty(messageBeingEdited.ServerId))
 				{
-					Text = "edited",
-					Foreground = Brush.Parse("#C1E1C1"),
-					FontSize = 10,
-					Padding = new Thickness(0, 0, 3, 0),
-					Margin = new Thickness(0, 3, 0, 0),
-					FontStyle = FontStyle.Italic,
-					HorizontalAlignment = HorizontalAlignment.Right,
-				};
-
-
-				textBlockChange.Text = chatTextBoxForEdit.Text;
-
-				if (textBlockChange.Parent is StackPanel textBlockAndTime)
-				{
-					int lastIndex = textBlockAndTime.Children.Count - 1;
-					var time = textBlockAndTime.Children[lastIndex];
-
-					if (time is StackPanel timeAndEdit)
+					var connection = _connection;
+					if (connection != null)
 					{
-						if (timeAndEdit.Children.Count == 1)
+						try
 						{
-							int childrenIndex = timeAndEdit.Children.Count - 1;
-							var saveTime = timeAndEdit.Children[childrenIndex];
-							timeAndEdit.Children.Remove(timeAndEdit.Children[childrenIndex]);
+							await connection.InvokeAsync("EditMessage", messageBeingEdited.ServerId, newContent);
+							// UI обновится через обработчик MessageEdited
+						}
+						catch (Exception ex)
+						{
+							System.Diagnostics.Debug.WriteLine($"Failed to edit message: {ex.Message}");
+						}
+					}
+				}
+				else
+				{
+					// Фолбек для старых сообщений без serverId - только локальное обновление
+					var editedText = new TextBlock
+					{
+						Text = "edited",
+						Foreground = Brush.Parse("#C1E1C1"),
+						FontSize = 10,
+						Padding = new Thickness(0, 0, 3, 0),
+						Margin = new Thickness(0, 3, 0, 0),
+						FontStyle = FontStyle.Italic,
+						HorizontalAlignment = HorizontalAlignment.Right,
+					};
 
-							timeAndEdit.Children.Add(editedText);
-							timeAndEdit.Children.Add(saveTime);
+					textBlockChange.Text = newContent;
+
+					if (textBlockChange.Parent is StackPanel textBlockAndTime)
+					{
+						int lastIndex = textBlockAndTime.Children.Count - 1;
+						var time = textBlockAndTime.Children[lastIndex];
+
+						if (time is StackPanel timeAndEdit)
+						{
+							if (timeAndEdit.Children.Count == 1)
+							{
+								int childrenIndex = timeAndEdit.Children.Count - 1;
+								var saveTime = timeAndEdit.Children[childrenIndex];
+								timeAndEdit.Children.Remove(timeAndEdit.Children[childrenIndex]);
+
+								timeAndEdit.Children.Add(editedText);
+								timeAndEdit.Children.Add(saveTime);
+							}
 						}
 					}
 				}
 
 				CloseEditMode();
 				textBlockChange = null;
+				messageBeingEdited = null;
 			}
 		}
 

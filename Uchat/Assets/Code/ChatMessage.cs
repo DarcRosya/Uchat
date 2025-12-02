@@ -1,7 +1,12 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.Media;
+using Microsoft.AspNetCore.SignalR.Client;
+using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 
 namespace Uchat
@@ -11,15 +16,16 @@ namespace Uchat
 		public class Chat
 		{
 			static int counter = 0;
-            static string selectedMessageText = "";
             public class Message
             {
                 private int id;
+                private string? serverId; // ID сообщения в LiteDB
                 private string content;
                 private string time;
                 private bool isGuest;
                 private bool isEdited;
                 private bool isReply;
+                private string? replyToContent;
 
                 private Border messageBorder = new Border();
                 private StackPanel messageStackPanel = new StackPanel();
@@ -33,14 +39,16 @@ namespace Uchat
                 private TextBlock replyUserName = new TextBlock();
                 private TextBlock replyTextBlock = new TextBlock();
 
-                public Message(bool isReply, string text, string timestamp, bool type)
+                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false)
                 {
                     id = counter++;
+                    this.serverId = serverId;
                     content = text;
                     time = timestamp;
                     isGuest = type;
-                    isEdited = false;
+                    this.isEdited = isEdited;
                     this.isReply = isReply;
+                    this.replyToContent = replyContent;
 
                     string messageBorderStyle = (isGuest) ? "guestMessageBorder" : "messageBorder";
                     messageBorder.Classes.Add(messageBorderStyle);
@@ -65,6 +73,22 @@ namespace Uchat
                     string color = (isGuest) ? "#C1E1C1" : "#FFFFFF";
                     timeTextBlock.Foreground = Brush.Parse(color);
                     timeTextBlock.Text = time;
+                    
+                    // Добавляем метку "edited" если сообщение отредактировано
+                    if (this.isEdited)
+                    {
+                        var editedLabel = new TextBlock
+                        {
+                            Text = "edited",
+                            Foreground = Brush.Parse("#C1E1C1"),
+                            FontSize = 10,
+                            Padding = new Thickness(0, 0, 3, 0),
+                            Margin = new Thickness(0, 3, 0, 0),
+                            FontStyle = FontStyle.Italic,
+                            HorizontalAlignment = HorizontalAlignment.Right
+                        };
+                        timeStackPanel.Children.Add(editedLabel);
+                    }
 
                     if (this.isReply)
                     {
@@ -75,7 +99,7 @@ namespace Uchat
                         replyUserName.Classes.Add("replyUserName");
                         replyUserName.Text = (isGuest) ? "Guest" : "Me";
                         replyTextBlock.Classes.Add("replyTextBlock");
-                        replyTextBlock.Text = selectedMessageText;
+                        replyTextBlock.Text = replyToContent ?? "(no content)";
 
                         replyStackPanel.Children.Add(replyUserName);
                         replyStackPanel.Children.Add(replyTextBlock);
@@ -87,6 +111,7 @@ namespace Uchat
                 }
 
                 public int ID { get { return id; } }
+                public string? ServerId { get { return serverId; } }
                 public string Content { get { return content; } }
                 public string Time { get { return time; } }
                 public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
@@ -159,6 +184,7 @@ namespace Uchat
                         Header = "Delete",
                         Foreground = Brush.Parse("#c57179")
                     };
+                    menuItemDelete.Click += MenuItemDelete_Click;
 
                     contextMenu.Items.Add(menuItemDelete);
                 }
@@ -173,7 +199,10 @@ namespace Uchat
                     mainWindow.chatTextBoxForReply.IsVisible = true;
                     mainWindow.replyTheMessageBox.IsVisible = true;
                     mainWindow.replyTheMessage.Text = chatMessage.Content;
-                    selectedMessageText = chatMessage.Content;
+                    
+                    // Сохраняем ID сообщения (будет генерироваться на сервере)
+                    // Пока используем текст, т.к. Message класс не хранит ID
+                    mainWindow.replyToMessageContent = chatMessage.Content;
                     mainWindow.replyTheMessageUsername.Text = "Replying to User Name";
 
 					if (!mainWindow.isReplied)
@@ -199,6 +228,7 @@ namespace Uchat
                     mainWindow.chatTextBoxForEdit.Text = chatMessage.Content;
 
                     mainWindow.textBlockChange = chatMessage.ContentTextBlock;
+                    mainWindow.messageBeingEdited = chatMessage; // Сохраняем ссылку на Message
 				}
 
                 private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
@@ -206,7 +236,7 @@ namespace Uchat
                     mainWindow.Clipboard.SetTextAsync(chatMessage.Content);
                 }
 
-				private void MenuItemDelete_Click(object sender, RoutedEventArgs e)
+				private async void MenuItemDelete_Click(object sender, RoutedEventArgs e)
                 {
                     mainWindow.editTheMessageBox.IsVisible = false;
                     mainWindow.replyTheMessageBox.IsVisible = false;
@@ -216,7 +246,29 @@ namespace Uchat
 
                     mainWindow.chatTextBoxForReply.IsVisible = false;
 
-                    mainWindow.ChatMessagesPanel.Children.Remove(messageGrid);
+                    // Отправляем запрос на удаление на сервер
+                    if (!string.IsNullOrEmpty(chatMessage.ServerId))
+                    {
+                        var connection = mainWindow._connection;
+                        if (connection != null)
+                        {
+                            try
+                            {
+                                await connection.InvokeAsync("DeleteMessage", chatMessage.ServerId);
+                                // UI обновится через обработчик MessageDeleted для всех пользователей
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Failed to delete message: {ex.Message}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Фолбек для старых сообщений без serverId - только локальное удаление
+                        mainWindow.ChatMessagesPanel.Children.Remove(messageGrid);
+                    }
+                    
                     mainWindow.chatTextBox.IsVisible = true;
 				}
 

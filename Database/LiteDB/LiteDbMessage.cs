@@ -397,6 +397,13 @@ public class LiteDbMessage
     /// </summary>
     [BsonField("replyToMessageId")]
     public string? ReplyToMessageId { get; set; }
+    
+    /// <summary>
+    /// Текст сообщения, на которое отвечаем (для быстрого отображения)
+    /// Дублирование данных для ускорения UI
+    /// </summary>
+    [BsonField("replyToContent")]
+    public string? ReplyToContent { get; set; }
 }
 
 // ============================================================================

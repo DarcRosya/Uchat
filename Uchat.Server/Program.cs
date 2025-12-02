@@ -158,6 +158,10 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
     dbContext.Database.Migrate();
+    
+    // Инициализируем LiteDB - создаём БД и индексы
+    var liteDbContext = scope.ServiceProvider.GetRequiredService<LiteDbContext>();
+    Console.WriteLine($"LiteDB initialized: {liteDbContext.Messages.Count()} messages");
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>(); 

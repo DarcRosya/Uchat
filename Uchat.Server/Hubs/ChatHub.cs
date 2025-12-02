@@ -60,7 +60,7 @@ public class ChatHub : Hub
         Console.WriteLine($"{user} joined chat {chatId}");
     }
 
-    public async Task SendMessage(string chatId, string user, string message)
+    public async Task SendMessage(string chatId, string user, string message, string? replyContent = null)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
@@ -79,10 +79,10 @@ public class ChatHub : Hub
         }
 
         // Сохранить сообщение в LiteDB
-        await SaveMessageToLiteDb(chatId, userId, username, message);
+        var messageId = await SaveMessageToLiteDb(chatId, userId, username, message, replyContent);
 
-        // Отправить сообщение всем в группе
-        await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message);
+        // Отправить сообщение всем в группе (включая replyContent и messageId)
+        await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message, replyContent, messageId);
     }
     
     public async Task<List<object>> GetChatHistory(string chatId, int limit = 50)
@@ -117,16 +117,31 @@ public class ChatHub : Hub
             type = m.Type,
             sentAt = m.SentAt,
             editedAt = m.EditedAt,
-            isDeleted = m.IsDeleted
+            isDeleted = m.IsDeleted,
+            replyToMessageId = m.ReplyToMessageId, // Для будущей функциональности
+            replyToContent = m.ReplyToContent // Текст сообщения, на которое ответили
         }).Cast<object>().ToList();
     }
 
-    private async Task SaveMessageToLiteDb(string chatId, int senderId, string senderName, string content)
+    private async Task<string> SaveMessageToLiteDb(string chatId, int senderId, string senderName, string content, string? replyContent = null)
     {
         try
         {
             using (await _writeGate.AcquireAsync())
             {
+                // Если есть replyContent, находим ID последнего сообщения с таким текстом
+                string? replyToId = null;
+                if (!string.IsNullOrEmpty(replyContent))
+                {
+                    var recentMessages = _liteDbContext.Messages
+                        .Find(m => m.ChatId == int.Parse(chatId) && m.Content == replyContent)
+                        .OrderByDescending(m => m.SentAt)
+                        .Take(1)
+                        .FirstOrDefault();
+                    
+                    replyToId = recentMessages?.Id;
+                }
+                
                 var message = new LiteDbMessage
                 {
                     ChatId = int.TryParse(chatId, out var cId) ? cId : 0,
@@ -141,15 +156,91 @@ public class ChatHub : Hub
                     Type = "text",
                     SentAt = DateTime.UtcNow,
                     EditedAt = null,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    // Сохраняем ID исходного сообщения
+                    ReplyToMessageId = replyToId,
+                    // Дублируем текст для быстрого отображения (денормализация)
+                    ReplyToContent = replyContent
                 };
 
                 _liteDbContext.Messages.Insert(message);
+                return message.Id; // Возвращаем ID вставленного сообщения
             }
         }
         catch (Exception)
         {
             // Ошибка сохранения сообщения
+            return string.Empty;
+        }
+    }
+
+    public async Task EditMessage(string messageId, string newContent)
+    {
+        if (string.IsNullOrWhiteSpace(messageId) || string.IsNullOrWhiteSpace(newContent))
+            return;
+
+        var userId = GetUserId();
+
+        try
+        {
+            using (await _writeGate.AcquireAsync())
+            {
+                var message = _liteDbContext.Messages.FindById(messageId);
+                
+                if (message == null || message.Sender.UserId != userId)
+                    return; // Можно редактировать только свои сообщения
+
+                message.Content = newContent;
+                message.EditedAt = DateTime.UtcNow;
+                
+                _liteDbContext.Messages.Update(message);
+
+                // Уведомляем всех в чате об изменении
+                await Clients.Group(message.ChatId.ToString()).SendAsync(
+                    "MessageEdited", 
+                    messageId, 
+                    newContent, 
+                    message.EditedAt
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to edit message: {ex.Message}");
+        }
+    }
+
+    public async Task DeleteMessage(string messageId)
+    {
+        if (string.IsNullOrWhiteSpace(messageId))
+            return;
+
+        var userId = GetUserId();
+
+        try
+        {
+            using (await _writeGate.AcquireAsync())
+            {
+                var message = _liteDbContext.Messages.FindById(messageId);
+                
+                if (message == null || message.Sender.UserId != userId)
+                    return; // Можно удалять только свои сообщения
+
+                message.IsDeleted = true;
+                message.Content = "Message deleted";
+                
+                _liteDbContext.Messages.Update(message);
+
+                // Уведомляем всех в чате об удалении
+                await Clients.Group(message.ChatId.ToString()).SendAsync(
+                    "MessageDeleted", 
+                    messageId
+                );
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to delete message: {ex.Message}");
         }
     }
 

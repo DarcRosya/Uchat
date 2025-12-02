@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Uchat.Services;
 
@@ -21,6 +22,8 @@ namespace Uchat
         public DateTime SentAt { get; set; }
         public DateTime? EditedAt { get; set; }
         public bool IsDeleted { get; set; }
+        public string? ReplyToMessageId { get; set; }
+        public string? ReplyToContent { get; set; } // Текст сообщения, на которое ответили
     }
 
     public class MessageSender
@@ -39,7 +42,10 @@ namespace Uchat
         private string? currentChatId = null; // Текущий активный чат
         private string name = "Unknown"; // Инициализируется в конструкторе после парсинга аргументов
         
-        private TextBlock _connectionStatusIndicator = null!;     
+        private TextBlock _connectionStatusIndicator = null!;
+        
+        // Словарь для быстрого поиска UI сообщений по ID
+        private Dictionary<string, MainWindow.Chat.Message> _messageCache = new();     
         
         private void InitializeChatComponents()
         {
@@ -83,7 +89,7 @@ namespace Uchat
             .WithAutomaticReconnect()
             .Build();
 
-            _connection.On<string, string, string>("ReceiveMessage", (chatId, user, message) =>
+            _connection.On<string, string, string, string?, string>("ReceiveMessage", (chatId, user, message, replyContent, messageId) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -92,11 +98,79 @@ namespace Uchat
 
                     replyTheMessageBox.IsVisible = false;
                     
-                    // Используем унифицированный метод отображения
-                    DisplayMessage(chatId, user, message);
+                    // Используем унифицированный метод отображения с replyContent и serverId
+                    DisplayMessage(chatId, user, message, replyContent, messageId);
                     
                     chatTextBox.Text = string.Empty;
                     ChatScrollViewer.ScrollToEnd();
+                });
+            });
+            
+            // Обработчик редактирования сообщения
+            _connection.On<string, string, DateTime>("MessageEdited", (messageId, newContent, editedAt) =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_messageCache.TryGetValue(messageId, out var cachedMsg))
+                    {
+                        // Обновляем текст сообщения
+                        cachedMsg.ContentTextBlock.Text = newContent;
+                        
+                        // Добавляем метку "edited"
+                        var timeStackPanel = cachedMsg.Bubble.Child as StackPanel;
+                        if (timeStackPanel != null)
+                        {
+                            var lastChild = timeStackPanel.Children[timeStackPanel.Children.Count - 1] as StackPanel;
+                            if (lastChild != null)
+                            {
+                                // Проверяем, есть ли уже метка edited
+                                bool hasEditedLabel = false;
+                                foreach (var child in lastChild.Children)
+                                {
+                                    if (child is TextBlock tb && tb.Text == "edited")
+                                    {
+                                        hasEditedLabel = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if (!hasEditedLabel)
+                                {
+                                    var editedLabel = new TextBlock
+                                    {
+                                        Text = "edited",
+                                        Foreground = Brush.Parse("#C1E1C1"),
+                                        FontSize = 10,
+                                        Padding = new Thickness(0, 0, 3, 0),
+                                        Margin = new Thickness(0, 3, 0, 0),
+                                        FontStyle = FontStyle.Italic,
+                                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
+                                    };
+                                    lastChild.Children.Add(editedLabel);
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // Обработчик удаления сообщения
+            _connection.On<string>("MessageDeleted", (messageId) =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_messageCache.TryGetValue(messageId, out var cachedMsg))
+                    {
+                        // Находим Grid, содержащий сообщение, и удаляем его из ChatMessagesPanel
+                        var bubble = cachedMsg.Bubble;
+                        if (bubble.Parent is Grid messageGrid && messageGrid.Parent == ChatMessagesPanel)
+                        {
+                            ChatMessagesPanel.Children.Remove(messageGrid);
+                        }
+                        
+                        // Удаляем из кеша
+                        _messageCache.Remove(messageId);
+                    }
                 });
             });
 
@@ -200,13 +274,37 @@ namespace Uchat
                 {
                     System.Diagnostics.Debug.WriteLine($"Loaded {messages.Count} messages for chat {chatId}");
                     
-                    // Очищаем текущие сообщения
+                    // Очищаем текущие сообщения и кеш
                     ChatMessagesPanel.Children.Clear();
+                    _messageCache.Clear();
                     
-                    // Отображаем загруженные сообщения
-                    foreach (var msg in messages)
+                    // Сортируем по времени отправки (старые сверху)
+                    var sortedMessages = messages.OrderBy(m => m.SentAt).ToList();
+                    
+                    // Кешируем DTO по ID для Reply (временный кеш)
+                    var dtoCacheForReply = new Dictionary<string, ChatMessage>();
+                    foreach (var msg in sortedMessages)
                     {
-                        DisplayMessage(chatId, msg.Sender.Username, msg.Content);
+                        dtoCacheForReply[msg.Id] = msg;
+                    }
+                    
+                    // Отображаем загруженные сообщения с Reply
+                    foreach (var msg in sortedMessages)
+                    {
+                        string? replyContent = null;
+                        
+                        // Если это ответ, находим исходное сообщение
+                        if (!string.IsNullOrEmpty(msg.ReplyToMessageId) && dtoCacheForReply.TryGetValue(msg.ReplyToMessageId, out var originalMsg))
+                        {
+                            replyContent = originalMsg.Content;
+                        }
+                        else if (!string.IsNullOrEmpty(msg.ReplyToContent))
+                        {
+                            // Фолбек на сохранённый текст (для обратной совместимости)
+                            replyContent = msg.ReplyToContent;
+                        }
+                        
+                        DisplayMessage(chatId, msg.Sender.Username, msg.Content, replyContent, msg.Id, msg.EditedAt);
                     }
                     
                     ChatScrollViewer.ScrollToEnd();
@@ -218,17 +316,25 @@ namespace Uchat
             }
         }
 
-        private void DisplayMessage(string chatId, string user, string message)
+        private void DisplayMessage(string chatId, string user, string message, string? replyContent = null, string? serverId = null, DateTime? editedAt = null)
         {
             if (currentChatId == null || chatId != currentChatId || string.IsNullOrEmpty(message))
                 return;
 
             var timestamp = DateTime.Now.ToString("HH:mm");
             bool isGuest = (user != name);
+            bool hasReply = !string.IsNullOrEmpty(replyContent);
+            bool isEdited = editedAt.HasValue;
             
             // Используем класс Chat.Message для единообразия
-            var chatMessage = new MainWindow.Chat.Message(false, message, timestamp, isGuest);
+            var chatMessage = new MainWindow.Chat.Message(hasReply, message, timestamp, isGuest, replyContent, serverId, isEdited);
             var bubble = chatMessage.Bubble;
+
+            // Кешируем сообщение по serverId для быстрого доступа при редактировании
+            if (!string.IsNullOrEmpty(serverId))
+            {
+                _messageCache[serverId] = chatMessage;
+            }
 
             var grid = new Grid
             {
@@ -255,7 +361,12 @@ namespace Uchat
                 
             try
             {
-                await _connection.InvokeAsync("SendMessage", currentChatId, name, messageText);
+                // Передаём replyContent если это ответ
+                string? replyContent = isReplied ? replyToMessageContent : null;
+                await _connection.InvokeAsync("SendMessage", currentChatId, name, messageText, replyContent);
+                
+                // Очищаем replyContent после отправки
+                replyToMessageContent = "";
             }
             catch (Exception)
             {
