@@ -18,12 +18,14 @@ namespace Uchat
         private TextBlock textBlockChange = new TextBlock();
         private string tempChatTextBox = "";
         
-        private string currentChatId = "TestChat"; // FOR DEBUG PURPOSE ONLY!!!
-        private string name = "Vetal";             // FOR DEBUG PURPOSE ONLY!!!
+        private string currentChatId = "1"; // FOR DEBUG PURPOSE ONLY!!!
+        private string name = UserSession.Instance.Username ?? "Unknown";     
+        
         public MainWindow()
         {
             InitializeComponent();
             ConnectToServer();
+
         }
 
         private async void ConnectToServer()

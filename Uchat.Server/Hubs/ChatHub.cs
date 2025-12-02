@@ -51,6 +51,7 @@ public class ChatHub : Hub
     public async Task NewUserNotification(string chatId, string user)
     {
         await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, "System", $"{user} joined the chat");
+        Console.WriteLine($"{user} joined chat {chatId}");
     }
 
     public async Task SendMessage(string chatId, string user, string message)
@@ -66,8 +67,8 @@ public class ChatHub : Hub
 
         // Отправить сообщение всем в группе
         await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message);
-        
-        Console.WriteLine($"Message from {username} in chat {chatId}: {message}");
+
+        Console.WriteLine($"[{chatId}] {user}: {message}");
     }
 
     private async Task SaveMessageToLiteDb(string chatId, int senderId, string senderName, string content)

@@ -23,13 +23,19 @@ public class AuthService
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
-        var existingUser = await _userRepository.GetByUsernameAsync(dto.Username);
-        if (existingUser != null)
-            throw new InvalidOperationException("Username already taken");
+        try
+        {
+            var existingUser = await _userRepository.GetByUsernameAsync(dto.Username);
+            if (existingUser != null)
+                throw new InvalidOperationException("Username already taken");
 
-        var existingEmail = await _userRepository.GetByEmailAsync(dto.Email);
-        if (existingEmail != null)
-            throw new InvalidOperationException("Email already registered");
+            var existingEmail = await _userRepository.GetByEmailAsync(dto.Email);
+            if (existingEmail != null)
+                throw new InvalidOperationException("Email already registered");
+        }catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
@@ -65,15 +71,22 @@ public class AuthService
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
     {
-        var existingUser = await _userRepository.GetByUsernameOrEmailAsync(dto.Identifier);
-        if (existingUser == null)
+        User existingUser = null;
+        try
         {
-            throw new InvalidOperationException("Invalid credentials"); 
-        }
+            existingUser = await _userRepository.GetByUsernameOrEmailAsync(dto.Identifier);
+            if (existingUser == null)
+            {
+                throw new InvalidOperationException("Invalid credentials");
+            }
 
-        if (!BCrypt.Net.BCrypt.Verify(dto.Password, existingUser.PasswordHash))
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, existingUser.PasswordHash))
+            {
+                throw new InvalidOperationException("Invalid credentials");
+            }
+        }catch (Exception ex)
         {
-            throw new InvalidOperationException("Invalid credentials");
+            Console.WriteLine(ex.Message);
         }
 
         var accessToken = _jwtService.GenerateAccessToken(

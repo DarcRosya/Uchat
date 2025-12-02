@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -8,10 +9,10 @@ using Uchat.Database.Context;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Server.Hubs;
 using Uchat.Server.Middleware;
 using Uchat.Server.Services;
 using Uchat.Server.Services.Auth;
-using Uchat.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -170,6 +171,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 // SignalR Hub для чата
+builder.WebHost.UseUrls("http://localhost:5000");
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

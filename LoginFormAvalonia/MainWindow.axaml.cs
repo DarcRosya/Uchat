@@ -165,7 +165,15 @@ namespace LoginFormAvalonia
                 return;
             }
 
-            await HandleLoginAsync(username, password);
+            try
+            {
+                await HandleLoginAsync(username, password);
+            }
+            catch (Exception ex)
+            {
+                invalidDataInHelloAgain.IsVisible = true;
+                invalidDataInHelloAgain.Text = ex.Message;
+            }
         }
 
         private async Task HandleLoginAsync(string username, string password)
@@ -231,7 +239,14 @@ namespace LoginFormAvalonia
                 return;
             }
 
-            await HandleRegisterAsync(username, email, password);
+            try
+            {
+                await HandleRegisterAsync(username, email, password);
+            }catch (Exception ex)
+            {
+                invalidDataInCreateAccount.IsVisible = true;
+                invalidDataInCreateAccount.Text = ex.Message;
+            }
         }
 
         private async Task HandleRegisterAsync(string username, string email, string password)
