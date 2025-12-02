@@ -61,29 +61,16 @@ namespace LoginFormAvalonia
 
         private void GoToResetPasswordForm_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string code = codeVerificationTextBox.Text;
-
-            /* ��������� ������������ ��� � ����. ���� �Ѩ ���� -- �������, ���� ��� -- ������ ���)
-            if ( �������� ��� )
-            {
-                invalidDataInCodeVerification.IsVisible = true;
-                invalidDataInCodeVerification.Text = "Invalid code ���-�� ���. ��������� �������� ������"
-
-                return;
-            }
-             */
-
-
+            string code = codeVerificationTextBox.Text ?? string.Empty;
             invalidDataInCodeVerification.IsVisible = false;
-
             CodeVerification.IsVisible = false;
             ResetPasswordForm.IsVisible = true;
         }
 
         private void ChangePasswordButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string newPassword = newPasswordTextBox.Text;
-            string confirmPassword = confirmPasswordTextBox.Text;
+            string newPassword = newPasswordTextBox.Text ?? string.Empty;
+            string confirmPassword = confirmPasswordTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
             {
@@ -111,7 +98,7 @@ namespace LoginFormAvalonia
 
         private void GoToCodeVerification_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string emailAddress = emailInRecoveryEmailTextBox.Text;
+            string emailAddress = emailInRecoveryEmailTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(emailAddress))
             {
@@ -154,8 +141,8 @@ namespace LoginFormAvalonia
 
         private async void LogInButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string username = usernameTextBox.Text;
-            string password = passwordTextBox.Text;
+            string username = usernameTextBox.Text ?? string.Empty;
+            string password = passwordTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
@@ -203,9 +190,9 @@ namespace LoginFormAvalonia
 
         private async void CreateAccountButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string username = createUsernameTextBox.Text;
-            string password = createPasswordTextBox.Text;
-            string email = createEmailTextBox.Text;
+            string username = createUsernameTextBox.Text ?? string.Empty;
+            string password = createPasswordTextBox.Text ?? string.Empty;
+            string email = createEmailTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
             {
@@ -278,43 +265,67 @@ namespace LoginFormAvalonia
         {
             try
             {
-                var chatExePath = System.IO.Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory,
-                    "..", "..", "..", "..",
-                    "Uchat", "bin", "Debug", "net9.0-windows", "Uchat.exe"
-                );
+                var args = $"--token \"{UserSession.Instance.AccessToken}\" --username \"{UserSession.Instance.Username}\" --userId {UserSession.Instance.UserId}";
+                
+                var possiblePaths = new[]
+                {
+                    System.IO.Path.Combine(AppContext.BaseDirectory, "Uchat.exe"),
+                    System.IO.Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        "..", "..", "..", "..",
+                        "Uchat", "bin", "Debug", "net9.0-windows", "Uchat.exe"
+                    ),
+                    System.IO.Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        "..", "..", "..", "..",
+                        "Uchat", "bin", "Release", "net9.0-windows", "Uchat.exe"
+                    )
+                };
 
-                chatExePath = System.IO.Path.GetFullPath(chatExePath);
+                string? chatExePath = null;
+                foreach (var path in possiblePaths)
+                {
+                    var fullPath = System.IO.Path.GetFullPath(path);
+                    if (System.IO.File.Exists(fullPath))
+                    {
+                        chatExePath = fullPath;
+                        break;
+                    }
+                }
 
-                if (System.IO.File.Exists(chatExePath))
+                if (chatExePath != null)
                 {
                     Process.Start(new ProcessStartInfo
                     {
                         FileName = chatExePath,
+                        Arguments = args,
                         UseShellExecute = true
                     });
                 }
                 else
                 {
-                    // Fallback: запускаем через dotnet run
                     var uchatProjectPath = System.IO.Path.Combine(
                         AppDomain.CurrentDomain.BaseDirectory,
                         "..", "..", "..", "..",
                         "Uchat"
                     );
 
-                    Process.Start(new ProcessStartInfo
+                    var fullProjectPath = System.IO.Path.GetFullPath(uchatProjectPath);
+                    
+                    if (System.IO.Directory.Exists(fullProjectPath))
                     {
-                        FileName = "dotnet",
-                        Arguments = "run --project Uchat.csproj",
-                        WorkingDirectory = System.IO.Path.GetFullPath(uchatProjectPath),
-                        UseShellExecute = true
-                    });
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = $"run --project Uchat.csproj -- {args}",
+                            WorkingDirectory = fullProjectPath,
+                            UseShellExecute = true
+                        });
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Failed to open chat window: {ex.Message}");
             }
         }
     }

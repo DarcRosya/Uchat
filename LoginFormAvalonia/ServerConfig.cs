@@ -15,7 +15,7 @@ namespace LoginFormAvalonia
         /// <summary>
         /// Локальный URL для разработки
         /// </summary>
-        public const string LocalUrl = "http://localhost:5000";
+        public const string LocalUrl = "http://localhost:5180";
         
         /// <summary>
         /// Использовать ngrok (true) или локальный сервер (false)

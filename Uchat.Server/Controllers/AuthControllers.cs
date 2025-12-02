@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Uchat.Server.DTOs;
 using Uchat.Server.Services.Auth;
 
@@ -8,6 +9,7 @@ namespace Uchat.Server.Controllers;
 
 [ApiController]
 [Route("api/auth")]
+[EnableRateLimiting("auth")] // Применяем rate limiting ко всем auth endpoints
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;

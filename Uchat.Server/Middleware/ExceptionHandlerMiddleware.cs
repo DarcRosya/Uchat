@@ -22,18 +22,16 @@ public class ExceptionHandlerMiddleware
         }
         catch (InvalidOperationException ex)
         {
-            // Ошибки бизнес-логики (Username already taken, Invalid credentials и т.д.)
-            _logger.LogWarning(ex, "Business logic error: {Message}", ex.Message);
+            _logger.LogWarning("Business logic error: {Message}", ex.Message);
             await HandleExceptionAsync(context, ex.Message, HttpStatusCode.BadRequest);
         }
         catch (UnauthorizedAccessException ex)
         {
-            _logger.LogWarning(ex, "Unauthorized access attempt");
+            _logger.LogWarning("Unauthorized access attempt: {Message}", ex.Message);
             await HandleExceptionAsync(context, "Unauthorized", HttpStatusCode.Unauthorized);
         }
         catch (Exception ex)
         {
-            // Неожиданные ошибки
             _logger.LogError(ex, "Unexpected error occurred");
             await HandleExceptionAsync(context, "Internal server error", HttpStatusCode.InternalServerError);
         }

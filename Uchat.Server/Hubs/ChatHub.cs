@@ -22,30 +22,27 @@ public class ChatHub : Hub
     {
         var userId = GetUserId();
         var username = GetUsername();
-        
-        Console.WriteLine($"User {username} (ID: {userId}) connected to ChatHub");
+        Console.WriteLine($"User {username} (ID: {userId}) connected");
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var username = GetUsername();
-        Console.WriteLine($"User {username} disconnected from ChatHub");
+        Console.WriteLine($"User {username} disconnected");
         await base.OnDisconnectedAsync(exception);
     }
 
     public async Task JoinGroup(string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-        var username = GetUsername();
-        Console.WriteLine($"{username} joined group: {groupName}");
+        Console.WriteLine($"{GetUsername()} joined group: {groupName}");
     }
 
     public async Task LeaveGroup(string groupName)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        var username = GetUsername();
-        Console.WriteLine($"{username} left group: {groupName}");
+        Console.WriteLine($"{GetUsername()} left group: {groupName}");
     }
 
     public async Task NewUserNotification(string chatId, string user)
@@ -77,8 +74,6 @@ public class ChatHub : Hub
         {
             using (await _writeGate.AcquireAsync())
             {
-                var collection = _liteDbContext.Messages;
-                
                 var message = new LiteDbMessage
                 {
                     ChatId = int.TryParse(chatId, out var cId) ? cId : 0,
@@ -96,13 +91,12 @@ public class ChatHub : Hub
                     IsDeleted = false
                 };
 
-                collection.Insert(message);
-                Console.WriteLine($"Message saved to LiteDB: {message.Id}");
+                _liteDbContext.Messages.Insert(message);
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving message to LiteDB: {ex.Message}");
+            Console.WriteLine($"Failed to save message: {ex.Message}");
         }
     }
 

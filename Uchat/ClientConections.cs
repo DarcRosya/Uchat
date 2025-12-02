@@ -19,21 +19,45 @@ namespace Uchat
         private string tempChatTextBox = "";
         
         private string currentChatId = "1"; // FOR DEBUG PURPOSE ONLY!!!
-        private string name = UserSession.Instance.Username ?? "Unknown";     
+        private string name; // Инициализируется в конструкторе после парсинга аргументов
+        
+        private TextBlock _connectionStatusIndicator;     
         
         public MainWindow()
         {
             InitializeComponent();
+            
+            // Инициализируем имя пользователя из сессии (уже заполнено из аргументов командной строки)
+            name = UserSession.Instance.Username ?? "Unknown";
+            
+            // Находим контрол ПОСЛЕ InitializeComponent
+            _connectionStatusIndicator = this.FindControl<TextBlock>("ConnectionStatusText");
+            
             ConnectToServer();
-
         }
 
         private async void ConnectToServer()
         {
-            // Server connection с JWT токеном из UserSession
-            _connection = new HubConnectionBuilder()
-            .WithUrl($"{ServerConfig.ServerUrl}/chatHub", options =>
+            // Проверяем наличие токена
+            if (string.IsNullOrEmpty(UserSession.Instance.AccessToken))
             {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_connectionStatusIndicator != null)
+                    {
+                        _connectionStatusIndicator.Text = "● No token - Login first!";
+                        _connectionStatusIndicator.Foreground = Brushes.Red;
+                    }
+                });
+                return;
+            }
+            
+            // Server connection с JWT токеном из UserSession
+            // ВАЖНО: Токен передаётся через query string, т.к. SignalR не поддерживает custom headers
+            _connection = new HubConnectionBuilder()
+            .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
+            {
+                // Токен уже в URL, но оставляем для совместимости
                 options.AccessTokenProvider = () => Task.FromResult(UserSession.Instance.AccessToken);
             })
             .WithAutomaticReconnect()
@@ -95,6 +119,8 @@ namespace Uchat
                     // Create context menu
                     var contextMenu = new ContextMenu();
                     bubble.ContextMenu = contextMenu;
+
+                    // Reply
 
                     // Reply
                     MenuItem menuItemReply = new MenuItem
@@ -194,27 +220,75 @@ namespace Uchat
 
             try
             {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_connectionStatusIndicator != null)
+                    {
+                        _connectionStatusIndicator.Text = "● Connecting...";
+                        _connectionStatusIndicator.Foreground = Brushes.Orange;
+                    }
+                });
+                
                 await _connection.StartAsync();
-                await _connection.InvokeAsync("JoinGroup", currentChatId); //in futute use actual chat id
-                await _connection.InvokeAsync("NewUserNotification", currentChatId, name); //in futute use actual chat id
+                await _connection.InvokeAsync("JoinGroup", currentChatId);
+                await _connection.InvokeAsync("NewUserNotification", currentChatId, name);
+                
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_connectionStatusIndicator != null)
+                    {
+                        _connectionStatusIndicator.Text = "● Connected";
+                        _connectionStatusIndicator.Foreground = Brushes.Green;
+                    }
+                });
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"CONNECTION ERROR: {ex.Message}");
+                var statusMsg = "Connection failed";
+                
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("401"))
+                    statusMsg = "Unauthorized";
+                else if (ex.InnerException != null && ex.InnerException.Message.Contains("404"))
+                    statusMsg = "Server not found";
+                else if (ex.Message.Contains("Connection refused") || ex.Message.Contains("No connection"))
+                    statusMsg = "Server offline";
+                
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_connectionStatusIndicator != null)
+                    {
+                        _connectionStatusIndicator.Text = $"● {statusMsg}";
+                        _connectionStatusIndicator.Foreground = Brushes.Red;
+                    }
+                });
             }
         }
 
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(chatTextBox.Text))
+                return;
+                
+            var messageText = chatTextBox.Text;
+            chatTextBox.Text = "";
+                
             try
             {
-                await _connection.InvokeAsync("SendMessage", currentChatId, name, chatTextBox.Text);
-                chatTextBox.Text = "";
+                await _connection.InvokeAsync("SendMessage", currentChatId, name, messageText);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //MessageBox.Show($"SENDING ERROR");
-                //ConnectToServer();
+                // Возвращаем текст если не отправилось
+                chatTextBox.Text = messageText;
+                
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_connectionStatusIndicator != null)
+                    {
+                        _connectionStatusIndicator.Text = "● Failed to send";
+                        _connectionStatusIndicator.Foreground = Brushes.Orange;
+                    }
+                });
             }
         }
     }

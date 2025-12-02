@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.RateLimiting;
 // using StackExchange.Redis;
 using System.Text;
 using Uchat.Database.Context;
@@ -16,29 +18,19 @@ using Uchat.Server.Services.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ============================================================================
-// 1. БАЗЫ ДАННЫХ
-// ============================================================================
-
-// SQLite 
-// Lifetime: Scoped (новый экземпляр на каждый HTTP запрос)
+// Databases
 builder.Services.AddDbContext<UchatDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
 
-// LiteDB 
-// Регистрируем настройки из appsettings.json
 builder.Services.Configure<LiteDbSettings>(
     builder.Configuration.GetSection("LiteDb"));
 
-// LiteDbContext как Singleton (один экземпляр на приложение)
-// ПОЧЕМУ Singleton? LiteDB держит файл открытым, нужно переиспользовать подключение
 builder.Services.AddSingleton<LiteDbContext>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<LiteDbSettings>>().Value;
     return new LiteDbContext(settings);
 });
 
-// Write Gate для синхронизации записей в LiteDB (thread-safety)
 builder.Services.AddSingleton<ILiteDbWriteGate, LiteDbWriteGate>();
 
 // Redis - для статусов пользователей (Online/Offline)
@@ -61,13 +53,8 @@ builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 
-// ============================================================================
-// 3. СЕРВИСЫ 
-// ============================================================================
-
-// JwtService - генерация JWT токенов
+// Services
 builder.Services.AddScoped<JwtService>();
-
 builder.Services.AddScoped<AuthService>();
 
 // TODO: UserStatusService - работа со статусами через Redis
@@ -99,12 +86,6 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero       // Без допуска по времени
     };
 
-    // Проблема: 
-    // HTTP запросы отправляют токен в заголовке Authorization: Bearer 
-    // SignalR не может отправлять custom headers
-
-    // Решение:
-    // SignalR отправляет токен в query string
     // Middleware извлекает токен из query параметра
     options.Events = new JwtBearerEvents
     {
@@ -123,14 +104,9 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
-
-// Регистрация Controllers
 builder.Services.AddControllers();
-
-// Регистрация SignalR
 builder.Services.AddSignalR();
 
-// CORS для клиента и SignalR
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -142,17 +118,39 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger для тестирования API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    // Ограничение для auth endpoints (login, register)
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 10; // Максимум 10 попыток в минуту
+        opt.QueueLimit = 0; // Не ставить в очередь
+    });
+    
+    options.AddFixedWindowLimiter("api", opt =>
+    {
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.PermitLimit = 100;
+        opt.QueueLimit = 0;
+    });
+    
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = 429;
+        await context.HttpContext.Response.WriteAsync(
+            "Too many requests. Please try again later.", 
+            cancellationToken: token);
+    };
+});
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>(); 
-
-// ============================================================================
-// КОНФИГУРАЦИЯ MIDDLEWARE PIPELINE
-// ============================================================================
 
 if (app.Environment.IsDevelopment())
 {
@@ -164,15 +162,10 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
-
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
-
-// SignalR Hub для чата
-builder.WebHost.UseUrls("http://localhost:5000");
 app.MapHub<ChatHub>("/chatHub");
 
 app.Run();
-

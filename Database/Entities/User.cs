@@ -73,7 +73,7 @@ public class User
     /// Связь: User (1) -> RefreshToken (Many)
     /// </summary>
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
-    public ICollection<UserSecurityToken> SecurityTokens { get; set; }
+    public ICollection<UserSecurityToken> SecurityTokens { get; set; } = new List<UserSecurityToken>();
     
     // ========================================================================
     // НАВИГАЦИОННЫЕ СВОЙСТВА ДЛЯ ДРУЖБЫ
@@ -108,7 +108,7 @@ public class UserSecurityToken
 {
     public int Id { get; set; }
     public int UserId { get; set; }
-    public User User { get; set; }
+    public required User User { get; set; }
     
     public TokenType Type { get; set; } // EmailConfirmation, PasswordReset
     public required string Token { get; set; }
