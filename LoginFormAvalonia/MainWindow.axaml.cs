@@ -1,13 +1,21 @@
 using Avalonia.Controls;
 using System.Net.Mail;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+using System.Diagnostics;
+using LoginFormAvalonia.Services;
 
 namespace LoginFormAvalonia
 {
     public partial class MainWindow : Window
     {
+        private readonly AuthApiService _authService;
+
         public MainWindow()
         {
             InitializeComponent();
+            _authService = new AuthApiService();
         }
 
         private void GoToSignUpButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -54,29 +62,16 @@ namespace LoginFormAvalonia
 
         private void GoToResetPasswordForm_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string code = codeVerificationTextBox.Text;
-
-            /* œ–Œ¬≈–»“‹ Œ“œ–¿¬À≈ÕÕ€…  Œƒ — ›“»Ã. ≈—À» ¬—® ÕŒ–Ã -- œ”—“»“‹, ≈—À» Õ≈“ -- «Õ¿◊»“ Õ≈“)
-            if ( ÌÂ‚ÂÌ˚È ÍÓ‰ )
-            {
-                invalidDataInCodeVerification.IsVisible = true;
-                invalidDataInCodeVerification.Text = "Invalid code ˜ÚÓ-ÚÓ Ú‡Ï. œ–»ƒ”Ã¿“‹ Õ¿«¬¿Õ»≈ Œÿ»¡ »"
-
-                return;
-            }
-             */
-
-
+            string code = codeVerificationTextBox.Text ?? string.Empty;
             invalidDataInCodeVerification.IsVisible = false;
-
             CodeVerification.IsVisible = false;
             ResetPasswordForm.IsVisible = true;
         }
 
         private void ChangePasswordButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string newPassword = newPasswordTextBox.Text;
-            string confirmPassword = confirmPasswordTextBox.Text;
+            string newPassword = newPasswordTextBox.Text ?? string.Empty;
+            string confirmPassword = confirmPasswordTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
             {
@@ -104,7 +99,7 @@ namespace LoginFormAvalonia
 
         private void GoToCodeVerification_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string emailAddress = emailInRecoveryEmailTextBox.Text;
+            string emailAddress = emailInRecoveryEmailTextBox.Text ?? string.Empty;
 
             if (string.IsNullOrEmpty(emailAddress))
             {
@@ -145,81 +140,227 @@ namespace LoginFormAvalonia
         {
         }
 
-        private void LogInButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async void LogInButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string username = usernameTextBox.Text;
-            string password = passwordTextBox.Text;
+            string username = usernameTextBox.Text ?? string.Empty;
+            string password = passwordTextBox.Text ?? string.Empty;
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
                 invalidDataInHelloAgain.IsVisible = true;
-                invalidDataInHelloAgain.Text = "Both fields cannot be empty";
-
+                invalidDataInHelloAgain.Text = "Username and password are required";
                 return;
             }
 
-            /*
-              Õ”∆ÕŒ —ƒ≈À¿“‹ œ–Œ¬≈– ” Õ¿ —ŒŒ“¬≈“—“¬»≈ ƒ¿ÕÕ€’ » «¿œ»’Õ”“‹ “Œ, ◊“Œ Õ¿’Œƒ»“‹—ﬂ œŒƒ IF
-            if ( ÂÒÎË ÌÂÚ ÒÓÓÚ‚ÂÚÒÚ‚ËÈ )
+            try
             {
-                invalidDataInHelloAgain.Text = "Incorrect username or password";
-
-                return;
+                invalidDataInHelloAgain.IsVisible = false;
+                await HandleLoginAsync(username, password);
             }
-             */
-
-            invalidDataInHelloAgain.IsVisible = false;
+            catch (Exception ex)
+            {
+                invalidDataInHelloAgain.IsVisible = true;
+                invalidDataInHelloAgain.Text = ex.Message;
+            }
         }
 
-        private void CreateAccountButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        private async Task HandleLoginAsync(string username, string password)
         {
-            string username = createUsernameTextBox.Text;
-            string password = createPasswordTextBox.Text;
-            string email = createEmailTextBox.Text;
+            try
+            {
+                var response = await _authService.LoginAsync(username, password);
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(email))
+                if (response != null)
+                {
+                    UserSession.Instance.SetSession(response);
+                    invalidDataInHelloAgain.IsVisible = false;
+
+                    OpenChatWindow();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                invalidDataInHelloAgain.IsVisible = true;
+                invalidDataInHelloAgain.Text = ex.Message;
+            }
+        }
+
+        private async void CreateAccountButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            string username = createUsernameTextBox.Text ?? string.Empty;
+            string password = createPasswordTextBox.Text ?? string.Empty;
+            string email = createEmailTextBox.Text ?? string.Empty;
+
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(email))
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "All fields cannot be empty";
-
+                invalidDataInCreateAccount.Text = "All fields are required";
                 return;
             }
 
-            /*
-            if ( ÒÛ˘ÂÒÚ‚ÛÂÚ ÔÓÎ¸ÁÓ‚‡ÚÂÎ¸ Ò Ú‡ÍËÏ ÌËÍÓÏ )
+            if (username.Length < 3 || username.Length > 14)
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "This username is already taken";
-
+                invalidDataInCreateAccount.Text = "Username must be 3-14 characters";
                 return;
             }
-             */
+
+            if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
+            {
+                invalidDataInCreateAccount.IsVisible = true;
+                invalidDataInCreateAccount.Text = "Username can only contain letters, numbers and underscore";
+                return;
+            }
 
             if (password.Length < 6)
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "Password size must be more 6";
-
+                invalidDataInCreateAccount.Text = "Password must be at least 6 characters";
                 return;
             }
 
-            if (!email.EndsWith("@gmail.com"))
+            if (!email.Contains("@") || email.Length < 5)
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "                 Invalid email address \nOnly [@gmail.com] is allowed";
-
+                invalidDataInCreateAccount.Text = "Invalid email address";
                 return;
             }
 
-            if (email.Length < 16 || email.Length > 40)
+            try
+            {
+                await HandleRegisterAsync(username, email, password);
+            }
+            catch (Exception ex)
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "Email size must be [more 16 and less 40]";
+                invalidDataInCreateAccount.Text = ex.Message;
+            }
+        }
 
-                return;
+        private async Task HandleRegisterAsync(string username, string email, string password)
+        {
+            try
+            {
+                var response = await _authService.RegisterAsync(username, email, password);
+
+                if (response != null)
+                {
+                    UserSession.Instance.SetSession(response);
+                    invalidDataInCreateAccount.IsVisible = false;
+
+                    OpenChatWindow();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                invalidDataInCreateAccount.IsVisible = true;
+                invalidDataInCreateAccount.Text = ex.Message;
+            }
+        }
+
+        private void OpenChatWindow()
+        {
+            try
+            {
+                var session = UserSession.Instance;
+                var args = $"--token \"{session.AccessToken}\" --username \"{session.Username}\" --userId {session.UserId}";
+
+                // Try to find Uchat.exe
+                var uchatExe = FindUchatExecutable();
+
+                if (!string.IsNullOrEmpty(uchatExe))
+                {
+                    System.Diagnostics.Debug.WriteLine($"Launching Uchat.exe from: {uchatExe}");
+                    System.Diagnostics.Debug.WriteLine($"Arguments: {args}");
+                    
+                    var process = Process.Start(new ProcessStartInfo
+                    {
+                        FileName = uchatExe,
+                        Arguments = args,
+                        UseShellExecute = true,
+                        WorkingDirectory = Path.GetDirectoryName(uchatExe)
+                    });
+                    
+                    System.Diagnostics.Debug.WriteLine($"Process started: {process != null}");
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Uchat.exe not found, trying dotnet run");
+                    
+                    var uchatProjectDir = Path.Combine(
+                        AppDomain.CurrentDomain.BaseDirectory,
+                        "..", "..", "..", "..", "Uchat"
+                    );
+                    
+                    var fullProjectDir = Path.GetFullPath(uchatProjectDir);
+                    System.Diagnostics.Debug.WriteLine($"Project directory: {fullProjectDir}");
+                    
+                    if (Directory.Exists(fullProjectDir))
+                    {
+                        var process = Process.Start(new ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = $"run -- {args}",
+                            UseShellExecute = true,
+                            WorkingDirectory = fullProjectDir
+                        });
+                        
+                        System.Diagnostics.Debug.WriteLine($"Process started: {process != null}");
+                    }
+                    else
+                    {
+                        throw new DirectoryNotFoundException($"Uchat project directory not found: {fullProjectDir}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error launching chat: {ex}");
+                invalidDataInHelloAgain.IsVisible = true;
+                invalidDataInHelloAgain.Text = $"Failed to launch chat: {ex.Message}";
+            }
+        }
+
+        private string FindUchatExecutable()
+        {
+            var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            System.Diagnostics.Debug.WriteLine($"Base directory: {baseDir}");
+            
+            var possiblePaths = new[]
+            {
+                // Same bin folder (when both projects built)
+                Path.Combine(baseDir, "Uchat.exe"),
+                // Relative to LoginFormAvalonia bin
+                Path.Combine(baseDir, "..", "..", "..", "Uchat", "bin", "Debug", "net9.0", "Uchat.exe"),
+                // From project root
+                Path.Combine(baseDir, "..", "..", "..", "..", "Uchat", "bin", "Debug", "net9.0", "Uchat.exe"),
+                // Release build
+                Path.Combine(baseDir, "..", "..", "..", "..", "Uchat", "bin", "Release", "net9.0", "Uchat.exe")
+            };
+
+            foreach (var path in possiblePaths)
+            {
+                try
+                {
+                    var fullPath = Path.GetFullPath(path);
+                    System.Diagnostics.Debug.WriteLine($"Checking: {fullPath}");
+                    
+                    if (File.Exists(fullPath))
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Found: {fullPath}");
+                        return fullPath;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error checking path {path}: {ex.Message}");
+                }
             }
 
-            invalidDataInCreateAccount.IsVisible = false;
+            System.Diagnostics.Debug.WriteLine("Uchat.exe not found in any expected location");
+            return string.Empty;
         }
     }
 }

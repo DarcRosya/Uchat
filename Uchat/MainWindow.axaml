@@ -61,7 +61,10 @@
             ColumnDefinitions="200,0.7*,0.3*">
         <StackPanel>
           <TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
-          <TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
+          <StackPanel Orientation="Horizontal">
+            <TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,5,0"/>
+            <TextBlock x:Name="ConnectionStatusText" Text="●" FontSize="10" Foreground="Red" Margin="5,0,0,0"/>
+          </StackPanel>
         </StackPanel>
 
         <Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
