@@ -48,7 +48,7 @@
             </Style.Animations>
         </Style>
 
-            <!-- Style for message text  -->
+   <!-- Style for message text  -->
        <Style Selector="TextBlock.chatMessage">
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="Foreground" Value="White"/>
@@ -58,9 +58,20 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
         </Style>
 
+    <!-- Style for username in received messages  -->
+        <Style Selector="TextBlock.username">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#C1E1C1"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="MaxWidth" Value="500"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+
     <!-- Style for sended messages in chat  -->
         <Style Selector ="Border.messageBorder">
-            <Setter Property="Background" Value="#358c8f"/>
+            <Setter Property="Background" Value="#5da3a5"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Padding" Value="8"/>
             <Setter Property="Margin" Value="5,0,5,0"/>
@@ -69,7 +80,7 @@
 
     <!-- Style for received messages in chat  -->
         <Style Selector ="Border.guestMessageBorder">
-            <Setter Property="Background" Value="#264C6F"/>
+            <Setter Property="Background" Value="#3c5e7d"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Padding" Value="8"/>
             <Setter Property="Margin" Value="5,0,5,0"/>
@@ -84,27 +95,33 @@
 
     <!-- Style for time text  -->
         <Style Selector ="TextBlock.timeTextBlock">
-            <Setter Property="Foreground" Value="#C1E1C1"/>
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Margin" Value="0,3,0,0"/>
             <Setter Property="Padding" Value="0,0,3,0"/>
         </Style>
 
-    <!-- Style for reply box -->
+    <!-- Style for own reply box -->
        <Style Selector="Border.replyToMessageBorder">
             <Setter Property="Background" Value="#20000000"/>
-            <Setter Property="BorderBrush" Value="#8FBC8F"/>
+            <Setter Property="BorderBrush" Value="#C1E1C1"/>
             <Setter Property="BorderThickness" Value="4,0,0,0"/>
             <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Padding" Value="8,5"/>
-            <Setter Property="Margin" Value="5,0,5,5"/>
+            <Setter Property="Margin" Value="0,2,5,2"/>
             <Setter Property="MinWidth" Value="120"/>
             <Setter Property="MaxWidth" Value="500"/>
         </Style>
 
+    <!-- Style for guest user name in reply box -->
+        <Style Selector="TextBlock.replyUserName">
+            <Setter Property="Foreground" Value="#C1E1C1"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
     <!-- Style for user name in reply box -->
         <Style Selector="TextBlock.replyUserName">
-            <Setter Property="Foreground" Value="#D0F0C0"/>
+            <Setter Property="Foreground" Value="#C1E1C1"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>

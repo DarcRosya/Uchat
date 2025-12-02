@@ -105,8 +105,8 @@
 	    <StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
     </ScrollViewer>
 
-	<Border Background="#282828"
-			BorderBrush="#8FBC8F"
+	<Border Background="#2a2c31"
+			BorderBrush="#93a6b7"
 			BorderThickness="4,0,0,0"
 			CornerRadius="5"
 			Padding="8, 5, 0, 5"
@@ -128,11 +128,11 @@
                                x:Name="replyTheMessageUsername"
 					           Foreground="#D0F0C0"
 					           FontWeight="SemiBold"
-					           FontSize="12"/>
+					           FontSize="10"/>
 
 			            <TextBlock Foreground="#E0E0E0"
 					           x:Name="replyTheMessage"
-					           FontSize="12"
+					           FontSize="15"
 					           TextTrimming = "CharacterEllipsis"
 					           Margin="0 0 50 0"
 					           MaxLines="1"/>
@@ -141,22 +141,24 @@
 
 			<Button Grid.Column="1"
 					x:Name="DontReplyTheMessage"
-					Background="#5e81ac"
+					Background="#c57179"
 					HorizontalAlignment="Right"
 					Width="45"
 					Height="45"
 					HorizontalContentAlignment="Center"
 					VerticalContentAlignment="Center"
+                    Content="&#xE10A;" 
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="17"
 					Click="DontReplyTheMessage_Click"
 					>
-				<PathIcon Data="M704 288h-281.6l177.6-202.88a32 32 0 0 0-48.32-42.24l-224 256a30.08 30.08 0 0 0-2.24 3.84 32 32 0 0 0-2.88 4.16v1.92a32 32 0 0 0 0 5.12A32 32 0 0 0 320 320a32 32 0 0 0 0 4.8 32 32 0 0 0 0 5.12v1.92a32 32 0 0 0 2.88 4.16 30.08 30.08 0 0 0 2.24 3.84l224 256a32 32 0 1 0 48.32-42.24L422.4 352H704a224 224 0 0 1 224 224v128a224 224 0 0 1-224 224H320a232 232 0 0 1-28.16-1.6 32 32 0 0 0-35.84 27.84 32 32 0 0 0 27.84 35.52A295.04 295.04 0 0 0 320 992h384a288 288 0 0 0 288-288v-128a288 288 0 0 0-288-288zM103.04 760a32 32 0 0 0-62.08 16A289.92 289.92 0 0 0 140.16 928a32 32 0 0 0 40-49.92 225.6 225.6 0 0 1-77.12-118.08zM64 672a32 32 0 0 0 22.72-9.28 37.12 37.12 0 0 0 6.72-10.56A32 32 0 0 0 96 640a33.6 33.6 0 0 0-9.28-22.72 32 32 0 0 0-10.56-6.72 32 32 0 0 0-34.88 6.72A32 32 0 0 0 32 640a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56A32 32 0 0 0 64 672z"/>
 			</Button>
 		</Grid>
 	</Border>
 
-	<Border Background="#282828"
+	<Border Background="#2a2c31"
+			BorderBrush="#93a6b7"
 			IsVisible="False"
-			BorderBrush="#8FBC8F"
 			BorderThickness="4,0,0,0"
 			CornerRadius="5"
 			Padding="8, 5, 0, 5"
@@ -178,7 +180,7 @@
 						       x:Name="editTheMessage"
                                Margin="0 0 50 0"
                                TextTrimming = "CharacterEllipsis"
-						       FontSize="12"
+						       FontSize="14"
 						       MaxLines="1"/>
 			    </StackPanel>
             </DockPanel>
@@ -186,14 +188,18 @@
 
 			<Button Grid.Column="1"
 					x:Name="DontEditTheMessage"
-					Background="#5e81ac"
+					Background="#c57179"
 					HorizontalAlignment="Right"
 					Width="45"
 					Height="45"
 					HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="&#xE10A;" 
+                    FontFamily="Segoe MDL2 Assets"
+                    FontSize="17"
 					Click="DontEditTheMessage_Click"
 					>
-				<PathIcon Data="M704 288h-281.6l177.6-202.88a32 32 0 0 0-48.32-42.24l-224 256a30.08 30.08 0 0 0-2.24 3.84 32 32 0 0 0-2.88 4.16v1.92a32 32 0 0 0 0 5.12A32 32 0 0 0 320 320a32 32 0 0 0 0 4.8 32 32 0 0 0 0 5.12v1.92a32 32 0 0 0 2.88 4.16 30.08 30.08 0 0 0 2.24 3.84l224 256a32 32 0 1 0 48.32-42.24L422.4 352H704a224 224 0 0 1 224 224v128a224 224 0 0 1-224 224H320a232 232 0 0 1-28.16-1.6 32 32 0 0 0-35.84 27.84 32 32 0 0 0 27.84 35.52A295.04 295.04 0 0 0 320 992h384a288 288 0 0 0 288-288v-128a288 288 0 0 0-288-288zM103.04 760a32 32 0 0 0-62.08 16A289.92 289.92 0 0 0 140.16 928a32 32 0 0 0 40-49.92 225.6 225.6 0 0 1-77.12-118.08zM64 672a32 32 0 0 0 22.72-9.28 37.12 37.12 0 0 0 6.72-10.56A32 32 0 0 0 96 640a33.6 33.6 0 0 0-9.28-22.72 32 32 0 0 0-10.56-6.72 32 32 0 0 0-34.88 6.72A32 32 0 0 0 32 640a32 32 0 0 0 2.56 12.16 37.12 37.12 0 0 0 6.72 10.56A32 32 0 0 0 64 672z"/>
+				
 			</Button>
 		</Grid>
 	</Border>
@@ -218,8 +224,8 @@
                             HorizontalAlignment="Stretch" 
                             VerticalContentAlignment="Center" 
                             HorizontalContentAlignment="Center" 
+                            Content="↑" FontSize="20"
                             Click="SendButton_Click">
-                        <PathIcon Data="M65.909,5.596c-0.641-0.409-1.462-0.42-2.11-0.026L4.133,41.638c-0.676,0.408-1.048,1.176-0.95,1.958 c0.097,0.783,0.646,1.436,1.399,1.666l18.664,5.707l2.445,12.145c0.142,0.701,0.646,1.273,1.324,1.501 c0.208,0.07,0.423,0.104,0.637,0.104c0.48,0,0.954-0.174,1.325-0.502l9.658-8.542l19.824,6.062 c0.191,0.059,0.389,0.088,0.585,0.088c0.387,0,0.77-0.112,1.1-0.329c0.497-0.328,0.823-0.86,0.889-1.452L66.821,7.5 C66.904,6.744,66.551,6.006,65.909,5.596z M28.928,58.921l-1.333-6.623l6.555,2.005L28.928,58.921z M57.321,57.206l-24.833-7.593 l20.105-23.584c0.358-0.42,0.309-1.051-0.112-1.409c-0.419-0.359-1.052-0.309-1.409,0.112L30.405,48.976l-20.373-6.229 l52.369-31.658L57.321,57.206z M55.524,39.707c0.042,0.006,0.083,0.008,0.124,0.008c0.498,0,0.929-0.371,0.991-0.877l0.186-1.5 c0.068-0.549-0.321-1.048-0.869-1.115c-0.547-0.073-1.047,0.322-1.115,0.869l-0.186,1.5C54.587,39.141,54.977,39.64,55.524,39.707z M54.191,50.396c-0.048,0.007,0.096,0.01,0.143,0.01c0.489,0,0.917-0.359,0.989-0.858l0.959-6.691 c0.078-0.547-0.302-1.053-0.849-1.132c-0.542-0.077-1.052,0.302-1.132,0.849l-0.959,6.691 C53.265,49.812,53.645,50.317,54.191,50.396z"/>
                     </Button>
                 </Border>
 

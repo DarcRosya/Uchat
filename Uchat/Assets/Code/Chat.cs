@@ -91,17 +91,7 @@ namespace Uchat
 			}
 
 			if (string.IsNullOrEmpty(text)) { return; }
-
-			//close the window with reply
 			replyTheMessageBox.IsVisible = false;
-
-			//if (isReplied)
-			//{
-			//	if (string.IsNullOrEmpty(chatTextBoxForReply.Text?.Trim()))
-			//	{
-			//		return;
-			//	}
-			//}
 
 			var grid = new Grid
 			{
@@ -112,7 +102,7 @@ namespace Uchat
 			};
 
 			//Recieve message
-			if (messagesCount % 2 == 1)
+			if (messagesCount % 2 == 0)
 			{
 				newMessage = new Chat.Message(isReplied, text, timestamp, false);		
 			}
