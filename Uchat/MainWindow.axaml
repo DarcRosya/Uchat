@@ -1,109 +1,497 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        x:Class="Uchat.MainWindow"
-        Width="1280" Height="720"
-        WindowStartupLocation="CenterScreen"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="NoChrome"
-        ExtendClientAreaTitleBarHeightHint="17"
-        KeyDown="MainWindow_KeyDown"
-        >
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d"
+		x:Class="Uchat.MainWindow"
+		Width="1280" Height="720"
+		WindowStartupLocation="CenterScreen"
+		ExtendClientAreaToDecorationsHint="True"
+		ExtendClientAreaChromeHints="NoChrome"
+		ExtendClientAreaTitleBarHeightHint="17"
+		Background="Transparent"
+		>
 
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="23"/>
-      <RowDefinition Height="*"/>
-    </Grid.RowDefinitions>
+	<Grid>
+		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="True">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="1.2*"/>
+				<ColumnDefinition Width="1.5*"/>
+			</Grid.ColumnDefinitions>
 
-    <!-- Title Bar -->
-    <Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
-      <Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
-      <Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-              Background="Transparent" Foreground="White" BorderThickness="0"
-              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
-      <Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
-              Background="Transparent" Foreground="White" BorderThickness="0"
-              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
-      <Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
-              Background="Transparent" Foreground="White" BorderThickness="0"
-              HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
-    </Grid>
+			<Border Grid.Column="0" CornerRadius="15 0 0 15">
+				<Border.Background>
+					<LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+						<!-- #2A9D8F | #0D0B38 -->
+						<GradientStop Offset="0.0" Color="#1E7C75"/>
+						<GradientStop Offset="1.0" Color="#080825"/>
+					</LinearGradientBrush>
+				</Border.Background>
 
-    <!-- Chat Layout -->
-    <Grid Grid.Row="1" ColumnDefinitions="0.4*,0,*,0,0.3*" RowDefinitions="40, *">
+				<Grid>
+					<StackPanel VerticalAlignment="Top" Margin="0 70 0 0">
+						<TextBlock Text="Welcome" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+						<TextBlock Text="to" FontSize="24" FontWeight="Light" Foreground="#DDFFFFFF" HorizontalAlignment="Center"/>
+						<TextBlock Text="Uchat" FontSize="40" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center"/>
+						<TextBlock Text="Connect with friends perfectly" Foreground="#AAFFFFFF" FontSize="14"
+								   HorizontalAlignment="Center" Margin="0,20,0,0" Width="200" TextAlignment="Center" TextWrapping="Wrap"/>
+					</StackPanel>
+
+					<Button x:Name="GoToLogInButtonForgottenForm"
+							HorizontalAlignment="Center"
+							Classes="LogOrSign"
+							Margin="0 190 0 0"
+							Content="Log In"
+							IsVisible="False"
+							Click="GoToLogInButtonForgottenForm_Click"
+							/>
+
+					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,50">
+						<Button x:Name="GoToSignUpButton"
+								Classes="LogOrSign"
+								Content="Sign Up"
+								Click="GoToSignUpButton_Click"
+								/>
+						<Button x:Name="GoToLogInButton"
+								Classes="LogOrSign"
+								Content="Log In"
+								IsVisible="False"
+								Click="GoToLogInButton_Click"
+								/>
+					</StackPanel>
+				</Grid>
+
+			</Border>
+
+			<Border Grid.Column="1" CornerRadius="0 15 15 0" Background="#333A44">
+				<Grid>
+					<Button
+					Width="35"
+					Height="35"
+					BorderThickness="0"
+					VerticalAlignment="Top"
+					HorizontalAlignment="Right"
+					Background="Transparent"
+					CornerRadius="0 15 0 4"
+					x:Name="CloseLoginFormButton"
+					Classes="closeLoginForm"
+					Click="CloseLoginFormButton_Click"
+					>
+						<Image Width="20" Height="20"
+							   Source="avares://Uchat/Assets/Icons/exit.png">
+						</Image>
+					</Button>
+
+					<StackPanel x:Name="loginForm"
+								VerticalAlignment="Center"
+								IsVisible="True"
+								Width="280">
+						<TextBlock Text="Hello Again!"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0,0,0,50"/>
+
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 10"
+								   Source="avares://Uchat/Assets/Icons/person.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="usernameTextBox"
+								Classes="DataBox"
+								Watermark="Username"
+								/>
+							</Border>
+						</DockPanel>
+
+						<DockPanel Margin="0 0 0 10">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="passwordTextBox"
+								Classes="DataBox"
+								Watermark="Password"
+								PasswordChar="*"
+								/>
+							</Border>
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInHelloAgain"
+						Margin="0 0 0 10"
+						Classes="invalidData"
+						/>
+
+						<TextBlock x:Name="ForgotPasswordButton"
+								   Text="Forgot password?"
+								   HorizontalAlignment="Right"
+								   Foreground="#9BBBDD"
+								   FontSize="12"
+								   Cursor="Hand"
+								   Margin="0,0,0,40"
+								   PointerPressed="ForgotPasswordButton_PointerPressed"
+								   />
+
+						<Button
+						x:Name="LogInButton"
+						Classes="LogIn"
+						Content="Log In"
+						Click="LogInButton_Click"
+						/>
+					</StackPanel>
+
+					<StackPanel x:Name="signUpForm"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="280">
+						<TextBlock Text="Create Account"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0,0,0,50"/>
+
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 10"
+								   Source="avares://Uchat/Assets/Icons/person.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="createUsernameTextBox"
+								Classes="DataBox"
+								Watermark="Username"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="createPasswordTextBox"
+								Classes="DataBox"
+								Watermark="Password"
+								PasswordChar="*"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/email.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="createEmailTextBox"
+								Classes="DataBox"
+								Watermark="Email"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInCreateAccount"
+						Classes="invalidData"
+						/>
+
+						<Button
+						x:Name="CreateAccountButton"
+						Classes="LogIn"
+						Content="Sign Up"
+						Click="CreateAccountButton_Click"
+						/>
+					</StackPanel>
+
+					<StackPanel x:Name="EmailVerification"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="280">
+						<TextBlock Text="Recovery Email"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0 0 0 40"/>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/email.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="emailInRecoveryEmailTextBox"
+								Classes="DataBox"
+								Watermark="Email"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInRecoveryEmail"
+						Classes="invalidData"
+						/>
+
+						<DockPanel>
+							<Button
+							Classes="back"
+							Click="GoToLogInButtonForgottenForm_Click"
+							>
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
+							</Button>
+							<Button
+							x:Name="GoToCodeVerification"
+							Classes="LogIn"
+							Content="Send code"
+							Width="180"
+							HorizontalAlignment="Right"
+							Click="GoToCodeVerification_Click"
+							/>
+						</DockPanel>
+					</StackPanel>
+
+					<StackPanel x:Name="CodeVerification"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="280">
+						<TextBlock Text="Code Verification"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0 0 0 40"/>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/key.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="codeVerificationTextBox"
+								Classes="DataBox"
+								Watermark="Code"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInCodeVerification"
+						Classes="invalidData"
+						/>
+
+						<DockPanel>
+							<Button
+							x:Name="BackToEmailForm"
+							Classes="back"
+							Click="BackToEmailForm_Click"
+							>
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
+							</Button>
+							<Button
+							x:Name="GoToResetPasswordForm"
+							Classes="LogIn"
+							Content="Continue"
+							Width="180"
+							HorizontalAlignment="Right"
+							Click="GoToResetPasswordForm_Click"
+							/>
+						</DockPanel>
+					</StackPanel>
+
+					<StackPanel x:Name="ResetPasswordForm"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="280">
+						<TextBlock Text="Reset Password"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0,0,0,50"/>
+
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="newPasswordTextBox"
+								Classes="DataBox"
+								Watermark="New password"
+								PasswordChar="*"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Background="#404853">
+								<TextBox
+								x:Name="confirmPasswordTextBox"
+								Classes="DataBox"
+								Watermark="Confirm password"
+								PasswordChar="*"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInResetPassword"
+						Classes="invalidData"
+						/>
+
+						<Button x:Name="ChangePasswordButton"
+								Classes="LogIn"
+								Content="Change the password"
+								Click="ChangePasswordButton_Click"
+								/>
+					</StackPanel>
+				</Grid>
+			</Border>
+		</Grid>
+
+		<Grid x:Name="MainProgram" IsVisible="False">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="23"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<!-- Title Bar -->
+			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
+				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
+				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+						Background="Transparent" Foreground="White" BorderThickness="0"
+						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
+				<Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+						Background="Transparent" Foreground="White" BorderThickness="0"
+						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
+				<Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+						Background="Transparent" Foreground="White" BorderThickness="0"
+						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
+			</Grid>
+
+			<!-- Chat Layout -->
+			<Grid Grid.Row="1" ColumnDefinitions="0.4*,0,*,0,0.3*" RowDefinitions="40, *">
 
 
-      <!-- Left Search -->
-      <Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
-        <Button Grid.Column="0" Background="Transparent" Foreground="White"
-                CornerRadius="5" Margin="0">
-			  <Image Source="avares://Uchat/Assets/Icons/options.png"/>
-        </Button>
-          
-        <Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
-          <TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
-                   Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
-        </Border>
+				<!-- Left Search -->
+				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
+					<Button Grid.Column="0" Background="Transparent" Foreground="White"
+							CornerRadius="5" Margin="0">
+						<Image Source="avares://Uchat/Assets/Icons/options.png"/>
+					</Button>
 
-        <Button Grid.Column="2" Background="Transparent" Foreground="White"
-                CornerRadius="5" Margin="0,5,5,5"
-                Click="addFriend_Click">
-			  <Image Source="avares://Uchat/Assets/Icons/add_friend.png"/>
-        </Button>
+					<Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
+						<TextBox Watermark="Search" Background="Transparent" BorderThickness="0"
+								 Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"/>
+					</Border>
 
-      </Grid>
+					<Button Grid.Column="2" Background="Transparent" Foreground="White"
+							CornerRadius="5" Margin="0,5,5,5"
+							Click="addFriend_Click">
+						<Image Source="avares://Uchat/Assets/Icons/add_friend.png"/>
+					</Button>
 
-      <!-- Middle Top Bar -->
-      <Grid MinWidth="350" Grid.Column="2" Grid.Row="0" Background="#0e1013"
-            ColumnDefinitions="200,0.7*,0.3*">
-        <StackPanel>
-          <TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
-          <TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
-        </StackPanel>
+				</Grid>
 
-        <Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
-          <TextBox Watermark="Search"
-                   Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
-                   HorizontalAlignment="Stretch"/>
-        </Border>
+				<!-- Middle Top Bar -->
+				<Grid MinWidth="350" Grid.Column="2" Grid.Row="0" Background="#0e1013"
+					  ColumnDefinitions="200,0.7*,0.3*">
+					<StackPanel>
+						<TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
+						<TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
+					</StackPanel>
 
-        <Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
-                BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-      </Grid>
+					<Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
+						<TextBox Watermark="Search"
+								 Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
+								 HorizontalAlignment="Stretch"/>
+					</Border>
 
-      <!-- Right Top bar -->
-      <Grid Grid.Column="4" Grid.Row="0" Background="#0e1013"></Grid>
+					<Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
+							BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+				</Grid>
 
-      <!-- Contacts Left Menu -->
-      <Grid MinWidth="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
-        <Grid Background="#3e4042" ColumnDefinitions="*,*">
-          <Button Content="Friends" CornerRadius="0" Background="#5e81ac" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-          <Button Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        </Grid>
+				<!-- Right Top bar -->
+				<Grid Grid.Column="4" Grid.Row="0" Background="#0e1013"></Grid>
 
-        <ScrollViewer Grid.Row="1">
-          <StackPanel Name="contanctList" Background="#20242d">
-          </StackPanel>
-        </ScrollViewer>
-      </Grid>
+				<!-- Contacts Left Menu -->
+				<Grid MinWidth="200" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
+					<Grid Background="#3e4042" ColumnDefinitions="*,*">
+						<Button Content="Friends" CornerRadius="0" Background="#5e81ac" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+						<Button Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+					</Grid>
 
-    <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
-                  Background="Transparent"
-                  ResizeDirection="Columns"
-                  ResizeBehavior="PreviousAndNext"
-                  ShowsPreview="False"/>
+					<ScrollViewer Grid.Row="1">
+						<StackPanel Name="contanctList" Background="#20242d">
+						</StackPanel>
+					</ScrollViewer>
+				</Grid>
 
-      <!-- Chat Middle -->
-      <Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#12151a">
-        <Grid/>
+				<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+							  Background="Transparent"
+							  ResizeDirection="Columns"
+							  ResizeBehavior="PreviousAndNext"
+							  ShowsPreview="False"/>
 
-        <!-- Chat Container -->
-    <ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
-	    <StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
-    </ScrollViewer>
+				<!-- Chat Middle -->
+				<Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#12151a">
+					<Grid/>
+
+					<!-- Chat Container -->
+					<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
+						<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
+					</ScrollViewer>
 
 	<Border Background="#2a2c31"
 			BorderBrush="#93a6b7"
@@ -204,16 +592,16 @@
 		</Grid>
 	</Border>
 
-        <!-- Bottom Container -->
-<Border Grid.Row="1"
-                Background="Black"
-                Margin="10,0,10,10"
-                CornerRadius="5">
-            <Grid ColumnDefinitions="*,70">
+					<!-- Bottom Container -->
+					<Border Grid.Row="1"
+							Background="Black"
+							Margin="10,0,10,10"
+							CornerRadius="5">
+						<Grid ColumnDefinitions="*,70">
 
-                <TextBox Name="chatTextBox" 
-                         Classes="MessagesToSendOrEdit"
-                         Watermark="Write a message..."/>
+							<TextBox Name="chatTextBox"
+									 Classes="MessagesToSendOrEdit"
+									 Watermark="Write a message..."/>
 
                 <Border Grid.Column="1" Background="#5e81ac" CornerRadius="5">
                     <Button Name="sendButton" 
@@ -229,56 +617,57 @@
                     </Button>
                 </Border>
 
-                <TextBox Name="chatTextBoxForEdit"
-                         Classes="MessagesToSendOrEdit"
-                         IsVisible="False"
-                         Watermark="Edit the message..."/>
+							<TextBox Name="chatTextBoxForEdit"
+									 Classes="MessagesToSendOrEdit"
+									 IsVisible="False"
+									 Watermark="Edit the message..."/>
 
-                <Border IsVisible="False" x:Name="editTheMessageButton" Grid.Column="1" Background="#5e81ac" CornerRadius="5">
-                    <Button Name="EditMessageButton"
-                            Background="Transparent" 
-                            Foreground="White"
-                            BorderThickness="0"
-                            VerticalAlignment="Stretch"
-                            HorizontalAlignment="Stretch"
-                            VerticalContentAlignment="Center"
-                            HorizontalContentAlignment="Center"
-                            Click="EditMessageButton_Click">
-                        <PathIcon Data="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z"/>
-                    </Button>
-                </Border>
+							<Border IsVisible="False" x:Name="editTheMessageButton" Grid.Column="1" Background="#5e81ac" CornerRadius="5">
+								<Button Name="EditMessageButton"
+										Background="Transparent"
+										Foreground="White"
+										BorderThickness="0"
+										VerticalAlignment="Stretch"
+										HorizontalAlignment="Stretch"
+										VerticalContentAlignment="Center"
+										HorizontalContentAlignment="Center"
+										Click="EditMessageButton_Click">
+									<PathIcon Data="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z"/>
+								</Button>
+							</Border>
 
-                <TextBox Name="chatTextBoxForReply"
-                         Classes="MessagesToSendOrEdit"
-                         IsVisible="False"
-                         Watermark="Reply to the message..."/>
+							<TextBox Name="chatTextBoxForReply"
+									 Classes="MessagesToSendOrEdit"
+									 IsVisible="False"
+									 Watermark="Reply to the message..."/>
 
-            </Grid>
-        </Border>
-      </Grid>
+						</Grid>
+					</Border>
+				</Grid>
 
-    <GridSplitter Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
-                Background="Transparent"
-                ResizeDirection="Columns"
-                ResizeBehavior="PreviousAndNext"
-                ShowsPreview="False"/>
+				<GridSplitter Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
+							  Background="Transparent"
+							  ResizeDirection="Columns"
+							  ResizeBehavior="PreviousAndNext"
+							  ShowsPreview="False"/>
 
-      <!-- Members Right Panel -->
-      <Grid Grid.Column="4" Grid.Row="1" Background="#0e1115">
-        <ScrollViewer>
-          <StackPanel>
-            <TextBlock Text="Members" 
-                       Background="Transparent"
-                       Foreground="White"
-                       HorizontalAlignment="Center"
-                       Padding="0,500,0,0"
-                       MinHeight="1000">
-            </TextBlock>
-          </StackPanel>
-        </ScrollViewer>
-      </Grid>
-    </Grid>
-  </Grid>
+				<!-- Members Right Panel -->
+				<Grid Grid.Column="4" Grid.Row="1" Background="#0e1115">
+					<ScrollViewer>
+						<StackPanel>
+							<TextBlock Text="Members"
+									   Background="Transparent"
+									   Foreground="White"
+									   HorizontalAlignment="Center"
+									   Padding="0,500,0,0"
+									   MinHeight="1000">
+							</TextBlock>
+						</StackPanel>
+					</ScrollViewer>
+				</Grid>
+			</Grid>
+		</Grid>
+	</Grid>
 </Window>
 
 
