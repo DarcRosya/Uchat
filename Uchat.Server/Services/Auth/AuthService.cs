@@ -170,7 +170,7 @@ public class AuthService
             var notesChat = new ChatRoom
             {
                 Name = "Notes",
-                Description = "Личный чат для заметок",
+                Description = "Private chat for notes",
                 Type = ChatRoomType.Private,
                 CreatorId = userId,
                 CreatedAt = DateTime.UtcNow,
