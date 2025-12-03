@@ -1,0 +1,14 @@
+[phases.setup]
+nixPkgs = ["dotnet-sdk_9"]
+
+[phases.build]
+cmds = [
+    "dotnet restore",
+    "dotnet publish -c Release -o out"
+]
+
+[phases.start]
+cmd = "cd out && dotnet Uchat.Server.dll"
+
+[variables]
+ASPNETCORE_ENVIRONMENT = "Production"

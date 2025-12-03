@@ -7,31 +7,32 @@ namespace Uchat
     public static class ServerConfig
     {
         /// <summary>
-        /// URL ngrok для удаленного доступа
-        /// ВАЖНО: Обновите этот URL после запуска ngrok!
+        /// ЦЕНТРАЛЬНЫЙ СЕРВЕР - используется всеми клиентами
+        /// Этот URL должен указывать на единственный работающий сервер
         /// 
-        /// Шаги:
-        /// 1. Запустите сервер: cd Uchat.Server && dotnet run
-        /// 2. В другом терминале: ngrok http 5180
-        /// 3. Скопируйте URL из ngrok (например: https://abc123.ngrok-free.app)
-        /// 4. Вставьте сюда вместо значения ниже
+        /// ВАЖНО для разработчиков:
+        /// - НЕ запускайте локальный сервер (Uchat.Server)
+        /// - Используйте только клиент (Uchat)
+        /// - Все подключаются к этому центральному серверу
         /// </summary>
-        public const string NgrokUrl = "https://unghostly-bunglingly-elli.ngrok-free.dev";
+        public const string CentralServerUrl = "https://unghostly-bunglingly-elli.ngrok-free.dev";
         
         /// <summary>
-        /// Локальный URL для разработки
+        /// Локальный URL - ТОЛЬКО для тестирования сервера
+        /// Обычные пользователи НЕ должны это использовать
         /// </summary>
         public const string LocalUrl = "http://localhost:5180";
         
         /// <summary>
-        /// Использовать ngrok (true) или локальный сервер (false)
+        /// Режим разработки сервера (false = все клиенты на центральный сервер)
+        /// Установите true ТОЛЬКО если вы разработчик сервера и тестируете изменения
         /// </summary>
-        public const bool UseNgrok = true;
+        public const bool UseLocalServer = false;
         
         /// <summary>
         /// Текущий активный URL сервера
         /// </summary>
-        public static string ServerUrl => UseNgrok ? NgrokUrl : LocalUrl;
+        public static string ServerUrl => UseLocalServer ? LocalUrl : CentralServerUrl;
         
         /// <summary>
         /// URL для SignalR Hub
