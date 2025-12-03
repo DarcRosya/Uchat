@@ -5,6 +5,8 @@
 		mc:Ignorable="d"
 		x:Class="Uchat.MainWindow"
 		Width="1280" Height="720"
+		MinWidth="700"
+		MinHeight="300"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaChromeHints="NoChrome"
@@ -443,11 +445,10 @@
 			<!-- Chat Layout -->
 			<Grid Grid.Row="1" RowDefinitions="40, *">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="0.4*" MinWidth="200"/>
+					<ColumnDefinition Width="0.4*" MinWidth="300"/>
 					<ColumnDefinition Width="0"/>
-					<ColumnDefinition Width="*" MinWidth="400"/> 
+					<ColumnDefinition Width="*" MinWidth="400"/>
 					<ColumnDefinition Width="0"/>
-					<ColumnDefinition Width="0.3*" MinWidth="200"/>
 				</Grid.ColumnDefinitions>
 
 				<!-- Left Search -->
@@ -475,10 +476,9 @@
 				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013">
 					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 						<TextBlock Text=" ENDGAME" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
-					</StackPanel>
 
-					<Button Content="→" Background="Transparent" Foreground="White"
-							BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+						<!-- ЗАПИХНУТЬ СЮДА КНОПКУ С ДАННЫМИ КАКИМИ-ТО ПРО ГРУППУ, ДРУГА ИЛИ ЕЩЁ ЧТО-ТО.  -->
+					</StackPanel>
 				</Grid>
 
 				<!-- Right Top bar -->
@@ -669,21 +669,6 @@
 							  ResizeDirection="Columns"
 							  ResizeBehavior="PreviousAndNext"
 							  ShowsPreview="False"/>
-
-				<!-- Members Right Panel -->
-				<Grid Grid.Column="4" Grid.Row="1" Background="#0e1115">
-					<ScrollViewer>
-						<StackPanel>
-							<TextBlock Text="Members"
-									   Background="Transparent"
-									   Foreground="White"
-									   HorizontalAlignment="Center"
-									   Padding="0,500,0,0"
-									   >
-							</TextBlock>
-						</StackPanel>
-					</ScrollViewer>
-				</Grid>
 			</Grid>
 		</Grid>
 
@@ -692,23 +677,53 @@
                 Background="#80000000"
                 IsVisible="False">
 			<Border CornerRadius="5" Background="#333A44"
-					Width="300" Height="120">
+					Width="300" Height="150">
             <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                    Background="Transparent">
 
-				<TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,4,0,0"
-				>Enter User ID</TextBlock>
+				<TextBlock  Margin="0 7 0 10" FontWeight="SemiBold" HorizontalAlignment="Center"
+					FontSize="20"
+					Foreground="#DDEEFF"
+				>NEW CONTACT</TextBlock>
 
                 <!-- Текстовий блок для введення -->
-				<Border BorderThickness="1" BorderBrush="White" CornerRadius="5"  Margin="10">
-					<TextBox Name="AddContactTextBox" HorizontalAlignment="Stretch" BorderThickness="0" Background="Transparent"/>
+				<Border 
+					Margin="0 10 0 10"
+					BorderThickness="0 0 0 4"
+					Width="250"
+					BorderBrush="Gray"
+					CornerRadius="5"
+					Background="#404853">
+					<TextBox
+					Name="AddContactTextBox"
+					Classes="DataBox"
+					Watermark="Username"
+					/>
 				</Border>
 
+
                 <!-- Кнопки Cancel та Enter -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="1">
-                    <Button Name="CancelButton" Content="Cancel" Margin="0,0,10,0" Click="CancelButton_Click"/>
-                    <Button Name="AddButton" Content="Add" Click="AddButton_Click"/>
-                </StackPanel>
+
+				<DockPanel Margin="21 7 21 0">
+					<Button Name="CancelButton"
+							HorizontalAlignment="Left"
+							Height="35"
+							Background="Transparent"
+							Click="CancelButton_Click" Classes="back"
+							
+							>
+						<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
+					</Button>
+                    <Button HorizontalAlignment="Right"
+							Height="35"
+							Width="150"
+							Name="AddButton" 
+							Content="Add"
+							Click="AddButton_Click"
+							Classes="LogIn"
+							/>
+				</DockPanel>
+
             </StackPanel>
 			</Border>
         </Grid>
