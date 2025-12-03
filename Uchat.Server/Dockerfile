@@ -6,15 +6,18 @@ ENV ASPNETCORE_URLS=http://+:8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Копируем csproj из родительской папки тоже (для зависимостей Database)
-COPY ["Uchat.Server.csproj", "Uchat.Server/"]
-COPY ["../Database/Database.csproj", "Database/"]
+# Копируем csproj файлы
+COPY ["Uchat.Server/Uchat.Server.csproj", "Uchat.Server/"]
+COPY ["Database/Database.csproj", "Database/"]
+
+# Restore зависимостей
 RUN dotnet restore "Uchat.Server/Uchat.Server.csproj"
 
 # Копируем весь код
-COPY . Uchat.Server/
-COPY ../Database/ Database/
+COPY ["Uchat.Server/", "Uchat.Server/"]
+COPY ["Database/", "Database/"]
 
+# Собираем проект
 WORKDIR "/src/Uchat.Server"
 RUN dotnet build "Uchat.Server.csproj" -c Release -o /app/build
 
