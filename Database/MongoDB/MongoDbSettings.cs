@@ -1,28 +1,5 @@
-/*
- * ============================================================================
- * MONGODB SETTINGS (Настройки подключения к MongoDB)
- * ============================================================================
- * 
- * Этот класс хранит настройки подключения к MongoDB.
- * Загружается из appsettings.json через IOptions<MongoDbSettings>
- * 
- * ============================================================================
- */
-
 namespace Uchat.Database.MongoDB;
 
-/// <summary>
-/// Настройки подключения к MongoDB
-/// 
-/// Загружается из appsettings.json:
-/// {
-///   "MongoDB": {
-///     "ConnectionString": "mongodb+srv://user:password@cluster.mongodb.net/",
-///     "DatabaseName": "uchat",
-///     "MessagesCollectionName": "messages"
-///   }
-/// }
-/// </summary>
 public class MongoDbSettings
 {
     /// <summary>

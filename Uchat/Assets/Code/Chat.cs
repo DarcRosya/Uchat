@@ -65,21 +65,6 @@ namespace Uchat
 			{
 				await SendMessageToServerAsync(text);
 			
-<<<<<<< HEAD
-				// Очищаем поля после успешной отправки
-				chatTextBox.Text = "";
-				chatTextBoxForReply.Text = "";
-				chatTextBox.IsVisible = true;
-				chatTextBoxForReply.IsVisible = false;
-				isReplied = false;
-			}
-			catch (Exception)
-			{
-				// Если не удалось отправить, оставляем текст в поле
-			}
-		}		
-		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
-=======
 			// Очищаем поля после успешной отправки
 			chatTextBox.Text = "";
 			chatTextBoxForReply.Text = "";
@@ -93,7 +78,6 @@ namespace Uchat
 			// Если не удалось отправить, оставляем текст в поле
 		}
 	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
->>>>>>> vadim
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;

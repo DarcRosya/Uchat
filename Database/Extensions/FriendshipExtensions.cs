@@ -4,9 +4,6 @@ using Uchat.Database.Entities;
 
 namespace Uchat.Database.Extensions;
 
-/// <summary>
-/// Extension methods for working with friendships and getting friends list
-/// </summary>
 public static class FriendshipExtensions
 {
     /// <summary>

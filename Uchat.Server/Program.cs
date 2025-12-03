@@ -57,9 +57,22 @@ public class Program
         // БАЗЫ ДАННЫХ
         // ============================================================================
         
-        // SQLite для локальной разработки (пользователи, чаты)
+        // Выбор БД: SQLite (локально) или PostgreSQL (для команды в сети)
+        var dbProvider = builder.Configuration["DatabaseProvider"] ?? "SQLite";
+        
         builder.Services.AddDbContext<UchatDbContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+        {
+            if (dbProvider == "PostgreSQL")
+            {
+                options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"));
+                Console.WriteLine("Using PostgreSQL (shared network database)");
+            }
+            else
+            {
+                options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
+                Console.WriteLine("Using SQLite (local database)");
+            }
+        });
 
         // MongoDB для сообщений (локально или в Docker)
         builder.Services.Configure<MongoDbSettings>(

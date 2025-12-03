@@ -1,33 +1,3 @@
-/*
- * ============================================================================
- * MONGODB DOCUMENT: MESSAGE (Сообщение в чате)
- * ============================================================================
- * 
- * ПОЧЕМУ MONGODB ДЛЯ СООБЩЕНИЙ?
- * 
- * 1. SCHEMA-LESS ФОРМАТ (NoSQL)
- *    - Разные типы сообщений (текст, фото, видео, опросы, системные)
- *    - Без JOIN-запросов для вложений и реакций
- *    - Вложенные документы (sender, attachments, reactions)
- *    - Все данные сообщения в одном документе
- * 
- * 2. МАСШТАБИРУЕМОСТЬ
- *    - Горизонтальное масштабирование через sharding
- *    - Репликация для надежности
- *    - Подходит для облачного хостинга (MongoDB Atlas)
- * 
- * 3. CURSOR-BASED PAGINATION (пагинация по времени)
- *    - Клиент запоминает lastTimestamp последнего сообщения
- *    - Загружает следующую порцию: WHERE sentAt < lastTimestamp
- *    - Составной индекс (chatId + sentAt DESC) для мгновенной загрузки
- * 
- * 4. ПОДДЕРЖКА LINQ через MongoDB.Driver
- *    - Привычный C# синтаксис
- *    - Сложные запросы без изучения query language
- * 
- * ============================================================================
- */
-
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -43,20 +13,10 @@ namespace Uchat.Database.MongoDB;
 /// </summary>
 public class MongoMessage
 {
-    /// <summary>
-    /// Уникальный ID сообщения
-    /// В MongoDB: _id (ObjectId)
-    /// В C#: string (автоматическая конвертация)
-    /// 
-    /// Пример: "507f1f77bcf86cd799439011"
-    /// </summary>
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
     
-    /// <summary>
-    /// ID чата (ссылка на ChatRooms.Id в SQLite)
-    /// </summary>
     [BsonElement("chatId")]
     public int ChatId { get; set; }
     
@@ -105,13 +65,6 @@ public class MongoMessage
     [BsonElement("type")]
     public string Type { get; set; } = "text";
     
-    /// <summary>
-    /// Список вложений (фото, видео, файлы)
-    /// В MongoDB: attachments (array of objects)
-    /// 
-    /// Пустой массив [] если нет вложений
-    /// Может содержать несколько элементов (альбом фото)
-    /// </summary>
     [BsonElement("attachments")]
     public List<MessageAttachment> Attachments { get; set; } = new();
     
@@ -133,26 +86,9 @@ public class MongoMessage
     [BsonElement("reactions")]
     public Dictionary<string, List<int>> Reactions { get; set; } = new();
     
-    /// <summary>
-    /// Список пользователей, которые прочитали сообщение
-    /// 
-    /// Пример: [100, 200, 300]
-    /// 
-    /// Пустой массив [] = никто не прочитал
-    /// Содержит userId из Users.Id (SQLite)
-    /// </summary>
     [BsonElement("readBy")]
     public List<int> ReadBy { get; set; } = new();
     
-    /// <summary>
-    /// Дата и время отправки сообщения (UTC)
-    /// 
-    /// Используется для:
-    /// - Сортировки сообщений (ORDER BY sentAt DESC)
-    /// - TTL Index (автоудаление через 30 дней)
-    /// 
-    /// Пример: ISODate("2024-01-15T10:30:00Z")
-    /// </summary>
     [BsonElement("sentAt")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
     public DateTime SentAt { get; set; } = DateTime.UtcNow;
@@ -176,20 +112,10 @@ public class MongoMessage
     [BsonElement("isDeleted")]
     public bool IsDeleted { get; set; }
     
-    /// <summary>
-    /// ID сообщения, на которое это является ответом
-    /// 
-    /// NULL = обычное сообщение
-    /// NOT NULL = ответ на другое сообщение
-    /// </summary>
     [BsonElement("replyToMessageId")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? ReplyToMessageId { get; set; }
     
-    /// <summary>
-    /// Текст сообщения, на которое отвечаем (для быстрого отображения)
-    /// Дублирование данных для ускорения UI
-    /// </summary>
     [BsonElement("replyToContent")]
     public string? ReplyToContent { get; set; }
 }

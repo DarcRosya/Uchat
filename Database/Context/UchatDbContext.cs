@@ -1,41 +1,4 @@
-/*
- * ============================================================================
- * DATABASE CONTEXT (Контекст базы данных)
- * ============================================================================
- * 
- * ЭТО САМЫЙ ВАЖНЫЙ ФАЙЛ ДЛЯ РАБОТЫ С БАЗОЙ ДАННЫХ!
- * 
- * ЧТО ТАКОЕ DbContext?
- * В FastAPI/SQLAlchemy это примерно эквивалент:
- *   - declarative_base() + engine + sessionmaker вместе
- * 
- * DbContext это:
- * 1. Точка входа в базу данных
- * 2. Хранилище всех таблиц (DbSet<T>)
- * 3. Место для настройки связей между таблицами
- * 4. Менеджер транзакций
- * 5. Change tracker (отслеживает изменения в объектах)
- * 
- * ============================================================================
- * КАК ЭТО РАБОТАЕТ?
- * ============================================================================
- * 
- * 1. Создаешь экземпляр DbContext
- * 2. Работаешь с DbSet<T> (это как таблицы)
- * 3. Вызываешь SaveChangesAsync() чтобы сохранить в БД
- * 
- * Пример:
- *   var context = new UchatDbContext(options);
- *   
- *   var user = new User { Username = "john" };
- *   context.Users.Add(user);  // Добавили в память
- *   await context.SaveChangesAsync();  // Сохранили в БД (INSERT)
- *   
- *   user.DisplayName = "John Doe";  // Изменили
- *   await context.SaveChangesAsync();  // EF автоматически создаст UPDATE!
- * 
- * ============================================================================
- */
+
 
 using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Entities;
@@ -43,12 +6,6 @@ using Uchat.Database.Entities;
 namespace Uchat.Database.Context;
 public class UchatDbContext : DbContext
 {
-    // ========================================================================
-    // DBSETS (Таблицы в базе данных)
-    // ========================================================================
-    // DbSet<T> - это коллекция всех записей типа T в БД
-    // Каждый DbSet представляет одну таблицу
-    // ========================================================================
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; } = null!;
@@ -57,81 +14,34 @@ public class UchatDbContext : DbContext
     public DbSet<Friendship> Friendships { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
-    // ========================================================================
-    // CONSTRUCTOR (Конструктор)
-    // ========================================================================
-    
-    /// Конструктор DbContext
-    /// 
-    /// DbContextOptions содержит настройки подключения к БД:
-    /// - Тип БД (SQLite, PostgreSQL, MySQL...)
-    /// - Connection string (путь к файлу БД)
-    /// - Logging
-    /// - и другое
-    /// 
-    /// Эти options передаются через Dependency Injection в реальном приложении:
-    /// 
-    ///   services.AddDbContext&lt;UchatDbContext&gt;(options =>
-    ///       options.UseSqlite("Data Source=uchat.db"));
     public UchatDbContext(DbContextOptions<UchatDbContext> options) : base(options)
     {
         // base(options) передает настройки в родительский класс DbContext
     }
 
-    // ========================================================================
-    // MODEL CONFIGURATION (Конфигурация моделей)
-    // ========================================================================
-    // OnModelCreating вызывается ОДИН РАЗ при создании контекста
-    // Здесь настраиваются:
-    // - Primary Keys
-    // - Foreign Keys
-    // - Indexes (для ускорения запросов)
-    // - Unique constraints
-    // - Default values
-    // - Column types
-    // - Relationships (связи между таблицами)
-    // ========================================================================
-
-    /// Настройка моделей базы данных (маппинг)
-    /// 
-    /// В EF Core есть два подхода:
-    /// 1. Data Annotations (атрибуты на свойствах) - проще
-    /// 2. Fluent API (здесь в OnModelCreating) - мощнее и гибче
-    /// 
-    /// Мы используем Fluent API!
+    /// We use Fluent API!
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ USERS
+        // USERS' TABLE
         // ====================================================================
         
         modelBuilder.Entity<User>(entity =>
         {
-            // Имя таблицы в БД (по умолчанию было бы "User")
             entity.ToTable("Users");
 
-            // entity.HasKey(u => u.Id) не обязательно - EF автоматически определяет свойство Id как PK
             entity.HasKey(u => u.Id);
-
-            // ----------------------------------------------------------------
-            // INDEXES (индексы для быстрого поиска)
-            // ----------------------------------------------------------------
 
             entity.HasIndex(u => u.Username)
                 .IsUnique() 
                 .HasDatabaseName("IX_Users_Username");
             
-            // UNIQUE INDEX на Email (для входа и уникальности)
             entity.HasIndex(u => u.Email)
                 .IsUnique() 
                 .HasDatabaseName("IX_Users_Email");
 
-            // ----------------------------------------------------------------
-            // COLUMN CONSTRAINTS (ограничения на колонки)
-            // ----------------------------------------------------------------
-            
             entity.Property(u => u.Username)
                 .IsRequired()  // NOT NULL
                 .HasMaxLength(50);  // VARCHAR(50)
@@ -156,50 +66,37 @@ public class UchatDbContext : DbContext
             entity.Property(u => u.AvatarUrl)
                 .HasMaxLength(500);
 
-            // DEFAULT VALUE для CreatedAt
             // PostgreSQL: CreatedAt TIMESTAMP NOT NULL DEFAULT NOW()
             // SQLite: CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             entity.Property(u => u.CreatedAt)
-                .HasDefaultValueSql("NOW()");  // PostgreSQL синтаксис (SQLite тоже поддерживает)
+                .HasDefaultValueSql("NOW()"); 
 
             entity.Property(u => u.LanguageCode)
                 .IsRequired()
                 .HasMaxLength(5)  // "en", "uk", "en-US"
                 .HasDefaultValue("en");
 
-            // ----------------------------------------------------------------
-            // RELATIONSHIPS (связи с другими таблицами)
-            // ----------------------------------------------------------------
-            
-            // ПРИМЕЧАНИЕ: Сообщения (Messages) хранятся в MongoDB!
-            // SQLite используется только для:
-            // - Users (пользователи)
-            // - Contacts (контакты)
-            // - Friendships (запросы в друзья)
-            // - ChatRooms (метаданные чатов)
-            // - ChatRoomMembers (участники чатов)
-
             // User -> ChatRoomMemberships (One-to-Many)
             entity.HasMany(u => u.ChatRoomMemberships)
                 .WithOne(crm => crm.User)
                 .HasForeignKey(crm => crm.UserId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его членство в группах
+                .OnDelete(DeleteBehavior.Cascade); 
 
             // User -> Contacts (One-to-Many)
             entity.HasMany(u => u.Contacts)
                 .WithOne(c => c.Owner)
                 .HasForeignKey(c => c.OwnerId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его контакты
+                .OnDelete(DeleteBehavior.Cascade); 
             
             // User -> RefreshTokens (One-to-Many)
             entity.HasMany(u => u.RefreshTokens)
                 .WithOne(t => t.User)
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его токены
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ CHATROOMS
+        // CHATROOMS' TABLE
         // ====================================================================
         
         modelBuilder.Entity<ChatRoom>(entity =>
@@ -207,29 +104,17 @@ public class UchatDbContext : DbContext
             entity.ToTable("ChatRooms");
             entity.HasKey(cr => cr.Id);
 
-            // ----------------------------------------------------------------
-            // INDEXES
-            // ----------------------------------------------------------------
-            
-            // INDEX на Type (для фильтрации по типу чата)
             entity.HasIndex(cr => cr.Type)
                 .HasDatabaseName("IX_ChatRooms_Type");
             
-            // INDEX на CreatorId (для получения чатов пользователя)
             entity.HasIndex(cr => cr.CreatorId)
                 .HasDatabaseName("IX_ChatRooms_CreatorId");
             
-            // INDEX на ParentChatRoomId (для получения топиков группы)
             entity.HasIndex(cr => cr.ParentChatRoomId)
                 .HasDatabaseName("IX_ChatRooms_ParentChatRoomId");
             
-            // INDEX на LastActivityAt (для сортировки по активности)
             entity.HasIndex(cr => cr.LastActivityAt)
                 .HasDatabaseName("IX_ChatRooms_LastActivityAt");
-
-            // ----------------------------------------------------------------
-            // COLUMNS
-            // ----------------------------------------------------------------
 
             entity.Property(cr => cr.Name)
                 .IsRequired()
@@ -244,43 +129,32 @@ public class UchatDbContext : DbContext
             entity.Property(cr => cr.CreatedAt)
                 .HasDefaultValueSql("NOW()");
 
-            // ----------------------------------------------------------------
-            // RELATIONSHIPS
-            // ----------------------------------------------------------------
-
             // ChatRoom -> Creator (Many-to-One)
             entity.HasOne(cr => cr.Creator)
-                .WithMany()  // У User нет обратной навигации к созданным группам
+                .WithMany()  
                 .HasForeignKey(cr => cr.CreatorId)
-                .OnDelete(DeleteBehavior.Restrict);  // Нельзя удалить создателя
+                .OnDelete(DeleteBehavior.Restrict);  // Can't Delete the Creator
 
             // ChatRoom -> Members (One-to-Many)
             entity.HasMany(cr => cr.Members)
                 .WithOne(crm => crm.ChatRoom)
                 .HasForeignKey(crm => crm.ChatRoomId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить группу → удалить всех участников
+                .OnDelete(DeleteBehavior.Cascade);  
 
-            // ChatRoom -> ParentChatRoom (self-reference для топиков)
             entity.HasOne(cr => cr.ParentChatRoom)
                 .WithMany(cr => cr.Topics)
                 .HasForeignKey(cr => cr.ParentChatRoomId)
-                .OnDelete(DeleteBehavior.Cascade); // Удалить группу → удалить топики
+                .OnDelete(DeleteBehavior.Cascade); 
         });
 
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ CHATROOMMEMBERS
+        // CHATROOMMEMBERS
         // ====================================================================
         
         modelBuilder.Entity<ChatRoomMember>(entity =>
         {
             entity.ToTable("ChatRoomMembers");
             entity.HasKey(crm => crm.Id);
-
-            // ----------------------------------------------------------------
-            // ОЧЕНЬ ВАЖНО! UNIQUE CONSTRAINT
-            // ----------------------------------------------------------------
-            // Пользователь НЕ МОЖЕТ быть дважды в одной группе!
-            // ----------------------------------------------------------------
             
             entity.HasIndex(crm => new { crm.ChatRoomId, crm.UserId })
                 .IsUnique()  // UNIQUE (ChatRoomId, UserId)
@@ -292,11 +166,11 @@ public class UchatDbContext : DbContext
             entity.Property(crm => crm.JoinedAt)
                 .HasDefaultValueSql("NOW()");
 
-            // ChatRoomMember -> InvitedBy (кто пригласил)
+            // ChatRoomMember -> InvitedBy (who invited)
             entity.HasOne(crm => crm.InvitedBy)
-                .WithMany()  // У User нет списка "кого я пригласил"
+                .WithMany()  
                 .HasForeignKey(crm => crm.InvitedById)
-                .OnDelete(DeleteBehavior.SetNull);  // Удалить пригласившего → InvitedById = NULL
+                .OnDelete(DeleteBehavior.SetNull); 
             
             // ChatRoomMember -> Permissions (1-to-1, optional)
             entity.HasOne(crm => crm.Permissions)
@@ -306,7 +180,7 @@ public class UchatDbContext : DbContext
         });
 
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ CONTACTS
+        // CONTACTS
         // ====================================================================
         
         modelBuilder.Entity<Contact>(entity =>
@@ -314,12 +188,6 @@ public class UchatDbContext : DbContext
             entity.ToTable("Contacts");
             entity.HasKey(c => c.Id);
 
-            // ----------------------------------------------------------------
-            // UNIQUE CONSTRAINT
-            // ----------------------------------------------------------------
-            // Нельзя добавить один контакт дважды!
-            // ----------------------------------------------------------------
-            
             entity.HasIndex(c => new { c.OwnerId, c.ContactUserId })
                 .IsUnique()
                 .HasDatabaseName("IX_Contacts_Owner_Contact");
@@ -344,12 +212,12 @@ public class UchatDbContext : DbContext
 
             // Contact -> ContactUser
             entity.HasOne(c => c.ContactUser)
-                .WithMany()  // У User нет списка "кто меня добавил в контакты"
+                .WithMany()  
                 .HasForeignKey(c => c.ContactUserId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить контакты с ним
+                .OnDelete(DeleteBehavior.Cascade);  
         });
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ CHATROOMMEMBERPERMISSIONS
+        // CHATROOMMEMBERPERMISSIONS
         // ====================================================================
         
         modelBuilder.Entity<ChatRoomMemberPermissions>(entity =>
@@ -367,42 +235,30 @@ public class UchatDbContext : DbContext
         });
         
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ FRIENDSHIPS
+        // FRIENDSHIPS
         // ====================================================================
         modelBuilder.Entity<Friendship>(entity =>
         {
             entity.ToTable("Friendships");
             entity.HasKey(f => f.Id);
 
-            // ----------------------------------------------------------------
-            // UNIQUE CONSTRAINT
-            // ----------------------------------------------------------------
-            // Один пользователь не может отправить запрос другому дважды!
-            // ----------------------------------------------------------------
-
             entity.HasIndex(f => new { f.SenderId, f.ReceiverId })
                 .IsUnique()
                 .HasDatabaseName("IX_Friendships_Sender_Receiver");
             
-            // INDEX для получения входящих запросов
+            // INDEX for receiving incoming requests
             entity.HasIndex(f => f.ReceiverId)
                 .HasDatabaseName("IX_Friendships_ReceiverId");
 
-            // INDEX для фильтрации по статусу
+            // INDEX for filter by request's status 
             entity.HasIndex(f => f.Status)
                 .HasDatabaseName("IX_Friendships_Status");
             
-            // COMPOSITE INDEX для получения списка друзей
-            // Query: WHERE (SenderId = X OR ReceiverId = X) AND Status = Accepted
             entity.HasIndex(f => new { f.SenderId, f.Status })
                 .HasDatabaseName("IX_Friendships_Sender_Status");
             
             entity.HasIndex(f => new { f.ReceiverId, f.Status })
                 .HasDatabaseName("IX_Friendships_Receiver_Status");
-
-            // ----------------------------------------------------------------
-            // COLUMNS
-            // ----------------------------------------------------------------
 
             entity.Property(f => f.Status)
                 .HasDefaultValue(FriendshipStatus.Pending);
@@ -410,27 +266,22 @@ public class UchatDbContext : DbContext
             entity.Property(f => f.CreatedAt)
                 .HasDefaultValueSql("NOW()");
 
-            // ----------------------------------------------------------------
-            // RELATIONSHIPS (Связи)
-            // ----------------------------------------------------------------
             
-            // Friendship -> Sender (кто отправил запрос)
-            // Обратная навигация: User.SentFriendshipRequests
+            // Friendship -> Sender (who sended)
             entity.HasOne(f => f.Sender)
                 .WithMany() 
                 .HasForeignKey(f => f.SenderId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить его запросы
+                .OnDelete(DeleteBehavior.Cascade);  
 
-            // Friendship -> Receiver (кто получил запрос)
-            // Обратная навигация: User.ReceivedFriendshipRequests
+            // Friendship -> Receiver (who received)
             entity.HasOne(f => f.Receiver)
                 .WithMany(u => u.ReceivedFriendshipRequests)
                 .HasForeignKey(f => f.ReceiverId)
-                .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить запросы к нему
+                .OnDelete(DeleteBehavior.Cascade); 
         });
         
         // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ REFRESHTOKENS
+        // REFRESHTOKENS
         // ====================================================================
         
         modelBuilder.Entity<RefreshToken>(entity =>
@@ -438,27 +289,15 @@ public class UchatDbContext : DbContext
             entity.ToTable("RefreshTokens");
             entity.HasKey(t => t.Id);
             
-            // ----------------------------------------------------------------
-            // INDEXES
-            // ----------------------------------------------------------------
-            
-            // UNIQUE INDEX на TokenHash (для быстрого поиска при валидации)
             entity.HasIndex(t => t.TokenHash)
                 .IsUnique()
                 .HasDatabaseName("IX_RefreshTokens_TokenHash");
             
-            // INDEX на UserId (для получения всех токенов пользователя)
             entity.HasIndex(t => t.UserId)
                 .HasDatabaseName("IX_RefreshTokens_UserId");
             
-            // COMPOSITE INDEX для поиска активных токенов
-            // Query: WHERE UserId = X AND IsRevoked = false AND ExpiresAt > NOW()
             entity.HasIndex(t => new { t.UserId, t.IsRevoked, t.ExpiresAt })
                 .HasDatabaseName("IX_RefreshTokens_UserId_IsRevoked_ExpiresAt");
-            
-            // ----------------------------------------------------------------
-            // COLUMNS
-            // ----------------------------------------------------------------
             
             entity.Property(t => t.TokenHash)
                 .IsRequired()
@@ -472,73 +311,3 @@ public class UchatDbContext : DbContext
         });
     }
 }
-
-/*
- * ============================================================================
- * КАК ИСПОЛЬЗОВАТЬ ЭТОТ DBCONTEXT?
- * ============================================================================
- * 
- * 1. В Program.cs сервера (Dependency Injection):
- * 
- *    var builder = WebApplication.CreateBuilder(args);
- *    
- *    builder.Services.AddDbContext<UchatDbContext>(options =>
- *        options.UseSqlite("Data Source=uchat.db"));
- *    
- *    var app = builder.Build();
- * 
- * 
- * 2. В репозиториях (через конструктор):
- * 
- *    public class UserRepository
- *    {
- *        private readonly UchatDbContext _context;
- *        
- *        public UserRepository(UchatDbContext context)
- *        {
- *            _context = context;
- *        }
- *        
- *        public async Task<User> GetByIdAsync(int id)
- *        {
- *            return await _context.Users.FindAsync(id);
- *        }
- *    }
- * 
- * 
- * 3. Напрямую (для тестирования):
- * 
- *    var options = new DbContextOptionsBuilder<UchatDbContext>()
- *        .UseSqlite("Data Source=test.db")
- *        .Options;
- *    
- *    using var context = new UchatDbContext(options);
- *    
- *    var user = new User { Username = "test" };
- *    context.Users.Add(user);
- *    await context.SaveChangesAsync();
- * 
- * ============================================================================
- * СОЗДАНИЕ БАЗЫ ДАННЫХ И МИГРАЦИЙ
- * ============================================================================
- * 
- * После создания всех Entity моделей и DbContext нужно:
- * 
- * 1. Создать первую миграцию (migration):
- *    cd uchat_server/Uchat.Database
- *    dotnet ef migrations add InitialCreate
- *    
- *    Это создаст папку Migrations/ с файлами миграции
- * 
- * 2. Применить миграцию (создать БД):
- *    dotnet ef database update
- *    
- *    Это создаст файл uchat.db с всеми таблицами!
- * 
- * 3. При изменении моделей:
- *    - Изменяешь User.cs (добавляешь поле)
- *    - Создаешь новую миграцию: dotnet ef migrations add AddUserBio
- *    - Применяешь: dotnet ef database update
- * 
- * ============================================================================
- */
