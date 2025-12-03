@@ -31,33 +31,33 @@ public class ChatHub : Hub
     {
         var userId = GetUserId();
         var username = GetUsername();
-        Console.WriteLine($"User {username} (ID: {userId}) connected");
+        Logger.Write($"User {username} (ID: {userId}) connected");
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var username = GetUsername();
-        Console.WriteLine($"User {username} disconnected");
+        Logger.Write($"User {username} disconnected");
         await base.OnDisconnectedAsync(exception);
     }
 
     public async Task JoinGroup(string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-        Console.WriteLine($"{GetUsername()} joined group: {groupName}");
+        Logger.Write($"{GetUsername()} joined group: {groupName}");
     }
 
     public async Task LeaveGroup(string groupName)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        Console.WriteLine($"{GetUsername()} left group: {groupName}");
+        Logger.Write($"{GetUsername()} left group: {groupName}");
     }
 
     public async Task NewUserNotification(string chatId, string user)
     {
         await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, "System", $"{user} joined the chat");
-        Console.WriteLine($"{user} joined chat {chatId}");
+        Logger.Write($"{user} joined chat {chatId}");
     }
 
     public async Task SendMessage(string chatId, string user, string message, string? replyContent = null)
@@ -206,7 +206,7 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to edit message: {ex.Message}");
+            Logger.Write($"Failed to edit message: {ex.Message}");
         }
     }
 
@@ -240,7 +240,7 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to delete message: {ex.Message}");
+            Logger.Write($"Failed to delete message: {ex.Message}");
         }
     }
 
