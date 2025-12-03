@@ -115,8 +115,9 @@ namespace Uchat
                     {
                         // Обновляем текст сообщения
                         cachedMsg.ContentTextBlock.Text = newContent;
-                        
+
                         // Добавляем метку "edited"
+                        cachedMsg.Content = newContent;
                         var timeStackPanel = cachedMsg.Bubble.Child as StackPanel;
                         if (timeStackPanel != null)
                         {
@@ -146,7 +147,7 @@ namespace Uchat
                                         FontStyle = FontStyle.Italic,
                                         HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
                                     };
-                                    lastChild.Children.Add(editedLabel);
+                                    lastChild.Children.Insert(0, editedLabel);
                                 }
                             }
                         }

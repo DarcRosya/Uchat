@@ -19,7 +19,7 @@ namespace Uchat
 		public partial class Chat
 		{
 			static List<Contact> ChatcontactList = new List<Contact>();
-			static bool areGroups = false;
+			//static bool areGroups = false;
 			public class Contact
 			{
 				private string chatName = "";

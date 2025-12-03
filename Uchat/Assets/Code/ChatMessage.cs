@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -13,7 +14,6 @@ namespace Uchat
 	{
 		public partial class Chat
 		{
-			static int counter = 0;
             public class Message
             {
                 private string? serverId; // ID сообщения в LiteDB
@@ -90,7 +90,7 @@ namespace Uchat
                     {
                         replyToMessageBorder.Classes.Add("replyToMessageBorder");
                         replyToMessageBorder.Child = replyStackPanel;
-                        //replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = contentTextBlock });
+                        replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = contentTextBlock });
 
                         replyUserName.Classes.Add("replyUserName");
                         replyUserName.Text = (isGuest) ? "Guest" : "Me";
@@ -107,7 +107,10 @@ namespace Uchat
                 }
 
                 public string? ServerId { get { return serverId; } }
-                public string Content { get { return content; } }
+                public string Content { 
+                    get { return content; }
+                    set { content = value; }
+                }
                 public string Time { get { return time; } }
                 public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
