@@ -18,7 +18,8 @@ namespace Uchat
 	{
 		public partial class Chat
 		{
-			static List<Contact> contactList = new List<Contact>(); 
+			static List<Contact> ChatcontactList = new List<Contact>();
+			static bool areGroups = false;
 			public class Contact
 			{
 				private string chatName = "";
@@ -65,7 +66,7 @@ namespace Uchat
 					Grid.SetColumn(contactStackPanel, 1);
 
                     attachedContactList.Children.Add(this.Box);
-					Chat.contactList.Add(this);
+					Chat.ChatcontactList.Add(this);
                 }
 
                 public Grid Box { get { return contactGrid; } }
@@ -73,7 +74,7 @@ namespace Uchat
 
 				private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
-					foreach (Contact contact in Chat.contactList)
+					foreach (Contact contact in Chat.ChatcontactList)
 					{
 						contact.Background = Brush.Parse("#171a20");
 					}

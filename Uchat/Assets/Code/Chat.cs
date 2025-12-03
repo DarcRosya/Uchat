@@ -21,12 +21,29 @@ namespace Uchat
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
 
-		private void addFriend_Click(object? sender, RoutedEventArgs e)
+        private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
-			var newContact = new Chat.Contact("New Chat", "Just an example", 0, contanctList);
+            AddContactOverlay.IsVisible = true;
 		}
 
-		private async void SendButton_Click(object? sender, RoutedEventArgs e)
+        private void CancelButton_Click(object? sender, RoutedEventArgs e)
+		{
+            AddContactTextBox.Text = "";
+            AddContactOverlay.IsVisible = false;
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+			//заменить в будущем
+			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
+			{
+                var newContact = new Chat.Contact(AddContactTextBox.Text, "", 0, contactList);
+                AddContactOverlay.IsVisible = false;
+                AddContactTextBox.Text = "";
+            }
+        }
+
+        private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{
 			string text;
 
@@ -39,26 +56,27 @@ namespace Uchat
                 text = chatTextBox.Text?.Trim() ?? "";
 			}
 
-		if (string.IsNullOrEmpty(text)) { return; }
-		replyTheMessageBox.IsVisible = false;
+			if (string.IsNullOrEmpty(text)) { return; }
+			replyTheMessageBox.IsVisible = false;
 
-		// Отправляем сообщение на сервер через SignalR
-		try
-		{
-			await SendMessageToServerAsync(text);
+			// Отправляем сообщение на сервер через SignalR
+			try
+			{
+				await SendMessageToServerAsync(text);
 			
-			// Очищаем поля после успешной отправки
-			chatTextBox.Text = "";
-			chatTextBoxForReply.Text = "";
-			chatTextBox.IsVisible = true;
-			chatTextBoxForReply.IsVisible = false;
-			isReplied = false;
-		}
-		catch (Exception)
-		{
-			// Если не удалось отправить, оставляем текст в поле
-		}
-	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+				// Очищаем поля после успешной отправки
+				chatTextBox.Text = "";
+				chatTextBoxForReply.Text = "";
+				chatTextBox.IsVisible = true;
+				chatTextBoxForReply.IsVisible = false;
+				isReplied = false;
+			}
+			catch (Exception)
+			{
+				// Если не удалось отправить, оставляем текст в поле
+			}
+		}		
+		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;
