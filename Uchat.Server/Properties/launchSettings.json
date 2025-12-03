@@ -2,17 +2,12 @@
   "profiles": {
     "Uchat.Server": {
       "commandName": "Project",
-<<<<<<< HEAD
-      "launchBrowser": true,
-=======
       "dotnetRunMessages": true,
       "launchBrowser": false,
-      "applicationUrl": "http://localhost:5000",
->>>>>>> vadim
+      "applicationUrl": "http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:50173;http://localhost:50174"
+      }
     }
   }
 }

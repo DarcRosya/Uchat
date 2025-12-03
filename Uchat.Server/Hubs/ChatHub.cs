@@ -264,11 +264,7 @@ public class ChatHub : Hub
         }
         catch (Exception ex)
         {
-<<<<<<< HEAD
-            Logger.Write($"Failed to delete message: {ex.Message}");
-=======
             Console.WriteLine($"[DeleteMessage] Failed to delete message: {ex.Message}");
->>>>>>> vadim
         }
     }
 

@@ -10,17 +10,8 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<UchatDbContext>();
         
-        // Попытка получить connection string из переменной окружения
-        var connectionString = Environment.GetEnvironmentVariable("UCHAT_CONNECTION_STRING");
-        
-        if (!string.IsNullOrEmpty(connectionString))
-        {
-            optionsBuilder.UseNpgsql(connectionString);
-        }
-        else
-        {
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=uchat;Username=uchat;Password=uchat123");
-        }
+        // PostgreSQL из Docker для всех
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=uchat;Username=uchat;Password=uchat123");
         
         return new UchatDbContext(optionsBuilder.Options);
     }

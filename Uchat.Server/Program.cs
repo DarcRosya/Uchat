@@ -41,7 +41,7 @@ public class Program
             return;
         }
 
-        int port = 5000;
+        int port = 6000;
         if (args.Length > 0 && !int.TryParse(args[^1], out port))
         {
             Console.WriteLine("Invalid port. Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
@@ -57,24 +57,14 @@ public class Program
         // БАЗЫ ДАННЫХ
         // ============================================================================
         
-        // Выбор БД: SQLite (локально) или PostgreSQL (для команды в сети)
-        var dbProvider = builder.Configuration["DatabaseProvider"] ?? "SQLite";
-        
+        // PostgreSQL для пользователей, чатов, контактов (из Docker)
         builder.Services.AddDbContext<UchatDbContext>(options =>
         {
-            if (dbProvider == "PostgreSQL")
-            {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"));
-                Console.WriteLine("Using PostgreSQL (shared network database)");
-            }
-            else
-            {
-                options.UseSqlite(builder.Configuration.GetConnectionString("SQLite"));
-                Console.WriteLine("Using SQLite (local database)");
-            }
+            options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"));
+            Console.WriteLine("Using PostgreSQL (Docker shared database)");
         });
 
-        // MongoDB для сообщений (локально или в Docker)
+        // MongoDB для сообщений (из Docker)
         builder.Services.Configure<MongoDbSettings>(
             builder.Configuration.GetSection("MongoDB"));
 
@@ -198,13 +188,11 @@ public class Program
 
             try
             {
-                // Применяем миграции SQLite
-                logger.LogInformation("Applying SQLite migrations...");
+                logger.LogInformation("Applying PostgreSQL migrations...");
                 var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
                 dbContext.Database.Migrate();
-                logger.LogInformation("SQLite migrations applied successfully");
+                logger.LogInformation("PostgreSQL migrations applied successfully");
 
-                // Проверяем MongoDB
                 logger.LogInformation("Initializing MongoDB...");
                 var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
                 var messageCount = mongoDbContext.Messages.CountDocuments(Builders<MongoMessage>.Filter.Empty);

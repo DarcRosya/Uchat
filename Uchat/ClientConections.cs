@@ -81,7 +81,7 @@ namespace Uchat
             // Server connection с JWT токеном из UserSession
             // ВАЖНО: Токен передаётся через query string, т.к. SignalR не поддерживает custom headers
             _connection = new HubConnectionBuilder()
-            .WithUrl($"{ServerConfig.ApiBaseUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
+            .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
             {
                 // Токен уже в URL, но оставляем для совместимости
                 options.AccessTokenProvider = () => Task.FromResult<string?>(UserSession.Instance.AccessToken);
