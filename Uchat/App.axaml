@@ -48,6 +48,48 @@
             </Style.Animations>
         </Style>
 
+     <!-- contact and groups  -->
+
+
+<!-- Style for whole contact grid -->
+     <Styles>
+        <Style Selector="Grid.contactGrid">
+          <Setter Property="Background" Value="#171a20"/>
+          <Setter Property="Height" Value="50"/>
+          <Setter Property="Margin" Value="0"/>
+        </Style>
+
+        <!-- Avatar image -->
+        <Style Selector="Image.avatarIcon">
+          <Setter Property="Stretch" Value="UniformToFill"/>
+          <Setter Property="Width" Value="45"/>
+          <Setter Property="Height" Value="45"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- Name -->
+        <Style Selector="TextBlock.contactName">
+          <Setter Property="Foreground" Value="#FFFFFF"/>
+          <Setter Property="FontSize" Value="15"/>
+          <Setter Property="Margin" Value="0,8,0,0"/>
+        </Style>
+
+        <!-- Last message -->
+        <Style Selector="TextBlock.lastMessage">
+          <Setter Property="Foreground" Value="#999999"/>
+          <Setter Property="FontSize" Value="10"/>
+          <Setter Property="VerticalAlignment" Value="Bottom"/>
+          <Setter Property="Margin" Value="0,3,0,0"/>
+        </Style>
+      </Styles>
+
+
+
+
+         <!-- Chat  -->
+
    <!-- Style for message text  -->
        <Style Selector="TextBlock.chatMessage">
             <Setter Property="FontSize" Value="16"/>

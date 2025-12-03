@@ -288,9 +288,5 @@ namespace Uchat
             // Initialize chat components with current session
             InitializeChatComponents();
         }
-
-        // Chat Window Controls (Title bar) - реализованы в Titlebar.cs
-
-        // Chat functionality - реализованы в Chat.cs и Titlebar.cs
     }
 }

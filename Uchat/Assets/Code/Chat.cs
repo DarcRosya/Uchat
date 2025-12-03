@@ -21,63 +21,29 @@ namespace Uchat
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
 
-		private void addFriend_Click(object? sender, RoutedEventArgs e)
+        private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
-			var contactGrid = new Grid
-			{
-				Background = Brush.Parse("#171a20"),
-				ColumnDefinitions =
-		{
-			new ColumnDefinition(new GridLength(50, GridUnitType.Pixel)),
-			new ColumnDefinition(new GridLength(1, GridUnitType.Star))
-		}
-			};
-
-			var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
-			var avatarIcon = new Avalonia.Controls.Image
-			{
-				Source = new Bitmap(AssetLoader.Open(imageURL)),
-				Stretch = Stretch.UniformToFill
-			};
-
-			var contactPanel = new StackPanel
-			{
-				Height = 50
-			};
-
-			var contactName = new TextBlock
-			{
-				Text = "John Cena",
-				Foreground = Brush.Parse("#ffffff"),
-				FontSize = 15,
-				Margin = new Thickness(5, 15, 0, 0),
-				HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-			};
-
-			var lastMessage = new TextBlock
-			{
-				Text = "Do you see me?",
-				Foreground = Brush.Parse("#999999"),
-				FontSize = 10,
-				Margin = new Thickness(5, 0, 0, 0),
-				HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
-			};
-
-			contactPanel.Children.Add(contactName);
-			contactPanel.Children.Add(lastMessage);
-
-			contactGrid.Children.Add(avatarIcon);
-
-			contactGrid.Children.Add(contactPanel);
-
-			Grid.SetColumn(avatarIcon, 0);
-			Grid.SetColumn(contactPanel, 1);
-
-			contanctList.Children.Add(contactGrid);
+            AddContactOverlay.IsVisible = true;
 		}
 
-		private async void SendButton_Click(object? sender, RoutedEventArgs e)
+        private void CancelButton_Click(object? sender, RoutedEventArgs e)
+		{
+            AddContactTextBox.Text = "";
+            AddContactOverlay.IsVisible = false;
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+			//заменить в будущем
+			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
+			{
+                var newContact = new Chat.Contact(AddContactTextBox.Text, "", 0, contactList);
+                AddContactOverlay.IsVisible = false;
+                AddContactTextBox.Text = "";
+            }
+        }
+
+        private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{
 			string text;
 
@@ -90,26 +56,27 @@ namespace Uchat
                 text = chatTextBox.Text?.Trim() ?? "";
 			}
 
-		if (string.IsNullOrEmpty(text)) { return; }
-		replyTheMessageBox.IsVisible = false;
+			if (string.IsNullOrEmpty(text)) { return; }
+			replyTheMessageBox.IsVisible = false;
 
-		// Отправляем сообщение на сервер через SignalR
-		try
-		{
-			await SendMessageToServerAsync(text);
+			// Отправляем сообщение на сервер через SignalR
+			try
+			{
+				await SendMessageToServerAsync(text);
 			
-			// Очищаем поля после успешной отправки
-			chatTextBox.Text = "";
-			chatTextBoxForReply.Text = "";
-			chatTextBox.IsVisible = true;
-			chatTextBoxForReply.IsVisible = false;
-			isReplied = false;
-		}
-		catch (Exception)
-		{
-			// Если не удалось отправить, оставляем текст в поле
-		}
-	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+				// Очищаем поля после успешной отправки
+				chatTextBox.Text = "";
+				chatTextBoxForReply.Text = "";
+				chatTextBox.IsVisible = true;
+				chatTextBoxForReply.IsVisible = false;
+				isReplied = false;
+			}
+			catch (Exception)
+			{
+				// Если не удалось отправить, оставляем текст в поле
+			}
+		}		
+		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;
