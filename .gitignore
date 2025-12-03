@@ -23,3 +23,7 @@ redis-data/
 *.snupkg
 packages/
 .nuget/
+
+# Local settings with sensitive data (passwords)
+appsettings.Development.Local.json
+appsettings.Production.json

@@ -8,8 +8,8 @@
  * Зачем нужен репозиторий?
  * 1. Абстракция доступа к данным
  * 2. Легко тестировать (можно подменить на mock)
- * 3. Бизнес-логика не зависит от LiteDB напрямую
- * 4. Легко сменить БД (с LiteDB на другую)
+ * 3. Бизнес-логика не зависит от MongoDB напрямую
+ * 4. Легко сменить БД (с MongoDB на другую)
  * 
  * Пример использования:
  *   IMessageRepository repo = new MessageRepository(context);
@@ -18,12 +18,12 @@
  * ============================================================================
  */
 
-using Uchat.Database.LiteDB;
+using Uchat.Database.MongoDB;
 
 namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
-/// Интерфейс репозитория для работы с сообщениями в LiteDB
+/// Интерфейс репозитория для работы с сообщениями в MongoDB
 /// 
 /// Предоставляет методы:
 /// - Получение истории чата (READ)
@@ -32,7 +32,7 @@ namespace Uchat.Database.Repositories.Interfaces;
 /// - Статус прочтения - доступен всем участникам
 /// 
 /// ⚠️ ВАЖНО: Создание новых сообщений ТОЛЬКО через MessageService!
-/// MessageService обеспечивает валидацию, проверку прав и координацию SQLite + LiteDB.
+/// MessageService обеспечивает валидацию, проверку прав и координацию SQLite + MongoDB.
 /// </summary>
 public interface IMessageRepository
 {
@@ -89,7 +89,7 @@ public interface IMessageRepository
     ///   - Медленно на больших offset (сканирует все пропущенные строки)
     ///   - Пропускает новые сообщения (непредсказуемо)
     /// </summary>
-    Task<List<LiteDbMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null);
+    Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null);
     
     /// <summary>
     /// Получить сообщение по ID
@@ -102,7 +102,7 @@ public interface IMessageRepository
     /// Пример:
     ///   var message = await repo.GetMessageByIdAsync("507f1f77bcf86cd799439011");
     /// </summary>
-    Task<LiteDbMessage?> GetMessageByIdAsync(string messageId);
+    Task<MongoMessage?> GetMessageByIdAsync(string messageId);
     
     /// <summary>
     /// Получить непрочитанные сообщения для пользователя
@@ -122,7 +122,7 @@ public interface IMessageRepository
     /// Пример:
     ///   var unread = await repo.GetUnreadMessagesAsync(chatId: 1, userId: 100);
     /// </summary>
-    Task<List<LiteDbMessage>> GetUnreadMessagesAsync(int chatId, int userId);
+    Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId);
     
     /// <summary>
     /// Получить количество непрочитанных сообщений
@@ -361,7 +361,7 @@ public interface IMessageRepository
     /// Пример:
     ///   var results = await repo.SearchMessagesAsync(chatId: 1, "hello");
     /// </summary>
-    Task<List<LiteDbMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20);
+    Task<List<MongoMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20);
 }
 
 /*

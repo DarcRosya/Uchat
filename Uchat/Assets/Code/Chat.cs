@@ -20,6 +20,7 @@ namespace Uchat
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
+		public string replyToMessageId = ""; // ID сообщения, на которое отвечаем
 
 		private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -104,6 +105,7 @@ namespace Uchat
 			chatTextBox.IsVisible = true;
 			chatTextBoxForReply.IsVisible = false;
 			isReplied = false;
+			replyToMessageId = "";
 		}
 		catch (Exception)
 		{
@@ -116,6 +118,7 @@ namespace Uchat
 			chatTextBox.Text = chatTextBoxForReply.Text;
 			chatTextBox.IsVisible = true;
 			isReplied = false;
+			replyToMessageId = "";
 			chatTextBoxForReply.Text = "";
 		}
 

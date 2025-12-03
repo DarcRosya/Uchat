@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Целевая платформа .NET 8.0 -->
-    <TargetFramework>net8.0</TargetFramework>
+    <!-- Целевая платформа .NET 9.0 -->
+    <TargetFramework>net9.0</TargetFramework>
     
     <!-- Неявные using директивы (автоматически добавляет System, System.Linq и т.д.) -->
     <ImplicitUsings>enable</ImplicitUsings>
@@ -16,9 +16,10 @@
   <ItemGroup>
     <!-- Основной пакет Entity Framework Core -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
-    
-    <!-- SQLite провайдер для EF Core (для локальной разработки) -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
+    
+    <!-- PostgreSQL провайдер для EF Core (для продакшена на Railway) -->
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.1" />
     
     <!-- Инструменты для создания миграций (dotnet ef migrations add) -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
@@ -31,8 +32,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     
-    <!-- LiteDB для хранения сообщений (легковесная альтернатива MongoDB) -->
-    <PackageReference Include="LiteDB" Version="5.0.21" />
+    <!-- MongoDB.Driver для хранения сообщений в MongoDB Atlas -->
+    <PackageReference Include="MongoDB.Driver" Version="3.5.2" />
     
     <!-- Microsoft.Extensions.Hosting для BackgroundService -->
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />

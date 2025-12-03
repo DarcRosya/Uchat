@@ -49,12 +49,12 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
         
         if (!string.IsNullOrEmpty(connectionString))
         {
-            optionsBuilder.UseSqlite(connectionString);
+            optionsBuilder.UseNpgsql(connectionString);
         }
         else
         {
-            // По умолчанию используем SQLite для локальной разработки
-            optionsBuilder.UseSqlite("Data Source=uchat.db");
+            // По умолчанию используем PostgreSQL для локальной сети
+            optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=uchat;Username=uchat;Password=uchat123");
         }
         
         return new UchatDbContext(optionsBuilder.Options);
@@ -68,10 +68,9 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
  * 
  * 1. Этот класс используется ТОЛЬКО во время разработки
  * 2. В реальном приложении DbContext настраивается в Program.cs
- * 3. Путь "Data Source=uchat.db" создаст файл в папке проекта
- * 4. Можно изменить путь, например:
- *    - "Data Source=../uchat.db" (на уровень выше)
- *    - "Data Source=C:/Databases/uchat.db" (абсолютный путь)
+ * 3. Connection string по умолчанию для локального PostgreSQL
+ * 4. Можно изменить через переменную окружения UCHAT_CONNECTION_STRING
+ * 5. Для Railway используй переменную окружения DATABASE_URL
  * 
  * ============================================================================
  */

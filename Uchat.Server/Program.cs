@@ -8,7 +8,7 @@ using System.Threading.RateLimiting;
 // using StackExchange.Redis;
 using System.Text;
 using Uchat.Database.Context;
-using Uchat.Database.LiteDB;
+using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Database.Services.Chat;
@@ -16,23 +16,25 @@ using Uchat.Server.Hubs;
 using Uchat.Server.Middleware;
 using Uchat.Server.Services;
 using Uchat.Server.Services.Auth;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load local settings if exists (for development with real passwords)
+builder.Configuration.AddJsonFile("appsettings.Development.Local.json", optional: true, reloadOnChange: true);
+
 // Databases
 builder.Services.AddDbContext<UchatDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("SQLite")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.Configure<LiteDbSettings>(
-    builder.Configuration.GetSection("LiteDb"));
+builder.Services.Configure<MongoDbSettings>(
+    builder.Configuration.GetSection("MongoDB"));
 
-builder.Services.AddSingleton<LiteDbContext>(sp =>
+builder.Services.AddSingleton<MongoDbContext>(sp =>
 {
-    var settings = sp.GetRequiredService<IOptions<LiteDbSettings>>().Value;
-    return new LiteDbContext(settings);
+    var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+    return new MongoDbContext(settings);
 });
-
-builder.Services.AddSingleton<ILiteDbWriteGate, LiteDbWriteGate>();
 
 // Redis - для статусов пользователей (Online/Offline)
 // builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
@@ -153,15 +155,38 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-// Автоматически применяем миграции при запуске
+// ============================================================================
+// АВТОМАТИЧЕСКАЯ ИНИЦИАЛИЗАЦИЯ БАЗ ДАННЫХ
+// ============================================================================
+// При первом запуске:
+// 1. Применяются все миграции PostgreSQL (создаются таблицы Users, ChatRooms и т.д.)
+// 2. Создаются индексы в MongoDB для коллекции messages
+// 
+// Это гарантирует, что БД готова к работе без ручных команд dotnet ef
+// ============================================================================
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
-    dbContext.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     
-    // Инициализируем LiteDB - создаём БД и индексы
-    var liteDbContext = scope.ServiceProvider.GetRequiredService<LiteDbContext>();
-    Console.WriteLine($"LiteDB initialized: {liteDbContext.Messages.Count()} messages");
+    try
+    {
+        // PostgreSQL миграции
+        logger.LogInformation("Applying PostgreSQL migrations...");
+        var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
+        dbContext.Database.Migrate();
+        logger.LogInformation("PostgreSQL migrations applied successfully");
+        
+        // MongoDB инициализация
+        logger.LogInformation("Initializing MongoDB indexes...");
+        var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+        var messageCount = mongoDbContext.Messages.CountDocuments(Builders<MongoMessage>.Filter.Empty);
+        logger.LogInformation("MongoDB initialized: {MessageCount} messages", messageCount);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Database initialization failed");
+        throw;
+    }
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>(); 
