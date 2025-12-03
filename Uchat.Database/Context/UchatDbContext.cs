@@ -145,6 +145,10 @@ public class UchatDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(256);
 
+            entity.Property(u => u.Salt)
+                .IsRequired()
+                .HasMaxLength(128);
+
             entity.Property(u => u.DisplayName)
                 .IsRequired()
                 .HasMaxLength(100);

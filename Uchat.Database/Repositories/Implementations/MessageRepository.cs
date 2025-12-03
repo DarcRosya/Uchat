@@ -274,31 +274,6 @@ public class MessageRepository : IMessageRepository
         return await Task.FromResult(count);
     }
     
-    public async Task<long> MarkAsReadUntilAsync(int chatId, int userId, DateTime untilTimestamp)
-    {
-        using var gate = await _writeGate.AcquireAsync();
-
-        // Находим все непрочитанные сообщения до указанного времени
-        var unreadMessages = _messages
-            .Find(m => m.ChatId == chatId 
-                    && !m.IsDeleted 
-                    && m.SentAt <= untilTimestamp 
-                    && !m.ReadBy.Contains(userId))
-            .ToList();
-
-        long count = 0;
-        foreach (var message in unreadMessages)
-        {
-            message.ReadBy.Add(userId);
-            if (_messages.Update(message))
-            {
-                count++;
-            }
-        }
-
-        return await Task.FromResult(count);
-    }
-    
     // ========================================================================
     // ПОИСК
     // ========================================================================
