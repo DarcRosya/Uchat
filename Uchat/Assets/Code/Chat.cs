@@ -20,6 +20,7 @@ namespace Uchat
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
+		public string replyToMessageId = ""; // ID сообщения, на которое отвечаем
 
         private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -64,6 +65,7 @@ namespace Uchat
 			{
 				await SendMessageToServerAsync(text);
 			
+<<<<<<< HEAD
 				// Очищаем поля после успешной отправки
 				chatTextBox.Text = "";
 				chatTextBoxForReply.Text = "";
@@ -77,12 +79,28 @@ namespace Uchat
 			}
 		}		
 		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+=======
+			// Очищаем поля после успешной отправки
+			chatTextBox.Text = "";
+			chatTextBoxForReply.Text = "";
+			chatTextBox.IsVisible = true;
+			chatTextBoxForReply.IsVisible = false;
+			isReplied = false;
+			replyToMessageId = "";
+		}
+		catch (Exception)
+		{
+			// Если не удалось отправить, оставляем текст в поле
+		}
+	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+>>>>>>> vadim
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;
 			chatTextBox.Text = chatTextBoxForReply.Text;
 			chatTextBox.IsVisible = true;
 			isReplied = false;
+			replyToMessageId = "";
 			chatTextBoxForReply.Text = "";
 		}
 

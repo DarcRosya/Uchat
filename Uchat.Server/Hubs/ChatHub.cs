@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
-using Uchat.Database.LiteDB;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Database.Services.Messaging;
 
@@ -10,19 +12,16 @@ namespace Uchat.Server.Hubs;
 [Authorize]
 public class ChatHub : Hub
 {
-    private readonly ILiteDbWriteGate _writeGate;
-    private readonly LiteDbContext _liteDbContext;
+    private readonly MongoDbContext _mongoDbContext;
     private readonly IMessageRepository _messageRepository;
     private readonly IChatRoomRepository _chatRoomRepository;
 
     public ChatHub(
-        ILiteDbWriteGate writeGate, 
-        LiteDbContext liteDbContext,
+        MongoDbContext mongoDbContext,
         IMessageRepository messageRepository,
         IChatRoomRepository chatRoomRepository)
     {
-        _writeGate = writeGate;
-        _liteDbContext = liteDbContext;
+        _mongoDbContext = mongoDbContext;
         _messageRepository = messageRepository;
         _chatRoomRepository = chatRoomRepository;
     }
@@ -60,7 +59,7 @@ public class ChatHub : Hub
         Logger.Write($"{user} joined chat {chatId}");
     }
 
-    public async Task SendMessage(string chatId, string user, string message, string? replyContent = null)
+    public async Task SendMessage(string chatId, string user, string message, string? replyToMessageId = null)
     {
         if (string.IsNullOrWhiteSpace(message))
             return;
@@ -78,11 +77,20 @@ public class ChatHub : Hub
             }
         }
 
-        // Сохранить сообщение в LiteDB
-        var messageId = await SaveMessageToLiteDb(chatId, userId, username, message, replyContent);
+        // Получаем текст сообщения, на которое отвечаем (для обратной совместимости с UI)
+        string? replyContent = null;
+        if (!string.IsNullOrEmpty(replyToMessageId))
+        {
+            var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, replyToMessageId);
+            var replyMessage = await _mongoDbContext.Messages.Find(filter).FirstOrDefaultAsync();
+            replyContent = replyMessage?.Content;
+        }
 
-        // Отправить сообщение всем в группе (включая replyContent и messageId)
-        await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message, replyContent, messageId);
+        // Сохранить сообщение в MongoDB
+        var messageId = await SaveMessageToMongo(chatId, userId, username, message, replyToMessageId);
+
+        // Отправить сообщение всем в группе (включая replyContent, messageId и replyToMessageId)
+        await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message, replyContent, messageId, replyToMessageId);
     }
     
     public async Task<List<object>> GetChatHistory(string chatId, int limit = 50)
@@ -123,53 +131,43 @@ public class ChatHub : Hub
         }).Cast<object>().ToList();
     }
 
-    private async Task<string> SaveMessageToLiteDb(string chatId, int senderId, string senderName, string content, string? replyContent = null)
+    private async Task<string> SaveMessageToMongo(string chatId, int senderId, string senderName, string content, string? replyToMessageId = null)
     {
         try
         {
-            using (await _writeGate.AcquireAsync())
+            // Получаем текст исходного сообщения для ReplyToContent
+            string? replyContent = null;
+            if (!string.IsNullOrEmpty(replyToMessageId))
             {
-                // Если есть replyContent, находим ID последнего сообщения с таким текстом
-                string? replyToId = null;
-                if (!string.IsNullOrEmpty(replyContent))
-                {
-                    var recentMessages = _liteDbContext.Messages
-                        .Find(m => m.ChatId == int.Parse(chatId) && m.Content == replyContent)
-                        .OrderByDescending(m => m.SentAt)
-                        .Take(1)
-                        .FirstOrDefault();
-                    
-                    replyToId = recentMessages?.Id;
-                }
-                
-                var message = new LiteDbMessage
-                {
-                    ChatId = int.TryParse(chatId, out var cId) ? cId : 0,
-                    Sender = new MessageSender
-                    {
-                        UserId = senderId,
-                        Username = senderName,
-                        DisplayName = senderName,
-                        AvatarUrl = null
-                    },
-                    Content = content,
-                    Type = "text",
-                    SentAt = DateTime.UtcNow,
-                    EditedAt = null,
-                    IsDeleted = false,
-                    // Сохраняем ID исходного сообщения
-                    ReplyToMessageId = replyToId,
-                    // Дублируем текст для быстрого отображения (денормализация)
-                    ReplyToContent = replyContent
-                };
-
-                _liteDbContext.Messages.Insert(message);
-                return message.Id; // Возвращаем ID вставленного сообщения
+                var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, replyToMessageId);
+                var replyMessage = await _mongoDbContext.Messages.Find(filter).FirstOrDefaultAsync();
+                replyContent = replyMessage?.Content;
             }
+            
+            var message = new MongoMessage
+            {
+                ChatId = int.TryParse(chatId, out var cId) ? cId : 0,
+                Sender = new MessageSender
+                {
+                    UserId = senderId,
+                    Username = senderName,
+                    DisplayName = senderName,
+                    AvatarUrl = null
+                },
+                Content = content,
+                Type = "text",
+                SentAt = DateTime.UtcNow,
+                EditedAt = null,
+                IsDeleted = false,
+                ReplyToMessageId = replyToMessageId,
+                ReplyToContent = replyContent
+            };
+
+            await _mongoDbContext.Messages.InsertOneAsync(message);
+            return message.Id;
         }
         catch (Exception)
         {
-            // Ошибка сохранения сообщения
             return string.Empty;
         }
     }
@@ -183,26 +181,24 @@ public class ChatHub : Hub
 
         try
         {
-            using (await _writeGate.AcquireAsync())
-            {
-                var message = _liteDbContext.Messages.FindById(messageId);
-                
-                if (message == null || message.Sender.UserId != userId)
-                    return; // Можно редактировать только свои сообщения
+            var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+            var message = await _mongoDbContext.Messages.Find(filter).FirstOrDefaultAsync();
+            
+            if (message == null || message.Sender.UserId != userId)
+                return;
 
-                message.Content = newContent;
-                message.EditedAt = DateTime.UtcNow;
-                
-                _liteDbContext.Messages.Update(message);
+            var update = Builders<MongoMessage>.Update
+                .Set(m => m.Content, newContent)
+                .Set(m => m.EditedAt, DateTime.UtcNow);
+            
+            await _mongoDbContext.Messages.UpdateOneAsync(filter, update);
 
-                // Уведомляем всех в чате об изменении
-                await Clients.Group(message.ChatId.ToString()).SendAsync(
-                    "MessageEdited", 
-                    messageId, 
-                    newContent, 
-                    message.EditedAt
-                );
-            }
+            await Clients.Group(message.ChatId.ToString()).SendAsync(
+                "MessageEdited", 
+                messageId, 
+                newContent, 
+                DateTime.UtcNow
+            );
         }
         catch (Exception ex)
         {
@@ -216,31 +212,63 @@ public class ChatHub : Hub
             return;
 
         var userId = GetUserId();
+        var username = GetUsername();
+
+        Console.WriteLine($"[DeleteMessage] User {username} (ID: {userId}) attempting to delete message: {messageId}");
 
         try
         {
-            using (await _writeGate.AcquireAsync())
+            var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+            var message = await _mongoDbContext.Messages.Find(filter).FirstOrDefaultAsync();
+            
+            if (message == null)
             {
-                var message = _liteDbContext.Messages.FindById(messageId);
-                
-                if (message == null || message.Sender.UserId != userId)
-                    return; // Можно удалять только свои сообщения
-
-                message.IsDeleted = true;
-                message.Content = "Message deleted";
-                
-                _liteDbContext.Messages.Update(message);
-
-                // Уведомляем всех в чате об удалении
-                await Clients.Group(message.ChatId.ToString()).SendAsync(
-                    "MessageDeleted", 
-                    messageId
-                );
+                Console.WriteLine($"[DeleteMessage] Message {messageId} not found");
+                return;
             }
+            
+            if (message.Sender.UserId != userId)
+            {
+                Console.WriteLine($"[DeleteMessage] Permission denied: User {userId} cannot delete message from user {message.Sender.UserId}");
+                return;
+            }
+
+            Console.WriteLine($"[DeleteMessage] Deleting message {messageId} in chat {message.ChatId}");
+
+            // Удаляем само сообщение
+            var update = Builders<MongoMessage>.Update
+                .Set(m => m.IsDeleted, true)
+                .Set(m => m.Content, "Message deleted");
+            
+            await _mongoDbContext.Messages.UpdateOneAsync(filter, update);
+
+            // Находим все сообщения, которые отвечают на удалённое
+            var replyFilter = Builders<MongoMessage>.Filter.Eq(m => m.ReplyToMessageId, messageId);
+            var repliesUpdate = Builders<MongoMessage>.Update
+                .Set(m => m.ReplyToMessageId, null)
+                .Set(m => m.ReplyToContent, null);
+            
+            var repliesResult = await _mongoDbContext.Messages.UpdateManyAsync(replyFilter, repliesUpdate);
+            Console.WriteLine($"[DeleteMessage] Cleared {repliesResult.ModifiedCount} reply references");
+
+            var hasReplies = repliesResult.ModifiedCount > 0;
+            
+            // Отправляем событие в группу
+            await Clients.Group(message.ChatId.ToString()).SendAsync(
+                "MessageDeletedWithReplies",
+                messageId,
+                hasReplies
+            );
+            
+            Console.WriteLine($"[DeleteMessage] Sent MessageDeletedWithReplies event to group for {messageId}, hasReplies: {hasReplies}");
         }
         catch (Exception ex)
         {
+<<<<<<< HEAD
             Logger.Write($"Failed to delete message: {ex.Message}");
+=======
+            Console.WriteLine($"[DeleteMessage] Failed to delete message: {ex.Message}");
+>>>>>>> vadim
         }
     }
 

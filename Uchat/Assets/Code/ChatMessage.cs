@@ -23,6 +23,7 @@ namespace Uchat
                 private bool isEdited;
                 private bool isReply;
                 private string? replyToContent;
+                private string? replyToMessageId; // ID сообщения, на которое отвечают
 
                 private Border messageBorder = new Border();
                 private StackPanel messageStackPanel = new StackPanel();
@@ -36,7 +37,7 @@ namespace Uchat
                 private TextBlock replyUserName = new TextBlock();
                 private TextBlock replyTextBlock = new TextBlock();
 
-                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false)
+                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null)
                 {
                     this.serverId = serverId;
                     content = text;
@@ -45,6 +46,7 @@ namespace Uchat
                     this.isEdited = isEdited;
                     this.isReply = isReply;
                     this.replyToContent = replyContent;
+                    this.replyToMessageId = replyToMessageId;
 
                     string messageBorderStyle = (isGuest) ? "guestMessageBorder" : "messageBorder";
                     messageBorder.Classes.Add(messageBorderStyle);
@@ -89,6 +91,7 @@ namespace Uchat
                     if (this.isReply)
                     {
                         replyToMessageBorder.Classes.Add("replyToMessageBorder");
+                        replyToMessageBorder.Name = "ReplyBorder"; // Для идентификации при удалении
                         replyToMessageBorder.Child = replyStackPanel;
                         //replyToMessageBorder.Bind(Border.WidthProperty, new Binding("Bounds.Width") { Source = contentTextBlock });
 
@@ -113,6 +116,7 @@ namespace Uchat
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
                 public Border Bubble { get { return messageBorder; } }
                 public TextBlock ContentTextBlock { get { return contentTextBlock; } }
+                public string? ReplyToMessageId { get { return replyToMessageId; } set { replyToMessageId = value; } }
             }
 
 			public class MessageContextMenu
@@ -194,9 +198,9 @@ namespace Uchat
                     mainWindow.replyTheMessageBox.IsVisible = true;
                     mainWindow.replyTheMessage.Text = chatMessage.Content;
                     
-                    // Сохраняем ID сообщения (будет генерироваться на сервере)
-                    // Пока используем текст, т.к. Message класс не хранит ID
-                    mainWindow.replyToMessageContent = chatMessage.Content;
+                    // Сохраняем ID сообщения для отправки на сервер
+                    mainWindow.replyToMessageId = chatMessage.ServerId ?? "";
+                    mainWindow.replyToMessageContent = chatMessage.Content; // Для отображения в UI
                     mainWindow.replyTheMessageUsername.Text = "Replying to User Name";
 
 					if (!mainWindow.isReplied)
@@ -248,16 +252,25 @@ namespace Uchat
                         {
                             try
                             {
+                                System.Diagnostics.Debug.WriteLine($"[Client] Calling DeleteMessage for: {chatMessage.ServerId}");
                                 await connection.InvokeAsync("DeleteMessage", chatMessage.ServerId);
+                                System.Diagnostics.Debug.WriteLine($"[Client] DeleteMessage call succeeded");
                                 // UI обновится через обработчик MessageDeleted для всех пользователей
                             }
                             catch (Exception ex)
                             {
-                                System.Diagnostics.Debug.WriteLine($"Failed to delete message: {ex.Message}");
+                                System.Diagnostics.Debug.WriteLine($"[Client] Failed to delete message: {ex.Message}");
                             }
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[Client] Connection is null, cannot delete message");
                         }
                     }
                     else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[Client] ServerId is empty, cannot delete message");
+                    }
                     {
                         // Фолбек для старых сообщений без serverId - только локальное удаление
                         mainWindow.ChatMessagesPanel.Children.Remove(messageGrid);

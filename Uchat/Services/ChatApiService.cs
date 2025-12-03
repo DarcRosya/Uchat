@@ -14,7 +14,7 @@ public class ChatApiService
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(ServerConfig.ServerUrl)
+            BaseAddress = new Uri(ServerConfig.ApiBaseUrl)
         };
     }
 

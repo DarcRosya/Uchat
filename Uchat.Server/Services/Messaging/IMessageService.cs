@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace Uchat.Database.Services.Messaging;
 
 /// <summary>
-/// Service for managing chat messages across SQLite (metadata) and LiteDB (content).
+/// Service for managing chat messages across SQLite (metadata) and MongoDB (content).
 /// Handles validation, permissions, and transactional consistency.
 /// </summary>
 public interface IMessageService

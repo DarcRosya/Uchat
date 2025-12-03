@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using LiteDB;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
 using Uchat.Database.Extensions;
-using Uchat.Database.LiteDB;
+using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
 
 namespace Uchat.Database.Services.Messaging;
@@ -21,7 +22,7 @@ namespace Uchat.Database.Services.Messaging;
 public sealed class MessageService : IMessageService
 {
     private readonly UchatDbContext _context;
-    private readonly LiteDbContext _liteDbContext;
+    private readonly MongoDbContext _mongoDbContext;
     private readonly IMessageRepository _messageRepository;
     private readonly ILogger<MessageService> _logger;
 
@@ -30,12 +31,12 @@ public sealed class MessageService : IMessageService
 
     public MessageService(
         UchatDbContext context,
-        LiteDbContext liteDbContext,
+        MongoDbContext mongoDbContext,
         IMessageRepository messageRepository,
         ILogger<MessageService> logger)
     {
         _context = context;
-        _liteDbContext = liteDbContext;
+        _mongoDbContext = mongoDbContext;
         _messageRepository = messageRepository;
         _logger = logger;
     }
@@ -55,7 +56,7 @@ public sealed class MessageService : IMessageService
         }
 
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-        LiteDbMessage? liteMessage = null;
+        MongoMessage? mongoMessage = null;
         string? messageId = null;
 
         try
@@ -87,28 +88,28 @@ public sealed class MessageService : IMessageService
                 return MessagingResult.Failure($"Sender {dto.SenderId} not found.");
             }
 
-            liteMessage = BuildLiteDbMessage(dto, sender);
+            mongoMessage = BuildMongoMessage(dto, sender);
             
-            // Сохранение в LiteDB
-            if (string.IsNullOrEmpty(liteMessage.Id))
+            // Сохранение в MongoDB
+            if (string.IsNullOrEmpty(mongoMessage.Id))
             {
-                liteMessage.Id = ObjectId.NewObjectId().ToString();
+                mongoMessage.Id = ObjectId.GenerateNewId().ToString();
             }
-            liteMessage.SentAt = DateTime.UtcNow;
+            mongoMessage.SentAt = DateTime.UtcNow;
             
-            var messages = _liteDbContext.Messages;
-            messages.Insert(liteMessage);
-            messageId = liteMessage.Id;
+            var messages = _mongoDbContext.Messages;
+            await messages.InsertOneAsync(mongoMessage, null, cancellationToken);
+            messageId = mongoMessage.Id;
 
-            chatRoom.LastActivityAt = liteMessage.SentAt;
+            chatRoom.LastActivityAt = mongoMessage.SentAt;
             chatRoom.TotalMessagesCount++;
 
-            await UpdateContactStatsAsync(chatRoom.Members.Select(m => m.UserId), dto.SenderId, liteMessage.SentAt, cancellationToken);
+            await UpdateContactStatsAsync(chatRoom.Members.Select(m => m.UserId), dto.SenderId, mongoMessage.SentAt, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
 
-            return MessagingResult.SuccessResult(messageId, liteMessage.SentAt);
+            return MessagingResult.SuccessResult(messageId, mongoMessage.SentAt);
         }
         catch (Exception ex)
         {
@@ -124,9 +125,9 @@ public sealed class MessageService : IMessageService
         }
     }
 
-    private static LiteDbMessage BuildLiteDbMessage(MessageCreateDto dto, User sender)
+    private static MongoMessage BuildMongoMessage(MessageCreateDto dto, User sender)
     {
-        return new LiteDbMessage
+        return new MongoMessage
         {
             ChatId = dto.ChatRoomId,
             Sender = new MessageSender

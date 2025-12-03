@@ -81,7 +81,7 @@ namespace Uchat
             // Server connection с JWT токеном из UserSession
             // ВАЖНО: Токен передаётся через query string, т.к. SignalR не поддерживает custom headers
             _connection = new HubConnectionBuilder()
-            .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
+            .WithUrl($"{ServerConfig.ApiBaseUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
             {
                 // Токен уже в URL, но оставляем для совместимости
                 options.AccessTokenProvider = () => Task.FromResult<string?>(UserSession.Instance.AccessToken);
@@ -89,7 +89,7 @@ namespace Uchat
             .WithAutomaticReconnect()
             .Build();
 
-            _connection.On<string, string, string, string?, string>("ReceiveMessage", (chatId, user, message, replyContent, messageId) =>
+            _connection.On<string, string, string, string?, string, string?>("ReceiveMessage", (chatId, user, message, replyContent, messageId, replyToMessageId) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -98,8 +98,8 @@ namespace Uchat
 
                     replyTheMessageBox.IsVisible = false;
                     
-                    // Используем унифицированный метод отображения с replyContent и serverId
-                    DisplayMessage(chatId, user, message, replyContent, messageId);
+                    // Используем унифицированный метод отображения с replyContent, serverId и replyToMessageId
+                    DisplayMessage(chatId, user, message, replyContent, messageId, null, replyToMessageId);
                     
                     chatTextBox.Text = string.Empty;
                     ChatScrollViewer.ScrollToEnd();
@@ -154,22 +154,96 @@ namespace Uchat
                 });
             });
             
-            // Обработчик удаления сообщения
-            _connection.On<string>("MessageDeleted", (messageId) =>
+            // Обработчик удаления сообщения, на которое отвечали (устаревший, оставлен для совместимости)
+            _connection.On<string>("ReplyTargetDeleted", (deletedMessageId) =>
+            {
+                Console.WriteLine($"[CLIENT] ReplyTargetDeleted received: {deletedMessageId}");
+                System.Diagnostics.Debug.WriteLine($"[CLIENT] ReplyTargetDeleted received: {deletedMessageId}");
+                Dispatcher.UIThread.Post(() =>
+                {
+                    int removedCount = 0;
+                    Console.WriteLine($"[CLIENT] MessageCache has {_messageCache.Count} messages");
+                    // Находим все сообщения, которые отвечали на удалённое
+                    foreach (var kvp in _messageCache.ToList())
+                    {
+                        var msg = kvp.Value;
+                        
+                        Console.WriteLine($"[CLIENT] Checking message {kvp.Key}, ReplyToMessageId: {msg.ReplyToMessageId}");
+                        
+                        // Проверяем, отвечает ли это сообщение на удалённое
+                        if (msg.ReplyToMessageId == deletedMessageId)
+                        {
+                            Console.WriteLine($"[CLIENT] Match found! Removing reply border from message {kvp.Key}");
+                            
+                            // Очищаем ReplyToMessageId в кеше
+                            msg.ReplyToMessageId = null;
+                            
+                            // Получаем StackPanel сообщения
+                            if (msg.Bubble.Child is StackPanel messageStackPanel)
+                            {
+                                // Ищем ReplyBorder внутри StackPanel
+                                var replyBorder = messageStackPanel.Children.OfType<Border>()
+                                    .FirstOrDefault(b => b.Name == "ReplyBorder");
+                                
+                                if (replyBorder != null)
+                                {
+                                    // Удаляем Border с ответом
+                                    messageStackPanel.Children.Remove(replyBorder);
+                                    removedCount++;
+                                    Console.WriteLine($"[CLIENT] ReplyBorder removed successfully");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"[CLIENT] ReplyBorder not found in message");
+                                }
+                            }
+                        }
+                    }
+                    Console.WriteLine($"[CLIENT] ReplyTargetDeleted processed: {removedCount} reply borders removed");
+                });
+            });
+
+            // Объединённый обработчик удаления с очисткой ответов
+            _connection.On<string, bool>("MessageDeletedWithReplies", (messageId, hasReplies) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
+                    // Если на это сообщение были ответы, сначала очищаем их
+                    if (hasReplies)
+                    {
+                        foreach (var kvp in _messageCache.ToList())
+                        {
+                            var msg = kvp.Value;
+                            
+                            if (msg.ReplyToMessageId == messageId)
+                            {
+                                msg.ReplyToMessageId = null;
+                                
+                                if (msg.Bubble.Child is StackPanel messageStackPanel)
+                                {
+                                    var replyBorder = messageStackPanel.Children.OfType<Border>()
+                                        .FirstOrDefault(b => b.Name == "ReplyBorder");
+                                    
+                                    if (replyBorder != null)
+                                    {
+                                        messageStackPanel.Children.Remove(replyBorder);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Теперь удаляем само сообщение
                     if (_messageCache.TryGetValue(messageId, out var cachedMsg))
                     {
-                        // Находим Grid, содержащий сообщение, и удаляем его из ChatMessagesPanel
                         var bubble = cachedMsg.Bubble;
                         if (bubble.Parent is Grid messageGrid && messageGrid.Parent == ChatMessagesPanel)
                         {
                             ChatMessagesPanel.Children.Remove(messageGrid);
                         }
                         
-                        // Удаляем из кеша
                         _messageCache.Remove(messageId);
+                        Console.WriteLine($"[CLIENT] Message {messageId} removed from cache and UI");
                     }
                 });
             });
@@ -304,7 +378,7 @@ namespace Uchat
                             replyContent = msg.ReplyToContent;
                         }
                         
-                        DisplayMessage(chatId, msg.Sender.Username, msg.Content, replyContent, msg.Id, msg.EditedAt);
+                        DisplayMessage(chatId, msg.Sender.Username, msg.Content, replyContent, msg.Id, msg.EditedAt, msg.ReplyToMessageId);
                     }
                     
                     ChatScrollViewer.ScrollToEnd();
@@ -316,7 +390,7 @@ namespace Uchat
             }
         }
 
-        private void DisplayMessage(string chatId, string user, string message, string? replyContent = null, string? serverId = null, DateTime? editedAt = null)
+        private void DisplayMessage(string chatId, string user, string message, string? replyContent = null, string? serverId = null, DateTime? editedAt = null, string? replyToMessageId = null)
         {
             if (currentChatId == null || chatId != currentChatId || string.IsNullOrEmpty(message))
                 return;
@@ -327,7 +401,7 @@ namespace Uchat
             bool isEdited = editedAt.HasValue;
             
             // Используем класс Chat.Message для единообразия
-            var chatMessage = new MainWindow.Chat.Message(hasReply, message, timestamp, isGuest, replyContent, serverId, isEdited);
+            var chatMessage = new MainWindow.Chat.Message(hasReply, message, timestamp, isGuest, replyContent, serverId, isEdited, replyToMessageId);
             var bubble = chatMessage.Bubble;
 
             // Кешируем сообщение по serverId для быстрого доступа при редактировании
@@ -361,12 +435,13 @@ namespace Uchat
                 
             try
             {
-                // Передаём replyContent если это ответ
-                string? replyContent = isReplied ? replyToMessageContent : null;
-                await _connection.InvokeAsync("SendMessage", currentChatId, name, messageText, replyContent);
+                // Передаём replyToMessageId если это ответ
+                string? replyMessageId = isReplied ? replyToMessageId : null;
+                await _connection.InvokeAsync("SendMessage", currentChatId, name, messageText, replyMessageId);
                 
-                // Очищаем replyContent после отправки
+                // Очищаем replyContent и replyId после отправки
                 replyToMessageContent = "";
+                replyToMessageId = "";
             }
             catch (Exception)
             {

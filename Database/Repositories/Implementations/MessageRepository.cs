@@ -5,36 +5,35 @@
  * 
  * Реализация IMessageRepository
  * 
- * Предоставляет методы для работы с сообщениями в LiteDB
+ * Предоставляет методы для работы с сообщениями в MongoDB
  * 
  * ============================================================================
  */
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using LiteDB;
-using Uchat.Database.LiteDB;
+using MongoDB.Bson;
+using MongoDB.Driver;
+using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
 
 namespace Uchat.Database.Repositories;
 
 /// <summary>
-/// Репозиторий для работы с сообщениями в LiteDB
+/// Репозиторий для работы с сообщениями в MongoDB
 /// </summary>
 public class MessageRepository : IMessageRepository
 {
-    private readonly LiteDbContext _context;
-    private readonly ILiteCollection<LiteDbMessage> _messages;
-    private readonly ILiteDbWriteGate _writeGate;
+    private readonly MongoDbContext _context;
+    private readonly IMongoCollection<MongoMessage> _messages;
     
     /// <summary>
     /// Конструктор
     /// </summary>
-    public MessageRepository(LiteDbContext context, ILiteDbWriteGate writeGate)
+    public MessageRepository(MongoDbContext context)
     {
         _context = context;
         _messages = context.Messages;
-        _writeGate = writeGate;
     }
     
     // ========================================================================
@@ -81,59 +80,75 @@ public class MessageRepository : IMessageRepository
     ///   - Медленно на больших offset (сканирует все пропущенные строки)
     ///   - Пропускает новые сообщения (непредсказуемо)
     /// </summary>
-    public async Task<List<LiteDbMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null)
+    public async Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null)
     {
-        IEnumerable<LiteDbMessage> query;
+        FilterDefinition<MongoMessage> filter;
         
         if (lastTimestamp == null)
         {
             // ПЕРВАЯ ЗАГРУЗКА: последние N сообщений
-            // Использует составной индекс (ChatId, SentAt DESC)
-            query = _messages
-                .Find(m => m.ChatId == chatId && !m.IsDeleted)
-                .OrderByDescending(m => m.SentAt);
+            filter = Builders<MongoMessage>.Filter.And(
+                Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+                Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
+            );
         }
         else
         {
             // ЗАГРУЗИТЬ ЕЩЕ: старые сообщения до lastTimestamp
-            // Использует составной индекс (ChatId, SentAt DESC)
-            // WHERE chatId = X AND sentAt < lastTimestamp
-            query = _messages
-                .Find(m => m.ChatId == chatId && !m.IsDeleted && m.SentAt < lastTimestamp.Value)
-                .OrderByDescending(m => m.SentAt);
+            filter = Builders<MongoMessage>.Filter.And(
+                Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+                Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+                Builders<MongoMessage>.Filter.Lt(m => m.SentAt, lastTimestamp.Value)
+            );
         }
         
-        var result = query
-            .Take(limit)
-            .ToList();
+        var result = await _messages
+            .Find(filter)
+            .SortByDescending(m => m.SentAt)
+            .Limit(limit)
+            .ToListAsync();
             
-        return await Task.FromResult(result);
+        return result;
     }
     
-    public async Task<LiteDbMessage?> GetMessageByIdAsync(string messageId)
+    public async Task<MongoMessage?> GetMessageByIdAsync(string messageId)
     {
-        var result = _messages
-            .FindById(messageId);
-            
-        return await Task.FromResult(result);
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        var result = await _messages.Find(filter).FirstOrDefaultAsync();
+        return result;
     }
     
-    public async Task<List<LiteDbMessage>> GetUnreadMessagesAsync(int chatId, int userId)
+    public async Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId)
     {
-        // LiteDB запрос: найти сообщения где userId НЕ в массиве readBy
-        var result = _messages
-            .Find(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId))
-            .OrderByDescending(m => m.SentAt)
-            .ToList();
+        // MongoDB запрос: найти сообщения где userId НЕ в массиве readBy
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+            Builders<MongoMessage>.Filter.Not(
+                Builders<MongoMessage>.Filter.AnyEq(m => m.ReadBy, userId)
+            )
+        );
+        
+        var result = await _messages
+            .Find(filter)
+            .SortByDescending(m => m.SentAt)
+            .ToListAsync();
             
-        return await Task.FromResult(result);
+        return result;
     }
     
     public async Task<long> GetUnreadCountAsync(int chatId, int userId)
     {
-        var count = _messages.Count(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId));
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+            Builders<MongoMessage>.Filter.Not(
+                Builders<MongoMessage>.Filter.AnyEq(m => m.ReadBy, userId)
+            )
+        );
         
-        return await Task.FromResult(count);
+        var count = await _messages.CountDocumentsAsync(filter);
+        return count;
     }
     
     // ========================================================================
@@ -142,37 +157,22 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> EditMessageAsync(string messageId, string newContent)
     {
-        using var gate = await _writeGate.AcquireAsync();
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        var update = Builders<MongoMessage>.Update
+            .Set(m => m.Content, newContent)
+            .Set(m => m.EditedAt, DateTime.UtcNow);
 
-        var message = _messages.FindById(messageId);
-        if (message == null)
-        {
-            return false;
-        }
-
-        message.Content = newContent;
-        message.EditedAt = DateTime.UtcNow;
-
-        var result = _messages.Update(message);
-
-        return await Task.FromResult(result);
+        var result = await _messages.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
     
     public async Task<bool> DeleteMessageAsync(string messageId)
     {
-        using var gate = await _writeGate.AcquireAsync();
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        var update = Builders<MongoMessage>.Update.Set(m => m.IsDeleted, true);
 
-        var message = _messages.FindById(messageId);
-        if (message == null)
-        {
-            return false;
-        }
-
-        message.IsDeleted = true;
-
-        var result = _messages.Update(message);
-
-        return await Task.FromResult(result);
+        var result = await _messages.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
     
     // ========================================================================
@@ -181,52 +181,24 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> AddReactionAsync(string messageId, string emoji, int userId)
     {
-        using var gate = await _writeGate.AcquireAsync();
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        
+        // Используем $addToSet для добавления userId в массив reactions[emoji]
+        var update = Builders<MongoMessage>.Update.AddToSet($"reactions.{emoji}", userId);
 
-        var message = _messages.FindById(messageId);
-        if (message == null)
-        {
-            return false;
-        }
-
-        if (!message.Reactions.ContainsKey(emoji))
-        {
-            message.Reactions[emoji] = new List<int>();
-        }
-
-        if (!message.Reactions[emoji].Contains(userId))
-        {
-            message.Reactions[emoji].Add(userId);
-        }
-
-        var result = _messages.Update(message);
-
-        return await Task.FromResult(result);
+        var result = await _messages.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
     
     public async Task<bool> RemoveReactionAsync(string messageId, string emoji, int userId)
     {
-        using var gate = await _writeGate.AcquireAsync();
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        
+        // Используем $pull для удаления userId из массива reactions[emoji]
+        var update = Builders<MongoMessage>.Update.Pull($"reactions.{emoji}", userId);
 
-        var message = _messages.FindById(messageId);
-        if (message == null)
-        {
-            return false;
-        }
-
-        if (message.Reactions.ContainsKey(emoji))
-        {
-            message.Reactions[emoji].Remove(userId);
-
-            if (message.Reactions[emoji].Count == 0)
-            {
-                message.Reactions.Remove(emoji);
-            }
-        }
-
-        var result = _messages.Update(message);
-
-        return await Task.FromResult(result);
+        var result = await _messages.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
     
     // ========================================================================
@@ -235,84 +207,66 @@ public class MessageRepository : IMessageRepository
     
     public async Task<bool> MarkAsReadAsync(string messageId, int userId)
     {
-        using var gate = await _writeGate.AcquireAsync();
+        var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
+        var update = Builders<MongoMessage>.Update.AddToSet(m => m.ReadBy, userId);
 
-        var message = _messages.FindById(messageId);
-        if (message == null)
-        {
-            return false;
-        }
-
-        if (!message.ReadBy.Contains(userId))
-        {
-            message.ReadBy.Add(userId);
-        }
-
-        var result = _messages.Update(message);
-
-        return await Task.FromResult(result);
+        var result = await _messages.UpdateOneAsync(filter, update);
+        return result.ModifiedCount > 0;
     }
     
     public async Task<long> MarkAllAsReadAsync(int chatId, int userId)
     {
-        using var gate = await _writeGate.AcquireAsync();
-
-        var unreadMessages = _messages
-            .Find(m => m.ChatId == chatId && !m.IsDeleted && !m.ReadBy.Contains(userId))
-            .ToList();
-
-        long count = 0;
-        foreach (var message in unreadMessages)
-        {
-            message.ReadBy.Add(userId);
-            if (_messages.Update(message))
-            {
-                count++;
-            }
-        }
-
-        return await Task.FromResult(count);
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+            Builders<MongoMessage>.Filter.Not(
+                Builders<MongoMessage>.Filter.AnyEq(m => m.ReadBy, userId)
+            )
+        );
+        
+        var update = Builders<MongoMessage>.Update.AddToSet(m => m.ReadBy, userId);
+        var result = await _messages.UpdateManyAsync(filter, update);
+        
+        return result.ModifiedCount;
     }
     
     public async Task<long> MarkAsReadUntilAsync(int chatId, int userId, DateTime untilTimestamp)
     {
-        using var gate = await _writeGate.AcquireAsync();
-
-        // Находим все непрочитанные сообщения до указанного времени
-        var unreadMessages = _messages
-            .Find(m => m.ChatId == chatId 
-                    && !m.IsDeleted 
-                    && m.SentAt <= untilTimestamp 
-                    && !m.ReadBy.Contains(userId))
-            .ToList();
-
-        long count = 0;
-        foreach (var message in unreadMessages)
-        {
-            message.ReadBy.Add(userId);
-            if (_messages.Update(message))
-            {
-                count++;
-            }
-        }
-
-        return await Task.FromResult(count);
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+            Builders<MongoMessage>.Filter.Lte(m => m.SentAt, untilTimestamp),
+            Builders<MongoMessage>.Filter.Not(
+                Builders<MongoMessage>.Filter.AnyEq(m => m.ReadBy, userId)
+            )
+        );
+        
+        var update = Builders<MongoMessage>.Update.AddToSet(m => m.ReadBy, userId);
+        var result = await _messages.UpdateManyAsync(filter, update);
+        
+        return result.ModifiedCount;
     }
     
     // ========================================================================
     // ПОИСК
     // ========================================================================
     
-    public async Task<List<LiteDbMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20)
+    public async Task<List<MongoMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20)
     {
-        // Фильтр: поиск по тексту (case-insensitive)
-        var result = _messages
-            .Find(m => m.ChatId == chatId && !m.IsDeleted && m.Content.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
-            .OrderByDescending(m => m.SentAt)
-            .Take(limit)
-            .ToList();
+        // Фильтр: поиск по тексту (case-insensitive через regex)
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
+            Builders<MongoMessage>.Filter.Regex(m => m.Content, new BsonRegularExpression(searchQuery, "i"))
+        );
+        
+        var result = await _messages
+            .Find(filter)
+            .SortByDescending(m => m.SentAt)
+            .Limit(limit)
+            .ToListAsync();
             
-        return await Task.FromResult(result);
+        return result;
     }
 }
 
