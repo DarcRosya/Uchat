@@ -23,58 +23,7 @@ namespace Uchat
 
 		private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
-			var contactGrid = new Grid
-			{
-				Background = Brush.Parse("#171a20"),
-				ColumnDefinitions =
-		{
-			new ColumnDefinition(new GridLength(50, GridUnitType.Pixel)),
-			new ColumnDefinition(new GridLength(1, GridUnitType.Star))
-		}
-			};
-
-			var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
-			var avatarIcon = new Avalonia.Controls.Image
-			{
-				Source = new Bitmap(AssetLoader.Open(imageURL)),
-				Stretch = Stretch.UniformToFill
-			};
-
-			var contactPanel = new StackPanel
-			{
-				Height = 50
-			};
-
-			var contactName = new TextBlock
-			{
-				Text = "John Cena",
-				Foreground = Brush.Parse("#ffffff"),
-				FontSize = 15,
-				Margin = new Thickness(5, 15, 0, 0),
-				HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-			};
-
-			var lastMessage = new TextBlock
-			{
-				Text = "Do you see me?",
-				Foreground = Brush.Parse("#999999"),
-				FontSize = 10,
-				Margin = new Thickness(5, 0, 0, 0),
-				HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
-				VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom
-			};
-
-			contactPanel.Children.Add(contactName);
-			contactPanel.Children.Add(lastMessage);
-
-			contactGrid.Children.Add(avatarIcon);
-
-			contactGrid.Children.Add(contactPanel);
-
-			Grid.SetColumn(avatarIcon, 0);
-			Grid.SetColumn(contactPanel, 1);
-
-			contanctList.Children.Add(contactGrid);
+			var newContact = new Chat.Contact("New Chat", "Just an example", 0, contanctList);
 		}
 
 		private async void SendButton_Click(object? sender, RoutedEventArgs e)

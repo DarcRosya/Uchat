@@ -5,20 +5,17 @@ using Avalonia.Layout;
 using Avalonia.Media;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 
 namespace Uchat
 {
 	public partial class MainWindow : Window
 	{
-		public class Chat
+		public partial class Chat
 		{
 			static int counter = 0;
             public class Message
             {
-                private int id;
                 private string? serverId; // ID сообщения в LiteDB
                 private string content;
                 private string time;
@@ -41,7 +38,6 @@ namespace Uchat
 
                 public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false)
                 {
-                    id = counter++;
                     this.serverId = serverId;
                     content = text;
                     time = timestamp;
@@ -110,14 +106,12 @@ namespace Uchat
                     messageStackPanel.Children.Add(timeStackPanel);
                 }
 
-                public int ID { get { return id; } }
                 public string? ServerId { get { return serverId; } }
                 public string Content { get { return content; } }
                 public string Time { get { return time; } }
                 public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
                 public Border Bubble { get { return messageBorder; } }
-                public TextBlock repy { get { return replyTextBlock; } set { replyTextBlock = value; } }
                 public TextBlock ContentTextBlock { get { return contentTextBlock; } }
             }
 
