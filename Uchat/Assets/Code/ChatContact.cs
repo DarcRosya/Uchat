@@ -1,3 +1,4 @@
+using Avalonia.Interactivity;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -29,7 +30,8 @@ namespace Uchat
 				private string lastMessage = "";
 				private int unreadMessages = 0;
 
-				private Grid contactGrid = new Grid();
+				private MainWindow mainWindow = new MainWindow();
+                private Grid contactGrid = new Grid();
 				private Border avatarIconBorder = new Border();
                 private Avalonia.Controls.Image avatarIcon = new Avalonia.Controls.Image();
 				private StackPanel contactStackPanel = new StackPanel();
@@ -37,8 +39,9 @@ namespace Uchat
 				private TextBlock lastMessageTextBlock = new TextBlock();
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
-				public Contact(string newChatName, string newLastMessage, int newUnreadMessages)
+				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window)
 				{
+					MainWindow mainWindow = window;
 					isGroupChat = Chat.GroupsActive;
                     chatName = newChatName;
 					lastMessage = newLastMessage;
@@ -94,10 +97,9 @@ namespace Uchat
 					Grid.SetColumn(contactStackPanel, 1);
 					Grid.SetColumn(unreadMessageBorder, 2);
 
-					ContactContextMenu contextMenu = new ContactContextMenu(this, contactList);
+					ContactContextMenu contextMenu = new ContactContextMenu(this, mainWindow.contactsStackPanel);
 					contactGrid.ContextMenu = contextMenu.Result();
 
-                    attachedContactList.Children.Add(this.Box);
 					Chat.chatsList.Add(this);
                 }
 
@@ -172,7 +174,7 @@ namespace Uchat
 
                 private void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
                 {
-					Chat.ChatcontactList.Remove(contact);
+					Chat.chatsList.Remove(contact);
 					contactList.Children.Remove(contact.Box);
                 }
             }

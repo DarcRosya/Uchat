@@ -53,8 +53,6 @@ namespace Uchat
                     messageBorder.Child = messageStackPanel;
 
                     timeStackPanel.Classes.Add("timeStackPanel");
-                    timeStackPanel.Children.Add(timeTextBlock);
-
 
                     if (isGuest)
                     { 
@@ -87,6 +85,7 @@ namespace Uchat
                         };
                         timeStackPanel.Children.Add(editedLabel);
                     }
+                    timeStackPanel.Children.Add(timeTextBlock);
 
                     if (this.isReply)
                     {
@@ -115,6 +114,7 @@ namespace Uchat
                 }
                 public string Time { get { return time; } }
                 public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
+                public bool IsGuest { get { return isGuest; } set { isGuest = value; } }
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
                 public Border Bubble { get { return messageBorder; } }
                 public TextBlock ContentTextBlock { get { return contentTextBlock; } }
@@ -149,47 +149,53 @@ namespace Uchat
                     };
                     menuItemReply.Click += MenuItemReply_Click;
                     contextMenu.Items.Add(menuItemReply);
-
-                    MenuItem menuItemEdit = new MenuItem
+                    if (!chatMessage.IsGuest)
                     {
-                        Icon = new Image
+                        MenuItem menuItemEdit = new MenuItem
                         {
-                            Source = new Bitmap(AssetLoader.Open(iconEditURL)),
-                            Width = 16,
-                            Height = 16
-                        },
-                        Header = "Edit"
-                    };
-                    menuItemEdit.Click += MenuItemEdit_Click;
-                    contextMenu.Items.Add(menuItemEdit);
+                            Icon = new Image
+                            {
+                                Source = new Bitmap(AssetLoader.Open(iconEditURL)),
+                                Width = 16,
+                                Height = 16
+                            },
+                            Header = "Edit"
+                        };
+                   
+                        menuItemEdit.Click += MenuItemEdit_Click;
+                        contextMenu.Items.Add(menuItemEdit);
+                    }
 
                     MenuItem menuItemCopy = new MenuItem
-                    {
-                        Icon = new Image
                         {
-                            Source = new Bitmap(AssetLoader.Open(iconCopyURL)),
-                            Width = 16,
-                            Height = 16
-                        },
-                        Header = "Copy"
-                    };
-                    menuItemCopy.Click += MenuItemCopy_Click;
-                    contextMenu.Items.Add(menuItemCopy);
+                            Icon = new Image
+                            {
+                                Source = new Bitmap(AssetLoader.Open(iconCopyURL)),
+                                Width = 16,
+                                Height = 16
+                            },
+                            Header = "Copy"
+                        };
+                        menuItemCopy.Click += MenuItemCopy_Click;
+                        contextMenu.Items.Add(menuItemCopy);
 
-                    MenuItem menuItemDelete = new MenuItem
+                    if (!chatMessage.IsGuest)
                     {
-                        Icon = new Image
+                        MenuItem menuItemDelete = new MenuItem
                         {
-                            Source = new Bitmap(AssetLoader.Open(iconDeleteURL)),
-                            Width = 16,
-                            Height = 16
-                        },
-                        Header = "Delete",
-                        Foreground = Brush.Parse("#c57179")
-                    };
-                    menuItemDelete.Click += MenuItemDelete_Click;
+                            Icon = new Image
+                            {
+                                Source = new Bitmap(AssetLoader.Open(iconDeleteURL)),
+                                Width = 16,
+                                Height = 16
+                            },
+                            Header = "Delete",
+                            Foreground = Brush.Parse("#c57179")
+                        };
+                        menuItemDelete.Click += MenuItemDelete_Click;
 
-                    contextMenu.Items.Add(menuItemDelete);
+                        contextMenu.Items.Add(menuItemDelete);
+                    }
                 }
 
                 private void MenuItemReply_Click(object sender, RoutedEventArgs e)

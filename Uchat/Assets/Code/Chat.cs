@@ -36,7 +36,7 @@ namespace Uchat
         {
 			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
 			{
-                var newContact = new Chat.Contact(AddContactTextBox.Text, "Example last message", 0);
+                var newContact = new Chat.Contact(AddContactTextBox.Text, "Example last message", 0, this);
                 contactsStackPanel.Children.Add(newContact.Box);
                 AddContactOverlay.IsVisible = false;
                 AddContactTextBox.Text = "";
@@ -48,6 +48,9 @@ namespace Uchat
             Chat.GroupsActive = true;
             GroupsButton.Background = Brush.Parse("#5da3a5");
             ContactsButton.Background = Brush.Parse("#3e4042");
+            ContactsButton.FontWeight = FontWeight.Normal;
+            GroupsButton.FontWeight = FontWeight.SemiBold;
+
 
             Chat.ShowGroups(true);
         }
@@ -56,8 +59,10 @@ namespace Uchat
 			Chat.GroupsActive = false;
 			ContactsButton.Background = Brush.Parse("#5e81ac");
             GroupsButton.Background = Brush.Parse("#3e4042");
+            ContactsButton.FontWeight = FontWeight.SemiBold;
+            GroupsButton.FontWeight = FontWeight.Normal;
 
-			Chat.ShowGroups(false);
+            Chat.ShowGroups(false);
         }
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{

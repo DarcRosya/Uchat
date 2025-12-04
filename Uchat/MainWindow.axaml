@@ -429,7 +429,7 @@
 			</Grid.RowDefinitions>
 
 			<!-- Title Bar -->
-			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
+			<Grid Grid.Row="0" Background="#060608" ColumnDefinitions="*,50,50,50">
 				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
 				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
@@ -634,7 +634,8 @@
                             HorizontalAlignment="Stretch" 
                             VerticalContentAlignment="Center" 
                             HorizontalContentAlignment="Center" 
-                            Content="↑" FontSize="20"
+							Padding="0,3,0,0"
+                            Content="↑" FontSize="20" FontWeight="SemiBold"
                             Click="SendButton_Click">
                     </Button>
                 </Border>
@@ -691,7 +692,7 @@
 
 				<TextBlock  Margin="0 7 0 10" FontWeight="SemiBold" HorizontalAlignment="Center"
 					FontSize="20"
-					Foreground="#D0F0C0"
+					Foreground="White"
 				>NEW CONTACT</TextBlock>
 
                 <!-- Текстовий блок для введення -->

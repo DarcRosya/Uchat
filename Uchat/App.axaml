@@ -195,7 +195,7 @@
 
     <!-- Style for message text in reply box -->
         <Style Selector="TextBlock.replyTextBlock">
-            <Setter Property="Foreground" Value="#bf616a"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="MaxLines" Value="1"/>
@@ -317,9 +317,9 @@
         </Style>
 
         <Style Selector="Button.back">
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="#1E2533"/>
-            <Setter Property="BorderBrush" Value="#bf616a"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="70"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="CornerRadius" Value="5"/>
@@ -350,8 +350,7 @@
             <Setter Property="FontSize" Value="17"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="BorderBrush" Value="#5e81ac"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
