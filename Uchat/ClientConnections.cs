@@ -87,25 +87,36 @@ namespace Uchat
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    if (_currentChatId != null && message.ChatRoomId == _currentChatId.Value)
+                    bool isCurrentChat = _currentChatId != null && message.ChatRoomId == _currentChatId.Value;
+
+                    if (isCurrentChat)
                     {
+                        // === СЦЕНАРИЙ А: Мы смотрим этот чат ===
+                        
+                        // 1. Рисуем сообщение
                         DisplayMessage(message);
+
+                        // 2. Если это сообщение от МЕНЯ - значит отправка прошла успешно
+                        // Очищаем поле ввода только здесь
+                        if (message.Sender.Username == _currentUsername)
+                        {
+                            replyTheMessageBox.IsVisible = false;
+                            chatTextBox.Text = string.Empty;
+                        }
+                        Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
                         ChatScrollViewer.ScrollToEnd();
                     }
                     else 
                     {
-                        // А ВОТ ТУТ (в будущем) уведомление!
-                        Console.WriteLine($"New message in background chat {message.ChatRoomId}");
+                        // === СЦЕНАРИЙ Б: Сообщение пришло в фоновый чат ===
+                        
+                        // Здесь НЕ вызываем DisplayMessage!
+                        // Здесь обновляем счетчик в списке слева или кидаем пуш-уведомление
+                        Console.WriteLine($"[Notification] New message in chat {message.ChatRoomId} from {message.Sender.Username}");
+                        
+                        // Пример на будущее:
+                        // UpdateUnreadCounter(message.ChatRoomId);
                     }
-
-                    if (message.Sender.Username == _currentUsername)
-                    {
-                        replyTheMessageBox.IsVisible = false;
-                        chatTextBox.Text = string.Empty;
-                    }
-                    
-                    DisplayMessage(message);
-                    ChatScrollViewer.ScrollToEnd();
                 });
             });
             
@@ -181,7 +192,7 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                // log error
+                System.Diagnostics.Debug.WriteLine($"Error opening chat: {ex.Message}");
             }
         }
 
