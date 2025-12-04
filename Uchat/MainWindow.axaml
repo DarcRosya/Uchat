@@ -79,7 +79,7 @@
 					HorizontalAlignment="Right"
 					Background="Transparent"
 					CornerRadius="4 0 0 4"
-					Margin="0 0 30 0"
+					Margin="0 0 35 0"
 					Click="MinimizeButton_Click"
 					>
 						<Image Width="20" Height="20"
@@ -524,11 +524,11 @@
 			x:Name="replyTheMessageBox">
 		<Grid>
 	        <DockPanel>
-		        <PathIcon
+		        <Image
 		        VerticalAlignment="Center"
 		        Height="20"
 		        Margin="0 0 10 0"
-		        Data="M113, 1208 C112.346, 1208 109.98, 1208.02 109.98, 1208.02 L109.98, 1213.39 L102.323, 1205 L109.98, 1196.6 L109.98, 1202.01 C109.98, 1202.01 112.48, 1201.98 113, 1202 C120.062, 1202.22 124.966, 1210.26 124.998, 1214.02 C122.84, 1211.25 117.17, 1208 113, 1208 L113, 1208 Z M111.983, 1200.01 L111.983, 1194.11 C112.017, 1193.81 111.936, 1193.51 111.708, 1193.28 C111.312, 1192.89 110.67, 1192.89 110.274, 1193.28 L100.285, 1204.24 C100.074, 1204.45 99.984, 1204.72 99.998, 1205 C99.984, 1205.27 100.074, 1205.55 100.285, 1205.76 L110.219, 1216.65 C110.403, 1216.88 110.67, 1217.03 110.981, 1217.03 C111.265, 1217.03 111.518, 1216.91 111.7, 1216.72 C111.702, 1216.72 111.706, 1216.72 111.708, 1216.71 C111.936, 1216.49 112.017, 1216.18 111.983, 1215.89 C111.983, 1215.89 112, 1210.34 112, 1210 C118.6, 1210 124.569, 1214.75 125.754, 1221.01 C126.552, 1219.17 127, 1217.15 127, 1215.02 C127, 1206.73 120.276, 1200.01 111.983, 1200.01 L111.983, 1200.01 Z"/>
+				Source="avares://Uchat/Assets/Icons/reply.png"/>
 
 		            <StackPanel>
 			            <TextBlock
@@ -575,11 +575,11 @@
 			x:Name="editTheMessageBox">
 		<Grid>
             <DockPanel>
-				<PathIcon
+				<Image
 		        VerticalAlignment="Center"
 		        Height="20"
 		        Margin="0 0 10 0"
-		        Data="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z"/>
+				Source="avares://Uchat/Assets/Icons/edit.png"/>
 
                 <StackPanel
                     VerticalAlignment="Center">
@@ -651,7 +651,12 @@
 										VerticalContentAlignment="Center"
 										HorizontalContentAlignment="Center"
 										Click="EditMessageButton_Click">
-									<PathIcon Data="M20.8477 1.87868C19.6761 0.707109 17.7766 0.707105 16.605 1.87868L2.44744 16.0363C2.02864 16.4551 1.74317 16.9885 1.62702 17.5692L1.03995 20.5046C0.760062 21.904 1.9939 23.1379 3.39334 22.858L6.32868 22.2709C6.90945 22.1548 7.44285 21.8693 7.86165 21.4505L22.0192 7.29289C23.1908 6.12132 23.1908 4.22183 22.0192 3.05025L20.8477 1.87868ZM18.0192 3.29289C18.4098 2.90237 19.0429 2.90237 19.4335 3.29289L20.605 4.46447C20.9956 4.85499 20.9956 5.48815 20.605 5.87868L17.9334 8.55027L15.3477 5.96448L18.0192 3.29289ZM13.9334 7.3787L3.86165 17.4505C3.72205 17.5901 3.6269 17.7679 3.58818 17.9615L3.00111 20.8968L5.93645 20.3097C6.13004 20.271 6.30784 20.1759 6.44744 20.0363L16.5192 9.96448L13.9334 7.3787Z"/>
+										<Image
+										VerticalAlignment="Center"
+										HorizontalAlignment="Center"
+										Height="20"
+										Margin="10 0 10 0"
+										Source="avares://Uchat/Assets/Icons/edit.png"/>
 								</Button>
 							</Border>
 
@@ -687,36 +692,40 @@
 				>NEW CONTACT</TextBlock>
 
                 <!-- Текстовий блок для введення -->
-				<Border 
-					Margin="0 10 0 10"
-					BorderThickness="0 0 0 4"
-					Width="250"
-					BorderBrush="Gray"
-					CornerRadius="5"
-					Background="#404853">
-					<TextBox
-					Name="AddContactTextBox"
-					Classes="DataBox"
-					Watermark="Username"
-					/>
-				</Border>
+				<DockPanel>
+					<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="7 0 0 21"
+							Source="avares://Uchat/Assets/Icons/person.png">
+					</Image>
 
+					<Border 
+						Margin="0 10 0 10"
+						BorderThickness="0 0 0 4"
+						Width="250"
+						BorderBrush="Gray"
+						CornerRadius="5"
+						Background="#404853">
+						<TextBox
+						Name="AddContactTextBox"
+						Classes="DataBox"
+						Watermark="Username"
+						/>
+					</Border>
+				</DockPanel>
 
                 <!-- Кнопки Cancel та Enter -->
 
-				<DockPanel Margin="21 7 21 0">
+				<DockPanel Margin="10 7 11 0">
 					<Button Name="CancelButton"
 							HorizontalAlignment="Left"
 							Height="35"
 							Background="Transparent"
 							Click="CancelButton_Click" Classes="back"
-							
 							>
 						<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
 					</Button>
                     <Button HorizontalAlignment="Right"
 							Height="35"
-							Width="150"
+							Width="190"
 							Name="AddButton" 
 							Content="Add"
 							Click="AddButton_Click"
