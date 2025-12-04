@@ -98,7 +98,7 @@ namespace Uchat
 					contactGrid.ContextMenu = contextMenu.Result();
 
                     attachedContactList.Children.Add(this.Box);
-					Chat.ChatcontactList.Add(this);
+					Chat.chatsList.Add(this);
                 }
 
 				public Grid Box { get { return contactGrid; } }

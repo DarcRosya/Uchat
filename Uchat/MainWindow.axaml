@@ -476,7 +476,7 @@
 				<!-- Middle Top Bar -->
 				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013">
 					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-						<TextBlock Text=" ENDGAME" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
+						<TextBlock Text=" ENDGAME" FontSize="15" Foreground="White" Margin="5,4,0,0" />
 
 						<!-- ЗАПИХНУТЬ СЮДА КНОПКУ С ДАННЫМИ КАКИМИ-ТО ПРО ГРУППУ, ДРУГА ИЛИ ЕЩЁ ЧТО-ТО.  -->
 					</StackPanel>
