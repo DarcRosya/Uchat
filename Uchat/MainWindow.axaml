@@ -446,15 +446,14 @@
 					<ColumnDefinition Width="0.4*" MinWidth="200"/>
 					<ColumnDefinition Width="0"/>
 					<ColumnDefinition Width="*" MinWidth="400"/> 
-					<ColumnDefinition Width="0"/>
-					<ColumnDefinition Width="0.3*" MinWidth="200"/>
 				</Grid.ColumnDefinitions>
 
 				<!-- Left Search -->
-				<Grid MinWidth="300" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
+				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
 					<Button Grid.Column="0" Background="Transparent" Foreground="White"
-							CornerRadius="5" Margin="0">
-						<Image Source="avares://Uchat/Assets/Icons/options.png"/>
+							CornerRadius="5">
+						<Image Source="avares://Uchat/Assets/Icons/options.png" 
+							   VerticalAlignment="Center"/>
 					</Button>
 
 					<Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
@@ -481,18 +480,19 @@
 							BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				</Grid>
 
-				<!-- Right Top bar -->
-				<Grid Grid.Column="4" Grid.Row="0" Background="#0e1013"></Grid>
-
 				<!-- Contacts Left Menu -->
 				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
 					<Grid Background="#3e4042" ColumnDefinitions="*,*">
-						<Button Content="Friends" CornerRadius="0" Background="#5e81ac" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-						<Button Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+						<Button Name="ContactsButton" Content="Contacts" CornerRadius="0" Background="#5e81ac" Foreground="White"
+							    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+								Click="SwitchToContacts_Click"/>
+						<Button Name="GroupsButton" Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White"
+									 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+									 Click="SwitchToGroups_Click"/>
 					</Grid>
 
 					<ScrollViewer Grid.Row="1">
-						<StackPanel Name="contactList" Background="#20242d">
+						<StackPanel Name="contactsStackPanel" Background="#20242d">
 						</StackPanel>
 					</ScrollViewer>
 				</Grid>
@@ -662,27 +662,6 @@
 
 						</Grid>
 					</Border>
-				</Grid>
-
-				<GridSplitter Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"
-							  Background="Transparent"
-							  ResizeDirection="Columns"
-							  ResizeBehavior="PreviousAndNext"
-							  ShowsPreview="False"/>
-
-				<!-- Members Right Panel -->
-				<Grid Grid.Column="4" Grid.Row="1" Background="#0e1115">
-					<ScrollViewer>
-						<StackPanel>
-							<TextBlock Text="Members"
-									   Background="Transparent"
-									   Foreground="White"
-									   HorizontalAlignment="Center"
-									   Padding="0,500,0,0"
-									   >
-							</TextBlock>
-						</StackPanel>
-					</ScrollViewer>
 				</Grid>
 			</Grid>
 		</Grid>
