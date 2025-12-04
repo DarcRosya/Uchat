@@ -7,6 +7,8 @@ public interface IMessageRepository
     Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null);
     
     Task<MongoMessage?> GetMessageByIdAsync(string messageId);
+    
+    Task<List<MongoMessage>> GetMessagesByIdsAsync(List<string> messageIds);
 
     Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId);
     
@@ -14,7 +16,9 @@ public interface IMessageRepository
     
     Task<bool> EditMessageAsync(string messageId, string newContent);
     
-    Task<bool> DeleteMessageAsync(string messageId);
+    Task<bool> DeleteMessagePermanentlyAsync(string messageId);
+    
+    Task<List<string>> ClearReplyReferencesAsync(string deletedMessageId);
     
     Task<bool> AddReactionAsync(string messageId, string emoji, int userId);
     

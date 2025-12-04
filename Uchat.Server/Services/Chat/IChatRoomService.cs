@@ -1,19 +1,38 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Uchat.Database.Entities;
-using Uchat.Database.Services.Shared;
 
-namespace Uchat.Database.Services.Chat;
+namespace Uchat.Server.Services.Chat;
 
 /// <summary>
-/// Service contract that encapsulates chat life-cycle operations and permission enforcement.
+/// Service contract для операций с чатами и проверки прав доступа.
 /// </summary>
 public interface IChatRoomService
 {
-    Task<ChatResult> CreateChatAsync(CreateChatDto dto);
+    /// <summary>
+    /// Получить список всех чатов пользователя
+    /// </summary>
+    Task<List<ChatRoom>> GetUserChatsAsync(int userId);
 
-    Task<Result> AddMemberAsync(int chatRoomId, int actorUserId, int memberUserId, ChatRoomRole role = ChatRoomRole.Member);
+    /// <summary>
+    /// Получить детали чата с проверкой прав доступа
+    /// </summary>
+    Task<ChatResult> GetChatDetailsAsync(int chatId, int userId);
 
-    Task<Result> RemoveMemberAsync(int chatRoomId, int actorUserId, int memberUserId);
+    /// <summary>
+    /// Создать новый чат
+    /// </summary>
+    Task<ChatResult> CreateChatAsync(int creatorId, string name, ChatRoomType type, string? description, IEnumerable<int>? initialMemberIds);
 
-    Task<Result> UpdateMemberRoleAsync(int chatRoomId, int actorUserId, int memberUserId, ChatRoomRole newRole);
+    /// <summary>
+    /// Добавить участника в чат
+    /// </summary>
+    Task<ChatResult> AddMemberAsync(int chatId, int actorUserId, int memberUserId);
+
+    /// <summary>
+    /// Удалить участника из чата
+    /// </summary>
+    Task<ChatResult> RemoveMemberAsync(int chatId, int actorUserId, int memberUserId);
+
+    Task<ChatResult> IsUserInChatAsync(int userId, int chatId);
 }

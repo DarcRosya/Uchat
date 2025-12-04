@@ -10,16 +10,18 @@ using Uchat.Database.Context;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Database.Services.Chat;
+using Uchat.Server.Services.Chat;
 using Uchat.Server;
 using Uchat.Server.Hubs;
 using Uchat.Server.Middleware;
 using Uchat.Server.Services;
 using Uchat.Server.Services.Auth;
+using Uchat.Server.Services.Messaging;
+using Uchat.Server.Data;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -90,6 +92,7 @@ public class Program
         builder.Services.AddScoped<JwtService>();
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
+        builder.Services.AddScoped<IMessageService, MessageService>();
 
         // ============================================================================
         // JWT АУТЕНТИФИКАЦИЯ
@@ -192,6 +195,11 @@ public class Program
                 var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
                 dbContext.Database.Migrate();
                 logger.LogInformation("PostgreSQL migrations applied successfully");
+                
+                // Инициализация системных сущностей (System User + Global Chat)
+                logger.LogInformation("Initializing system data (seeding)...");
+                await DbInitializer.InitializeAsync(dbContext);
+                logger.LogInformation("System data initialized successfully");
 
                 logger.LogInformation("Initializing MongoDB...");
                 var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();

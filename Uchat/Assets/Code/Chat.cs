@@ -16,11 +16,11 @@ namespace Uchat
 	public partial class MainWindow : Window
 	{
 		private TextBlock? textBlockChange = new TextBlock();
-		private Message? messageBeingEdited = null; // Сохраняем ссылку на Message для редактирования
+		private Message? messageBeingEdited = null; 
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
-		public string replyToMessageId = ""; // ID сообщения, на которое отвечаем
+		public string replyToMessageId = ""; 
 
         private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -60,12 +60,10 @@ namespace Uchat
 			if (string.IsNullOrEmpty(text)) { return; }
 			replyTheMessageBox.IsVisible = false;
 
-			// Отправляем сообщение на сервер через SignalR
 			try
 			{
 				await SendMessageToServerAsync(text);
 			
-			// Очищаем поля после успешной отправки
 			chatTextBox.Text = "";
 			chatTextBoxForReply.Text = "";
 			chatTextBox.IsVisible = true;
@@ -109,56 +107,17 @@ namespace Uchat
 			{
 				var newContent = chatTextBoxForEdit.Text;
 				
-				// Отправляем изменения на сервер
+				// Отправляем изменения через REST API
 				if (!string.IsNullOrEmpty(messageBeingEdited.ServerId))
 				{
-					var connection = _connection;
-					if (connection != null)
+					try
 					{
-						try
-						{
-							await connection.InvokeAsync("EditMessage", messageBeingEdited.ServerId, newContent);
-							// UI обновится через обработчик MessageEdited
-						}
-						catch (Exception ex)
-						{
-							System.Diagnostics.Debug.WriteLine($"Failed to edit message: {ex.Message}");
-						}
+						await EditMessageAsync(messageBeingEdited.ServerId, newContent);
+						// UI обновится через SignalR обработчик MessageEdited
 					}
-				}
-				else
-				{
-					// Фолбек для старых сообщений без serverId - только локальное обновление
-					var editedText = new TextBlock
+					catch (Exception ex)
 					{
-						Text = "edited",
-						Foreground = Brush.Parse("#C1E1C1"),
-						FontSize = 10,
-						Padding = new Thickness(0, 0, 3, 0),
-						Margin = new Thickness(0, 3, 0, 0),
-						FontStyle = FontStyle.Italic,
-						HorizontalAlignment = HorizontalAlignment.Right,
-					};
-
-					textBlockChange.Text = newContent;
-
-					if (textBlockChange.Parent is StackPanel textBlockAndTime)
-					{
-						int lastIndex = textBlockAndTime.Children.Count - 1;
-						var time = textBlockAndTime.Children[lastIndex];
-
-						if (time is StackPanel timeAndEdit)
-						{
-							if (timeAndEdit.Children.Count == 1)
-							{
-								int childrenIndex = timeAndEdit.Children.Count - 1;
-								var saveTime = timeAndEdit.Children[childrenIndex];
-								timeAndEdit.Children.Remove(timeAndEdit.Children[childrenIndex]);
-
-								timeAndEdit.Children.Add(editedText);
-								timeAndEdit.Children.Add(saveTime);
-							}
-						}
+						// Failed to edit message
 					}
 				}
 

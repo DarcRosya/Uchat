@@ -12,8 +12,10 @@ using Uchat.Database.Entities;
 using Uchat.Database.Extensions;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Shared.DTOs;
+using SQLitePCL;
 
-namespace Uchat.Database.Services.Messaging;
+namespace Uchat.Server.Services.Messaging;
 
 /// <summary>
 /// Service for managing chat messages across SQLite (metadata) and LiteDB (content).
@@ -76,12 +78,6 @@ public sealed class MessageService : IMessageService
                 return MessagingResult.Failure("Sender is not a member of the chat.");
             }
 
-            // Check if sender has permission to send messages
-            if (!senderMember.CanSendMessages())
-            {
-                return MessagingResult.Failure("You don't have permission to send messages in this chat.");
-            }
-
             var sender = await _context.Users.FindAsync(new object[] { dto.SenderId }, cancellationToken: cancellationToken);
             if (sender == null)
             {
@@ -125,6 +121,162 @@ public sealed class MessageService : IMessageService
         }
     }
 
+    public async Task<MessageDto?> GetMessageByIdAsync(string messageId)
+    {
+        var mongoMessage = await _messageRepository.GetMessageByIdAsync(messageId);
+        if (mongoMessage == null)
+            return null;
+
+        // Загружаем ReplyTo сообщение, если есть
+        MessageReplyDto? replyToDto = null;
+        if (!string.IsNullOrEmpty(mongoMessage.ReplyToMessageId))
+        {
+            var replyToMessage = await _messageRepository.GetMessageByIdAsync(mongoMessage.ReplyToMessageId);
+            if (replyToMessage != null)
+            {
+                replyToDto = new MessageReplyDto
+                {
+                    Id = replyToMessage.Id,
+                    Content = replyToMessage.Content,
+                    SenderName = replyToMessage.Sender.Username
+                };
+            }
+        }
+
+        return new MessageDto
+        {
+            Id = mongoMessage.Id,
+            ChatRoomId = mongoMessage.ChatId,
+            Sender = new MessageSenderDto
+            {
+                UserId = mongoMessage.Sender.UserId,
+                Username = mongoMessage.Sender.Username,
+                DisplayName = mongoMessage.Sender.DisplayName,
+                AvatarUrl = mongoMessage.Sender.AvatarUrl
+            },
+            Content = mongoMessage.Content,
+            Type = mongoMessage.Type,
+            ReplyToMessageId = mongoMessage.ReplyToMessageId,
+            Attachments = mongoMessage.Attachments.Select(a => new Uchat.Shared.DTOs.MessageAttachment
+            {
+                Id = mongoMessage.Id + "_" + mongoMessage.Attachments.IndexOf(a),
+                FileName = a.FileName ?? "file",
+                ContentType = a.Type,
+                FileSize = a.Size,
+                Url = a.Url,
+                ThumbnailUrl = a.ThumbnailUrl,
+                Width = a.Width,
+                Height = a.Height
+            }).ToList(),
+            ReactionsCount = mongoMessage.Reactions.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Count
+            ),
+            MyReactions = new List<string>(),
+            SentAt = mongoMessage.SentAt,
+            EditedAt = mongoMessage.EditedAt,
+            IsDeleted = mongoMessage.IsDeleted,
+            ReplyTo = replyToDto
+        };
+    }
+
+    public async Task<bool> MessageExistsAsync(string messageId, int chatId)
+    {
+        var message = await _messageRepository.GetMessageByIdAsync(messageId);
+        return message != null && message.ChatId == chatId && !message.IsDeleted;
+    }
+
+    public async Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int limit = 50, DateTime? before = null)
+    {
+        // Получаем сообщения из MongoDB (limit + 1 для определения HasMore)
+        var mongoMessages = await _messageRepository.GetChatMessagesAsync(chatId, limit + 1, before);
+        
+        // Проверяем, есть ли ещё сообщения
+        bool hasMore = mongoMessages.Count > limit;
+        if (hasMore)
+        {
+            mongoMessages.RemoveAt(mongoMessages.Count - 1);
+        }
+
+        // Собираем все ReplyToMessageId для загрузки
+        var replyToIds = mongoMessages
+            .Where(m => !string.IsNullOrEmpty(m.ReplyToMessageId))
+            .Select(m => m.ReplyToMessageId!)
+            .Distinct()
+            .ToList();
+
+        // Загружаем все referenced сообщения одним запросом
+        var replyToMessages = new Dictionary<string, MessageReplyDto>();
+        if (replyToIds.Any())
+        {
+            var replyMongoMessages = await _messageRepository.GetMessagesByIdsAsync(replyToIds);
+            foreach (var replyMsg in replyMongoMessages)
+            {
+                replyToMessages[replyMsg.Id] = new MessageReplyDto
+                {
+                    Id = replyMsg.Id,
+                    Content = replyMsg.Content,
+                    SenderName = replyMsg.Sender.Username
+                };
+            }
+        }
+
+        // Маппинг MongoMessage → MessageDto
+        var messageDtos = mongoMessages.Select(m => new MessageDto
+        {
+            Id = m.Id,
+            ChatRoomId = m.ChatId,
+            Sender = new MessageSenderDto
+            {
+                UserId = m.Sender.UserId,
+                Username = m.Sender.Username,
+                DisplayName = m.Sender.DisplayName,
+                AvatarUrl = m.Sender.AvatarUrl
+            },
+            Content = m.Content,
+            Type = m.Type,
+            ReplyToMessageId = m.ReplyToMessageId,
+            Attachments = m.Attachments.Select(a => new Uchat.Shared.DTOs.MessageAttachment
+            {
+                Id = m.Id + "_" + m.Attachments.IndexOf(a),
+                FileName = a.FileName ?? "file",
+                ContentType = a.Type,
+                FileSize = a.Size,
+                Url = a.Url,
+                ThumbnailUrl = a.ThumbnailUrl,
+                Width = a.Width,
+                Height = a.Height
+            }).ToList(),
+            ReactionsCount = m.Reactions.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Count
+            ),
+            MyReactions = new List<string>(),
+            SentAt = m.SentAt,
+            EditedAt = m.EditedAt,
+            IsDeleted = m.IsDeleted,
+            ReplyTo = !string.IsNullOrEmpty(m.ReplyToMessageId) && replyToMessages.ContainsKey(m.ReplyToMessageId)
+                ? replyToMessages[m.ReplyToMessageId]
+                : null
+        }).ToList();
+
+        // Cursor для следующей страницы
+        DateTime? nextCursor = hasMore && messageDtos.Any()
+            ? messageDtos.Last().SentAt
+            : null;
+
+        return new PaginatedMessagesDto
+        {
+            Messages = messageDtos,
+            Pagination = new PaginationInfo
+            {
+                NextCursor = nextCursor,
+                HasMore = hasMore,
+                Count = messageDtos.Count
+            }
+        };
+    }
+
     private static MongoMessage BuildMongoMessage(MessageCreateDto dto, User sender)
     {
         return new MongoMessage
@@ -139,9 +291,7 @@ public sealed class MessageService : IMessageService
             },
             Content = dto.Content ?? string.Empty,
             Type = string.IsNullOrWhiteSpace(dto.Type) ? "text" : dto.Type,
-            Attachments = dto.Attachments != null
-                ? dto.Attachments.ToList()
-                : new List<MessageAttachment>(),
+            Attachments = new List<Database.MongoDB.MessageAttachment>(), // TODO: Добавить поддержку
             ReplyToMessageId = dto.ReplyToMessageId,
             SentAt = DateTime.UtcNow
         };
@@ -180,7 +330,7 @@ public sealed class MessageService : IMessageService
     {
         try
         {
-            await _messageRepository.DeleteMessageAsync(id);
+            await _messageRepository.DeleteMessagePermanentlyAsync(id);
         }
         catch (Exception ex)
         {
@@ -190,20 +340,17 @@ public sealed class MessageService : IMessageService
 
     private static string? ValidateMessage(MessageCreateDto dto)
     {
-        if (string.IsNullOrWhiteSpace(dto.Content) && (dto.Attachments == null || dto.Attachments.Count == 0))
+        if (string.IsNullOrWhiteSpace(dto.Content))
         {
-            return "Message must have either content or attachments.";
+            return "Message content cannot be empty.";
         }
 
-        if (dto.Content != null && dto.Content.Length > MaxMessageLength)
+        if (dto.Content.Length > MaxMessageLength)
         {
             return $"Message content exceeds maximum length of {MaxMessageLength} characters.";
         }
 
-        if (dto.Attachments != null && dto.Attachments.Count > MaxAttachments)
-        {
-            return $"Message cannot have more than {MaxAttachments} attachments.";
-        }
+        // TODO: Добавить валидацию Attachments
 
         return null;
     }
@@ -234,31 +381,44 @@ public sealed class MessageService : IMessageService
             if (!isAuthor)
             {
                 // Check if user has permission to delete messages in this chat
-                var chatRoom = await _context.ChatRooms
+                var chat = await _context.ChatRooms
                     .Include(cr => cr.Members)
                     .FirstOrDefaultAsync(cr => cr.Id == message.ChatId, cancellationToken);
 
-                if (chatRoom == null)
+                if (chat == null)
                 {
                     return MessagingResult.Failure("Chat room not found.");
                 }
 
-                var member = chatRoom.Members.FirstOrDefault(m => m.UserId == userId);
-                if (member == null || !member.CanDeleteMessages())
+                var member = chat.Members.FirstOrDefault(m => m.UserId == userId);
+                if (member == null)
                 {
                     return MessagingResult.Failure("You don't have permission to delete this message.");
                 }
             }
 
-            // Perform soft delete
-            var success = await _messageRepository.DeleteMessageAsync(messageId);
+            // Физическое удаление из MongoDB
+            var success = await _messageRepository.DeleteMessagePermanentlyAsync(messageId);
             if (!success)
             {
                 return MessagingResult.Failure("Failed to delete message.");
             }
 
+            // Очищаем ReplyToMessageId у сообщений, которые отвечали на удалённое
+            var clearedReplies = await _messageRepository.ClearReplyReferencesAsync(messageId);
+            _logger.LogInformation("Cleared {Count} reply references to deleted message {MessageId}", clearedReplies.Count, messageId);
+
+            // Получаем чат для обновления статистики
+            var chatRoom = await _context.ChatRooms.FindAsync(new object[] { message.ChatId }, cancellationToken: cancellationToken);
+            if (chatRoom != null)
+            {
+                // Уменьшаем счётчик сообщений в чате
+                chatRoom.TotalMessagesCount = Math.Max(0, chatRoom.TotalMessagesCount - 1);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+
             _logger.LogInformation("Message {MessageId} deleted by user {UserId}", messageId, userId);
-            return MessagingResult.SuccessResult(messageId, DateTime.UtcNow);
+            return MessagingResult.SuccessResult(messageId, DateTime.UtcNow, clearedReplies);
         }
         catch (Exception ex)
         {

@@ -1,4 +1,5 @@
 using System;
+using Uchat.Shared.DTOs;
 
 namespace Uchat.Services;
 
@@ -39,7 +40,7 @@ public class UserSession
 
     public bool IsAuthenticated => !string.IsNullOrEmpty(AccessToken) && DateTime.UtcNow < TokenExpiresAt;
 
-    public void SetSession(AuthResponse response)
+    public void SetSession(AuthResponseDto response)
     {
         AccessToken = response.AccessToken;
         RefreshToken = response.RefreshToken;

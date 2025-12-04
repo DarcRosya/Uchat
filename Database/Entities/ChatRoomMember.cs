@@ -17,15 +17,6 @@ public class ChatRoomMember
     public int UserId { get; set; }
     
     // ========================================================================
-    // РОЛЬ В ГРУППЕ
-    // ========================================================================
-
-    /// Member = 0 (обычный участник)
-    /// Admin = 1 (может менять настройки группы, назначать модераторов)
-    /// Owner = 2 (создатель, полный контроль, не может быть кикнут)
-    public ChatRoomRole Role { get; set; }
-    
-    // ========================================================================
     // ВРЕМЕННЫЕ МЕТКИ
     // ========================================================================
     
@@ -49,40 +40,7 @@ public class ChatRoomMember
     /// - Истории: кто кого пригласил (граф приглашений)
     /// - Ответственность: если пригласил спамера, можно понять кто виноват
     public int? InvitedById { get; set; }
-    
-    // ========================================================================
-    // МОДЕРАЦИЯ
-    // ========================================================================
-
-    /// Заблокирован ли участник в этой группе (mute/ban)
-    /// 
-    /// true = не может писать сообщения в группе
-    /// false = может писать
-    public bool IsMuted { get; set; }
-    
-    /// <summary>
-    /// Mute expiration time. NULL = permanent or not muted
-    /// </summary>
-    public DateTime? MutedUntil { get; set; }
-    
-    // ========================================================================
-    // NAVIGATION PROPERTIES
-    // ========================================================================
-    
     public ChatRoom ChatRoom { get; set; } = null!;
     public User User { get; set; } = null!;
     public User? InvitedBy { get; set; }
-    
-    /// <summary>
-    /// Admin permissions (only for Admin and Owner roles)
-    /// NULL for regular members
-    /// </summary>
-    public ChatRoomMemberPermissions? Permissions { get; set; }
-}
-
-public enum ChatRoomRole
-{
-    Member = 0,
-    Admin = 1,
-    Owner = 2
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Uchat.Shared.DTOs;
 
 namespace Uchat.Services;
 
@@ -61,7 +62,7 @@ public class ChatApiService
         }
     }
 
-    public async Task<ChatRoomDto?> CreateChatAsync(CreateChatRequest request)
+    public async Task<ChatRoomDto?> CreateChatAsync(CreateChatRequestDto request)
     {
         try
         {
@@ -117,52 +118,4 @@ public class ChatApiService
             throw new Exception($"Network error: {ex.Message}");
         }
     }
-}
-
-public class ChatRoomDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public string Type { get; set; } = string.Empty;
-    public int CreatorId { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public int MemberCount { get; set; }
-}
-
-public class ChatRoomDetailDto
-{
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public string Type { get; set; } = string.Empty;
-    public int CreatorId { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public int? ParentChatRoomId { get; set; }
-    public int? MaxMembers { get; set; }
-    public bool DefaultCanSendMessages { get; set; }
-    public bool DefaultCanInviteMembers { get; set; }
-    public int? SlowModeSeconds { get; set; }
-    public List<ChatMemberDto> Members { get; set; } = new();
-}
-
-public class ChatMemberDto
-{
-    public int UserId { get; set; }
-    public string Username { get; set; } = string.Empty;
-    public string Role { get; set; } = string.Empty;
-    public DateTime JoinedAt { get; set; }
-}
-
-public class CreateChatRequest
-{
-    public string Name { get; set; } = string.Empty;
-    public string Type { get; set; } = "Private";
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
-    public List<int>? InitialMemberIds { get; set; }
-    public int? ParentChatRoomId { get; set; }
-    public int? MaxMembers { get; set; }
 }

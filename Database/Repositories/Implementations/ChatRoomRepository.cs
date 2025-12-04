@@ -29,6 +29,14 @@ public class ChatRoomRepository : IChatRoomRepository
                 .ThenInclude(m => m.User)
             .FirstOrDefaultAsync(cr => cr.Id == id);
     }
+    
+    public async Task<ChatRoom?> GetByNameAsync(string name)
+    {
+        return await _context.ChatRooms
+            .Include(cr => cr.Members)
+                .ThenInclude(m => m.User)
+            .FirstOrDefaultAsync(cr => cr.Name == name);
+    }
 
     public async Task<IEnumerable<ChatRoom>> GetUserChatRoomsAsync(int userId)
     {
@@ -60,19 +68,6 @@ public class ChatRoomRepository : IChatRoomRepository
 
         // Hard delete: удаляем участника из группы
         _context.ChatRoomMembers.Remove(member);
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> UpdateMemberRoleAsync(int chatRoomId, int userId, ChatRoomRole role)
-    {
-        var member = await _context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
-
-        if (member == null)
-            return false;
-
-        member.Role = role;
         await _context.SaveChangesAsync();
         return true;
     }

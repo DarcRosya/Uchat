@@ -43,4 +43,8 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Uchat.Shared\Uchat.Shared.csproj" />
+  </ItemGroup>
 </Project>
