@@ -558,6 +558,7 @@
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="17"
 					Click="DontReplyTheMessage_Click"
+					Classes="dontReplyOrEditMessage"
 					>
 			</Button>
 		</Grid>
@@ -592,7 +593,6 @@
 			    </StackPanel>
             </DockPanel>
 
-
 			<Button Grid.Column="1"
 					x:Name="DontEditTheMessage"
 					Background="#c57179"
@@ -605,6 +605,7 @@
                     FontFamily="Segoe MDL2 Assets"
                     FontSize="17"
 					Click="DontEditTheMessage_Click"
+					Classes="dontReplyOrEditMessage"
 					>
 				
 			</Button>
@@ -688,7 +689,7 @@
 
 				<TextBlock  Margin="0 7 0 10" FontWeight="SemiBold" HorizontalAlignment="Center"
 					FontSize="20"
-					Foreground="#DDEEFF"
+					Foreground="#D0F0C0"
 				>NEW CONTACT</TextBlock>
 
                 <!-- Текстовий блок для введення -->
@@ -718,18 +719,19 @@
 					<Button Name="CancelButton"
 							HorizontalAlignment="Left"
 							Height="35"
-							Background="Transparent"
+							Background="#bf616a"
 							Click="CancelButton_Click" Classes="back"
 							>
 						<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
 					</Button>
                     <Button HorizontalAlignment="Right"
+							Background="#5e81ac"
 							Height="35"
 							Width="190"
 							Name="AddButton" 
 							Content="Add"
 							Click="AddButton_Click"
-							Classes="LogIn"
+							Classes="addContactOrGroup"
 							/>
 				</DockPanel>
 
