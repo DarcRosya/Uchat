@@ -15,7 +15,9 @@ namespace Uchat
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                string [] Args = desktop.Args; // ????????? ?????????
+
+                desktop.MainWindow = new MainWindow(Args); // ???????? ? ????
             }
 
             base.OnFrameworkInitializationCompleted();

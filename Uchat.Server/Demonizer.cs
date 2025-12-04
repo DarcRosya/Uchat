@@ -27,7 +27,6 @@ namespace Uchat.Server
             {
                 Console.WriteLine($"Started process with ID: {process.Id}");
             }
-
             Environment.Exit(0);
         }
 

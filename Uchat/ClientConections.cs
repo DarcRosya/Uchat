@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
@@ -41,11 +42,13 @@ namespace Uchat
         
         private string? currentChatId = null; // Текущий активный чат
         private string name = "Unknown"; // Инициализируется в конструкторе после парсинга аргументов
-        
+
         private TextBlock _connectionStatusIndicator = null!;
         
         // Словарь для быстрого поиска UI сообщений по ID
-        private Dictionary<string, MainWindow.Chat.Message> _messageCache = new();     
+        private Dictionary<string, MainWindow.Chat.Message> _messageCache = new();
+
+        
         
         private void InitializeChatComponents()
         {
@@ -56,7 +59,7 @@ namespace Uchat
             _connectionStatusIndicator = this.FindControl<TextBlock>("ConnectionStatusText") ?? new TextBlock();
             
             // Инициализируем API сервис
-            _chatApiService = new ChatApiService();
+            _chatApiService = new ChatApiService(args);
             _chatApiService.SetAuthToken(UserSession.Instance.AccessToken ?? string.Empty);
             
             ConnectToServer();
@@ -81,7 +84,7 @@ namespace Uchat
             // Server connection с JWT токеном из UserSession
             // ВАЖНО: Токен передаётся через query string, т.к. SignalR не поддерживает custom headers
             _connection = new HubConnectionBuilder()
-            .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
+            .WithUrl($"{ConnectionConfig.GetServerUrl(this.args)}/chatHub?access_token={UserSession.Instance.AccessToken}", options =>
             {
                 // Токен уже в URL, но оставляем для совместимости
                 options.AccessTokenProvider = () => Task.FromResult<string?>(UserSession.Instance.AccessToken);

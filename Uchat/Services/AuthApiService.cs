@@ -9,11 +9,11 @@ public class AuthApiService
 {
     private readonly HttpClient _httpClient;
 
-    public AuthApiService()
+    public AuthApiService(string[] args)
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(ServerConfig.ServerUrl)
+            BaseAddress = new Uri(ConnectionConfig.GetServerUrl(args))
         };
     }
 

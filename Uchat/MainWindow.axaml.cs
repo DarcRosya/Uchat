@@ -21,11 +21,13 @@ namespace Uchat
     {
         private bool isWindowFocused = false;
         private readonly AuthApiService _authService;
+        private string[] args;
 
-        public MainWindow()
+        public MainWindow(string[] args)
         {
             InitializeComponent();
-            _authService = new AuthApiService();
+            _authService = new AuthApiService(args);
+            this.args = args;
         }
 
         private void MainWindow_KeyDown(object? sender, KeyEventArgs e)

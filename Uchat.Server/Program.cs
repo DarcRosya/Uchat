@@ -10,6 +10,7 @@ using StackExchange.Redis.Maintenance;
 // using StackExchange.Redis;
 using System.Text;
 using System.Threading.RateLimiting;
+using Uchat;
 using Uchat.Database.Context;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories;
@@ -25,18 +26,12 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        //if (args.Length < 2)
-        //{
-        //    Console.WriteLine("Usage: binary (--demonize / --kill) port (four digits)");
-        //    return;
-        //}
-
         var builder = WebApplication.CreateBuilder(args);
 
-        if (args.Contains("-kill") && args.Contains("-start"))
+        if (!ValidServerArgs(args))
         {
-            Console.WriteLine("Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
-            return;
+            Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill");
+            Environment.Exit(0);
         }
 
         if (args.Contains("-kill"))
@@ -50,13 +45,8 @@ public class Program
             return;
         }
 
-        int port = 5000;
-        if (args.Length > 0 && !int.TryParse(args[^1], out port))
-        {
-            Console.WriteLine("Invalid port. Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
-            return;
-        }
-
+        int port = int.Parse(args[^1]);
+        
         builder.WebHost.UseKestrel(options =>
         {
             //options.ListenAnyIP(8080); // слушаем порт 8080 на всех интерфейсах
@@ -227,5 +217,30 @@ public class Program
         app.MapHub<ChatHub>("/chatHub");
 
         app.Run();
+    }
+
+    static bool ValidServerArgs(string[] args)
+    {
+        if (args.Length < 1)
+        {
+            return false;
+        }
+        if (args.Contains("-kill") && args.Contains("-start"))
+        {
+            return false;
+        }
+        if (args.Contains("-start") && args.Length < 2)
+        {
+            return false;
+        }
+        if (args.Contains("-start") && !int.TryParse(args[^1], out _))
+        {
+            return false;
+        }
+        if (args.Contains("-kill") && args.Length > 1)
+        {
+            return false;
+        }
+        return true;
     }
 }
