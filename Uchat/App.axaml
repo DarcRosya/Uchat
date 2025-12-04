@@ -59,21 +59,28 @@
           <Setter Property="Margin" Value="0"/>
         </Style>
 
+        <!-- Avatar Icon Border-->
+         <Style Selector="Border.avatarIconBorder">
+          <Setter Property="Background" Value="White"/>
+          <Setter Property="CornerRadius" Value="5"/>
+          <Setter Property="Margin" Value="3"/>
+          <Setter Property="Padding" Value="3"/>
+        </Style>
+
         <!-- Avatar image -->
         <Style Selector="Image.avatarIcon">
           <Setter Property="Stretch" Value="UniformToFill"/>
           <Setter Property="Width" Value="45"/>
           <Setter Property="Height" Value="45"/>
-          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Top"/>
           <Setter Property="HorizontalAlignment" Value="Center"/>
-          <Setter Property="Margin" Value="5"/>
         </Style>
 
         <!-- Name -->
         <Style Selector="TextBlock.contactName">
           <Setter Property="Foreground" Value="#FFFFFF"/>
           <Setter Property="FontSize" Value="15"/>
-          <Setter Property="Margin" Value="0,8,0,0"/>
+          <Setter Property="Margin" Value="2,8,0,0"/>
         </Style>
 
         <!-- Last message -->
@@ -81,7 +88,25 @@
           <Setter Property="Foreground" Value="#999999"/>
           <Setter Property="FontSize" Value="10"/>
           <Setter Property="VerticalAlignment" Value="Bottom"/>
-          <Setter Property="Margin" Value="0,3,0,0"/>
+          <Setter Property="Margin" Value="2,3,0,0"/>
+        </Style>
+
+        <!-- Unread message border -->
+         <Style Selector="Border.unreadMessageBorder">
+          <Setter Property="Background" Value="White"/>
+          <Setter Property="Height" Value="20"/>
+          <Setter Property="Width" Value="20"/>
+          <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+
+        <!-- Unread message text -->
+        <Style Selector="TextBlock.unreadMessage">
+          <Setter Property="Foreground" Value="Black"/>
+          <Setter Property="FontSize" Value="15"/>
+          <Setter Property="FontWeight" Value="SemiBold"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
       </Styles>
 

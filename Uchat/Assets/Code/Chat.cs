@@ -34,15 +34,31 @@ namespace Uchat
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-			//заменить в будущем
 			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
 			{
-                var newContact = new Chat.Contact(AddContactTextBox.Text, "", 0, contactList);
+                var newContact = new Chat.Contact(AddContactTextBox.Text, "Example last message", 0);
+                contactsStackPanel.Children.Add(newContact.Box);
                 AddContactOverlay.IsVisible = false;
                 AddContactTextBox.Text = "";
             }
         }
 
+        private void SwitchToGroups_Click(object? sender, RoutedEventArgs e)
+		{
+            Chat.GroupsActive = true;
+            GroupsButton.Background = Brush.Parse("#5da3a5");
+            ContactsButton.Background = Brush.Parse("#3e4042");
+
+            Chat.ShowGroups(true);
+        }
+        private void SwitchToContacts_Click(object? sender, RoutedEventArgs e)
+		{
+			Chat.GroupsActive = false;
+			ContactsButton.Background = Brush.Parse("#5e81ac");
+            GroupsButton.Background = Brush.Parse("#3e4042");
+
+			Chat.ShowGroups(false);
+        }
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{
 			string text;
