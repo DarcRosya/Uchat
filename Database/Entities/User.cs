@@ -22,7 +22,6 @@ public class User
     // ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ О ПОЛЬЗОВАТЕЛЕ
     // ========================================================================
 
-    public string? Bio { get ; set; }
     public string? AvatarUrl { get; set; }
     public DateTime? DateOfBirth { get; set; } // Correct format is [ DD.MM.YYYY ]
 
@@ -74,7 +73,6 @@ public class User
     /// </summary>
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     public ICollection<UserSecurityToken> SecurityTokens { get; set; } = new List<UserSecurityToken>();
-    public ICollection<Friendship> ReceivedFriendshipRequests { get; set; } = new List<Friendship>();
 }
 
 public class UserSecurityToken

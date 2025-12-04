@@ -17,6 +17,7 @@ using Uchat.Server.Middleware;
 using Uchat.Server.Services;
 using Uchat.Server.Services.Auth;
 using Uchat.Server.Services.Messaging;
+using Uchat.Server.Services.Contact;
 using Uchat.Server.Data;
 
 public class Program
@@ -83,7 +84,6 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
         builder.Services.AddScoped<IContactRepository, ContactRepository>();
-        builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
         builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         builder.Services.AddScoped<IMessageRepository, MessageRepository>();
         builder.Services.AddScoped<ITransactionRunner, TransactionRunner>();
@@ -93,6 +93,7 @@ public class Program
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
+        builder.Services.AddScoped<IContactService, ContactService>();
 
         // ============================================================================
         // JWT АУТЕНТИФИКАЦИЯ

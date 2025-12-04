@@ -20,6 +20,12 @@ public interface IContactRepository
     /// ЗАЧЕМ: Проверить, есть ли пользователь B в контактах пользователя A
     Task<Contact?> FindContactAsync(int ownerId, int contactUserId);
     
+    /// Получить контакты по статусу (Friend, RequestSent, RequestReceived, Blocked)
+    Task<IEnumerable<Contact>> GetContactsByStatusAsync(int userId, ContactStatus status);
+    
+    /// Обновить статус контакта
+    Task<bool> UpdateStatusAsync(int contactId, ContactStatus status);
+    
     /// Получить только избранные контакты
     Task<IEnumerable<Contact>> GetFavoriteContactsAsync(int userId);
     
@@ -39,9 +45,9 @@ public interface IContactRepository
 
     /// Добавить/убрать из избранного
     Task<bool> SetFavoriteAsync(int contactId, bool isFavorite);
-
-    /// Установить личные заметки о контакте
-    Task<bool> SetNotesAsync(int contactId, string? notes);
+    
+    /// Установить IsBlocked флаг
+    Task<bool> SetBlockedAsync(int contactId, bool isBlocked);
 
     /// Обновить время последнего сообщения
     /// ЗАЧЕМ: Сортировка контактов по активности (с кем недавно общались - вверху)
@@ -67,6 +73,12 @@ public interface IContactRepository
     
     /// Включить/выключить уведомления от контакта
     Task<bool> SetNotificationsEnabledAsync(int contactId, bool enabled);
+    
+    /// Установить SavedChatRoomId для быстрого доступа к чату
+    Task<bool> SetSavedChatRoomAsync(int contactId, int? chatRoomId);
+    
+    /// Удалить контакт по ID
+    Task<bool> DeleteContactAsync(int contactId);
     
     /// Удалить контакт из списка
     Task<bool> RemoveContactAsync(int ownerId, int contactUserId);

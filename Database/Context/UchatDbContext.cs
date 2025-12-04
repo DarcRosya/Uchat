@@ -10,7 +10,6 @@ public class UchatDbContext : DbContext
     public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; } = null!;
     public DbSet<Contact> Contacts { get; set; } = null!;
-    public DbSet<Friendship> Friendships { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
 
     public UchatDbContext(DbContextOptions<UchatDbContext> options) : base(options)
@@ -44,9 +43,6 @@ public class UchatDbContext : DbContext
             entity.Property(u => u.Username)
                 .IsRequired()  // NOT NULL
                 .HasMaxLength(50);  // VARCHAR(50)
-
-            entity.Property(u => u.Bio)
-                .HasMaxLength(190);
 
             entity.Property(u => u.DateOfBirth);
 
@@ -183,9 +179,6 @@ public class UchatDbContext : DbContext
 
             entity.Property(c => c.Nickname)
                 .HasMaxLength(100);
-            
-            entity.Property(c => c.PrivateNotes)
-                .HasMaxLength(500);
 
             entity.Property(c => c.AddedAt)
                 .HasDefaultValueSql("NOW()");
@@ -196,59 +189,31 @@ public class UchatDbContext : DbContext
             entity.Property(c => c.IsFavorite)
                 .HasDefaultValue(false);
 
-            // Contact -> ContactUser
+            entity.Property(c => c.IsBlocked)
+                .HasDefaultValue(false);
+
+            entity.Property(c => c.Status)
+                .HasDefaultValue(ContactStatus.None);   
+
+            // Contact -> Owner (Кто создал запись)
+            entity.HasOne(c => c.Owner)
+                .WithMany(u => u.Contacts) 
+                .HasForeignKey(c => c.OwnerId)
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            // Contact -> ContactUser (Кого добавили)
             entity.HasOne(c => c.ContactUser)
                 .WithMany()  
                 .HasForeignKey(c => c.ContactUserId)
-                .OnDelete(DeleteBehavior.Cascade);  
-        });
-
-        // ====================================================================
-        // FRIENDSHIPS
-        // ====================================================================
-        modelBuilder.Entity<Friendship>(entity =>
-        {
-            entity.ToTable("Friendships");
-            entity.HasKey(f => f.Id);
-
-            entity.HasIndex(f => new { f.SenderId, f.ReceiverId })
-                .IsUnique()
-                .HasDatabaseName("IX_Friendships_Sender_Receiver");
-            
-            // INDEX for receiving incoming requests
-            entity.HasIndex(f => f.ReceiverId)
-                .HasDatabaseName("IX_Friendships_ReceiverId");
-
-            // INDEX for filter by request's status 
-            entity.HasIndex(f => f.Status)
-                .HasDatabaseName("IX_Friendships_Status");
-            
-            entity.HasIndex(f => new { f.SenderId, f.Status })
-                .HasDatabaseName("IX_Friendships_Sender_Status");
-            
-            entity.HasIndex(f => new { f.ReceiverId, f.Status })
-                .HasDatabaseName("IX_Friendships_Receiver_Status");
-
-            entity.Property(f => f.Status)
-                .HasDefaultValue(FriendshipStatus.Pending);
-
-            entity.Property(f => f.CreatedAt)
-                .HasDefaultValueSql("NOW()");
-
-            
-            // Friendship -> Sender (who sended)
-            entity.HasOne(f => f.Sender)
-                .WithMany() 
-                .HasForeignKey(f => f.SenderId)
-                .OnDelete(DeleteBehavior.Cascade);  
-
-            // Friendship -> Receiver (who received)
-            entity.HasOne(f => f.Receiver)
-                .WithMany(u => u.ReceivedFriendshipRequests)
-                .HasForeignKey(f => f.ReceiverId)
                 .OnDelete(DeleteBehavior.Cascade); 
+                
+            // Contact -> SavedChatRoom (Личный чат)
+            entity.HasOne(c => c.SavedChatRoom)
+                .WithMany()
+                .HasForeignKey(c => c.SavedChatRoomId)
+                .OnDelete(DeleteBehavior.SetNull); // Если чат удалили, контакт остается, но ссылка сбрасывается
         });
-        
+
         // ====================================================================
         // REFRESHTOKENS
         // ====================================================================

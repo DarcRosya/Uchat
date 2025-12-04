@@ -70,8 +70,7 @@ public class UserRepository : IUserRepository
         return await _context.Users
             .Where(u => 
                 u.Username.ToLower().Contains(searchTerm) ||
-                u.DisplayName.ToLower().Contains(searchTerm) ||
-                (u.Bio != null && u.Bio.ToLower().Contains(searchTerm)))
+                u.DisplayName.ToLower().Contains(searchTerm))
             .OrderBy(u => u.Username)
             .Take(limit)
             .ToListAsync();
@@ -93,9 +92,6 @@ public class UserRepository : IUserRepository
 
         if (displayName != null)
             user.DisplayName = displayName;
-        
-        if (bio != null)
-            user.Bio = bio;
         
         if (avatarUrl != null)
             user.AvatarUrl = avatarUrl;
