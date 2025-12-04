@@ -9,7 +9,6 @@ public class UchatDbContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; } = null!;
-    public DbSet<ChatRoomMemberPermissions> ChatRoomMemberPermissions { get; set; } = null!;
     public DbSet<Contact> Contacts { get; set; } = null!;
     public DbSet<Friendship> Friendships { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
@@ -110,8 +109,6 @@ public class UchatDbContext : DbContext
             entity.HasIndex(cr => cr.CreatorId)
                 .HasDatabaseName("IX_ChatRooms_CreatorId");
             
-            entity.HasIndex(cr => cr.ParentChatRoomId)
-                .HasDatabaseName("IX_ChatRooms_ParentChatRoomId");
             
             entity.HasIndex(cr => cr.LastActivityAt)
                 .HasDatabaseName("IX_ChatRooms_LastActivityAt");
@@ -140,11 +137,6 @@ public class UchatDbContext : DbContext
                 .WithOne(crm => crm.ChatRoom)
                 .HasForeignKey(crm => crm.ChatRoomId)
                 .OnDelete(DeleteBehavior.Cascade);  
-
-            entity.HasOne(cr => cr.ParentChatRoom)
-                .WithMany(cr => cr.Topics)
-                .HasForeignKey(cr => cr.ParentChatRoomId)
-                .OnDelete(DeleteBehavior.Cascade); 
         });
 
         // ====================================================================
@@ -171,12 +163,6 @@ public class UchatDbContext : DbContext
                 .WithMany()  
                 .HasForeignKey(crm => crm.InvitedById)
                 .OnDelete(DeleteBehavior.SetNull); 
-            
-            // ChatRoomMember -> Permissions (1-to-1, optional)
-            entity.HasOne(crm => crm.Permissions)
-                .WithOne(p => p.Member)
-                .HasForeignKey<ChatRoomMemberPermissions>(p => p.ChatRoomMemberId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ====================================================================
@@ -216,24 +202,7 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(c => c.ContactUserId)
                 .OnDelete(DeleteBehavior.Cascade);  
         });
-        // ====================================================================
-        // CHATROOMMEMBERPERMISSIONS
-        // ====================================================================
-        
-        modelBuilder.Entity<ChatRoomMemberPermissions>(entity =>
-        {
-            entity.ToTable("ChatRoomMemberPermissions");
-            entity.HasKey(p => p.Id);
-            
-            // Index for finding member's permissions
-            entity.HasIndex(p => p.ChatRoomMemberId)
-                .IsUnique()
-                .HasDatabaseName("IX_ChatRoomMemberPermissions_MemberId");
-            
-            entity.Property(p => p.CustomTitle)
-                .HasMaxLength(16);
-        });
-        
+
         // ====================================================================
         // FRIENDSHIPS
         // ====================================================================

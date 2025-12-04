@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\Uchat.Shared\Uchat.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -55,6 +55,16 @@ public class MessageRepository : IMessageRepository
         return result;
     }
     
+    public async Task<List<MongoMessage>> GetMessagesByIdsAsync(List<string> messageIds)
+    {
+        if (!messageIds.Any())
+            return new List<MongoMessage>();
+            
+        var filter = Builders<MongoMessage>.Filter.In(m => m.Id, messageIds);
+        var result = await _messages.Find(filter).ToListAsync();
+        return result;
+    }
+    
     public async Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId)
     {
         // MongoDB запрос: найти сообщения где userId НЕ в массиве readBy
@@ -87,10 +97,17 @@ public class MessageRepository : IMessageRepository
         var count = await _messages.CountDocumentsAsync(filter);
         return count;
     }
-    
-    // ========================================================================
-    // РЕДАКТИРОВАНИЕ И УДАЛЕНИЕ
-    // ========================================================================
+
+    public async Task MarkAsDeletedAsync(string messageId)
+    {
+        var update = Builders<MongoMessage>.Update
+            .Set(m => m.IsDeleted, true);
+
+        await _messages.UpdateOneAsync(
+            m => m.Id == messageId,
+            update
+        );
+    }
     
     public async Task<bool> EditMessageAsync(string messageId, string newContent)
     {
@@ -103,18 +120,29 @@ public class MessageRepository : IMessageRepository
         return result.ModifiedCount > 0;
     }
     
-    public async Task<bool> DeleteMessageAsync(string messageId)
+    public async Task<bool> DeleteMessagePermanentlyAsync(string messageId)
     {
         var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
-        var update = Builders<MongoMessage>.Update.Set(m => m.IsDeleted, true);
-
-        var result = await _messages.UpdateOneAsync(filter, update);
-        return result.ModifiedCount > 0;
+        var result = await _messages.DeleteOneAsync(filter);
+        return result.DeletedCount > 0;
     }
     
-    // ========================================================================
-    // РЕАКЦИИ
-    // ========================================================================
+    public async Task<List<string>> ClearReplyReferencesAsync(string deletedMessageId)
+    {
+        // Находим все сообщения, которые отвечают на удалённое
+        var replyFilter = Builders<MongoMessage>.Filter.Eq(m => m.ReplyToMessageId, deletedMessageId);
+        var messagesToUpdate = await _messages.Find(replyFilter).ToListAsync();
+        
+        if (!messagesToUpdate.Any())
+            return new List<string>();
+        
+        // Очищаем ReplyToMessageId у найденных сообщений
+        var update = Builders<MongoMessage>.Update.Set(m => m.ReplyToMessageId, null);
+        await _messages.UpdateManyAsync(replyFilter, update);
+        
+        // Возвращаем список ID сообщений, у которых очистили reply
+        return messagesToUpdate.Select(m => m.Id).ToList();
+    }
     
     public async Task<bool> AddReactionAsync(string messageId, string emoji, int userId)
     {
@@ -137,11 +165,7 @@ public class MessageRepository : IMessageRepository
         var result = await _messages.UpdateOneAsync(filter, update);
         return result.ModifiedCount > 0;
     }
-    
-    // ========================================================================
-    // СТАТУС ПРОЧТЕНИЯ
-    // ========================================================================
-    
+
     public async Task<bool> MarkAsReadAsync(string messageId, int userId)
     {
         var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
@@ -183,11 +207,7 @@ public class MessageRepository : IMessageRepository
         
         return result.ModifiedCount;
     }
-    
-    // ========================================================================
-    // ПОИСК
-    // ========================================================================
-    
+
     public async Task<List<MongoMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20)
     {
         // Фильтр: поиск по тексту (case-insensitive через regex)

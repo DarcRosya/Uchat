@@ -1,7 +1,9 @@
 using System.Security.Cryptography;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
-using Uchat.Server.DTOs;
+using Uchat.Server.Services.Chat;
+using Uchat.Shared.DTOs;
+
 
 namespace Uchat.Server.Services.Auth;
 
@@ -10,17 +12,20 @@ public class AuthService
     private readonly IUserRepository _userRepository;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IChatRoomRepository _chatRoomRepository;
+    private readonly IChatRoomService _chatRoomService;
     private readonly JwtService _jwtService;
 
     public AuthService(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IChatRoomRepository chatRoomRepository,
+        IChatRoomService chatRoomService,
         JwtService jwtService)
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _chatRoomRepository = chatRoomRepository;
+        _chatRoomService = chatRoomService;
         _jwtService = jwtService;
     }
 
@@ -40,6 +45,9 @@ public class AuthService
 
         // Создаем личный чат "Заметки" для нового пользователя
         await CreatePersonalNotesChat(createdUser.Id, createdUser.Username);
+        
+        // Добавляем пользователя в глобальный публичный чат
+        await AddUserToGlobalPublicChat(createdUser.Id, createdUser.Username);
 
         var accessToken = _jwtService.GenerateAccessToken(
             createdUser.Id,
@@ -167,32 +175,53 @@ public class AuthService
     {
         try
         {
-            var notesChat = new ChatRoom
-            {
-                Name = "Notes",
-                Description = "Private chat for notes",
-                Type = ChatRoomType.Private,
-                CreatorId = userId,
-                CreatedAt = DateTime.UtcNow,
-                DefaultCanSendMessages = true,
-                MaxMembers = 1
-            };
+            var result = await _chatRoomService.CreateChatAsync(
+                creatorId: userId,
+                name: "Notes",
+                type: ChatRoomType.Private,
+                description: "Personal notes and reminders",
+                initialMemberIds: null // Создатель добавляется автоматически
+            );
 
-            var createdChat = await _chatRoomRepository.CreateAsync(notesChat);
-
-            // Добавляем пользователя как Owner
-            await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
+            if (!result.IsSuccess)
             {
-                ChatRoomId = createdChat.Id,
-                UserId = userId,
-                Role = ChatRoomRole.Owner,
-                JoinedAt = DateTime.UtcNow
-            });
+                Console.WriteLine($"Failed to create notes chat for user {username}: {result.ErrorMessage}");
+            }
         }
         catch (Exception ex)
         {
             // Логируем ошибку, но не прерываем регистрацию
             Console.WriteLine($"Failed to create notes chat for user {username}: {ex.Message}");
+        }
+    }
+    
+    private async Task AddUserToGlobalPublicChat(int userId, string username)
+    {
+        try
+        {
+            // Ищем глобальный чат по имени (создан в DbInitializer при старте сервера)
+            var globalChat = await _chatRoomRepository.GetByNameAsync("Global Chat");
+            
+            if (globalChat == null)
+            {
+                // Критическая ошибка - глобальный чат должен существовать всегда
+                Console.WriteLine($"[CRITICAL] Global Chat not found during registration of user {username}!");
+                return;
+            }
+            
+            // Добавляем нового пользователя в глобальный чат
+            await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
+            {
+                ChatRoomId = globalChat.Id,
+                UserId = userId,
+                JoinedAt = DateTime.UtcNow
+            });
+            
+            Console.WriteLine($"[AuthService] User {username} added to Global Chat (ID: {globalChat.Id})");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[ERROR] Failed to add user {username} to global chat: {ex.Message}");
         }
     }
 }

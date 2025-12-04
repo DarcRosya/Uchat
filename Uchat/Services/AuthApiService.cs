@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Uchat.Shared.DTOs;
 
 namespace Uchat.Services;
 
@@ -17,7 +18,7 @@ public class AuthApiService
         };
     }
 
-    public async Task<AuthResponse?> RegisterAsync(string username, string email, string password)
+    public async Task<AuthResponseDto?> RegisterAsync(string username, string email, string password)
     {
         try
         {
@@ -44,7 +45,7 @@ public class AuthApiService
                 }
             }
 
-            return await response.Content.ReadFromJsonAsync<AuthResponse>();
+            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
         }
         catch (HttpRequestException ex)
         {
@@ -52,7 +53,7 @@ public class AuthApiService
         }
     }
 
-    public async Task<AuthResponse?> LoginAsync(string identifier, string password)
+    public async Task<AuthResponseDto?> LoginAsync(string identifier, string password)
     {
         try
         {
@@ -77,7 +78,7 @@ public class AuthApiService
                 }
             }
 
-            return await response.Content.ReadFromJsonAsync<AuthResponse>();
+            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
         }
         catch (HttpRequestException ex)
         {
@@ -85,7 +86,7 @@ public class AuthApiService
         }
     }
 
-    public async Task<AuthResponse?> RefreshTokenAsync(string refreshToken)
+    public async Task<AuthResponseDto?> RefreshTokenAsync(string refreshToken)
     {
         try
         {
@@ -95,7 +96,7 @@ public class AuthApiService
             if (!response.IsSuccessStatusCode)
                 return null;
 
-            return await response.Content.ReadFromJsonAsync<AuthResponse>();
+            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
         }
         catch
         {
@@ -118,19 +119,4 @@ public class AuthApiService
             // Ignore logout errors
         }
     }
-}
-
-public class AuthResponse
-{
-    public string AccessToken { get; set; } = string.Empty;
-    public string RefreshToken { get; set; } = string.Empty;
-    public int UserId { get; set; }
-    public string Username { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public DateTime ExpiresAt { get; set; }
-}
-
-public class ErrorResponse
-{
-    public string Error { get; set; } = string.Empty;
 }

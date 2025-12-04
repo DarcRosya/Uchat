@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Uchat.Server.DTOs;
+using Uchat.Shared.DTOs;
 using Uchat.Server.Services.Auth;
 
 namespace Uchat.Server.Controllers;

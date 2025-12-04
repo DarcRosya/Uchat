@@ -74,33 +74,6 @@ public class User
     /// </summary>
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
     public ICollection<UserSecurityToken> SecurityTokens { get; set; } = new List<UserSecurityToken>();
-    
-    // ========================================================================
-    // НАВИГАЦИОННЫЕ СВОЙСТВА ДЛЯ ДРУЖБЫ
-    // ========================================================================
-    
-    // /// Запросы дружбы, ОТПРАВЛЕННЫЕ этим пользователем
-    // /// 
-    // /// Как использовать:
-    // ///   var user = await context.Users
-    // ///       .Include(u => u.SentFriendshipRequests)
-    // ///           .ThenInclude(f => f.Receiver)
-    // ///       .FirstAsync(u => u.Id == 1);
-    // ///   
-    // public ICollection<Friendship> SentFriendshipRequests { get; set; } = new List<Friendship>();
-    
-    /// Запросы дружбы, ПОЛУЧЕННЫЕ этим пользователем
-    /// 
-    /// Как использовать:
-    ///   var user = await context.Users
-    ///       .Include(u => u.ReceivedFriendshipRequests)
-    ///           .ThenInclude(f => f.Sender)
-    ///       .FirstAsync(u => u.Id == 1);
-    ///   
-    ///   // Кто хочет со мной подружиться?
-    ///   foreach (var request in user.ReceivedFriendshipRequests.Where(f => f.Status == FriendshipStatus.Pending)) {
-    ///       Console.WriteLine($"Запрос от: {request.Sender.Username}");
-    ///   }
     public ICollection<Friendship> ReceivedFriendshipRequests { get; set; } = new List<Friendship>();
 }
 

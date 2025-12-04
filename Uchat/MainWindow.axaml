@@ -482,12 +482,10 @@
 				<Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#12151a">
 					<Grid/>
 
-					<!-- Chat Container -->
-					<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto">
-						<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
-					</ScrollViewer>
-
-	<Border Background="#2a2c31"
+				<!-- Chat Container -->
+				<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
+					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
+				</ScrollViewer>	<Border Background="#2a2c31"
 			BorderBrush="#93a6b7"
 			BorderThickness="4,0,0,0"
 			CornerRadius="5"

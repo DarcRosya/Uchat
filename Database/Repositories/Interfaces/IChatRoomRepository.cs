@@ -21,16 +21,16 @@ public interface IChatRoomRepository
     /// Includes chat members when the room is loaded.
     /// </summary>
     Task<ChatRoom?> GetByIdAsync(int id);
+    
+    /// <summary>
+    /// Finds chat room by exact name (for system chats like "Global Chat").
+    /// </summary>
+    Task<ChatRoom?> GetByNameAsync(string name);
 
     /// <summary>
     /// Loads rooms for a specific user (joins handled via the repository).
     /// </summary>
     Task<IEnumerable<ChatRoom>> GetUserChatRoomsAsync(int userId);
-
-    /// <summary>
-    /// Updates the role for a particular membership row (returns false if not found).
-    /// </summary>
-    Task<bool> UpdateMemberRoleAsync(int chatRoomId, int userId, ChatRoomRole role);
 
     /// <summary>
     /// Removes a membership row from the chat (hard delete).
