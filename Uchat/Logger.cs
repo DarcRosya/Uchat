@@ -1,9 +1,12 @@
-﻿namespace Uchat.Server
+using System;
+using System.IO;
+
+namespace Uchat
 {
     public static class Logger
     {
 #if DEBUG
-        private static string _logFilePath;
+        private static string _logFilePath = string.Empty;
         private static readonly object _lock = new object();
 
         static Logger()
@@ -16,12 +19,13 @@
             try
             {
                 var appDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                _logFilePath = Path.Combine(appDirectory, "log.txt");
+                _logFilePath = Path.Combine(appDirectory, "client_log.txt");
+                File.WriteAllText(_logFilePath, "");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to initialize logger: {ex.Message}");
-                _logFilePath = "log.txt";
+                _logFilePath = "client_log.txt";
             }
         }
 
@@ -29,7 +33,7 @@
         {
             try
             {
-                var logEntry = $"[{DateTime.Now:HH:mm:ss}] {message}\n";
+                var logEntry = $"[{DateTime.Now:HH:mm:ss.fff}] {message}\n";
                 File.AppendAllText(_logFilePath, logEntry);
                 Console.WriteLine(logEntry.TrimEnd());
             }
@@ -37,7 +41,7 @@
         }
 #endif
 
-        public static void Write(string message)
+        public static void Log(string message)
         {
 #if DEBUG
             lock (_lock)
@@ -46,7 +50,7 @@
             }
 #endif
         }
-
+        
         public static void Error(string message, Exception? ex = null)
         {
             var logEntry = $"[ERROR] [{DateTime.Now}] {message}";

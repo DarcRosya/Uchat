@@ -24,6 +24,20 @@ namespace Uchat
 
         private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
+            // Update UI based on which tab is active
+            if (Chat.GroupsActive)
+            {
+                AddContactTitle.Text = "CREATE GROUP";
+                AddContactTextBox.Watermark = "Group name";
+                AddContactIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/group_contact.png")));
+            }
+            else
+            {
+                AddContactTitle.Text = "NEW CONTACT";
+                AddContactTextBox.Watermark = "Username";
+                AddContactIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/person.png")));
+            }
+            
             AddContactOverlay.IsVisible = true;
 		}
 
@@ -33,14 +47,102 @@ namespace Uchat
             AddContactOverlay.IsVisible = false;
         }
 
-        private void AddButton_Click(object sender, RoutedEventArgs e)
+        private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
-			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
-			{
-                var newContact = new Chat.Contact(AddContactTextBox.Text, "Example last message", 0, this);
-                contactsStackPanel.Children.Add(newContact.Box);
+            string input = AddContactTextBox.Text ?? string.Empty;
+            
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return;
+            }
+            
+            try
+            {
+                if (Chat.GroupsActive)
+                {
+                    // Create a new group
+                    var request = new Shared.DTOs.CreateChatRequestDto
+                    {
+                        Name = input,
+                        Type = "group",
+                        Description = null
+                    };
+                    var newChat = await _chatApiService.CreateChatAsync(request);
+                    
+                    if (newChat != null)
+                    {
+                        // Add group to UI
+                        await LoadUserChatsAsync();
+                        
+                        // Open the new chat
+                        await OpenChatAsync(newChat.Id);
+                    }
+                }
+                else
+                {
+                    // Send friend request
+                    var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
+                    
+                    if (!success)
+                    {
+                        // Show error message
+                        AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
+                        AddContactErrorText.IsVisible = true;
+                        return; // Don't close overlay
+                    }
+                    
+                    // Success - hide error and reload
+                    AddContactErrorText.IsVisible = false;
+                }
+                
+                // Clear textbox and hide overlay
+                AddContactTextBox.Text = string.Empty;
                 AddContactOverlay.IsVisible = false;
-                AddContactTextBox.Text = "";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+        }
+
+        private async Task LoadPendingFriendRequestsAsync()
+        {
+            try
+            {
+                var requests = await _contactApiService.GetPendingRequestsAsync();
+                
+                Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                {
+                    requestList.Children.Clear();
+                    
+                    if (requests.Count == 0)
+                    {
+                        var noRequestsText = new TextBlock
+                        {
+                            Text = "No pending requests",
+                            Foreground = new SolidColorBrush(Color.FromRgb(136, 142, 152)),
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Margin = new Thickness(0, 20, 0, 0)
+                        };
+                        requestList.Children.Add(noRequestsText);
+                    }
+                    else
+                    {
+                        foreach (var request in requests)
+                        {
+                            var friendRequest = new Chat.FriendRequest(
+                                request.ContactUsername,
+                                request.Id,
+                                this
+                            );
+                            requestList.Children.Add(friendRequest.Box);
+                        }
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Error loading pending friend requests", ex);
             }
         }
 

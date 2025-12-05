@@ -2,9 +2,12 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Uchat.Database.Entities;
+using Uchat.Database.Repositories.Interfaces;
+using Uchat.Database.MongoDB;
 using Uchat.Server.Services.Chat;
 using Uchat.Server.DTOs;
 using Uchat.Shared.DTOs;
+using MongoDB.Driver;
 
 namespace Uchat.Server.Controllers;
 
@@ -14,10 +17,17 @@ namespace Uchat.Server.Controllers;
 public class ChatsController : ControllerBase
 {
     private readonly IChatRoomService _chatRoomService;
+    private readonly IUserRepository _userRepository;
+    private readonly MongoDbContext _mongoContext;
 
-    public ChatsController(IChatRoomService chatRoomService)
+    public ChatsController(
+        IChatRoomService chatRoomService,
+        IUserRepository userRepository,
+        MongoDbContext mongoContext)
     {
         _chatRoomService = chatRoomService;
+        _userRepository = userRepository;
+        _mongoContext = mongoContext;
     }
 
     /// <summary>
@@ -29,7 +39,73 @@ public class ChatsController : ControllerBase
         var userId = GetCurrentUserId();
         var chats = await _chatRoomService.GetUserChatsAsync(userId);
         
-        return Ok(chats.Select(c => c.ToDto()));
+        var chatDtos = new List<ChatRoomDto>();
+        
+        foreach (var chat in chats)
+        {
+            var dto = chat.ToDto();
+            
+            // Для Direct чатов - заменить имя на имя собеседника
+            if (chat.Type == ChatRoomType.DirectMessage)
+            {
+                int otherUserId = 0;
+
+                if (chat.Members != null && chat.Members.Any())
+                {
+                    var otherMember = chat.Members.FirstOrDefault(m => m.UserId != userId);
+                    if (otherMember != null) otherUserId = otherMember.UserId;
+                }
+                
+                if (otherUserId == 0 && !string.IsNullOrEmpty(chat.Name))
+                {
+                    try 
+                    {
+                        var parts = chat.Name.Split(new[] { ' ', '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var part in parts)
+                        {
+                            if (int.TryParse(part, out int id) && id != userId && id > 0)
+                            {
+                                otherUserId = id;
+                                break;
+                            }
+                        }
+                    }
+                    catch { /* Игнорируем ошибки парсинга */ }
+                }
+
+                if (otherUserId > 0)
+                {
+                    var otherUser = await _userRepository.GetByIdAsync(otherUserId);
+                    dto.Name = otherUser?.DisplayName ?? otherUser?.Username ?? "Unknown";
+                    dto.IconUrl = otherUser?.AvatarUrl;
+                }
+            }
+            
+            // Получить последнее сообщение из MongoDB
+            var lastMessage = await _mongoContext.Messages
+                .Find(m => m.ChatId == chat.Id && !m.IsDeleted)
+                .SortByDescending(m => m.SentAt)
+                .Limit(1)
+                .FirstOrDefaultAsync();
+                
+            if (lastMessage != null)
+            {
+                dto.LastMessageContent = lastMessage.Content;
+                dto.LastMessageAt = lastMessage.SentAt;
+            }
+            else
+            {
+                dto.LastMessageAt = chat.CreatedAt;
+            }
+            
+            // Подсчитать непрочитанные (TODO: нужна таблица ReadReceipts)
+            // Пока возвращаем 0
+            dto.UnreadCount = 0;
+            
+            chatDtos.Add(dto);
+        }
+        
+        return Ok(chatDtos);
     }
 
     [HttpGet("{id}")]

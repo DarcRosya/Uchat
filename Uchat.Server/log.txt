@@ -1,4 +1,0 @@
-Log entry at 03.12.2025 17:11:24: User 123123 (ID: 1) connected
-Log entry at 03.12.2025 17:11:25: 123123 joined group: 2
-Log entry at 03.12.2025 17:11:25: 123123 joined chat 2
-Log entry at 03.12.2025 17:11:57: User 123123 disconnected

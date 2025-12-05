@@ -109,6 +109,13 @@ public class ChatHub : Hub
         Logger.Write($"[JoinGroup] {GetUsername()} joined {groupName}");
     }
 
+    public async Task JoinChatGroup(int chatId)
+    {
+        string groupName = $"chat_{chatId}";
+        await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+        Logger.Write($"[JoinChatGroup] {GetUsername()} joined chat {chatId} (group: {groupName})");
+    }
+
     public async Task LeaveGroup(string groupName)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);

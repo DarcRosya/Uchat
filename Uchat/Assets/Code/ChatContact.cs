@@ -99,7 +99,7 @@ namespace Uchat
 					Grid.SetColumn(contactStackPanel, 1);
 					Grid.SetColumn(unreadMessageBorder, 2);
 
-					ContactContextMenu contextMenu = new ContactContextMenu(this, mainWindow.contactsStackPanel);
+					ContactContextMenu contextMenu = new ContactContextMenu(this, mainWindow.contactsStackPanel, mainWindow);
 					contactGrid.ContextMenu = contextMenu.Result();
 
 					Chat.chatsList.Add(this);
@@ -110,8 +110,31 @@ namespace Uchat
 				public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; } }
 				public int ChatId { get { return chatId; } set { chatId = value; } }
+				public string ChatName { get { return chatName; } }
+				
+				/// <summary>
+				/// Обновить последнее сообщение и счетчик непрочитанных
+				/// </summary>
+				public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
+				{
+					lastMessage = newLastMessage;
+					lastMessageTextBlock.Text = newLastMessage;
+					
+					if (newUnreadCount.HasValue)
+					{
+						unreadMessages = newUnreadCount.Value;
+						unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
+					}
+				}
+				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
+					// FIX 3: Only handle left mouse button clicks
+					if (!e.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
+					{
+						return; // Right click will show context menu automatically
+					}
+					
 					string color = (GroupsActive == true) ? "#5da3a5" : "#5e81ac";
 
                     foreach (Contact contact in Chat.chatsList)
@@ -132,11 +155,13 @@ namespace Uchat
 				private ContextMenu contextMenu = new ContextMenu();
 				private Contact contact;
 				private StackPanel contactList;
+				private MainWindow mainWindow;
 
-                public ContactContextMenu(Contact contact, StackPanel contactList)
+                public ContactContextMenu(Contact contact, StackPanel contactList, MainWindow window)
 				{
 					this.contact = contact;
 					this.contactList = contactList;
+					this.mainWindow = window;
 
                     var iconPinURL = new Uri("avares://Uchat/Assets/Icons/pin.png");
                     var iconDeleteURL = new Uri("avares://Uchat/Assets/Icons/delete.png");
@@ -180,12 +205,32 @@ namespace Uchat
                     contactList.Children.Insert(0, contact.Box);
                 }
 
-                private void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
-                {
-					Chat.chatsList.Remove(contact);
-					contactList.Children.Remove(contact.Box);
-                }
-            }
+                private async void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
+				{
+					if (contact.ChatName == "Notes") return;
+
+					contact.Box.IsEnabled = false;
+
+					try 
+					{
+						var success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
+
+						if (success)
+						{
+							mainWindow.RemoveChatFromUI(contact.ChatId);
+						}
+						else
+						{
+							contact.Box.IsEnabled = true;
+						}
+					}
+					catch (Exception ex)
+					{
+						Logger.Error("Failed to delete chat", ex);
+						contact.Box.IsEnabled = true;
+					}
+				}
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Uchat.Shared.DTOs;
 
@@ -9,6 +10,10 @@ namespace Uchat.Services;
 public class AuthApiService
 {
     private readonly HttpClient _httpClient;
+    private static readonly JsonSerializerOptions _jsonOptions = new() 
+    { 
+        PropertyNameCaseInsensitive = true 
+    };
 
     public AuthApiService()
     {
@@ -22,6 +27,8 @@ public class AuthApiService
     {
         try
         {
+            Logger.Log($"Attempting registration for: {username}");
+            
             var request = new
             {
                 username,
@@ -33,9 +40,10 @@ public class AuthApiService
             
             if (!response.IsSuccessStatusCode)
             {
+                Logger.Log($"Registration failed: {response.StatusCode}");
                 try
                 {
-                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
                     throw new Exception(errorResponse?.Error ?? "Registration failed");
                 }
                 catch (Exception)
@@ -45,10 +53,20 @@ public class AuthApiService
                 }
             }
 
-            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+            var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
+            
+            if (result != null)
+            {
+                Logger.Log($"Registration successful for {username}");
+                TokenStorage.SaveTokens(result.AccessToken, result.RefreshToken, result.ExpiresAt, result.UserId, result.Username);
+                UserSession.Instance.SetSession(result.AccessToken, result.RefreshToken, result.UserId, result.Username);
+            }
+            
+            return result;
         }
         catch (HttpRequestException ex)
         {
+            Logger.Error("Network error during registration", ex);
             throw new Exception($"Network error: {ex.Message}");
         }
     }
@@ -57,6 +75,8 @@ public class AuthApiService
     {
         try
         {
+            Logger.Log($"Attempting login for: {identifier}");
+            
             var request = new
             {
                 identifier,
@@ -67,9 +87,10 @@ public class AuthApiService
             
             if (!response.IsSuccessStatusCode)
             {
+                Logger.Log($"Login failed: {response.StatusCode}");
                 try
                 {
-                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
                     throw new Exception(errorResponse?.Error ?? "Invalid credentials");
                 }
                 catch (Exception)
@@ -78,10 +99,20 @@ public class AuthApiService
                 }
             }
 
-            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+            var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
+            
+            if (result != null)
+            {
+                Logger.Log($"Login successful for {result.Username}");
+                TokenStorage.SaveTokens(result.AccessToken, result.RefreshToken, result.ExpiresAt, result.UserId, result.Username);
+                UserSession.Instance.SetSession(result.AccessToken, result.RefreshToken, result.UserId, result.Username);
+            }
+            
+            return result;
         }
         catch (HttpRequestException ex)
         {
+            Logger.Error("Network error during login", ex);
             throw new Exception($"Network error: {ex.Message}");
         }
     }
@@ -90,13 +121,27 @@ public class AuthApiService
     {
         try
         {
+            Logger.Log("Attempting to refresh access token");
+            
             var request = new { refreshToken };
             var response = await _httpClient.PostAsJsonAsync("/api/auth/refresh", request);
             
             if (!response.IsSuccessStatusCode)
+            {
+                Logger.Log($"Token refresh failed: {response.StatusCode}");
                 return null;
+            }
 
-            return await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+            var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
+            
+            if (result != null)
+            {
+                Logger.Log("Token refresh successful");
+                TokenStorage.SaveTokens(result.AccessToken, result.RefreshToken, result.ExpiresAt, result.UserId, result.Username);
+                UserSession.Instance.SetSession(result.AccessToken, result.RefreshToken, result.UserId, result.Username);
+            }
+            
+            return result;
         }
         catch
         {

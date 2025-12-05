@@ -19,13 +19,35 @@ namespace Uchat
 {
     public partial class MainWindow : Window
     {
-        private bool isWindowFocused = false;
         private readonly AuthApiService _authService;
 
         public MainWindow()
         {
             InitializeComponent();
             _authService = new AuthApiService();
+            
+            // Попытка восстановить сессию при запуске
+            Loaded += MainWindow_Loaded;
+        }
+
+        private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
+        {
+            Logger.Log("=== MainWindow loaded, auto-login disabled for testing ===");
+            
+            // AUTO-LOGIN DISABLED FOR TESTING - UNCOMMENT TO RE-ENABLE:
+            /*
+            var restored = await UserSession.Instance.TryRestoreSessionAsync();
+            
+            if (restored)
+            {
+                Logger.Log("Session restored, switching to chat view");
+                SwitchToChatView();
+            }
+            else
+            {
+                Logger.Log("No valid session, showing login form");
+            }
+            */
         }
 
         private void MainWindow_KeyDown(object? sender, KeyEventArgs e)

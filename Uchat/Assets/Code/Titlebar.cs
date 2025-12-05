@@ -1,12 +1,56 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using System;
 
 namespace Uchat
 {
     public partial class MainWindow : Window
     {
-		private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
+        private void Options_Click(object sender, RoutedEventArgs e)
+		{
+			// UNCOMMENT TO ADD LOGOUT BUTTON:
+			// LogoutAsync();
+        }
+        
+        private async void LogoutAsync()
+        {
+			try
+			{
+				var authService = new Services.AuthApiService();
+				await authService.LogoutAsync(
+					Services.UserSession.Instance.AccessToken, 
+					Services.UserSession.Instance.RefreshToken
+				);
+			}
+			catch (Exception ex)
+			{
+				Logger.Error("Logout API call failed", ex);
+			}
+			
+			Services.UserSession.Instance.Clear();
+			SwitchToLoginView();
+        }
+        
+        private void SwitchToLoginView()
+        {
+			MainProgram.IsVisible = false;
+			loginForm.IsVisible = true;
+			
+			// Clear input fields
+			usernameTextBox.Text = string.Empty;
+			passwordTextBox.Text = string.Empty;
+        }
+
+        private async void NotificationButton_Click(object sender, RoutedEventArgs e)
+		{
+			NotificationBox.IsVisible = !NotificationBox.IsVisible;
+			
+			if (NotificationBox.IsVisible)
+				await LoadPendingFriendRequestsAsync();
+        }
+
+        private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
 		{
 			WindowState = WindowState.Minimized;
 		}
@@ -16,11 +60,15 @@ namespace Uchat
 			if (WindowState == WindowState.Maximized)
 			{
 				WindowState = WindowState.Normal;
-			}
+				maximizeButton.Content = "\uE922";
+
+            }
 			else
 			{
 				WindowState = WindowState.Maximized;
-			}
+				maximizeButton.Content = "\uE923";
+
+            }
 		}
 
 		private void CloseButton_Click(object? sender, RoutedEventArgs e)

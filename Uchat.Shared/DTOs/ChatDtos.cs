@@ -55,6 +55,11 @@ public class ChatRoomDto
     public int CreatorId { get; set; }
     public DateTime CreatedAt { get; set; }
     public int MemberCount { get; set; }
+    
+    // Для списка чатов
+    public string? LastMessageContent { get; set; }
+    public DateTime? LastMessageAt { get; set; }
+    public int UnreadCount { get; set; }
 }
 
 /// <summary>

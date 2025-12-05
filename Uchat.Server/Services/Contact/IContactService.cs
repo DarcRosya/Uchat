@@ -20,7 +20,7 @@ public interface IContactService
     /// Принять заявку в друзья.
     /// Обновляет обе записи на Status = Friend.
     /// </summary>
-    Task<ServiceResult> AcceptFriendRequestAsync(int userId, int requesterId);
+    Task<ServiceResult<int>> AcceptFriendRequestAsync(int userId, int requesterId);
 
     /// <summary>
     /// Отклонить заявку в друзья.
@@ -33,6 +33,8 @@ public interface IContactService
     /// Обновляет обе записи на Status = None (остаются контакты, но не друзья).
     /// </summary>
     Task<ServiceResult> RemoveFriendAsync(int userId, int friendId);
+
+    Task<ServiceResult> UpdateContactChatIdAsync(int userId1, int userId2, int chatRoomId);
 
     /// <summary>
     /// Заблокировать пользователя.
@@ -67,6 +69,21 @@ public interface IContactService
     Task<IEnumerable<Database.Entities.Contact>> GetBlockedUsersAsync(int userId);
 
     /// <summary>
+    /// Получить контакт по ID.
+    /// </summary>
+    Task<ServiceResult<Database.Entities.Contact>> GetContactByIdAsync(int contactId);
+
+    /// <summary>
+    /// Получить все контакты пользователя (друзья).
+    /// </summary>
+    Task<ServiceResult<IEnumerable<Database.Entities.Contact>>> GetContactsAsync(int userId);
+
+    /// <summary>
+    /// Получить входящие запросы в друзья.
+    /// </summary>
+    Task<ServiceResult<IEnumerable<Database.Entities.Contact>>> GetPendingRequestsAsync(int userId);
+
+    /// <summary>
     /// Добавить в избранное.
     /// </summary>
     Task<ServiceResult> SetFavoriteAsync(int userId, int contactUserId, bool isFavorite);
@@ -82,19 +99,19 @@ public interface IContactService
 /// </summary>
 public class ServiceResult
 {
-    public bool IsSuccess { get; set; }
-    public string? ErrorMessage { get; set; }
-    public object? Data { get; set; }
+    public bool Success { get; set; }
+    public string? Message { get; set; }
 
-    public static ServiceResult Success(object? data = null) => new() 
-    { 
-        IsSuccess = true, 
-        Data = data 
-    };
+    public static ServiceResult SuccessResult() => new() { Success = true };
+    public static ServiceResult Failure(string error) => new() { Success = false, Message = error };
+}
 
-    public static ServiceResult Failure(string error) => new() 
-    { 
-        IsSuccess = false, 
-        ErrorMessage = error 
-    };
+public class ServiceResult<T>
+{
+    public bool Success { get; set; }
+    public string? Message { get; set; }
+    public T? Data { get; set; }
+
+    public static ServiceResult<T> SuccessResult(T? data = default) => new() { Success = true, Data = data };
+    public static ServiceResult<T> Failure(string error) => new() { Success = false, Message = error };
 }

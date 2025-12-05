@@ -6,6 +6,7 @@ using Uchat.Server.Hubs;
 using Uchat.Server.Services.Chat;
 using Uchat.Server.Services.Messaging;
 using Uchat.Shared.DTOs;
+using Uchat.Database.Entities;
 
 namespace Uchat.Server.Controllers;
 
@@ -74,6 +75,58 @@ public class MessagesController : ControllerBase
         if (!memberCheck.IsSuccess)
         {
             return Forbid();
+        }
+
+        // === УЛУЧШЕННАЯ ЛОГИКА ВОСКРЕШЕНИЯ (RESURRECTION V2) ===
+        // 1. Получаем детали чата, включая участников
+        var chatDetails = await _chatRoomService.GetChatDetailsAsync(chatId, userId);
+
+        if (chatDetails.IsSuccess && chatDetails.ChatRoom != null && chatDetails.ChatRoom.Type == ChatRoomType.DirectMessage)
+        {
+            var chat = chatDetails.ChatRoom;
+            int targetUserId = 0;
+
+            // Пытаемся определить ID собеседника (того, кто НЕ мы)
+            // Сначала пробуем парсить имя (15-20)
+            try 
+            {
+                var parts = chat.Name.Split(new[] { '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var part in parts)
+                {
+                    if (int.TryParse(part, out int parsedId) && parsedId != userId)
+                    {
+                        targetUserId = parsedId;
+                        break;
+                    }
+                }
+            } catch { }
+
+            // Если имя не помогло, ищем в истории сообщений любого "чужого" отправителя
+            if (targetUserId == 0)
+            {
+                var oldMessages = await _messageService.GetMessagesAsync(chatId, 20); // Берем 20 последних
+                if (oldMessages?.Messages != null)
+                {
+                    var otherMsg = oldMessages.Messages.FirstOrDefault(m => m.Sender.UserId != userId);
+                    if (otherMsg != null) targetUserId = otherMsg.Sender.UserId;
+                }
+            }
+
+            // Если мы нашли ID собеседника — проверяем, есть ли он в участниках
+            if (targetUserId > 0)
+            {
+                // Проверяем список участников (Members уже загружены через Include в GetChatDetailsAsync)
+                bool isTargetActive = chat.Members.Any(m => m.UserId == targetUserId);
+
+                if (!isTargetActive)
+                {
+                    _logger.LogInformation($"User {targetUserId} is missing in chat {chatId}. Resurrecting...");
+                    // Возвращаем его в чат
+                    await _chatRoomService.AddMemberAsync(chatId, userId, targetUserId);
+                    
+                    // Опционально: можно отправить ему пуш "Вас вернули в чат", но SignalR ниже справится
+                }
+            }
         }
 
         // 3. Проверка ReplyTo (если это ответ)

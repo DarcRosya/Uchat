@@ -1,15 +1,20 @@
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Uchat.Shared.DTOs;
 
 namespace Uchat.Services;
 
 /// <summary>
 /// Singleton для хранения данных текущего пользователя и JWT токенов
+/// Автоматически обновляет токены за 5 минут до истечения
 /// </summary>
 public class UserSession
 {
     private static UserSession? _instance;
     private static readonly object _lock = new object();
+    private Timer? _refreshTimer;
+    private AuthApiService? _authService;
 
     public static UserSession Instance
     {
@@ -19,10 +24,7 @@ public class UserSession
             {
                 lock (_lock)
                 {
-                    if (_instance == null)
-                    {
-                        _instance = new UserSession();
-                    }
+                    _instance ??= new UserSession();
                 }
             }
             return _instance;
@@ -39,24 +41,145 @@ public class UserSession
     public DateTime TokenExpiresAt { get; set; }
 
     public bool IsAuthenticated => !string.IsNullOrEmpty(AccessToken) && DateTime.UtcNow < TokenExpiresAt;
+    
+    public bool NeedsRefresh => DateTime.UtcNow >= TokenExpiresAt.AddMinutes(-5);
+
+    public void SetSession(string accessToken, string refreshToken, int userId, string username, string email = "")
+    {
+        AccessToken = accessToken;
+        RefreshToken = refreshToken;
+        UserId = userId;
+        Username = username;
+        Email = email;
+        TokenExpiresAt = DateTime.UtcNow.AddMinutes(30);
+        
+        Logger.Log($"Session set for user {username} (expires: {TokenExpiresAt:HH:mm:ss})");
+        StartAutoRefresh();
+    }
 
     public void SetSession(AuthResponseDto response)
     {
-        AccessToken = response.AccessToken;
-        RefreshToken = response.RefreshToken;
-        UserId = response.UserId;
-        Username = response.Username;
-        Email = response.Email;
+        SetSession(response.AccessToken, response.RefreshToken, response.UserId, response.Username, response.Email);
         TokenExpiresAt = response.ExpiresAt;
+    }
+
+    public void StartAutoRefresh()
+    {
+        StopAutoRefresh();
+        
+        _authService = new AuthApiService();
+        
+        // Проверяем каждые 60 секунд
+        _refreshTimer = new Timer(async _ => await TryAutoRefresh(), null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
+        
+        Logger.Log("Auto-refresh timer started");
+    }
+
+    private async Task TryAutoRefresh()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(RefreshToken))
+            {
+                Logger.Log("Auto-refresh skipped: no refresh token");
+                return;
+            }
+
+            if (!NeedsRefresh)
+            {
+                return;
+            }
+
+            Logger.Log("Token expiring soon, attempting auto-refresh...");
+            
+            if (_authService == null)
+            {
+                _authService = new AuthApiService();
+            }
+
+            var result = await _authService.RefreshTokenAsync(RefreshToken);
+            
+            if (result != null)
+            {
+                Logger.Log("Auto-refresh successful!");
+                // Токены уже сохранены в AuthApiService.RefreshTokenAsync
+            }
+            else
+            {
+                Logger.Error("Auto-refresh failed - refresh token invalid or expired", new Exception("RefreshTokenAsync returned null"));
+                Clear();
+                // TODO: Show UI notification to user: "Session expired, please login again"
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Error("Auto-refresh error", ex);
+        }
+    }
+
+    public void StopAutoRefresh()
+    {
+        if (_refreshTimer != null)
+        {
+            _refreshTimer.Dispose();
+            _refreshTimer = null;
+            Logger.Log("Auto-refresh timer stopped");
+        }
     }
 
     public void Clear()
     {
+        StopAutoRefresh();
+        TokenStorage.ClearTokens();
+        
         AccessToken = string.Empty;
         RefreshToken = string.Empty;
         UserId = 0;
         Username = string.Empty;
         Email = string.Empty;
         TokenExpiresAt = DateTime.MinValue;
+        
+        Logger.Log("Session cleared");
+    }
+    
+    /// <summary>
+    /// Пытается восстановить сессию из сохраненных токенов
+    /// </summary>
+    public async Task<bool> TryRestoreSessionAsync()
+    {
+        var savedTokens = TokenStorage.LoadTokens();
+        
+        if (savedTokens == null)
+        {
+            Logger.Log("No saved tokens to restore");
+            return false;
+        }
+
+        // Проверяем не истек ли access token
+        if (savedTokens.ExpiresAt > DateTime.UtcNow.AddMinutes(5))
+        {
+            // Access token еще валиден
+            Logger.Log("Restoring session from saved tokens");
+            SetSession(savedTokens.AccessToken, savedTokens.RefreshToken, savedTokens.UserId, savedTokens.Username);
+            TokenExpiresAt = savedTokens.ExpiresAt;
+            return true;
+        }
+
+        // Access token истек, пробуем refresh
+        Logger.Log("Saved access token expired, attempting refresh");
+        
+        _authService = new AuthApiService();
+        var result = await _authService.RefreshTokenAsync(savedTokens.RefreshToken);
+        
+        if (result != null)
+        {
+            Logger.Log("Session restored via token refresh");
+            return true;
+        }
+
+        Logger.Error("Failed to restore session - refresh token invalid", new Exception("RefreshTokenAsync returned null"));
+        TokenStorage.ClearTokens();
+        return false;
     }
 }
+

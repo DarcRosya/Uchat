@@ -9,7 +9,7 @@ namespace Uchat.Server.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-[EnableRateLimiting("auth")] // Применяем rate limiting ко всем auth endpoints
+[EnableRateLimiting("auth")] 
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
@@ -20,6 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] RegisterDto dto)
     {
         if (!ModelState.IsValid)
@@ -36,6 +37,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         if (!ModelState.IsValid)

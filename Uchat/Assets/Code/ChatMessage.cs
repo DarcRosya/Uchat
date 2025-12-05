@@ -41,7 +41,7 @@ namespace Uchat
                 
                 public Border? ReplyPreviewBorder { get; set; }
 
-                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null)
+                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null, string? username = null)
                 {
                     this.serverId = serverId;
                     content = text;
@@ -55,6 +55,9 @@ namespace Uchat
                     string messageBorderStyle = (isGuest) ? "guestMessageBorder" : "messageBorder";
                     messageBorder.Classes.Add(messageBorderStyle);
                     messageBorder.Child = messageStackPanel;
+                    
+                    // Alignment: свои сообщения справа, чужие слева
+                    messageBorder.HorizontalAlignment = isGuest ? HorizontalAlignment.Left : HorizontalAlignment.Right;
 
                     timeStackPanel.Classes.Add("timeStackPanel");
                     timeStackPanel.Children.Add(timeTextBlock);
@@ -62,8 +65,7 @@ namespace Uchat
                     if (isGuest)
                     { 
                         userNameTextBlock.Classes.Add("username");
-                        //place for username
-                        userNameTextBlock.Text = "username";
+                        userNameTextBlock.Text = username ?? "Unknown";
                         messageStackPanel.Children.Add(userNameTextBlock);
                     }
 
@@ -125,6 +127,7 @@ namespace Uchat
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
                 public Border Bubble { get { return messageBorder; } }
                 public TextBlock ContentTextBlock { get { return contentTextBlock; } }
+                public TextBlock? ReplyTextBlock { get { return replyTextBlock; } }
                 public string? ReplyToMessageId { get { return replyToMessageId; } set { replyToMessageId = value; } }
             }
 
@@ -229,7 +232,7 @@ namespace Uchat
                     mainWindow.isReplied = true;
 				}
 
-				private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
+                private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
                 {
                     mainWindow.tempChatTextBox = mainWindow.chatTextBox.Text;
 
@@ -240,14 +243,13 @@ namespace Uchat
                     mainWindow.editTheMessageBox.IsVisible = true;
                     mainWindow.chatTextBoxForEdit.IsVisible = true;
                     mainWindow.editTheMessageButton.IsVisible = true;
-                    mainWindow.editTheMessage.Text = chatMessage.Content;
-                    mainWindow.chatTextBoxForEdit.Text = chatMessage.Content;
+                    // Use current text from ContentTextBlock instead of original Content field
+                    mainWindow.editTheMessage.Text = chatMessage.ContentTextBlock.Text ?? chatMessage.Content;
+                    mainWindow.chatTextBoxForEdit.Text = chatMessage.ContentTextBlock.Text ?? chatMessage.Content;
 
                     mainWindow.textBlockChange = chatMessage.ContentTextBlock;
                     mainWindow.messageBeingEdited = chatMessage; // Сохраняем ссылку на Message
-				}
-
-                private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
+                }                private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
                 {
                     mainWindow.Clipboard.SetTextAsync(chatMessage.Content);
                 }
