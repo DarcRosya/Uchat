@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
+using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Server.Services.Chat;
 
 namespace Uchat.Server.Hubs;
 
@@ -9,36 +11,58 @@ namespace Uchat.Server.Hubs;
 public class ChatHub : Hub
 {
     private readonly IChatRoomRepository _chatRoomRepository;
+    private readonly IChatRoomService _chatRoomService;
 
-    public ChatHub(IChatRoomRepository chatRoomRepository)
+    // Active online users
+    private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
+
+    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService)
     {
         _chatRoomRepository = chatRoomRepository;
+        _chatRoomService = chatRoomService;
     }
 
     public override async Task OnConnectedAsync()
     {
         var userId = GetUserId();
         var username = GetUsername();
+        var connectionId = Context.ConnectionId;
+
         Logger.Write($"User {username} (ID: {userId}) connected");
 
-        // Автоматически присоединяем пользователя ко всем его чатам
-        // После миграции на Redis: это будет заменено на Redis Pub/Sub подписки
+        // Online logic
+        lock (OnlineUsers)
+        {
+            if (!OnlineUsers.ContainsKey(userId))
+                OnlineUsers[userId] = new HashSet<string>();
+
+            OnlineUsers[userId].Add(connectionId);
+        }
+
+        // Notify all clients if user became online
+        if (OnlineUsers[userId].Count == 1)
+        {
+            await Clients.All.SendAsync("UserOnline", userId);
+            Logger.Write($"[ONLINE] User {username} became ONLINE");
+        }
+
+        // Auto join to chatGroups
         try
         {
             var userChats = await _chatRoomRepository.GetUserChatRoomsAsync(userId);
-            
+
             foreach (var chat in userChats)
             {
-                var groupName = $"chat_{chat.Id}";
-                await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-                Logger.Write($"[Auto-Join] User {username} added to group: {groupName}");
+                string groupName = $"chat_{chat.Id}";
+                await Groups.AddToGroupAsync(connectionId, groupName);
+                Logger.Write($"[Auto-Join] User {username} added to group {groupName}");
             }
-            
+
             Logger.Write($"[Auto-Join] User {username} joined {userChats.Count()} chat groups");
         }
         catch (Exception ex)
         {
-            Logger.Write($"[Auto-Join ERROR] Failed to join user {username} to chats: {ex.Message}");
+            Logger.Write($"[Auto-Join ERROR] {ex.Message}");
         }
 
         await base.OnConnectedAsync();
@@ -46,35 +70,117 @@ public class ChatHub : Hub
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
+        var userId = GetUserId();
         var username = GetUsername();
+        var connectionId = Context.ConnectionId;
+
         Logger.Write($"User {username} disconnected");
+
+        // Online logic
+        bool becameOffline = false;
+
+        lock (OnlineUsers)
+        {
+            if (OnlineUsers.ContainsKey(userId))
+            {
+                OnlineUsers[userId].Remove(connectionId);
+
+                if (OnlineUsers[userId].Count == 0)
+                {
+                    OnlineUsers.Remove(userId);
+                    becameOffline = true;
+                }
+            }
+        }
+
+        if (becameOffline)
+        {
+            await Clients.All.SendAsync("UserOffline", userId);
+            Logger.Write($"[OFFLINE] User {username} became OFFLINE");
+        }
+
         await base.OnDisconnectedAsync(exception);
     }
 
+    // Groups
     public async Task JoinGroup(string groupName)
     {
         await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-        var username = GetUsername();
-        Logger.Write($"[JoinGroup] User '{username}' (ConnectionId: {Context.ConnectionId}) joined group: {groupName}");
+        Logger.Write($"[JoinGroup] {GetUsername()} joined {groupName}");
     }
 
     public async Task LeaveGroup(string groupName)
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
-        var username = GetUsername();
-        Logger.Write($"[LeaveGroup] User '{username}' (ConnectionId: {Context.ConnectionId}) left group: {groupName}");
+        Logger.Write($"[LeaveGroup] {GetUsername()} left {groupName}");
     }
 
-    public async Task NewUserNotification(string chatId, string user)
+    // Chat Methods
+    public async Task CreateChat(string name, string type, string? description, List<int>? initialMembers)
     {
-        await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, "System", $"{user} joined the chat");
-        Logger.Write($"{user} joined chat {chatId}");
+        var creatorId = GetUserId();
+
+        if (!Enum.TryParse<ChatRoomType>(type, true, out var chatType))
+            throw new HubException("Invalid chat type");
+
+        var result = await _chatRoomService.CreateChatAsync(
+            creatorId,
+            name,
+            chatType,
+            description,
+            initialMembers
+        );
+
+        if (!result.IsSuccess)
+            throw new HubException(result.ErrorMessage);
+
+        var chat = result.ChatRoom!;
+
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"chat_{chat.Id}");
+
+        await Clients.Caller.SendAsync("ChatCreated", chat.Id, chat.Name);
     }
 
+    public async Task AddUserToChat(int chatId, int newUserId)
+    {
+        var actorId = GetUserId();
+
+        var result = await _chatRoomService.AddMemberAsync(chatId, actorId, newUserId);
+        if (!result.IsSuccess)
+            throw new HubException(result.ErrorMessage);
+
+        await Clients.Group($"chat_{chatId}")
+            .SendAsync("UserAdded", chatId, newUserId);
+    }
+
+    public async Task RemoveUserFromChat(int chatId, int userIdToRemove)
+    {
+        var actorId = GetUserId();
+
+        var result = await _chatRoomService.RemoveMemberAsync(chatId, actorId, userIdToRemove);
+        if (!result.IsSuccess)
+            throw new HubException(result.ErrorMessage);
+
+        await Clients.Group($"chat_{chatId}")
+            .SendAsync("UserRemoved", chatId, userIdToRemove);
+    }
+
+    public async Task SendMessage(int chatId, string message)
+    {
+        var userId = GetUserId();
+
+        var check = await _chatRoomService.IsUserInChatAsync(userId, chatId);
+        if (!check.IsSuccess)
+            throw new HubException("User is not in chat!");
+
+        await Clients.Group($"chat_{chatId}")
+            .SendAsync("ReceiveMessage", chatId, userId, message);
+    }
+    // Getters
     private int GetUserId()
     {
-        var userIdClaim = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        return int.TryParse(userIdClaim, out var userId) ? userId : 0;
+        var claim = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        return int.TryParse(claim, out var id) ? id : 0;
     }
 
     private string GetUsername()
