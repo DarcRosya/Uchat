@@ -26,18 +26,6 @@ namespace Uchat
         {
             InitializeComponent();
             _authService = new AuthApiService();
-            
-            // Проверяем, есть ли активная сессия при запуске
-            Loaded += MainWindow_Loaded;
-        }
-
-        private void MainWindow_Loaded(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            // Если есть сохранённый токен - сразу переключаемся в чат
-            if (!string.IsNullOrEmpty(UserSession.Instance.AccessToken))
-            {
-                SwitchToChatView();
-            }
         }
 
         private void MainWindow_KeyDown(object? sender, KeyEventArgs e)

@@ -170,6 +170,25 @@ namespace Uchat
                 
                 Dispatcher.UIThread.Post(() =>
                 {
+                    contactsStackPanel.Children.Clear();
+                    
+                    foreach (var chat in chats)
+                    {
+                        var contact = new MainWindow.Chat.Contact(
+                            chat.Name ?? $"Chat {chat.Id}",
+                            "", // Last message - можно добавить позже
+                            0,  // Unread count - можно добавить позже
+                            this,
+                            chat.Id
+                        );
+                        
+                        bool isGroup = chat.Type != "private";
+                        contact.IsGroupChat = isGroup;
+                        contact.IsVisible = isGroup ? Chat.GroupsActive : !Chat.GroupsActive;
+                        
+                        contactsStackPanel.Children.Add(contact.Box);
+                    }
+                    
                     if (chats.Count > 0)
                     {
                         var firstChat = chats[0];
@@ -177,17 +196,24 @@ namespace Uchat
                     }
                 });
             }
-            catch (Exception ex)
+            catch
             {
                 // Failed to load chats
             }
         }
 
-        private async Task OpenChatAsync(int chatId)
+        public async Task OpenChatAsync(int chatId)
         {
             try
             {
                 _currentChatId = chatId;
+                
+                // Clear current messages
+                Dispatcher.UIThread.Post(() =>
+                {
+                    ChatMessagesPanel.Children.Clear();
+                    _messageCache.Clear();
+                });
                 
                 await LoadChatHistoryAsync(chatId);
             }
@@ -231,9 +257,9 @@ namespace Uchat
                     ChatScrollViewer.ScrollToEnd();
                 });
             }
-            catch (Exception ex)
+            catch
             {
-                // Failed to load chat history
+                // Failed to load messages
             }
         }
 
@@ -414,7 +440,7 @@ private async Task LoadMoreHistoryAsync()
                 replyToMessageId = "";
                 isReplied = false;
             }
-            catch (Exception ex)
+            catch
             {
                 UpdateConnectionStatus("● Send failed", Brushes.Red);
             }
@@ -431,7 +457,7 @@ private async Task LoadMoreHistoryAsync()
             {
                 await _messageApiService.EditMessageAsync(_currentChatId.Value, messageId, newContent);
             }
-            catch (Exception ex)
+            catch
             {
                 // Edit failed
             }
@@ -448,7 +474,7 @@ private async Task LoadMoreHistoryAsync()
             {
                 await _messageApiService.DeleteMessageAsync(_currentChatId.Value, messageId);
             }
-            catch (Exception ex)
+            catch
             {
                 // Delete failed
             }

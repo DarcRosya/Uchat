@@ -50,6 +50,7 @@
 
      <!-- contact and groups  -->
 
+
 <!-- Style for whole contact grid -->
      <Styles>
         <Style Selector="Grid.contactGrid">
@@ -58,21 +59,28 @@
           <Setter Property="Margin" Value="0"/>
         </Style>
 
+        <!-- Avatar Icon Border-->
+         <Style Selector="Border.avatarIconBorder">
+          <Setter Property="Background" Value="White"/>
+          <Setter Property="CornerRadius" Value="5"/>
+          <Setter Property="Margin" Value="3"/>
+          <Setter Property="Padding" Value="3"/>
+        </Style>
+
         <!-- Avatar image -->
         <Style Selector="Image.avatarIcon">
           <Setter Property="Stretch" Value="UniformToFill"/>
           <Setter Property="Width" Value="45"/>
           <Setter Property="Height" Value="45"/>
-          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Top"/>
           <Setter Property="HorizontalAlignment" Value="Center"/>
-          <Setter Property="Margin" Value="5"/>
         </Style>
 
         <!-- Name -->
         <Style Selector="TextBlock.contactName">
           <Setter Property="Foreground" Value="#FFFFFF"/>
           <Setter Property="FontSize" Value="15"/>
-          <Setter Property="Margin" Value="0,8,0,0"/>
+          <Setter Property="Margin" Value="2,8,0,0"/>
         </Style>
 
         <!-- Last message -->
@@ -80,9 +88,30 @@
           <Setter Property="Foreground" Value="#999999"/>
           <Setter Property="FontSize" Value="10"/>
           <Setter Property="VerticalAlignment" Value="Bottom"/>
-          <Setter Property="Margin" Value="0,3,0,0"/>
+          <Setter Property="Margin" Value="2,3,0,0"/>
+        </Style>
+
+        <!-- Unread message border -->
+         <Style Selector="Border.unreadMessageBorder">
+          <Setter Property="Background" Value="White"/>
+          <Setter Property="Height" Value="20"/>
+          <Setter Property="Width" Value="20"/>
+          <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+
+        <!-- Unread message text -->
+        <Style Selector="TextBlock.unreadMessage">
+          <Setter Property="Foreground" Value="Black"/>
+          <Setter Property="FontSize" Value="15"/>
+          <Setter Property="FontWeight" Value="SemiBold"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,0,0,0"/>
         </Style>
       </Styles>
+
+
+
 
          <!-- Chat  -->
 
@@ -166,7 +195,7 @@
 
     <!-- Style for message text in reply box -->
         <Style Selector="TextBlock.replyTextBlock">
-            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="MaxLines" Value="1"/>
@@ -178,7 +207,7 @@
         </Style>
 
         
-        <Style Selector="Button.dontReplyOrEditMessage:focus /template/ ContentPresenter#PART_ContentPresenter">
+        <Style Selector="Button.dontReplyOrEditMessage:pressed /template/ ContentPresenter#PART_ContentPresenter">
 			<Setter Property="Background" Value="#bf616a"/>
         </Style>
 
@@ -207,7 +236,7 @@
         <Style Selector="Button.LogIn">
             <Setter Property="Width" Value="280"/>
             <Setter Property="Foreground" Value="WhiteSmoke"/>
-            <Setter Property="CornerRadius" Value="21"/>
+            <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="FontSize" Value="17"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -233,7 +262,7 @@
 			<Setter Property="Width" Value="180"/>
             <Setter Property="Height" Value="40"/>
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="CornerRadius" Value="21"/>
+            <Setter Property="CornerRadius" Value="5"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="2"/>
@@ -243,6 +272,26 @@
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style Selector="Button.LogIn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+
+        <Style Selector="Button.LogIn /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.LogIn:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="Foreground" Value="Black"/>
         </Style>
 
         <Style Selector="Button.LogOrSign:pointerover /template/ ContentPresenter#PART_ContentPresenter">
@@ -267,41 +316,21 @@
             <Setter Property="Foreground" Value="Black"/>
         </Style>
 
-        <Style Selector="Button.LogIn:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="WhiteSmoke"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-
-        <Style Selector="Button.LogIn /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Transitions">
-                <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.15" />
-                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
-                </Transitions>
-            </Setter>
-        </Style>
-
-        <Style Selector="Button.LogIn:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="WhiteSmoke"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-
         <Style Selector="Button.back">
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="#1E2533"/>
-            <Setter Property="BorderBrush" Value="#9B4F4F"/>
-            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="70"/>
             <Setter Property="Height" Value="42"/>
-            <Setter Property="CornerRadius" Value="21"/>
+            <Setter Property="CornerRadius" Value="5"/>
         </Style>
 
         <Style Selector="Button.back:pressed /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#9B4F4F"/>
+            <Setter Property="Background" Value="#bf616a"/>
         </Style>
 
         <Style Selector="Button.back:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-            <Setter Property="Background" Value="#9B4F4F"/>
+            <Setter Property="Background" Value="#bf616a"/>
         </Style>
 
                 <Style Selector="Button.back /template/ ContentPresenter#PART_ContentPresenter">
@@ -311,6 +340,40 @@
                     <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
                 </Transitions>
             </Setter>
+        </Style>
+
+        <Style Selector="Button.addContactOrGroup">
+            <Setter Property="Width" Value="280"/>
+            <Setter Property="Foreground" Value="WhiteSmoke"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        
+        <Style Selector="Button.addContactOrGroup:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#5e81ac"/>
+        </Style>
+
+        <Style Selector="Button.addContactOrGroup /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.addContactOrGroup:pressed /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#5e81ac"/>
         </Style>
 
     </Application.Styles>

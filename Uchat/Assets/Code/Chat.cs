@@ -16,11 +16,11 @@ namespace Uchat
 	public partial class MainWindow : Window
 	{
 		private TextBlock? textBlockChange = new TextBlock();
-		private Message? messageBeingEdited = null; 
+		private Message? messageBeingEdited = null; // Сохраняем ссылку на Message для редактирования
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
-		public string replyToMessageId = "";
+		public string replyToMessageId = ""; // ID сообщения, на которое отвечают
 
         private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -35,15 +35,36 @@ namespace Uchat
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-			//заменить в будущем
 			if (!String.IsNullOrEmpty(AddContactTextBox.Text))
 			{
-                var newContact = new Chat.Contact(AddContactTextBox.Text, "", 0, contactList);
+                var newContact = new Chat.Contact(AddContactTextBox.Text, "Example last message", 0, this);
+                contactsStackPanel.Children.Add(newContact.Box);
                 AddContactOverlay.IsVisible = false;
                 AddContactTextBox.Text = "";
             }
         }
 
+        private void SwitchToGroups_Click(object? sender, RoutedEventArgs e)
+		{
+            Chat.GroupsActive = true;
+            GroupsButton.Background = Brush.Parse("#5da3a5");
+            ContactsButton.Background = Brush.Parse("#3e4042");
+            ContactsButton.FontWeight = FontWeight.Normal;
+            GroupsButton.FontWeight = FontWeight.SemiBold;
+
+
+            Chat.ShowGroups(true);
+        }
+        private void SwitchToContacts_Click(object? sender, RoutedEventArgs e)
+		{
+			Chat.GroupsActive = false;
+			ContactsButton.Background = Brush.Parse("#5e81ac");
+            GroupsButton.Background = Brush.Parse("#3e4042");
+            ContactsButton.FontWeight = FontWeight.SemiBold;
+            GroupsButton.FontWeight = FontWeight.Normal;
+
+            Chat.ShowGroups(false);
+        }
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
 		{
 			string text;
@@ -58,19 +79,26 @@ namespace Uchat
 			}
 
 			if (string.IsNullOrEmpty(text)) { return; }
-			
-			// Отправляем сообщение через API
+			replyTheMessageBox.IsVisible = false;
+
+			// Отправляем сообщение на сервер через SignalR
 			try
 			{
 				await SendMessageToServerAsync(text);
-				// UI обновится через SignalR обработчик ReceiveMessage
+			
+				// Очищаем поля после успешной отправки
+				chatTextBox.Text = "";
+				chatTextBoxForReply.Text = "";
+				chatTextBox.IsVisible = true;
+				chatTextBoxForReply.IsVisible = false;
+				isReplied = false;
+				replyToMessageId = "";
 			}
 			catch (Exception)
 			{
 				// Если не удалось отправить, оставляем текст в поле
 			}
-		}
-		
+		}		
 		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;
@@ -111,7 +139,7 @@ namespace Uchat
 						await EditMessageAsync(messageBeingEdited.ServerId, newContent);
 						// UI обновится через SignalR обработчик MessageEdited
 					}
-					catch (Exception ex)
+					catch
 					{
 						// Failed to edit message
 					}
