@@ -114,68 +114,7 @@ public class ChatHub : Hub
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         Logger.Write($"[LeaveGroup] {GetUsername()} left {groupName}");
     }
-
-    // Chat Methods
-    public async Task CreateChat(string name, string type, string? description, List<int>? initialMembers)
-    {
-        var creatorId = GetUserId();
-
-        if (!Enum.TryParse<ChatRoomType>(type, true, out var chatType))
-            throw new HubException("Invalid chat type");
-
-        var result = await _chatRoomService.CreateChatAsync(
-            creatorId,
-            name,
-            chatType,
-            description,
-            initialMembers
-        );
-
-        if (!result.IsSuccess)
-            throw new HubException(result.ErrorMessage);
-
-        var chat = result.ChatRoom!;
-
-        await Groups.AddToGroupAsync(Context.ConnectionId, $"chat_{chat.Id}");
-
-        await Clients.Caller.SendAsync("ChatCreated", chat.Id, chat.Name);
-    }
-
-    public async Task AddUserToChat(int chatId, int newUserId)
-    {
-        var actorId = GetUserId();
-
-        var result = await _chatRoomService.AddMemberAsync(chatId, actorId, newUserId);
-        if (!result.IsSuccess)
-            throw new HubException(result.ErrorMessage);
-
-        await Clients.Group($"chat_{chatId}")
-            .SendAsync("UserAdded", chatId, newUserId);
-    }
-
-    public async Task RemoveUserFromChat(int chatId, int userIdToRemove)
-    {
-        var actorId = GetUserId();
-
-        var result = await _chatRoomService.RemoveMemberAsync(chatId, actorId, userIdToRemove);
-        if (!result.IsSuccess)
-            throw new HubException(result.ErrorMessage);
-
-        await Clients.Group($"chat_{chatId}")
-            .SendAsync("UserRemoved", chatId, userIdToRemove);
-    }
-
-    public async Task SendMessage(int chatId, string message)
-    {
-        var userId = GetUserId();
-
-        var check = await _chatRoomService.IsUserInChatAsync(userId, chatId);
-        if (!check.IsSuccess)
-            throw new HubException("User is not in chat!");
-
-        await Clients.Group($"chat_{chatId}")
-            .SendAsync("ReceiveMessage", chatId, userId, message);
-    }
+    
     // Getters
     private int GetUserId()
     {

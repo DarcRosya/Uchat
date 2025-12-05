@@ -103,6 +103,7 @@ namespace Uchat
                             replyTheMessageBox.IsVisible = false;
                             chatTextBox.Text = string.Empty;
                         }
+
                         Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
                         ChatScrollViewer.ScrollToEnd();
                     }
