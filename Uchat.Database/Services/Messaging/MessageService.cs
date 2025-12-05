@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
-using Uchat.Database.Extensions;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
 
@@ -75,10 +74,10 @@ public sealed class MessageService : IMessageService
                 return MessagingResult.Failure("Sender is not a member of the chat.");
             }
 
-            // Check if sender has permission to send messages
-            if (!senderMember.CanSendMessages())
+            // Check mute state
+            if (!CanSendMessage(senderMember))
             {
-                return MessagingResult.Failure("You don't have permission to send messages in this chat.");
+                return MessagingResult.Failure("You are currently muted in this chat.");
             }
 
             var sender = await _context.Users.FindAsync(new object[] { dto.SenderId }, cancellationToken: cancellationToken);
@@ -185,6 +184,21 @@ public sealed class MessageService : IMessageService
         {
             _logger.LogWarning(ex, "Failed to delete orphaned message {MessageId}", id);
         }
+    }
+
+    private static bool CanSendMessage(ChatRoomMember member)
+    {
+        if (!member.IsMuted)
+        {
+            return true;
+        }
+
+        if (!member.MutedUntil.HasValue)
+        {
+            return false;
+        }
+
+        return member.MutedUntil.Value <= DateTime.UtcNow;
     }
 
     private static string? ValidateMessage(MessageCreateDto dto)

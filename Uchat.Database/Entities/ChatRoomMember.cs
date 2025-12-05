@@ -102,12 +102,6 @@ public class ChatRoomMember
     public ChatRoom ChatRoom { get; set; } = null!;
     public User User { get; set; } = null!;
     public User? InvitedBy { get; set; }
-    
-    /// <summary>
-    /// Admin permissions (only for Admin and Owner roles)
-    /// NULL for regular members
-    /// </summary>
-    public ChatRoomMemberPermissions? Permissions { get; set; }
 }
 
 public enum ChatRoomRole

@@ -12,6 +12,5 @@ public sealed class CreateChatDto
     public string? Description { get; init; }
     public string? IconUrl { get; init; }
     public IEnumerable<int> InitialMemberIds { get; init; } = Array.Empty<int>();
-    public int? ParentChatRoomId { get; init; }
     public int? MaxMembers { get; init; }
 }

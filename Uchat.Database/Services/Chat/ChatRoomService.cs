@@ -47,12 +47,6 @@ public sealed class ChatRoomService : IChatRoomService
             return ChatResult.Failure("Chat name is required for group chats.");
         }
 
-        if (dto.Type == ChatRoomType.Topic && !dto.ParentChatRoomId.HasValue)
-        {
-            LogBad("CHAT CREATION", "Topic chats must reference a parent room.");
-            return ChatResult.Failure("Topic chats must reference a parent room.");
-        }
-
         var creator = await _userRepository.GetByIdAsync(dto.CreatorId);
         if (creator == null)
         {
@@ -85,16 +79,6 @@ public sealed class ChatRoomService : IChatRoomService
             return ChatResult.Failure($"Users not found: {string.Join(", ", missingUsers)}");
         }
 
-        if (dto.ParentChatRoomId.HasValue)
-        {
-            var parent = await _chatRoomRepository.GetByIdAsync(dto.ParentChatRoomId.Value);
-            if (parent == null)
-            {
-                LogBad("CHAT CREATION", "Parent chat room not found.");
-                return ChatResult.Failure("Parent chat room not found.");
-            }
-        }
-
         var chatRoom = new ChatRoom
         {
             Name = dto.Name,
@@ -102,7 +86,6 @@ public sealed class ChatRoomService : IChatRoomService
             IconUrl = dto.IconUrl,
             Type = dto.Type,
             CreatorId = dto.CreatorId,
-            ParentChatRoomId = dto.ParentChatRoomId,
             MaxMembers = dto.MaxMembers
         };
 

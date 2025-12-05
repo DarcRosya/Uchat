@@ -52,7 +52,6 @@ public class UchatDbContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; } = null!;
-    public DbSet<ChatRoomMemberPermissions> ChatRoomMemberPermissions { get; set; } = null!;
     public DbSet<Contact> Contacts { get; set; } = null!;
     public DbSet<Friendship> Friendships { get; set; } = null!;
     public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
@@ -223,9 +222,6 @@ public class UchatDbContext : DbContext
             entity.HasIndex(cr => cr.CreatorId)
                 .HasDatabaseName("IX_ChatRooms_CreatorId");
             
-            // INDEX на ParentChatRoomId (для получения топиков группы)
-            entity.HasIndex(cr => cr.ParentChatRoomId)
-                .HasDatabaseName("IX_ChatRooms_ParentChatRoomId");
             
             // INDEX на LastActivityAt (для сортировки по активности)
             entity.HasIndex(cr => cr.LastActivityAt)
@@ -264,11 +260,6 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(crm => crm.ChatRoomId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить группу → удалить всех участников
 
-            // ChatRoom -> ParentChatRoom (self-reference для топиков)
-            entity.HasOne(cr => cr.ParentChatRoom)
-                .WithMany(cr => cr.Topics)
-                .HasForeignKey(cr => cr.ParentChatRoomId)
-                .OnDelete(DeleteBehavior.Cascade); // Удалить группу → удалить топики
         });
 
         // ====================================================================
@@ -302,11 +293,6 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(crm => crm.InvitedById)
                 .OnDelete(DeleteBehavior.SetNull);  // Удалить пригласившего → InvitedById = NULL
             
-            // ChatRoomMember -> Permissions (1-to-1, optional)
-            entity.HasOne(crm => crm.Permissions)
-                .WithOne(p => p.Member)
-                .HasForeignKey<ChatRoomMemberPermissions>(p => p.ChatRoomMemberId)
-                .OnDelete(DeleteBehavior.Cascade);
         });
 
         // ====================================================================
@@ -352,24 +338,6 @@ public class UchatDbContext : DbContext
                 .HasForeignKey(c => c.ContactUserId)
                 .OnDelete(DeleteBehavior.Cascade);  // Удалить user → удалить контакты с ним
         });
-        // ====================================================================
-        // КОНФИГУРАЦИЯ ТАБЛИЦЫ CHATROOMMEMBERPERMISSIONS
-        // ====================================================================
-        
-        modelBuilder.Entity<ChatRoomMemberPermissions>(entity =>
-        {
-            entity.ToTable("ChatRoomMemberPermissions");
-            entity.HasKey(p => p.Id);
-            
-            // Index for finding member's permissions
-            entity.HasIndex(p => p.ChatRoomMemberId)
-                .IsUnique()
-                .HasDatabaseName("IX_ChatRoomMemberPermissions_MemberId");
-            
-            entity.Property(p => p.CustomTitle)
-                .HasMaxLength(16);
-        });
-        
         // ====================================================================
         // КОНФИГУРАЦИЯ ТАБЛИЦЫ FRIENDSHIPS
         // ====================================================================
