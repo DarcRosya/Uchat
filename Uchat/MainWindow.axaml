@@ -424,13 +424,23 @@
 
 		<Grid x:Name="MainProgram" IsVisible="False">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="23"/>
+				<RowDefinition Height="40"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
 			<!-- Title Bar -->
-			<Grid Grid.Row="0" Background="#060608" ColumnDefinitions="*,50,50,50">
-				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
+			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
+				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed">
+					<Button Name="notificationButton" Background="#339933" Width="65"
+							Margin="0,5,35,5"
+							Padding="6"
+							HorizontalAlignment="Right"
+							HorizontalContentAlignment="Center"
+							Click="NotificationButton_Click">
+						<Image Source="avares://Uchat/Assets/Icons/bell.png" 
+							   VerticalAlignment="Center"/>
+					</Button>
+				</Border>
 				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
@@ -454,7 +464,7 @@
 				<!-- Left Search -->
 				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
 					<Button Grid.Column="0" Background="Transparent" Foreground="White"
-							CornerRadius="5">
+							CornerRadius="5" Click="Options_Click">
 						<Image Source="avares://Uchat/Assets/Icons/options.png" 
 							   VerticalAlignment="Center"/>
 					</Button>
@@ -680,6 +690,39 @@
 							  ShowsPreview="False"/>
 			</Grid>
 		</Grid>
+
+		<Border Name="NotificationBox" Width="250" Height="180" IsVisible="False"
+				Margin="0,40,90,0"
+				Background="#13161b"
+				BorderThickness="1"
+				BorderBrush="#363a42"
+				CornerRadius="5"
+		  		HorizontalAlignment="Right"
+				VerticalAlignment="Top">
+
+				<StackPanel Background="Transparent">
+					<Border Height="40" Background="#363a42" Margin="8,10,8,8" CornerRadius="5">
+						<Grid Background="Transparent" ColumnDefinitions="*"
+									HorizontalAlignment="Stretch">
+							<TextBlock Foreground="White"
+									   FontSize="15"
+									   FontWeight="SemiBold"
+									   HorizontalAlignment="Center"
+									   VerticalAlignment="Center">
+								Notifications
+							</TextBlock>
+						</Grid>
+					</Border>
+					<Border Height="110" Background="#363a42" Margin="8,0,8,0" CornerRadius="5" ClipToBounds="True">
+						<ScrollViewer IsScrollInertiaEnabled="False"
+								      HorizontalScrollBarVisibility="Disabled"
+								      VerticalScrollBarVisibility="Hidden">
+							<StackPanel Name="requestList" Background="Transparent" Margin="0,0,0,0">
+							</StackPanel>
+						</ScrollViewer>
+					</Border>
+				</StackPanel>
+		</Border>
 
         <!-- Модальне вікно -->
         <Grid Name="AddContactOverlay"

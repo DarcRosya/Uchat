@@ -48,6 +48,41 @@
             </Style.Animations>
         </Style>
 
+     <!-- title bar  -->
+     <Styles>
+		 <!-- Style for friend request box-->
+         <Style Selector="Grid.friendRequestBox">
+			 <Setter Property="Height" Value="40"/>
+             <Setter Property="Background" Value="#4a4e55"/>
+         </Style>
+
+        <!-- Style for user name -->
+        <Style Selector="TextBlock.friendRequestUsername">
+          <Setter Property="Foreground" Value="#FFFFFF"/>
+          <Setter Property="FontSize" Value="15"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+
+        <!-- Style for accept request button -->
+        <Style Selector="Button.acceptRequestButton">
+          <Setter Property="HorizontalAlignment" Value="Stretch"/>
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,5,0,0"/>
+          <Setter Property="Background" Value="#4da64d"/>
+        </Style>
+
+        <!-- Style for accept request button -->
+        <Style Selector="Button.rejectRequestButton">
+          <Setter Property="Background" Value="#bf616a"/>
+          <Setter Property="HorizontalAlignment" Value="Stretch"/>
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+
+     </Styles>
+     
+
      <!-- contact and groups  -->
 
 

@@ -19,7 +19,6 @@ namespace Uchat
 {
     public partial class MainWindow : Window
     {
-        private bool isWindowFocused = false;
         private readonly AuthApiService _authService;
 
         public MainWindow()
