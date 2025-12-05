@@ -16,7 +16,7 @@ namespace Uchat
 			static int counter = 0;
             public class Message
             {
-                private string? serverId; // ID сообщения в LiteDB
+                private string? serverId; // ID сообщения в MongoDB
                 private string content;
                 private string time;
                 private bool isGuest;

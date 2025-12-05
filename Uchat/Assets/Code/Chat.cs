@@ -20,7 +20,7 @@ namespace Uchat
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
-		public string replyToMessageId = ""; 
+		public string replyToMessageId = "";
 
         private void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -58,24 +58,20 @@ namespace Uchat
 			}
 
 			if (string.IsNullOrEmpty(text)) { return; }
-			replyTheMessageBox.IsVisible = false;
-
+			
+			// Отправляем сообщение через API
 			try
 			{
 				await SendMessageToServerAsync(text);
-			
-			chatTextBox.Text = "";
-			chatTextBoxForReply.Text = "";
-			chatTextBox.IsVisible = true;
-			chatTextBoxForReply.IsVisible = false;
-			isReplied = false;
-			replyToMessageId = "";
+				// UI обновится через SignalR обработчик ReceiveMessage
+			}
+			catch (Exception)
+			{
+				// Если не удалось отправить, оставляем текст в поле
+			}
 		}
-		catch (Exception)
-		{
-			// Если не удалось отправить, оставляем текст в поле
-		}
-	}		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
+		
+		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;
 			chatTextBoxForReply.IsVisible = false;

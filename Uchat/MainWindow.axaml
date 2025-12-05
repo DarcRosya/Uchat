@@ -446,14 +446,20 @@
 
 				<!-- Middle Top Bar -->
 				<Grid MinWidth="350" Grid.Column="2" Grid.Row="0" Background="#0e1013"
-					  ColumnDefinitions="*,100">
+					  ColumnDefinitions="200,0.7*,0.3*">
+					<StackPanel>
+						<TextBlock Text="Chat Name Example Bruh" FontSize="15" Foreground="White" Margin="5,4,0,0"/>
+						<TextBlock Text="10 members" FontSize="10" Foreground="#FF919191" Margin="5,0,0,0"/>
+					</StackPanel>
 
-					<TextBlock Grid.Column="0" Text="Chat Name Example Bruh" FontSize="15" Foreground="White"
-								    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="5,4,0,0"/>
+					<Border Grid.Column="1" Background="#FF3E4047" Margin="5" CornerRadius="3">
+						<TextBox Watermark="Search"
+								 Classes="MessagesToSendOrEdit" Background="Transparent" BorderThickness="0"
+								 HorizontalAlignment="Stretch"/>
+					</Border>
 
-					<Button Grid.Column="1" Content="→" Background="Transparent" Foreground="White"
-							BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"
-							/>
+					<Button Grid.Column="2" Content="→" Background="Transparent" Foreground="White"
+							BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
 				</Grid>
 
 				<!-- Right Top bar -->
@@ -482,10 +488,12 @@
 				<Grid MinWidth="350" Grid.Column="2" Grid.Row="1" RowDefinitions="*,50" Background="#12151a">
 					<Grid/>
 
-				<!-- Chat Container -->
-				<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
-					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
-				</ScrollViewer>	<Border Background="#2a2c31"
+					<!-- Chat Container -->
+					<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
+						<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
+					</ScrollViewer>
+
+	<Border Background="#2a2c31"
 			BorderBrush="#93a6b7"
 			BorderThickness="4,0,0,0"
 			CornerRadius="5"
@@ -659,32 +667,6 @@
 				</Grid>
 			</Grid>
 		</Grid>
-
-        <!-- Модальне вікно -->
-        <Grid Name="AddContactOverlay"
-                Background="#80000000"
-                IsVisible="False">
-			<Border CornerRadius="5" Background="#333A44"
-					Width="300" Height="120">
-            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                   Background="Transparent">
-
-				<TextBlock FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,4,0,0"
-				>Enter User ID</TextBlock>
-
-                <!-- Текстовий блок для введення -->
-				<Border BorderThickness="1" BorderBrush="White" CornerRadius="5"  Margin="10">
-					<TextBox Name="AddContactTextBox" HorizontalAlignment="Stretch" BorderThickness="0" Background="Transparent"/>
-				</Border>
-
-                <!-- Кнопки Cancel та Enter -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10" Grid.Row="1">
-                    <Button Name="CancelButton" Content="Cancel" Margin="0,0,10,0" Click="CancelButton_Click"/>
-                    <Button Name="AddButton" Content="Add" Click="AddButton_Click"/>
-                </StackPanel>
-            </StackPanel>
-			</Border>
-        </Grid>
 	</Grid>
 </Window>
 

@@ -50,7 +50,6 @@
 
      <!-- contact and groups  -->
 
-
 <!-- Style for whole contact grid -->
      <Styles>
         <Style Selector="Grid.contactGrid">
@@ -84,9 +83,6 @@
           <Setter Property="Margin" Value="0,3,0,0"/>
         </Style>
       </Styles>
-
-
-
 
          <!-- Chat  -->
 
