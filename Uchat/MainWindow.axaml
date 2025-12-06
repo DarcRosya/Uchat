@@ -12,6 +12,7 @@
 		ExtendClientAreaChromeHints="NoChrome"
 		ExtendClientAreaTitleBarHeightHint="17"
 		Background="Transparent"
+		KeyDown="MainWindow_KeyDown"
 		>
 
 	<Grid>
@@ -424,28 +425,28 @@
 
 		<Grid x:Name="MainProgram" IsVisible="False">
 			<Grid.RowDefinitions>
-				<RowDefinition Height="23"/>
+				<RowDefinition Height="30"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 
 			<!-- Title Bar -->
-			<Grid Grid.Row="0" Background="#060608" ColumnDefinitions="*,50,50,50,50">
+			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
 				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
 				
 				<!-- Notification Button -->
-				<Button Grid.Column="1" Name="notificationButton" Content="&#xE7E7;" FontFamily="Segoe MDL2 Assets" FontSize="14"
-						Background="Transparent" Foreground="White" BorderThickness="0"
-						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+				<Button Grid.Column="0" Name="notificationButton" Content="&#xE7E7;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+						Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,0,53,0" Width="50"
+						HorizontalAlignment="Right" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
 						Click="NotificationButton_Click"
 						ToolTip.Tip="Friend Requests"/>
 				
-				<Button Grid.Column="2" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
-				<Button Grid.Column="3" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+				<Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
-				<Button Grid.Column="4" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+				<Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
 			</Grid>
@@ -759,7 +760,7 @@
 		
 		<!-- Notification Box for Friend Requests -->
 		<Border Name="NotificationBox" Width="250" Height="180" IsVisible="False"
-				Margin="0,40,90,0"
+				Margin="0,35,90,0"
 				Background="#13161b"
 				BorderThickness="1"
 				BorderBrush="#363a42"
@@ -771,14 +772,15 @@
 						   FontSize="16" 
 						   FontWeight="SemiBold"
 						   Foreground="White"
-						   Margin="0,5,0,10"
+						   Margin="0,10,0,0"
 						   HorizontalAlignment="Center"/>
-				
-				<ScrollViewer Grid.Row="1">
-					<StackPanel Name="requestList" Spacing="5">
-						<!-- Friend requests will be dynamically added here -->
-					</StackPanel>
-				</ScrollViewer>
+				<Border Grid.Row="1" Height="120" Background="#31343b" Margin="8,0,8,0" CornerRadius="5" ClipToBounds="True">
+					<ScrollViewer >
+						<StackPanel Name="requestList" Spacing="5">
+							<!-- Friend requests will be dynamically added here -->
+						</StackPanel>
+					</ScrollViewer>
+				</Border>
 			</Grid>
 		</Border>
 	</Grid>

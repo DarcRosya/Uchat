@@ -48,8 +48,46 @@
             </Style.Animations>
         </Style>
 
-     <!-- contact and groups  -->
+     <!-- title bar  -->
+     <Styles>
+		 <!-- Style for friend request box-->
+         <Style Selector="Grid.friendRequestBox">
+			 <Setter Property="Height" Value="40"/>
+             <Setter Property="Background" Value="#4a4e55"/>
+         </Style>
 
+        <!-- Style for user name -->
+        <Style Selector="TextBlock.friendRequestUsername">
+          <Setter Property="Foreground" Value="#FFFFFF"/>
+          <Setter Property="FontSize" Value="15"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+
+        <!-- Style for accept request button -->
+        <Style Selector="Button.acceptRequestButton">
+          <Setter Property="HorizontalAlignment" Value="Stretch"/>
+          <Setter Property="VerticalContentAlignment" Value="Top"/>
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,8,5,8"/>
+          <Setter Property="Background" Value="#4da64d"/>
+          <Setter Property="FontSize" Value="10"/>
+          <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
+        </Style>
+
+        <!-- Style for accept request button -->
+        <Style Selector="Button.rejectRequestButton">
+          <Setter Property="Background" Value="#bf616a"/>
+          <Setter Property="HorizontalAlignment" Value="Stretch"/>
+          <Setter Property="HorizontalContentAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0,8,5,8"/>
+          <Setter Property="FontSize" Value="10"/>
+        </Style>
+
+     </Styles>
+
+
+     <!-- contact and groups  -->
 
 <!-- Style for whole contact grid -->
      <Styles>

@@ -1,0 +1,57 @@
+[ERROR] [06.12.2025 13:42:22] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:45:04] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:46:08] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:46:23] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:47:05] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:47:30] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:47:40] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:52:42] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 13:53:07] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:33:20] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:37:30] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:37:40] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:38:44] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:38:58] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:39:05] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:39:10] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:39:16] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:39:52] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
+[ERROR] [06.12.2025 14:39:58] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 112
