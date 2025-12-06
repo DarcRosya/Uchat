@@ -27,6 +27,7 @@ public sealed class MessageService : IMessageService
     private readonly MongoDbContext _mongoDbContext;
     private readonly IMessageRepository _messageRepository;
     private readonly ILogger<MessageService> _logger;
+    private readonly IMongoCollection<MongoMessage> _messages;
 
     private const int MaxMessageLength = 5000;
     private const int MaxAttachments = 10;
@@ -41,6 +42,7 @@ public sealed class MessageService : IMessageService
         _mongoDbContext = mongoDbContext;
         _messageRepository = messageRepository;
         _logger = logger;
+        _messages = mongoDbContext.Messages;
     }
 
     public async Task<MessagingResult> SendMessageAsync(MessageCreateDto dto, CancellationToken cancellationToken = default)
@@ -178,6 +180,63 @@ public sealed class MessageService : IMessageService
             IsDeleted = mongoMessage.IsDeleted,
             ReplyTo = replyToDto
         };
+    }
+
+    public async Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(List<int> chatIds)
+    {
+        if (chatIds == null || !chatIds.Any())
+            return new Dictionary<int, MessageDto>();
+        
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.In(m => m.ChatId, chatIds),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
+        );
+
+        var aggregation = _messages.Aggregate()
+        .Match(filter)
+        .SortByDescending(m => m.SentAt)
+        .Group(m => m.ChatId, g => new 
+        { 
+            ChatId = g.Key, 
+            LastMessage = g.First() 
+        });
+
+        var results = await aggregation.ToListAsync();
+
+        var dict = new Dictionary<int, MessageDto>();
+
+        foreach (var item in results)
+        {
+            var msg = item.LastMessage;
+            
+            // Превращаем Mongo-сущность в DTO
+            var dto = new MessageDto
+            {
+                Id = msg.Id,
+                ChatRoomId = msg.ChatId,
+                Content = msg.Content,
+                Type = msg.Type, // "text", "image", etc.
+                SentAt = msg.SentAt,
+                EditedAt = msg.EditedAt,
+                IsDeleted = msg.IsDeleted,
+                ReplyToMessageId = msg.ReplyToMessageId,
+                
+                Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
+
+                Attachments = msg.Attachments?.Select(a => new Shared.DTOs.MessageAttachment
+                {
+                    Id = Guid.NewGuid().ToString(), 
+                    ContentType = a.Type
+                }).ToList() ?? new List<Shared.DTOs.MessageAttachment>(),
+                
+                ReactionsCount = new Dictionary<string, int>(),
+                MyReactions = new List<string>()
+            };
+
+            dict[item.ChatId] = dto;
+        }
+
+        return dict;
     }
 
     public async Task<bool> MessageExistsAsync(string messageId, int chatId)

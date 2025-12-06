@@ -258,89 +258,10 @@ namespace Uchat
             });
             
             // Handler for when someone accepts YOUR friend request (you are the requester)
-            _hubConnection.On<object>("FriendRequestAccepted", (data) =>
-            {
-                Dispatcher.UIThread.Post(async () =>
-                {
-                    try
-                    {
-                        var json = System.Text.Json.JsonSerializer.Serialize(data);
-                        var notification = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json);
-                        
-                        if (notification != null)
-                        {
-                            Console.WriteLine($"{notification.friendDisplayName} принял ваш запрос!");
-                            
-                            // === FIX: РУЧНАЯ ПРОВЕРКА И ДОБАВЛЕНИЕ ===
-                            // Если после загрузки чата нет в списке - добавляем его принудительно
-                            if (notification.chatRoomId > 0 && !_chatContacts.ContainsKey(notification.chatRoomId))
-                            {
-                                Logger.Log($"Chat {notification.chatRoomId} missing after reload. Adding manually.");
-                                
-                                var newContact = new MainWindow.Chat.Contact(
-                                    notification.friendDisplayName, 
-                                    "New Friend", 
-                                    0, 
-                                    this, 
-                                    notification.chatRoomId
-                                );
-                                
-                                _chatContacts[notification.chatRoomId] = newContact;
-                                contactsStackPanel.Children.Insert(0, newContact.Box);
-                            }
-                            // =========================================
-
-                            // Открываем чат
-                            if (notification.chatRoomId > 0)
-                            {
-                                await OpenChatAsync(notification.chatRoomId);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error handling FriendRequestAccepted: {ex.Message}");
-                    }
-                });
-            });
+            _hubConnection.On<object>("FriendRequestAccepted", HandleNewFriendChat);
             
             // Handler for when YOU accept someone's friend request (you are the accepter)
-            _hubConnection.On<object>("FriendAdded", (data) =>
-            {
-                Dispatcher.UIThread.Post(async () =>
-                {
-                    try
-                    {
-                        var json = System.Text.Json.JsonSerializer.Serialize(data);
-                        var notification = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json);
-                        
-                        if (notification != null)
-                        {
-                            Console.WriteLine($"Now you are friends with {notification.friendDisplayName}!");
-                            
-                            if (notification.chatRoomId > 0 && !_chatContacts.ContainsKey(notification.chatRoomId))
-                            {
-                                Logger.Log($"Chat {notification.chatRoomId} missing after reload. Adding manually.");
-                                
-                                var newContact = new MainWindow.Chat.Contact(
-                                    notification.friendDisplayName, 
-                                    "New Friend", 
-                                    0, 
-                                    this, 
-                                    notification.chatRoomId
-                                );
-                                
-                                _chatContacts[notification.chatRoomId] = newContact;
-                                contactsStackPanel.Children.Insert(0, newContact.Box);
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error handling FriendAdded: {ex.Message}");
-                    }
-                });
-            });
+            _hubConnection.On<object>("FriendAdded", HandleNewFriendChat);
             
             _hubConnection.On<int>("FriendRequestRejected", (contactId) =>
             {
@@ -356,7 +277,6 @@ namespace Uchat
                 Dispatcher.UIThread.Post(() =>
                 {
                     Logger.Log($"Friend removed, chat ID: {chatRoomId}");
-                    // FIX 4: Use RemoveChatFromUI method
                     RemoveChatFromUI(chatRoomId);
                 });
             });
@@ -571,101 +491,101 @@ namespace Uchat
             }
         }
 
-private async Task LoadMoreHistoryAsync()
-{
-    if (!_currentChatId.HasValue || !_hasMoreMessages || _isLoadingHistory || !_oldestMessageDate.HasValue)
-    {
-        return;
-    }
-
-    _isLoadingHistory = true;
-
-    try
-    {
-        var result = await _messageApiService.GetMessagesAsync(
-            _currentChatId.Value, 
-            limit: 30, 
-            before: _oldestMessageDate.Value
-        );
-
-        if (result == null || result.Messages.Count == 0)
+        private async Task LoadMoreHistoryAsync()
         {
-            _hasMoreMessages = false;
-            return;
-        }
-
-        await Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            var scrollViewer = ChatScrollViewer;
-
-            double oldExtentHeight = scrollViewer.Extent.Height;
-            double oldOffset = scrollViewer.Offset.Y;
-            
-            var messages = result.Messages;
-            messages.Reverse();
-
-            _hasMoreMessages = result.Pagination.HasMore;
-            _oldestMessageDate = messages[0].SentAt;
-
-            var newControls = new List<Control>();
-
-            for (int i = messages.Count - 1; i >= 0; i--)
+            if (!_currentChatId.HasValue || !_hasMoreMessages || _isLoadingHistory || !_oldestMessageDate.HasValue)
             {
-                var msg = messages[i];
+                return;
+            }
 
-                var timestamp = msg.SentAt.ToLocalTime().ToString("HH:mm");
-                bool isGuest = (msg.Sender.Username != _currentUsername);
-                bool hasReply = msg.ReplyTo != null;
-                string? replyContent = msg.ReplyTo?.Content;
+            _isLoadingHistory = true;
 
-                var chatMessage = new MainWindow.Chat.Message(
-                    hasReply, msg.Content, timestamp, isGuest, replyContent,
-                    msg.Id, msg.EditedAt.HasValue, msg.ReplyToMessageId,
-                    msg.Sender.DisplayName ?? msg.Sender.Username
+            try
+            {
+                var result = await _messageApiService.GetMessagesAsync(
+                    _currentChatId.Value, 
+                    limit: 30, 
+                    before: _oldestMessageDate.Value
                 );
 
-                _messageCache[msg.Id] = chatMessage;
-
-                var grid = new Grid
+                if (result == null || result.Messages.Count == 0)
                 {
-                    ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) }
-                };
+                    _hasMoreMessages = false;
+                    return;
+                }
 
-                Grid.SetColumn(chatMessage.Bubble, 0);
-                grid.Children.Add(chatMessage.Bubble);
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    var scrollViewer = ChatScrollViewer;
 
-                var messageContextMenu = new MainWindow.Chat.MessageContextMenu(this, chatMessage, grid);
-                chatMessage.Bubble.ContextMenu = messageContextMenu.Result();
-                // -------------------------------------
-                
-                newControls.Add(grid);
+                    double oldExtentHeight = scrollViewer.Extent.Height;
+                    double oldOffset = scrollViewer.Offset.Y;
+                    
+                    var messages = result.Messages;
+                    messages.Reverse();
+
+                    _hasMoreMessages = result.Pagination.HasMore;
+                    _oldestMessageDate = messages[0].SentAt;
+
+                    var newControls = new List<Control>();
+
+                    for (int i = messages.Count - 1; i >= 0; i--)
+                    {
+                        var msg = messages[i];
+
+                        var timestamp = msg.SentAt.ToLocalTime().ToString("HH:mm");
+                        bool isGuest = (msg.Sender.Username != _currentUsername);
+                        bool hasReply = msg.ReplyTo != null;
+                        string? replyContent = msg.ReplyTo?.Content;
+
+                        var chatMessage = new MainWindow.Chat.Message(
+                            hasReply, msg.Content, timestamp, isGuest, replyContent,
+                            msg.Id, msg.EditedAt.HasValue, msg.ReplyToMessageId,
+                            msg.Sender.DisplayName ?? msg.Sender.Username
+                        );
+
+                        _messageCache[msg.Id] = chatMessage;
+
+                        var grid = new Grid
+                        {
+                            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) }
+                        };
+
+                        Grid.SetColumn(chatMessage.Bubble, 0);
+                        grid.Children.Add(chatMessage.Bubble);
+
+                        var messageContextMenu = new MainWindow.Chat.MessageContextMenu(this, chatMessage, grid);
+                        chatMessage.Bubble.ContextMenu = messageContextMenu.Result();
+                        // -------------------------------------
+                        
+                        newControls.Add(grid);
+                    }
+
+                    ChatMessagesPanel.Children.InsertRange(0, newControls);
+
+                    Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
+
+                    double newExtentHeight = scrollViewer.Extent.Height;
+                    
+                    double heightDifference = newExtentHeight - oldExtentHeight;
+
+                    if (heightDifference > 0)
+                    {
+                        scrollViewer.Offset = new Vector(0, oldOffset + heightDifference);
+                    }
+                });
             }
-
-            ChatMessagesPanel.Children.InsertRange(0, newControls);
-
-            Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
-
-            double newExtentHeight = scrollViewer.Extent.Height;
-            
-            double heightDifference = newExtentHeight - oldExtentHeight;
-
-            if (heightDifference > 0)
+            catch (Exception ex)
             {
-                scrollViewer.Offset = new Vector(0, oldOffset + heightDifference);
+                System.Diagnostics.Debug.WriteLine($"Error loading history: {ex.Message}");
             }
-        });
-    }
-    catch (Exception ex)
-    {
-        System.Diagnostics.Debug.WriteLine($"Error loading history: {ex.Message}");
-    }
-    finally
-    {
-        // Небольшая задержка, чтобы UI не дергался
-        await Task.Delay(200); 
-        _isLoadingHistory = false;
-    }
-}
+            finally
+            {
+                // Небольшая задержка, чтобы UI не дергался
+                await Task.Delay(200); 
+                _isLoadingHistory = false;
+            }
+        }
 
         public void OnChatScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
@@ -684,6 +604,47 @@ private async Task LoadMoreHistoryAsync()
             {
                 _ = LoadMoreHistoryAsync();
             }
+        }
+
+        private void HandleNewFriendChat(object data)
+        {
+            Dispatcher.UIThread.Post(async () =>
+            {
+                try
+                {
+                    var json = System.Text.Json.JsonSerializer.Serialize(data);
+                    var notification = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json);
+
+                    if (notification != null && notification.chatRoomId > 0)
+                    {
+                        if (!_chatContacts.ContainsKey(notification.chatRoomId))
+                        {
+                            var newContact = new MainWindow.Chat.Contact(
+                                notification.friendDisplayName, 
+                                "New Friend!",
+                                0, 
+                                this, 
+                                notification.chatRoomId
+                            );
+                            
+                            _chatContacts[notification.chatRoomId] = newContact;
+                            contactsStackPanel.Children.Insert(0, newContact.Box);
+                        }
+                        else 
+                        {
+                            var existingContact = _chatContacts[notification.chatRoomId];
+                            existingContact.UpdateLastMessage("New Friend!"); 
+
+                            contactsStackPanel.Children.Remove(existingContact.Box);
+                            contactsStackPanel.Children.Insert(0, existingContact.Box);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error handling New Friend Chat: {ex.Message}");
+                }
+            });
         }
 
         private void DisplayMessage(MessageDto message)

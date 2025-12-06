@@ -97,8 +97,6 @@ namespace Uchat
 						{
 							if (friendRequestGrid.Parent is StackPanel parent)
 								parent.Children.Remove(friendRequestGrid);
-							
-							await mainWindow.LoadUserChatsAsync();
 						}
 					}
 					catch (Exception ex)
