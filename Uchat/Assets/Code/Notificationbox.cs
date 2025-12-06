@@ -37,10 +37,6 @@ namespace Uchat
 
 					// Настройка сетки
 					friendRequestGrid.Classes.Add("friendRequestBox");
-					friendRequestGrid.Height = 45; // Явно задаем высоту!
-					friendRequestGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
-					friendRequestGrid.Background = Brush.Parse("#3b4252"); // Фон плашки
-					friendRequestGrid.Margin = new Thickness(0, 0, 0, 5); // Отступ снизу
 
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Star)));
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(40)));
