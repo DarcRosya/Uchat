@@ -35,46 +35,34 @@ namespace Uchat
 					contactId = newContactId;
 					mainWindow = window;
 
-					// Настройка сетки
 					friendRequestGrid.Classes.Add("friendRequestBox");
-					friendRequestGrid.Height = 45; // Явно задаем высоту!
-					friendRequestGrid.HorizontalAlignment = HorizontalAlignment.Stretch;
-					friendRequestGrid.Background = Brush.Parse("#3b4252"); // Фон плашки
-					friendRequestGrid.Margin = new Thickness(0, 0, 0, 5); // Отступ снизу
-
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Star)));
-					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(40)));
-					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(40)));
+					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(55)));
+					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(55)));
 
-					// Имя пользователя
 					usernameTextBlock.Classes.Add("friendRequestUsername");
 					usernameTextBlock.Text = username;
-					usernameTextBlock.VerticalAlignment = VerticalAlignment.Center;
-					usernameTextBlock.Margin = new Thickness(10, 0, 0, 0);
-					usernameTextBlock.Foreground = Brushes.White; // Явно задаем белый цвет!
-					usernameTextBlock.FontSize = 14;
 
-					// Кнопка Принять (+)
 					acceptRequestButton.Classes.Add("acceptRequestButton");
-					acceptRequestButton.Content = "✔"; // Галочка выглядит лучше плюса
-					acceptRequestButton.Background = Brush.Parse("#a3be8c"); // Зеленый
-					acceptRequestButton.Foreground = Brushes.White;
-					acceptRequestButton.Margin = new Thickness(2);
-					acceptRequestButton.HorizontalContentAlignment = HorizontalAlignment.Center;
-					acceptRequestButton.VerticalContentAlignment = VerticalAlignment.Center;
-					acceptRequestButton.Click += AcceptRequestButton_Click;
+                    var icon = new Uri("avares://Uchat/Assets/Icons/check.png");
+					acceptRequestButton.Content = new Image
+					{
+                        Source = new Bitmap(AssetLoader.Open(icon)),
+                        Width = 16,
+                        Height = 14
+                    };
+                    acceptRequestButton.Click += AcceptRequestButton_Click;
 
-					// Кнопка Отклонить (-)
 					rejectRequestButton.Classes.Add("rejectRequestButton");
-					rejectRequestButton.Content = "✖";
-					rejectRequestButton.Background = Brush.Parse("#bf616a"); // Красный
-					rejectRequestButton.Foreground = Brushes.White;
-					rejectRequestButton.Margin = new Thickness(2);
-					rejectRequestButton.HorizontalContentAlignment = HorizontalAlignment.Center;
-					rejectRequestButton.VerticalContentAlignment = VerticalAlignment.Center;
+					icon = new Uri("avares://Uchat/Assets/Icons/cross.png");
+					rejectRequestButton.Content = new Image
+					{
+						Source = new Bitmap(AssetLoader.Open(icon)),
+						Width = 12,
+						Height = 12
+					};
 					rejectRequestButton.Click += RejectRequestButton_Click;
 
-					// Добавляем в Grid
 					friendRequestGrid.Children.Add(usernameTextBlock);
 					friendRequestGrid.Children.Add(acceptRequestButton);
 					friendRequestGrid.Children.Add(rejectRequestButton);
@@ -95,8 +83,9 @@ namespace Uchat
 						
 						if (success)
 						{
-							if (friendRequestGrid.Parent is StackPanel parent)
-								parent.Children.Remove(friendRequestGrid);
+                            mainWindow.requestList.Children.Remove(friendRequestGrid);
+							
+							await mainWindow.LoadUserChatsAsync();
 						}
 					}
 					catch (Exception ex)
@@ -111,11 +100,8 @@ namespace Uchat
 					{
 						await mainWindow._contactApiService.RejectFriendRequestAsync(contactId);
 						
-						// Remove this request from the list
-						if (friendRequestGrid.Parent is StackPanel parent)
-						{
-							parent.Children.Remove(friendRequestGrid);
-						}
+                        mainWindow.requestList.Children.Remove(friendRequestGrid);
+						
 					}
 					catch (Exception ex)
 					{
