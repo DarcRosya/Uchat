@@ -8,6 +8,7 @@ namespace Uchat.Server
         public static void RunDetached(string[] args)
         {
             var fileName = Process.GetCurrentProcess().MainModule!.FileName!;
+            var workingDir = Path.GetDirectoryName(fileName);
 
             var arguments = string.Join(" ", args.Where(a => a != "-start"));
 
@@ -17,15 +18,28 @@ namespace Uchat.Server
                 Arguments = arguments, // new args
                 UseShellExecute = false,
                 CreateNoWindow = true, // true, if window isn't needed
-                WindowStyle = ProcessWindowStyle.Normal
+                WindowStyle = ProcessWindowStyle.Normal,
+
+                WorkingDirectory = workingDir
             };
 
-            Console.WriteLine($"Starting detached process: {fileName} {arguments}");
+            Logger.Write($"[Daemon] Starting detached process: {fileName} {arguments}");
 
-            var process = Process.Start(startInfo);
-            if (process != null)
+            try
             {
-                Console.WriteLine($"Started process with ID: {process.Id}");
+                var process = Process.Start(startInfo);
+                if (process != null)
+                {
+                    Logger.Write($"[Daemon] Started process with ID: {process.Id}");
+                }
+                else
+                {
+                    Logger.Write($"[Daemon] ERROR: Process.Start returned null.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Write($"[Daemon] CRITICAL ERROR starting process: {ex.Message}");
             }
             Environment.Exit(0);
         }
@@ -41,11 +55,11 @@ namespace Uchat.Server
                 try
                 {
                     proc.Kill(true);
-                    Console.WriteLine($"Killed process {proc.Id}");
+                    Logger.Write($"[Daemon] Killed process {proc.Id}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to kill process {proc.Id}: {ex.Message}");
+                    Logger.Write($"[Daemon] Failed to kill process {proc.Id}: {ex.Message}");
                 }
             }
         }

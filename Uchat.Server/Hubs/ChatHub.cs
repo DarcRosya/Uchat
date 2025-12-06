@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using System.Diagnostics;
 using System.Security.Claims;
 using Uchat.Database.LiteDB;
 using Uchat.Database.Repositories.Interfaces;
@@ -83,6 +84,8 @@ public class ChatHub : Hub
 
         // Отправить сообщение всем в группе (включая replyContent и messageId)
         await Clients.Group(chatId).SendAsync("ReceiveMessage", chatId, username, message, replyContent, messageId);
+
+        Logger.Write($"[Message]: User {user} in chat {chatId} sent message: {message}");
     }
     
     public async Task<List<object>> GetChatHistory(string chatId, int limit = 50)
