@@ -11,6 +11,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Uchat.Services;
@@ -52,21 +53,23 @@ namespace Uchat
 
         private void MainWindow_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Back)
-            {
-                if (!string.IsNullOrEmpty(chatTextBox.Text))
-                {
-                    chatTextBox.Text = chatTextBox.Text.Substring(0, chatTextBox.Text.Length - 1);
-                }
-            }
-            else if (e.Key == Key.Enter)
-            {
-                //SendMessage();
-            }
-            else
-            {
-                chatTextBox.Focus();
-            }
+            // if (e.Key == Key.Enter)
+            // {
+            //     //SendMessage();
+            // }
+            // else if (chatTextBoxForReply.IsVisible)
+            // {
+            //     chatTextBoxForReply.Focus();
+            //     chatTextBoxForReply.SelectionStart = chatTextBoxForReply.Text.Length;
+            //     chatTextBoxForReply.SelectionEnd = chatTextBoxForReply.Text.Length;
+            // }
+            // else if (chatTextBoxForEdit.IsVisible)
+            // {
+            //     chatTextBoxForEdit.Focus();
+            //     chatTextBoxForEdit.SelectionStart = chatTextBoxForEdit.Text.Length;
+            //     chatTextBoxForEdit.SelectionEnd = chatTextBoxForEdit.Text.Length;
+            // }
+            // else chatTextBox.Focus();
         }
 
         // Login Form Navigation Methods
