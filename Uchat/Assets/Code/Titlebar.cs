@@ -42,14 +42,6 @@ namespace Uchat
 			passwordTextBox.Text = string.Empty;
         }
 
-        private async void NotificationButton_Click(object sender, RoutedEventArgs e)
-		{
-			NotificationBox.IsVisible = !NotificationBox.IsVisible;
-			
-			if (NotificationBox.IsVisible)
-				await LoadPendingFriendRequestsAsync();
-        }
-
         private void MinimizeButton_Click(object? sender, RoutedEventArgs e)
 		{
 			WindowState = WindowState.Minimized;

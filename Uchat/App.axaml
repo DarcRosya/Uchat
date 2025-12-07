@@ -75,7 +75,7 @@
           <Setter Property="FontFamily" Value="Segoe Fluent Icons"/>
         </Style>
 
-        <!-- Style for accept request button -->
+        <!-- Style for reject request button -->
         <Style Selector="Button.rejectRequestButton">
           <Setter Property="Background" Value="#bf616a"/>
           <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -124,7 +124,7 @@
         <!-- Last message -->
         <Style Selector="TextBlock.lastMessage">
           <Setter Property="Foreground" Value="#999999"/>
-          <Setter Property="FontSize" Value="10"/>
+          <Setter Property="FontSize" Value="12"/>
           <Setter Property="VerticalAlignment" Value="Bottom"/>
           <Setter Property="Margin" Value="2,3,0,0"/>
         </Style>

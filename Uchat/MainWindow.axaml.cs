@@ -26,9 +26,12 @@ namespace Uchat
         {
             InitializeComponent();
             _authService = new AuthApiService();
-            
+
             // Попытка восстановить сессию при запуске
             Loaded += MainWindow_Loaded;
+
+
+            chatLayout.LayoutUpdated += ChatLayout_LayoutUpdated;
         }
 
         private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -49,6 +52,11 @@ namespace Uchat
                 Logger.Log("No valid session, showing login form");
             }
             */
+        }
+
+        private void ChatLayout_LayoutUpdated(object? sender, EventArgs e)
+        {
+            NotificationBox.Margin = new Thickness(chatSplitter.Bounds.X - 180, 0, 0, 55);
         }
 
         private void MainWindow_KeyDown(object? sender, KeyEventArgs e)
@@ -220,7 +228,7 @@ namespace Uchat
                     invalidDataInHelloAgain.IsVisible = false;
 
                     // Switch to chat view
-                    SwitchToChatView();
+                    SwitchToChatView(username);
                 }
             }
             catch (Exception ex)
@@ -294,7 +302,7 @@ namespace Uchat
                     invalidDataInCreateAccount.IsVisible = false;
 
                     // Switch to chat view
-                    SwitchToChatView();
+                    SwitchToChatView(username);
                 }
             }
             catch (Exception ex)
@@ -304,11 +312,12 @@ namespace Uchat
             }
         }
 
-        private void SwitchToChatView()
+        private void SwitchToChatView(string username)
         {
             // Hide login program, show main chat program
             LoginProgram.IsVisible = false;
             MainProgram.IsVisible = true;
+            userNameTextBlock.Text = username;
 
             // Initialize chat components with current session
             InitializeChatComponents();

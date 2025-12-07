@@ -432,14 +432,7 @@
 			<!-- Title Bar -->
 			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
 				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
-				
-				<!-- Notification Button -->
-				<Button Grid.Column="0" Name="notificationButton" Content="&#xE7E7;" FontFamily="Segoe MDL2 Assets" FontSize="14"
-						Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,0,53,0" Width="50"
-						HorizontalAlignment="Right" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-						Click="NotificationButton_Click"
-						ToolTip.Tip="Friend Requests"/>
-				
+						
 				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
@@ -452,7 +445,7 @@
 			</Grid>
 
 			<!-- Chat Layout -->
-			<Grid Grid.Row="1" RowDefinitions="40, *">
+			<Grid Name="chatLayout" Grid.Row="1" RowDefinitions="40,*">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.4*" MinWidth="300"/>
 					<ColumnDefinition Width="0"/>
@@ -461,23 +454,23 @@
 				</Grid.ColumnDefinitions>
 
 				<!-- Left Search -->
-				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="40,*,40">
-					<Button Grid.Column="0" Background="Transparent" Foreground="White"
-							CornerRadius="5">
-						<Image Source="avares://Uchat/Assets/Icons/options.png" 
-							   VerticalAlignment="Center"/>
-					</Button>
-
-					<Border Grid.Column="1" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
-						<TextBox MinHeight="100" Watermark="Search" Background="Transparent" BorderThickness="0"
-								 Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Center"
+				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,40">
+					<Border Grid.Column="0" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
+						<TextBox Name="searchTextBox" MinHeight="100" Watermark="Find friend" Background="Transparent" BorderThickness="0"
+								 Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Left"
 								 VerticalContentAlignment="Center"/>
 					</Border>
 
-					<Button Grid.Column="2" Background="Transparent" Foreground="White"
-							CornerRadius="5" Margin="0,5,5,5"
+					<Button Grid.Column="0" Background="Transparent" Foreground="White"
+							CornerRadius="5" Margin="0,5,5,5" HorizontalAlignment="Right"
 							Click="addFriend_Click">
-						<Image Source="avares://Uchat/Assets/Icons/add_friend.png"/>
+						<Image Source="avares://Uchat/Assets/Icons/search.png"/>
+					</Button>
+
+					<Button Name="createGroupButton" Grid.Column="2" Background="Transparent" Foreground="White"
+							CornerRadius="5" Click="CreateGroupButton_Click">
+						<Image Source="avares://Uchat/Assets/Icons/create_group.png" 
+							   VerticalAlignment="Center"/>
 					</Button>
 
 				</Grid>
@@ -492,7 +485,7 @@
 				</Grid>
 
 				<!-- Contacts Left Menu -->
-				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*" Background="White">
+				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*, 50" Background="#20242d">
 					<Grid Background="#3e4042" ColumnDefinitions="*,*">
 						<Button Name="ContactsButton" Content="Contacts" CornerRadius="0" Background="#5e81ac" Foreground="White"
 							    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
@@ -506,9 +499,38 @@
 						<StackPanel Name="contactsStackPanel" Background="#20242d">
 						</StackPanel>
 					</ScrollViewer>
+
+					<!-- Profile Box Border -->
+					<Border Grid.Row="2" Background="#0d0e12">
+						<Grid Background="Transparent" ColumnDefinitions="50,*,40,40">
+								<Image Grid.Column="0" HorizontalAlignment="Left" Source="avares://Uchat/Assets/Icons/avatar.png" VerticalAlignment="Center"/>
+								<Border Grid.Column="0" Margin="0,0,1,1" Width="20" Height="20"
+										BorderBrush="#0d0e12" BorderThickness="4" CornerRadius="16"
+										HorizontalAlignment="Right" VerticalAlignment="Bottom">
+									<Ellipse Fill="Green"/> 
+								</Border>
+
+								<StackPanel Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">						
+									<TextBlock Foreground="Green" FontSize="12" Margin="0,5,0,0">Online</TextBlock>
+									<TextBlock Name="userNameTextBlock" FontSize="18" Margin="0,3,0,0">Vetal</TextBlock>
+								</StackPanel>
+								<Button Name="notificationButton" Grid.Column="2" Content="&#xE7E7;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+										Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,3,0,3" Width="50"
+										HorizontalAlignment="Right" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+										Click="NotificationButton_Click"
+										ToolTip.Tip="Friend Requests">
+								</Button>
+								<Button Grid.Column="3" Background="Transparent" Padding="10"
+										VerticalContentAlignment="Center" VerticalAlignment="Center"
+										Click="SettingsButton_Click" ToolTip.Tip="Settings">
+									<Image Source="avares://Uchat/Assets/Icons/gear.png"></Image>
+								</Button>
+							    
+						</Grid>
+					</Border>
 				</Grid>
 
-				<GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
+				<GridSplitter Name="chatSplitter" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"
 							  Background="Transparent"
 							  ResizeDirection="Columns"
 							  ResizeBehavior="PreviousAndNext"
@@ -688,92 +710,21 @@
 			</Grid>
 		</Grid>
 
-        <!-- Модальне вікно -->
-        <Grid Name="AddContactOverlay"
-                Background="#80000000"
-                IsVisible="False">
-			<Border CornerRadius="5" Background="#333A44"
-					Width="300" Height="150">
-            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                   Background="Transparent">
-
-				<TextBlock Name="AddContactTitle" Margin="0 7 0 10" FontWeight="SemiBold" HorizontalAlignment="Center"
-					FontSize="20"
-					Foreground="White"
-				>NEW CONTACT</TextBlock>
-
-                <!-- Текстовий блок для введення -->
-				<DockPanel>
-					<Image Name="AddContactIcon" Width="20" Height="20" VerticalAlignment="Bottom" Margin="7 0 0 21"
-							Source="avares://Uchat/Assets/Icons/person.png">
-					</Image>
-
-					<Border 
-						Margin="0 10 0 10"
-						BorderThickness="0 0 0 4"
-						Width="250"
-						BorderBrush="Gray"
-						CornerRadius="5"
-						Background="#404853">
-						<TextBox
-						Name="AddContactTextBox"
-						Classes="DataBox"
-						Watermark="Username"
-						/>
-					</Border>
-					
-					<!-- Error message for friend request -->
-					<TextBlock 
-						Name="AddContactErrorText"
-						Foreground="#bf616a"
-						FontSize="12"
-						TextAlignment="Center"
-						IsVisible="False"
-						Margin="0 5 0 0"/>
-				</DockPanel>
-
-                <!-- Кнопки Cancel та Enter -->
-
-				<DockPanel Margin="10 7 11 0">
-					<Button Name="CancelButton"
-							HorizontalAlignment="Left"
-							Height="35"
-							Background="#bf616a"
-							Click="CancelButton_Click" Classes="back"
-							>
-						<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
-					</Button>
-                    <Button HorizontalAlignment="Right"
-							Background="#5e81ac"
-							Height="35"
-							Width="190"
-							Name="AddButton" 
-							Content="Add"
-							Click="AddButton_Click"
-							Classes="addContactOrGroup"
-							/>
-				</DockPanel>
-
-            </StackPanel>
-			</Border>
-        </Grid>
-		
 		<!-- Notification Box for Friend Requests -->
-		<Border Name="NotificationBox" Width="250" Height="180" IsVisible="False"
-				Margin="0,35,90,0"
+		<Border Grid.Row="1" Grid.Column="0" Name="NotificationBox" Width="250" Height="180" IsVisible="False"
 				Background="#13161b"
 				BorderThickness="1"
 				BorderBrush="#363a42"
 				CornerRadius="5"
-				HorizontalAlignment="Right"
-				VerticalAlignment="Top">
+				HorizontalAlignment="Left"
+				VerticalAlignment="Bottom">
 			<Grid RowDefinitions="Auto,*">
 				<TextBlock Grid.Row="0" Text="Friend Requests" 
-						   FontSize="16" 
-						   FontWeight="SemiBold"
-						   Foreground="White"
-						   Margin="0,10,0,0"
-						   HorizontalAlignment="Center"/>
+							FontSize="16" 
+							FontWeight="SemiBold"
+							Foreground="White"
+							Margin="0,10,0,0"
+							HorizontalAlignment="Center"/>
 				<Border Grid.Row="1" Height="120" Background="#31343b" Margin="8,0,8,0" CornerRadius="5" ClipToBounds="True">
 					<ScrollViewer >
 						<StackPanel Name="requestList" Spacing="5">

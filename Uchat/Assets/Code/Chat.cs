@@ -22,88 +22,52 @@ namespace Uchat
 		public string replyToMessageContent = "";
 		public string replyToMessageId = ""; // ID сообщения, на которое отвечают
 
-        private void addFriend_Click(object? sender, RoutedEventArgs e)
+		private async void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
-            // Update UI based on which tab is active
-            if (Chat.GroupsActive)
-            {
-                AddContactTitle.Text = "CREATE GROUP";
-                AddContactTextBox.Watermark = "Group name";
-                AddContactIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/group_contact.png")));
-            }
-            else
-            {
-                AddContactTitle.Text = "NEW CONTACT";
-                AddContactTextBox.Watermark = "Username";
-                AddContactIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/person.png")));
-            }
-            
-            AddContactOverlay.IsVisible = true;
+			if (String.IsNullOrEmpty(searchTextBox.Text)) return;
+
+			string input = searchTextBox.Text;
+
+			if (Chat.GroupsActive)
+			{
+				// Create a new group
+				var request = new Shared.DTOs.CreateChatRequestDto
+				{
+					Name = input,
+					Type = "group",
+					Description = null
+				};
+				var newChat = await _chatApiService.CreateChatAsync(request);
+
+				if (newChat != null)
+				{
+					// Add group to UI
+					await LoadUserChatsAsync();
+
+					// Open the new chat
+					await OpenChatAsync(newChat.Id);
+				}
+			}
+			else
+			{
+				// Send friend request
+				var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
+
+				if (!success)
+				{
+					// Show error message
+					//AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
+					//AddContactErrorText.IsVisible = true;
+					return; // Don't close overlay
+				}
+
+				//// Success - hide error and reload
+				//AddContactErrorText.IsVisible = false;
+			}
+
+			// Clear textbox and hide overlay
+			searchTextBox.Text = string.Empty;
 		}
-
-        private void CancelButton_Click(object? sender, RoutedEventArgs e)
-		{
-            AddContactTextBox.Text = "";
-            AddContactOverlay.IsVisible = false;
-        }
-
-        private async void AddButton_Click(object sender, RoutedEventArgs e)
-        {
-            string input = AddContactTextBox.Text ?? string.Empty;
-            
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                return;
-            }
-            
-            try
-            {
-                if (Chat.GroupsActive)
-                {
-                    // Create a new group
-                    var request = new Shared.DTOs.CreateChatRequestDto
-                    {
-                        Name = input,
-                        Type = "group",
-                        Description = null
-                    };
-                    var newChat = await _chatApiService.CreateChatAsync(request);
-                    
-                    if (newChat != null)
-                    {
-                        // Add group to UI
-                        await LoadUserChatsAsync();
-                        
-                        // Open the new chat
-                        await OpenChatAsync(newChat.Id);
-                    }
-                }
-                else
-                {
-                    // Send friend request
-                    var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
-                    
-                    if (!success)
-                    {
-                        // Show error message
-                        AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
-                        AddContactErrorText.IsVisible = true;
-                        return; // Don't close overlay
-                    }
-                    
-                    // Success - hide error and reload
-                    AddContactErrorText.IsVisible = false;
-                }
-                
-                // Clear textbox and hide overlay
-                AddContactTextBox.Text = string.Empty;
-                AddContactOverlay.IsVisible = false;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error: {ex.Message}");
-            }
-        }
 
         private async Task LoadPendingFriendRequestsAsync()
         {
@@ -146,9 +110,15 @@ namespace Uchat
             }
         }
 
+		//создание групи туууууут
+		private async void CreateGroupButton_Click(object sender, RoutedEventArgs e)
+		{
+        }
+
         private void SwitchToGroups_Click(object? sender, RoutedEventArgs e)
 		{
             Chat.GroupsActive = true;
+            searchTextBox.Watermark = "Find group";
             GroupsButton.Background = Brush.Parse("#5da3a5");
             ContactsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.Normal;
@@ -160,7 +130,8 @@ namespace Uchat
         private void SwitchToContacts_Click(object? sender, RoutedEventArgs e)
 		{
 			Chat.GroupsActive = false;
-			ContactsButton.Background = Brush.Parse("#5e81ac");
+            searchTextBox.Watermark = "Find friend";
+            ContactsButton.Background = Brush.Parse("#5e81ac");
             GroupsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.SemiBold;
             GroupsButton.FontWeight = FontWeight.Normal;

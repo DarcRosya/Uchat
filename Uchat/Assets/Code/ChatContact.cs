@@ -1,10 +1,11 @@
-using Avalonia.Interactivity;
-using System.Collections.Generic;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 
 namespace Uchat
@@ -36,14 +37,14 @@ namespace Uchat
 				private Border avatarIconBorder = new Border();
                 private Avalonia.Controls.Image avatarIcon = new Avalonia.Controls.Image();
 				private StackPanel contactStackPanel = new StackPanel();
-				private TextBlock contactNameTextBlock = new TextBlock();
+                private StackPanel contactInfoStackPanel = new StackPanel();
+                private TextBlock contactNameTextBlock = new TextBlock();
 				private TextBlock lastMessageTextBlock = new TextBlock();
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
 				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0)
 				{
 					this.mainWindow = window;
-					isGroupChat = Chat.GroupsActive;
                     chatName = newChatName;
 					lastMessage = newLastMessage;
 					unreadMessages = newUnreadMessages;
@@ -59,24 +60,16 @@ namespace Uchat
 
                     avatarIconBorder.Classes.Add("avatarIconBorder");
 					avatarIconBorder.Child = avatarIcon;
+                    avatarIconBorder.Background= new SolidColorBrush(Colors.Transparent);
 
-                    string iconPath;
-                    if (GroupsActive)
-                    {
-                        iconPath = "avares://Uchat/Assets/Icons/group_contact.png";
-						avatarIconBorder.Padding = new Avalonia.Thickness(0);
-                    }
-                    else
-                    {
-                        iconPath = "avares://Uchat/Assets/Icons/avatar.png";
-                        avatarIconBorder.Background= new SolidColorBrush(Colors.Transparent);
-                    }
-
-                    var imageURL = new Uri(iconPath);
+                    var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
 					avatarIcon.Classes.Add("avatarIcon");
 					avatarIcon.Source = new Bitmap(AssetLoader.Open(imageURL));
 
-					contactNameTextBlock.Classes.Add("contactName");
+					contactInfoStackPanel.Orientation = Avalonia.Layout.Orientation.Horizontal;
+
+
+                    contactNameTextBlock.Classes.Add("contactName");
 					contactNameTextBlock.Text = chatName;
 
 					lastMessageTextBlock.Classes.Add("lastMessage");
@@ -107,7 +100,9 @@ namespace Uchat
 
 				public Grid Box { get { return contactGrid; } }
 				public IBrush Background { get { return contactGrid.Background; } set { contactGrid.Background = value; } }
-				public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
+
+                public IBrush LastMessageForeground { get { return lastMessageTextBlock.Foreground; } set { lastMessageTextBlock.Foreground = value; } }
+                public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; } }
 				public int ChatId { get { return chatId; } set { chatId = value; } }
 				public string ChatName { get { return chatName; } }
@@ -135,14 +130,17 @@ namespace Uchat
 						return; // Right click will show context menu automatically
 					}
 					
-					string color = (GroupsActive == true) ? "#5da3a5" : "#5e81ac";
+					string color = (GroupsActive == true) ? "#4a8284" : "#4b678a";
 
                     foreach (Contact contact in Chat.chatsList)
 					{
 						contact.Background = Brush.Parse("#171a20");
+						contact.LastMessageForeground = Brush.Parse("#999999");
 					}
 					this.Background = Brush.Parse(color);
-					
+                    this.LastMessageForeground = Brush.Parse("#FFFFFF");
+
+
 					if (chatId > 0)
 					{
 						_ = mainWindow.OpenChatAsync(chatId);
@@ -150,7 +148,18 @@ namespace Uchat
 				}
             }
 
-			public class ContactContextMenu
+            public class Group : Contact
+			{
+				private List<string> membersName;
+				public Group(string groupName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0)
+					: base(groupName, newLastMessage, newUnreadMessages, window, newChatId)
+				{
+
+				}
+
+			}
+
+            public class ContactContextMenu
 			{
 				private ContextMenu contextMenu = new ContextMenu();
 				private Contact contact;
@@ -231,6 +240,18 @@ namespace Uchat
 					}
 				}
 			}
+        }
+        private async void NotificationButton_Click(object sender, RoutedEventArgs e)
+        {
+            NotificationBox.IsVisible = !NotificationBox.IsVisible;
+
+            if (NotificationBox.IsVisible)
+                await LoadPendingFriendRequestsAsync();
+        }
+
+		private void SettingsButton_Click(object sender, RoutedEventArgs  e)
+		{
+
 		}
-	}
+    }
 }
