@@ -12,6 +12,7 @@ using Uchat.Database.Entities;
 using Uchat.Database.Extensions;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Server.Services.Redis;
 using Uchat.Shared.DTOs;
 using SQLitePCL;
 
@@ -26,6 +27,7 @@ public sealed class MessageService : IMessageService
     private readonly UchatDbContext _context;
     private readonly MongoDbContext _mongoDbContext;
     private readonly IMessageRepository _messageRepository;
+    private readonly IRedisService _redisService;
     private readonly ILogger<MessageService> _logger;
     private readonly IMongoCollection<MongoMessage> _messages;
 
@@ -36,11 +38,13 @@ public sealed class MessageService : IMessageService
         UchatDbContext context,
         MongoDbContext mongoDbContext,
         IMessageRepository messageRepository,
+        IRedisService redisService,
         ILogger<MessageService> logger)
     {
         _context = context;
         _mongoDbContext = mongoDbContext;
         _messageRepository = messageRepository;
+        _redisService = redisService;
         _logger = logger;
         _messages = mongoDbContext.Messages;
     }
@@ -106,6 +110,8 @@ public sealed class MessageService : IMessageService
             await _context.SaveChangesAsync(cancellationToken);
 
             await transaction.CommitAsync(cancellationToken);
+
+            await CacheLastMessageAsync(chatRoom.Id, mongoMessage);
 
             return MessagingResult.SuccessResult(messageId, mongoMessage.SentAt);
         }
@@ -335,6 +341,34 @@ public sealed class MessageService : IMessageService
             }
         };
     }
+
+    private async Task CacheLastMessageAsync(int chatId, MongoMessage message)
+    {
+        if (!_redisService.IsAvailable || message == null)
+        {
+            return;
+        }
+
+        try
+        {
+            var key = GetChatLastMessageKey(chatId);
+            await _redisService.SetHashAsync(key, "messageId", message.Id);
+            await _redisService.SetHashAsync(key, "sentAt", message.SentAt.ToString("o"));
+            await _redisService.SetHashAsync(key, "content", message.Content ?? string.Empty);
+            await _redisService.SetHashAsync(key, "senderId", message.Sender.UserId.ToString());
+            await _redisService.SetHashAsync(key, "senderUsername", message.Sender.Username ?? string.Empty);
+            if (!string.IsNullOrWhiteSpace(message.Sender.AvatarUrl))
+            {
+                await _redisService.SetHashAsync(key, "senderAvatar", message.Sender.AvatarUrl);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Unable to cache last message for chat {ChatId}", chatId);
+        }
+    }
+
+    private static string GetChatLastMessageKey(int chatId) => $"chat:{chatId}:last";
 
     private static MongoMessage BuildMongoMessage(MessageCreateDto dto, User sender)
     {
