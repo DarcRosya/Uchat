@@ -288,10 +288,11 @@
         </Style>
 
         <Style Selector="TextBlock.invalidData">
-			<Setter Property="Foreground" Value="Red"/>
+			<Setter Property="Foreground" Value="#F44336"/>
+            <Setter Property="Width" Value="320"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="Margin" Value="0 -30 0 30"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="IsVisible" Value="False"/>
         </Style>
@@ -357,7 +358,8 @@
         <Style Selector="Button.back">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Background" Value="#1E2533"/>
-            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#bf616a"/>
             <Setter Property="Width" Value="70"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="CornerRadius" Value="5"/>
