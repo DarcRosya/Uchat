@@ -101,18 +101,35 @@
          <Style Selector="Border.avatarIconBorder">
           <Setter Property="Background" Value="White"/>
           <Setter Property="CornerRadius" Value="5"/>
-          <Setter Property="Margin" Value="3"/>
-          <Setter Property="Padding" Value="3"/>
+          <Setter Property="Margin" Value="0"/>
+          <Setter Property="Padding" Value="0"/>
         </Style>
 
         <!-- Avatar image -->
         <Style Selector="Image.avatarIcon">
-          <Setter Property="Stretch" Value="UniformToFill"/>
-          <Setter Property="Width" Value="45"/>
-          <Setter Property="Height" Value="45"/>
-          <Setter Property="VerticalAlignment" Value="Top"/>
+          <Setter Property="Stretch" Value="Uniform"/>
+          <Setter Property="Width" Value="40"/>
+          <Setter Property="Height" Value="40"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
           <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
+
+         <!-- Avatar Status Border-->
+        <Style Selector="Border.contactStatusBorder">
+          <Setter Property="Width" Value="20"/>
+          <Setter Property="Height" Value="20"/>
+          <Setter Property="Margin" Value="0,0,1,1"/>
+          <Setter Property="BorderBrush" Value="#171a20"/>
+          <Setter Property="BorderThickness" Value="4"/>
+          <Setter Property="CornerRadius" Value="16"/>
+          <Setter Property="HorizontalAlignment" Value="Right"/>
+          <Setter Property="VerticalAlignment" Value="Bottom"/>
+        </Style>
+
+         <!-- Avatar Status Ellipse-->
+         <Style Selector="Ellipse.contactStatusEllipse">
+             <Setter Property="Fill" Value="#4da64d"/>
+         </Style>
 
         <!-- Name -->
         <Style Selector="TextBlock.contactName">

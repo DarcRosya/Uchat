@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
@@ -27,6 +28,7 @@ namespace Uchat
 			public class Contact
 			{
 				private bool isGroupChat = false;
+				private bool isPinned = false;
 				private string chatName = "";
 				private string lastMessage = "";
 				private int unreadMessages = 0;
@@ -34,12 +36,18 @@ namespace Uchat
 
 				private MainWindow mainWindow = new MainWindow();
                 private Grid contactGrid = new Grid();
+
 				private Border avatarIconBorder = new Border();
                 private Avalonia.Controls.Image avatarIcon = new Avalonia.Controls.Image();
-				private StackPanel contactStackPanel = new StackPanel();
+                private Avalonia.Controls.Image pinIcon = new Avalonia.Controls.Image();
+                private Border contactStatusBorder = new Border();
+				private Ellipse contactStatusEllipse = new Ellipse();
+
+                private StackPanel contactStackPanel = new StackPanel();
                 private StackPanel contactInfoStackPanel = new StackPanel();
                 private TextBlock contactNameTextBlock = new TextBlock();
 				private TextBlock lastMessageTextBlock = new TextBlock();
+
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
 				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0)
@@ -63,11 +71,26 @@ namespace Uchat
                     avatarIconBorder.Background= new SolidColorBrush(Colors.Transparent);
 
                     var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
-					avatarIcon.Classes.Add("avatarIcon");
+					if(GroupsActive == true) imageURL = new Uri("avares://Uchat/Assets/Icons/group.png");
+                    avatarIcon.Classes.Add("avatarIcon");
 					avatarIcon.Source = new Bitmap(AssetLoader.Open(imageURL));
 
-					contactInfoStackPanel.Orientation = Avalonia.Layout.Orientation.Horizontal;
+					contactStatusBorder.Classes.Add("contactStatusBorder");
+					contactStatusBorder.Child = contactStatusEllipse;
 
+					contactStatusEllipse.Classes.Add("contactStatusEllipse");
+
+                    contactInfoStackPanel.Orientation = Avalonia.Layout.Orientation.Horizontal;
+                    var icon = new Uri("avares://Uchat/Assets/Icons/pin.png");
+                    pinIcon = new Image
+                    {
+                        Source = new Bitmap(AssetLoader.Open(icon)),
+                        Width = 10,
+                        Height = 10,
+						IsVisible = false
+                    };
+                    contactInfoStackPanel.Children.Add(pinIcon);
+                    contactInfoStackPanel.Children.Add(contactNameTextBlock);
 
                     contactNameTextBlock.Classes.Add("contactName");
 					contactNameTextBlock.Text = chatName;
@@ -81,14 +104,16 @@ namespace Uchat
 					unreadMessageTextBlock.Classes.Add("unreadMessage");
 					unreadMessageTextBlock.Text = unreadMessages.ToString();
 
-					contactStackPanel.Children.Add(contactNameTextBlock);
+					contactStackPanel.Children.Add(contactInfoStackPanel);
 					contactStackPanel.Children.Add(lastMessageTextBlock);
 
 					contactGrid.Children.Add(avatarIconBorder);
-					contactGrid.Children.Add(contactStackPanel);
+                    contactGrid.Children.Add(contactStatusBorder);
+                    contactGrid.Children.Add(contactStackPanel);
 					contactGrid.Children.Add(unreadMessageBorder);
 
 					Grid.SetColumn(avatarIcon, 0);
+					Grid.SetColumn(contactStatusBorder, 0);
 					Grid.SetColumn(contactStackPanel, 1);
 					Grid.SetColumn(unreadMessageBorder, 2);
 
@@ -97,14 +122,24 @@ namespace Uchat
 
 					Chat.chatsList.Add(this);
                 }
+				public void Pin(bool pinNeeded)
+				{
+					isPinned = pinNeeded;
+					pinIcon.IsVisible = pinNeeded;
+                }
 
 				public Grid Box { get { return contactGrid; } }
 				public IBrush Background { get { return contactGrid.Background; } set { contactGrid.Background = value; } }
 
+                public IBrush StatusColor { get { return contactStatusEllipse.Fill; } set { contactStatusEllipse.Fill = value; } }
+
+                public IBrush StatusBackground { get { return contactStatusBorder.BorderBrush; } set { contactStatusBorder.BorderBrush = value; } }
+
                 public IBrush LastMessageForeground { get { return lastMessageTextBlock.Foreground; } set { lastMessageTextBlock.Foreground = value; } }
                 public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; } }
-				public int ChatId { get { return chatId; } set { chatId = value; } }
+                public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
+                public int ChatId { get { return chatId; } set { chatId = value; } }
 				public string ChatName { get { return chatName; } }
 				
 				/// <summary>
@@ -136,12 +171,13 @@ namespace Uchat
 					{
 						contact.Background = Brush.Parse("#171a20");
 						contact.LastMessageForeground = Brush.Parse("#999999");
-					}
+						contact.StatusBackground = Brush.Parse("#171a20");
+                    }
 					this.Background = Brush.Parse(color);
                     this.LastMessageForeground = Brush.Parse("#FFFFFF");
+					this.StatusBackground = Brush.Parse(color);
 
-
-					if (chatId > 0)
+                    if (chatId > 0)
 					{
 						_ = mainWindow.OpenChatAsync(chatId);
 					}
@@ -210,8 +246,9 @@ namespace Uchat
 
                 private void menuItemPinContact_Click(object? sender, RoutedEventArgs e)
                 {
-					contactList.Children.Remove(contact.Box);
-                    contactList.Children.Insert(0, contact.Box);
+					bool currentState = contact.IsPinned;
+
+                    contact.Pin(!currentState);
                 }
 
                 private async void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
