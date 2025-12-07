@@ -13,20 +13,16 @@ public class ContactService : IContactService
     private readonly IUserRepository _userRepository;
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly UchatDbContext _context;
-    private readonly MongoDbContext _mongoContext;
-
     public ContactService(
         IContactRepository contactRepository,
         IUserRepository userRepository,
         IChatRoomRepository chatRoomRepository,
-        UchatDbContext context,
-        MongoDbContext mongoContext)
+        UchatDbContext context)
     {
         _contactRepository = contactRepository;
         _userRepository = userRepository;
         _chatRoomRepository = chatRoomRepository;
         _context = context;
-        _mongoContext = mongoContext;
     }
 
     public async Task<ServiceResult> SendFriendRequestAsync(int senderId, int receiverId)
@@ -50,6 +46,20 @@ public class ContactService : IContactService
         if (existingSender?.Status == ContactStatus.RequestSent)
             return ServiceResult.Failure("Friend request already sent");
 
+        if (existingSender != null && existingSender.FriendRequestRejectedAt.HasValue)
+        {
+            var cooldownPeriod = TimeSpan.FromMinutes(1);
+            var timePassed = DateTime.UtcNow - existingSender.FriendRequestRejectedAt.Value;
+
+            if (timePassed < cooldownPeriod)
+            {
+                var timeLeft = cooldownPeriod - timePassed;
+                return ServiceResult.Failure($"User rejected your request recently. You can try again in {timeLeft.Seconds}.");
+            }
+            
+            existingSender.FriendRequestRejectedAt = null; 
+        }
+
         // If the receiver has blocked the sender
         if (existingReceiver?.IsBlocked == true)
             return ServiceResult.Failure("Cannot send request to this user");
@@ -64,7 +74,13 @@ public class ContactService : IContactService
                 await _contactRepository.AddContactAsync(senderId, receiverId);
                 existingSender = await _contactRepository.FindContactAsync(senderId, receiverId);
             }
-            
+
+            if (existingSender!.FriendRequestRejectedAt != null) 
+            {
+                 existingSender.FriendRequestRejectedAt = null;
+                 _context.Contacts.Update(existingSender); 
+            }
+
             await _contactRepository.UpdateStatusAsync(existingSender!.Id, ContactStatus.RequestSent);
 
             // Create/update receiver record
@@ -112,37 +128,51 @@ public class ContactService : IContactService
                 // === СЦЕНАРИЙ А: Чат уже был (Восстанавливаем участников) ===
                 finalChatId = userContact.SavedChatRoomId.Value;
 
-                // Проверяем текущего юзера (Accepter)
-                bool isUserMember = await _context.ChatRoomMembers
-                    .AnyAsync(m => m.ChatRoomId == finalChatId && m.UserId == userId);
+                var existingMembers = await _context.ChatRoomMembers
+                .IgnoreQueryFilters()
+                .Where(m => m.ChatRoomId == finalChatId && (m.UserId == userId || m.UserId == requesterId))
+                .ToListAsync();
                 
-                if (!isUserMember)
+                var currentUserMember = existingMembers.FirstOrDefault(m => m.UserId == userId);
+                if (currentUserMember != null)
+                {
+                    // Если был удален - воскрешаем
+                    if (currentUserMember.IsDeleted)
+                    {
+                        currentUserMember.IsDeleted = false;
+                        currentUserMember.ClearedHistoryAt = DateTime.UtcNow; 
+                    }
+                }
+                else
                 {
                     await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
                     {
-                        ChatRoomId = finalChatId,
-                        UserId = userId,
-                        JoinedAt = DateTime.UtcNow
+                        ChatRoomId = finalChatId, UserId = userId, JoinedAt = DateTime.UtcNow
                     });
                 }
 
-                // Проверяем друга (Requester)
-                bool isRequesterMember = await _context.ChatRoomMembers
-                    .AnyAsync(m => m.ChatRoomId == finalChatId && m.UserId == requesterId);
-
-                if (!isRequesterMember)
+                var friendMember = existingMembers.FirstOrDefault(m => m.UserId == requesterId);
+                if (friendMember != null)
+                {
+                    if (friendMember.IsDeleted)
+                    {
+                        friendMember.IsDeleted = false;
+                        friendMember.ClearedHistoryAt = DateTime.UtcNow;
+                    }
+                }
+                else
                 {
                     await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
                     {
-                        ChatRoomId = finalChatId,
-                        UserId = requesterId,
-                        JoinedAt = DateTime.UtcNow
+                        ChatRoomId = finalChatId, UserId = requesterId, JoinedAt = DateTime.UtcNow
                     });
                 }
+
+                await _context.SaveChangesAsync();
             }
             else
             {
-                // === СЦЕНАРИЙ Б: Чата нет (Создаем новый) ===
+                // === СЦЕНАРИЙ Б: В чате больше никого нет - (Создаем новый) ===
                 var chatRoom = new ChatRoom
                 {
                     Name = $"{userId}_{requesterId}",
@@ -187,35 +217,46 @@ public class ContactService : IContactService
         }
     }
 
-    public async Task<ServiceResult> RejectFriendRequestAsync(int userId, int requesterId)
+    public async Task<ServiceResult<int>> RejectFriendRequestAsync(int currentUserId, int contactId)
     {
-        var userContact = await _contactRepository.FindContactAsync(userId, requesterId);
-        var requesterContact = await _contactRepository.FindContactAsync(requesterId, userId);
+        var userContact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
 
         if (userContact == null)
-            return ServiceResult.Failure("Friend request not found");
+            return ServiceResult<int>.Failure("Contact request not found");
+
+        if (userContact.OwnerId != currentUserId)
+            return ServiceResult<int>.Failure("This is not your contact request");
 
         if (userContact.Status != ContactStatus.RequestReceived)
-            return ServiceResult.Failure("No pending friend request from this user");
+            return ServiceResult<int>.Failure("No pending friend request found");
 
-        // Use transaction for atomicity
+        int requesterId = userContact.ContactUserId;
+
+        // 5. Находим зеркальный контакт (у друга)
+        var requesterContact = await _contactRepository.FindContactAsync(requesterId, currentUserId);
+
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
-            // Do not delete the contact (preserve chat history and settings), 
-            // instead reset status to None
-            await _contactRepository.UpdateStatusAsync(userContact.Id, ContactStatus.None);
-            
-            if (requesterContact != null)
-                await _contactRepository.UpdateStatusAsync(requesterContact.Id, ContactStatus.None);
+            userContact.Status = ContactStatus.None;
+            // _context.Contacts.Update(userContact); // EF Core и так отслеживает, но можно явно
 
+            if (requesterContact != null)
+            {
+                requesterContact.Status = ContactStatus.None;
+                requesterContact.FriendRequestRejectedAt = DateTime.UtcNow;
+                // _context.Contacts.Update(requesterContact);
+            }
+
+            await _context.SaveChangesAsync();
             await transaction.CommitAsync();
-            return ServiceResult.SuccessResult();
+
+            return ServiceResult<int>.SuccessResult(requesterId);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return ServiceResult.Failure("Database error occurred while rejecting friend request");
+            return ServiceResult<int>.Failure("Database error");
         }
     }
 

@@ -12,8 +12,8 @@ public class RefreshToken
     /// 30 days maybe
     public DateTime ExpiresAt { get; set; }
     
-    /// Был ли токен отозван (вручную logout)
-    /// true = токен больше нельзя использовать (даже если не истек)
+    // Was the token revoked (manual logout)
+    // true = token can no longer be used (even if it has not expired)
     public bool IsRevoked { get; set; }
     public User User { get; set; } = null!;
 }

@@ -11,15 +11,13 @@ namespace Uchat.Server.Hubs;
 public class ChatHub : Hub
 {
     private readonly IChatRoomRepository _chatRoomRepository;
-    private readonly IChatRoomService _chatRoomService;
 
     // Active online users
     private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
 
-    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService)
+    public ChatHub(IChatRoomRepository chatRoomRepository)
     {
         _chatRoomRepository = chatRoomRepository;
-        _chatRoomService = chatRoomService;
     }
 
     public override async Task OnConnectedAsync()
@@ -49,7 +47,7 @@ public class ChatHub : Hub
         // Auto join to chatGroups
         try
         {
-            var userChats = await _chatRoomRepository.GetUserChatRoomsAsync(userId);
+            var userChats = await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
 
             foreach (var chat in userChats)
             {

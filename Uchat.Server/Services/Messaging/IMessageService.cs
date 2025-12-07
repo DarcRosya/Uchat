@@ -9,9 +9,9 @@ public interface IMessageService
 {
     Task<MessagingResult> SendMessageAsync(MessageCreateDto dto, CancellationToken cancellationToken = default);
 
-    Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int limit = 50, DateTime? before = null);
+    Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int userId, int limit = 50, DateTime? before = null);
 
-    Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(List<int> chatIds);
+    Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(Dictionary<int, DateTime?> chatsWithClearDates);
     
     Task<MessageDto?> GetMessageByIdAsync(string messageId);
     

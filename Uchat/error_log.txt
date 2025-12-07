@@ -1,0 +1,47 @@
+[ERROR] [06.12.2025 21:53:00] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:00] Server failed to reject request
+[ERROR] [06.12.2025 21:53:00] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:00] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:53:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 21:53:01] Server failed to reject request
+[ERROR] [06.12.2025 21:59:28] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:08:01] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:08:01] Server failed to reject request
+[ERROR] [06.12.2025 22:08:06] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:08:06] Server failed to reject request
+[ERROR] [06.12.2025 22:08:07] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:08:07] Server failed to reject request
+[ERROR] [06.12.2025 22:29:21] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:29:21] Server failed to reject request
+[ERROR] [06.12.2025 22:29:21] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:29:21] Server failed to reject request
+[ERROR] [06.12.2025 22:29:22] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:29:22] Server failed to reject request
+[ERROR] [06.12.2025 22:29:28] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:29:28] Server failed to reject request
+[ERROR] [06.12.2025 22:35:08] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:35:08] Server failed to reject request
+[ERROR] [06.12.2025 22:35:09] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:35:09] Server failed to reject request
+[ERROR] [06.12.2025 22:35:09] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:35:09] Server failed to reject request
+[ERROR] [06.12.2025 22:35:09] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 22:35:09] Server failed to reject request
+[ERROR] [06.12.2025 23:01:43] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 23:02:19] [DEBUG] Кнопка Reject нажата для ID: 10
+[ERROR] [06.12.2025 23:17:50] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 23:17:58] [DEBUG] Кнопка Reject нажата для ID: 10
+[ERROR] [06.12.2025 23:19:11] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 23:31:55] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 23:33:03] [DEBUG] Кнопка Reject нажата для ID: 9
+[ERROR] [06.12.2025 23:39:54] [DEBUG] Кнопка Reject нажата для ID: 10

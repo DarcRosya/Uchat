@@ -26,7 +26,7 @@ public interface IContactService
     /// Отклонить заявку в друзья.
     /// Удаляет обе записи Contact.
     /// </summary>
-    Task<ServiceResult> RejectFriendRequestAsync(int userId, int requesterId);
+    Task<ServiceResult<int>> RejectFriendRequestAsync(int currentUserId, int contactId);
 
     /// <summary>
     /// Удалить из друзей.
@@ -101,6 +101,7 @@ public class ServiceResult
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
+    public int Data { get; internal set; }
 
     public static ServiceResult SuccessResult() => new() { Success = true };
     public static ServiceResult Failure(string error) => new() { Success = false, Message = error };

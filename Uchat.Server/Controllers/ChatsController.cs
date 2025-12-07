@@ -41,10 +41,17 @@ public class ChatsController : ControllerBase
     public async Task<IActionResult> GetUserChats()
     {
         var userId = GetCurrentUserId();
-        var chats = await _chatRoomService.GetUserChatsAsync(userId);
-        var chatDtos = new List<ChatRoomDto>();
-        
-        var chatIds = chats.Select(c => c.Id).ToList();
+
+        var memberships = await _chatRoomService.GetUserChatMembershipsAsync(userId);
+    
+        var chats = memberships.Select(m => m.ChatRoom).ToList();;
+
+        var clearDatesDict = memberships.ToDictionary(
+            m => m.ChatRoomId, 
+            m => m.ClearedHistoryAt 
+        );
+
+        var lastMessagesDict = await _messageService.GetLastMessagesForChatsBatch(clearDatesDict);
 
         var partnerUserIds = new HashSet<int>();
         foreach (var chat in chats.Where(c => c.Type == ChatRoomType.DirectMessage))
@@ -56,7 +63,7 @@ public class ChatsController : ControllerBase
         var usersDict = (await _userRepository.GetUsersByIdsAsync(partnerUserIds.ToList()))
                     .ToDictionary(u => u.Id);
 
-        var lastMessagesDict = await _messageService.GetLastMessagesForChatsBatch(chatIds);
+        var chatDtos = new List<ChatRoomDto>();
 
         foreach (var chat in chats)
         {
@@ -72,31 +79,21 @@ public class ChatsController : ControllerBase
                 }
                 else
                 {
-                    dto.Name = "Uknown User"; // Или старое имя чата как фоллбэк
+                    dto.Name = "Unknown User"; 
                 }
             }
 
             if (lastMessagesDict.TryGetValue(chat.Id, out var lastMsgDto))
             {
-                if (string.IsNullOrEmpty(lastMsgDto.Content) && lastMsgDto.Attachments.Any())
-                {
-                    var firstAtt = lastMsgDto.Attachments.First();
-                    
-                    dto.LastMessageContent = GetAttachmentPreview(firstAtt);
-                }
-                else
-                {
-                    dto.LastMessageContent = lastMsgDto.Content;
-                }
-
+                dto.LastMessageContent = lastMsgDto.Content;
                 dto.LastMessageAt = lastMsgDto.SentAt;
             }
             else
             {
-                dto.LastMessageAt = chat.CreatedAt;
                 dto.LastMessageContent = "";
+                dto.LastMessageAt = chat.CreatedAt; 
             }
-            
+        
             dto.UnreadCount = 0; 
             chatDtos.Add(dto);
         }
@@ -203,28 +200,28 @@ public class ChatsController : ControllerBase
         return int.Parse(claim!);
     }
 
-    private string GetAttachmentPreview(Shared.DTOs.MessageAttachment attachment)
-    {
-        if (attachment == null) return "";
+    // private string GetAttachmentPreview(Shared.DTOs.MessageAttachment attachment)
+    // {
+    //     if (attachment == null) return "";
 
-        var mime = attachment.ContentType?.ToLower() ?? "";
-        var fileName = attachment.FileName;
+    //     var mime = attachment.ContentType?.ToLower() ?? "";
+    //     var fileName = attachment.FileName;
 
-        if (mime.Contains("gif")) 
-            return "👾 GIF";
+    //     if (mime.Contains("gif")) 
+    //         return "👾 GIF";
 
-        if (mime.StartsWith("image")) 
-            return $"📷 {fileName}"; 
+    //     if (mime.StartsWith("image")) 
+    //         return $"📷 {fileName}"; 
 
-        if (mime.StartsWith("video")) 
-            return $"🎥 {fileName}"; 
+    //     if (mime.StartsWith("video")) 
+    //         return $"🎥 {fileName}"; 
 
-        // 
-        // if (mime.StartsWith("audio"))
-        //     return "🎤 Voice message";
+    //     // 
+    //     // if (mime.StartsWith("audio"))
+    //     //     return "🎤 Voice message";
 
-        // 5. Обычные файлы (документы, архивы, код)
-        // Тут мы показываем скрепку + ИМЯ ФАЙЛА, как ты и хотел
-        return $"📎 {fileName}"; 
-    }
+    //     // 5. Обычные файлы (документы, архивы, код)
+    //     // Тут мы показываем скрепку + ИМЯ ФАЙЛА, как ты и хотел
+    //     return $"📎 {fileName}"; 
+    // }
 }

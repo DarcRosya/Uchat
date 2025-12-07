@@ -125,11 +125,20 @@ namespace Uchat.Services
                 }
                 
                 var response = await _httpClient.SendAsync(request);
-                return response.IsSuccessStatusCode;
+        
+                if (!response.IsSuccessStatusCode)
+                {
+                    // ЧИТАЕМ ОШИБКУ СЕРВЕРА
+                    var errorContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"[API ERROR] Reject failed: {response.StatusCode} - {errorContent}");
+                    return false;
+                }
+                
+                return true;
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to reject friend request {contactId}", ex);
+                Console.WriteLine($"[API EXCEPTION] {ex.Message}");
                 return false;
             }
         }

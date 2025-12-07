@@ -17,37 +17,32 @@ public class MessageRepository : IMessageRepository
         _context = context;
         _messages = context.Messages;
     }
-    public async Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null)
+    public async Task<List<MongoMessage>> GetChatMessagesAsync(
+        int chatId, 
+        DateTime? minDate,
+        int limit = 50,
+        DateTime? lastTimestamp = null)
     {
-        FilterDefinition<MongoMessage> filter;
-        
-        if (lastTimestamp == null)
+        var builder = Builders<MongoMessage>.Filter;
+        var filter = builder.Eq(m => m.ChatId, chatId) & 
+                builder.Eq(m => m.IsDeleted, false);
+
+        if (minDate.HasValue)
         {
-            // ПЕРВАЯ ЗАГРУЗКА: последние N сообщений
-            filter = Builders<MongoMessage>.Filter.And(
-                Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
-                Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
-            );
+            filter &= builder.Gt(m => m.SentAt, minDate.Value);
         }
-        else
+
+        if (lastTimestamp.HasValue)
         {
-            // ЗАГРУЗИТЬ ЕЩЕ: старые сообщения до lastTimestamp
-            filter = Builders<MongoMessage>.Filter.And(
-                Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
-                Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
-                Builders<MongoMessage>.Filter.Lt(m => m.SentAt, lastTimestamp.Value)
-            );
+            filter &= builder.Lt(m => m.SentAt, lastTimestamp.Value);
         }
         
-        var result = await _messages
-            .Find(filter)
+        return await _messages.Find(filter)
             .SortByDescending(m => m.SentAt)
             .Limit(limit)
             .ToListAsync();
-            
-        return result;
     }
-    
+
     public async Task<MongoMessage?> GetMessageByIdAsync(string messageId)
     {
         var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
@@ -67,7 +62,7 @@ public class MessageRepository : IMessageRepository
     
     public async Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId)
     {
-        // MongoDB запрос: найти сообщения где userId НЕ в массиве readBy
+        // MongoDB query: find messages where userId is NOT in the readBy array
         var filter = Builders<MongoMessage>.Filter.And(
             Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
             Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),
@@ -129,18 +124,18 @@ public class MessageRepository : IMessageRepository
     
     public async Task<List<string>> ClearReplyReferencesAsync(string deletedMessageId)
     {
-        // Находим все сообщения, которые отвечают на удалённое
+        // Find all messages that respond to the deleted one
         var replyFilter = Builders<MongoMessage>.Filter.Eq(m => m.ReplyToMessageId, deletedMessageId);
         var messagesToUpdate = await _messages.Find(replyFilter).ToListAsync();
         
         if (!messagesToUpdate.Any())
             return new List<string>();
         
-        // Очищаем ReplyToMessageId у найденных сообщений
+        // Clear ReplyToMessageId for found messages
         var update = Builders<MongoMessage>.Update.Set(m => m.ReplyToMessageId, null);
         await _messages.UpdateManyAsync(replyFilter, update);
         
-        // Возвращаем список ID сообщений, у которых очистили reply
+        // Return a list of message IDs for which replies have been cleared
         return messagesToUpdate.Select(m => m.Id).ToList();
     }
     
@@ -148,7 +143,7 @@ public class MessageRepository : IMessageRepository
     {
         var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
         
-        // Используем $addToSet для добавления userId в массив reactions[emoji]
+        // Use $addToSet to add userId to the reactions[emoji] array
         var update = Builders<MongoMessage>.Update.AddToSet($"reactions.{emoji}", userId);
 
         var result = await _messages.UpdateOneAsync(filter, update);
@@ -159,7 +154,7 @@ public class MessageRepository : IMessageRepository
     {
         var filter = Builders<MongoMessage>.Filter.Eq(m => m.Id, messageId);
         
-        // Используем $pull для удаления userId из массива reactions[emoji]
+        // Use $pull to remove userId from the reactions[emoji] array
         var update = Builders<MongoMessage>.Update.Pull($"reactions.{emoji}", userId);
 
         var result = await _messages.UpdateOneAsync(filter, update);
@@ -210,7 +205,7 @@ public class MessageRepository : IMessageRepository
 
     public async Task<List<MongoMessage>> SearchMessagesAsync(int chatId, string searchQuery, int limit = 20)
     {
-        // Фильтр: поиск по тексту (case-insensitive через regex)
+        // Filter: text search (case-insensitive via regex)
         var filter = Builders<MongoMessage>.Filter.And(
             Builders<MongoMessage>.Filter.Eq(m => m.ChatId, chatId),
             Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false),

@@ -3,89 +3,89 @@ using Uchat.Database.Entities;
 namespace Uchat.Database.Repositories.Interfaces;
 
 /// <summary>
-/// Интерфейс для работы со списком контактов (Contact)
+/// Interface for working with the contact list (Contact)
 /// </summary>
 public interface IContactRepository
 {
-    /// ПРИМЕЧАНИЕ: Метод проверяет, не добавлен ли контакт уже (дубликаты)
+    /// NOTE: The method checks whether the contact has already been added (duplicates).
     Task<Contact> AddContactAsync(int ownerId, int contactUserId);
 
-    /// ВАЖНО: Возвращает NULL если контакт не найден
+    /// IMPORTANT: Returns NULL if the contact is not found.
     Task<Contact?> GetByIdAsync(int contactId);
 
-    /// ОПТИМИЗАЦИЯ: Включает данные User (ContactUser) через Include для избежания N+1 запросов
+    /// OPTIMIZATION: Includes User (ContactUser) data via Include to avoid N+1 queries
     Task<IEnumerable<Contact>> GetUserContactsAsync(int userId);
     
-    /// Найти контакт между двумя пользователями
-    /// ЗАЧЕМ: Проверить, есть ли пользователь B в контактах пользователя A
+    /// Find a contact between two users
+    /// WHY: To check if user B is in user A's contacts
     Task<Contact?> FindContactAsync(int ownerId, int contactUserId);
     
-    /// Получить контакты по статусу (Friend, RequestSent, RequestReceived, Blocked)
+    /// Get contacts by status (Friend, RequestSent, RequestReceived, Blocked)
     Task<IEnumerable<Contact>> GetContactsByStatusAsync(int userId, ContactStatus status);
     
-    /// Обновить статус контакта
+    /// Update contact status
     Task<bool> UpdateStatusAsync(int contactId, ContactStatus status);
     
-    /// Получить только избранные контакты
+    /// Get only selected contacts
     Task<IEnumerable<Contact>> GetFavoriteContactsAsync(int userId);
     
-    /// Получить заблокированные контакты
+    /// Get blocked contacts
     Task<IEnumerable<Contact>> GetBlockedContactsAsync(int userId);
     
-    /// Поиск контактов по имени/никнейму
-    /// ПОИСК ПО:
-    /// - Username пользователя
-    /// - DisplayName пользователя
-    /// - Nickname (если установлен в контакте)
-    /// - PrivateNotes (личные заметки)
+    /// Search for contacts by name/nickname
+    /// SEARCH BY:
+    /// - User's username
+    /// - User's display name
+    /// - Nickname (if set in the contact)
+    /// - PrivateNotes (personal notes)
     Task<IEnumerable<Contact>> SearchContactsAsync(int userId, string query);
 
-    /// Заблокировать или разблокировать контакт
+    /// Block or unblock a contact
     Task<bool> BlockContactAsync(int contactId, bool isBlocked);
 
-    /// Добавить/убрать из избранного
+    /// Add/remove from favorites
     Task<bool> SetFavoriteAsync(int contactId, bool isFavorite);
     
-    /// Установить IsBlocked флаг
+    /// Set the IsBlocked flag
     Task<bool> SetBlockedAsync(int contactId, bool isBlocked);
 
-    /// Обновить время последнего сообщения
-    /// ЗАЧЕМ: Сортировка контактов по активности (с кем недавно общались - вверху)
-    /// КОГДА НУЖНА:
-    /// - Автоматически при отправке/получении сообщения
-    /// - Вызывается из MessageRepository после сохранения сообщения
-    /// - Не вызывается через API напрямую (внутренняя логика)
+    /// Update the time of the last message
+    /// WHY: Sort contacts by activity (recently communicated with - at the top)
+    /// WHEN NEEDED:
+    /// - Automatically when sending/receiving a message
+    /// - Called from MessageRepository after saving a message
+    /// - Not called directly via API (internal logic)
     Task<bool> UpdateLastMessageAsync(int contactId, DateTime? lastMessageAt);
 
-    /// Увеличить счетчик сообщений с контактом
+    /// Increase the message counter with the contact
     /// 
-    /// ЗАЧЕМ: Статистика - сколько всего сообщений отправлено с этим контактом
-    /// КОГДА НУЖНА:
-    /// - Автоматически при отправке/получении сообщения
-    /// - Вызывается из MessageRepository
-    /// - Показ статистики в профиле ("Всего сообщений: 1523")
+    /// WHY: Statistics - how many messages have been sent with this contact
+    /// WHEN NEEDED:
+    /// - Automatically when sending/receiving a message
+    /// - Called from MessageRepository
+    /// - Display statistics in profile (“Total messages: 1523”)
     /// 
-    /// ВАЖНО: Обычно вызывается вместе с UpdateLastMessageAsync
+    /// IMPORTANT: Usually called together with UpdateLastMessageAsync
     Task<long> IncrementMessageCountAsync(int contactId, int increment = 1);
     
-    /// Установить никнейм контакту
+    /// Set nickname for contact
     Task<bool> SetNicknameAsync(int contactId, string? nickname);
     
-    /// Включить/выключить уведомления от контакта
+    /// Turn notifications from a contact on/off
     Task<bool> SetNotificationsEnabledAsync(int contactId, bool enabled);
     
-    /// Установить SavedChatRoomId для быстрого доступа к чату
+    /// Set SavedChatRoomId for quick access to chat
     Task<bool> SetSavedChatRoomAsync(int contactId, int? chatRoomId);
     
-    /// Удалить контакт по ID
+    /// Delete contact by ID
     Task<bool> DeleteContactAsync(int contactId);
     
-    /// Удалить контакт из списка
+    /// Delete contact from list
     Task<bool> RemoveContactAsync(int ownerId, int contactUserId);
     
-    /// Проверить, существует ли контакт
+    /// Check if the contact exists
     Task<bool> ExistsAsync(int ownerId, int contactUserId);
     
-    /// Проверить, заблокирован ли пользователь
+    /// Check if the user is blocked
     Task<bool> IsBlockedAsync(int ownerId, int contactUserId);
 }
