@@ -107,7 +107,7 @@
 					<StackPanel x:Name="loginForm"
 								VerticalAlignment="Center"
 								IsVisible="True"
-								Width="280">
+								Width="350">
 						<TextBlock Text="Hello Again!"
 								   FontSize="32"
 								   FontWeight="Bold"
@@ -123,6 +123,7 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="usernameTextBox"
@@ -140,21 +141,42 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
-								<TextBox
-								x:Name="passwordTextBox"
-								Classes="DataBox"
-								Watermark="Password"
-								PasswordChar="*"
-								/>
+									<TextBox
+									x:Name="passwordTextBox"
+									Classes="DataBox"
+									Watermark="Password"
+									PasswordChar="*"
+									>
+									</TextBox>
 							</Border>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="RevealePasswordInLogIn"
+								IsVisible="True"
+								Margin="33 0 8 8" PointerPressed="RevealePasswordInLogIn_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/closeEye.png">
+							</Image>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="HidePasswordInLogIn"
+								IsVisible="False"
+								Margin="33 0 8 8" PointerPressed="HidePasswordInLogIn_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/openEye.png">
+							</Image>
 						</DockPanel>
 
 						<TextBlock
-						x:Name="invalidDataInHelloAgain"
-						Margin="0 0 0 10"
-						Classes="invalidData"
+							Margin="0 1 0 10"
+							x:Name="invalidDataInHelloAgain"
+							Classes="invalidData"
 						/>
+
 
 						<TextBlock x:Name="ForgotPasswordButton"
 								   Text="Forgot password?"
@@ -167,7 +189,9 @@
 								   />
 
 						<Button
+						HorizontalAlignment="Right"
 						x:Name="LogInButton"
+						Width="320"
 						Classes="LogIn"
 						Content="Log In"
 						Click="LogInButton_Click"
@@ -177,7 +201,7 @@
 					<StackPanel x:Name="signUpForm"
 								VerticalAlignment="Center"
 								IsVisible="False"
-								Width="280">
+								Width="350">
 						<TextBlock Text="Create Account"
 								   FontSize="32"
 								   FontWeight="Bold"
@@ -193,6 +217,7 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="createUsernameTextBox"
@@ -203,6 +228,8 @@
 
 						</DockPanel>
 
+						<!-- НА СЛУЧАЙ ЕСЛИ Я ГДЕ-ТО НАПОРТАЧИЛ!
+						
 						<DockPanel Margin="0 0 0 25">
 							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
 								   Source="avares://Uchat/Assets/Icons/lock.png">
@@ -211,6 +238,7 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="createPasswordTextBox"
@@ -221,6 +249,46 @@
 							</Border>
 
 						</DockPanel>
+						-->
+
+
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Width="320"
+								Background="#404853">
+									<TextBox
+									x:Name="createPasswordTextBox"
+									Classes="DataBox"
+									Watermark="Password"
+									PasswordChar="*"
+									>
+									</TextBox>
+							</Border>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="RevealePasswordInSingUp"
+								IsVisible="True"
+								Margin="33 0 8 8" PointerPressed="RevealePasswordInSingUp_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/closeEye.png">
+							</Image>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="HidePasswordInSingUp"
+								IsVisible="False"
+								Margin="33 0 8 8" PointerPressed="HidePasswordInSingUp_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/openEye.png">
+							</Image>
+						</DockPanel>
 
 						<DockPanel Margin="0 0 0 40">
 							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
@@ -230,6 +298,7 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="createEmailTextBox"
@@ -246,69 +315,19 @@
 						/>
 
 						<Button
+						Width="320"
+						HorizontalAlignment="Right"
 						x:Name="CreateAccountButton"
 						Classes="LogIn"
-						Content="Sign Up"
+						Content="Register"
 						Click="CreateAccountButton_Click"
 						/>
 					</StackPanel>
 
-					<StackPanel x:Name="EmailVerification"
+					<StackPanel x:Name="CodeVerificationSignUpForm"
 								VerticalAlignment="Center"
 								IsVisible="False"
-								Width="280">
-						<TextBlock Text="Recovery Email"
-								   FontSize="32"
-								   FontWeight="Bold"
-								   Foreground="#DDEEFF"
-								   HorizontalAlignment="Center"
-								   Margin="0 0 0 40"/>
-
-						<DockPanel Margin="0 0 0 40">
-							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
-								   Source="avares://Uchat/Assets/Icons/email.png">
-							</Image>
-
-							<Border BorderThickness="0 0 0 4"
-								BorderBrush="Gray" 
-								CornerRadius="5"
-								Background="#404853">
-								<TextBox
-								x:Name="emailInRecoveryEmailTextBox"
-								Classes="DataBox"
-								Watermark="Email"
-								/>
-							</Border>
-
-						</DockPanel>
-
-						<TextBlock
-						x:Name="invalidDataInRecoveryEmail"
-						Classes="invalidData"
-						/>
-
-						<DockPanel>
-							<Button
-							Classes="back"
-							Click="GoToLogInButtonForgottenForm_Click"
-							>
-								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
-							</Button>
-							<Button
-							x:Name="GoToCodeVerification"
-							Classes="LogIn"
-							Content="Send code"
-							Width="180"
-							HorizontalAlignment="Right"
-							Click="GoToCodeVerification_Click"
-							/>
-						</DockPanel>
-					</StackPanel>
-
-					<StackPanel x:Name="CodeVerification"
-								VerticalAlignment="Center"
-								IsVisible="False"
-								Width="280">
+								Width="350">
 						<TextBlock Text="Code Verification"
 								   FontSize="32"
 								   FontWeight="Bold"
@@ -324,6 +343,115 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
+								Background="#404853">
+								<TextBox
+								x:Name="CodeVerificationSignUpFormTextBox"
+								Classes="DataBox"
+								Watermark="Code"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInCodeVerificationSignUpForm"
+						Classes="invalidData"
+						/>
+
+						<DockPanel HorizontalAlignment="Right">
+							<Button
+							x:Name="BackToSignUp"
+							Classes="back"
+							Margin="0 0 30 0"
+							Click="BackToSignUp_Click"
+							>
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
+							</Button>
+							<Button
+							x:Name="GoToMainProgram"
+							Classes="LogIn"
+							Content="Sing Up"
+							Width="221"
+							Click="GoToMainProgram_Click"
+							/>
+						</DockPanel>
+					</StackPanel>
+
+					<StackPanel x:Name="EmailVerification"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="350">
+						<TextBlock Text="Recovery Email"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0 0 0 40"/>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/email.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Width="320"
+								Background="#404853">
+								<TextBox
+								x:Name="emailInRecoveryEmailTextBox"
+								Classes="DataBox"
+								Watermark="Email"
+								/>
+							</Border>
+
+						</DockPanel>
+
+						<TextBlock
+						x:Name="invalidDataInRecoveryEmail"
+						Classes="invalidData"
+						/>
+
+						<DockPanel HorizontalAlignment="Right">
+							<Button
+							Classes="back"
+							Margin="0 0 30 0"
+							Click="GoToLogInButtonForgottenForm_Click"
+							>
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
+							</Button>
+							<Button
+							x:Name="GoToCodeVerification"
+							Classes="LogIn"
+							Content="Send code"
+							Width="221"
+							HorizontalAlignment="Right"
+							Click="GoToCodeVerification_Click"
+							/>
+						</DockPanel>
+					</StackPanel>
+
+					<StackPanel x:Name="CodeVerification"
+								VerticalAlignment="Center"
+								IsVisible="False"
+								Width="350">
+						<TextBlock Text="Code Verification"
+								   FontSize="32"
+								   FontWeight="Bold"
+								   Foreground="#DDEEFF"
+								   HorizontalAlignment="Center"
+								   Margin="0 0 0 40"/>
+
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/key.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="codeVerificationTextBox"
@@ -339,10 +467,11 @@
 						Classes="invalidData"
 						/>
 
-						<DockPanel>
+						<DockPanel HorizontalAlignment="Right">
 							<Button
 							x:Name="BackToEmailForm"
 							Classes="back"
+							Margin="0 0 30 0"
 							Click="BackToEmailForm_Click"
 							>
 								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/back.png"/>
@@ -351,8 +480,7 @@
 							x:Name="GoToResetPasswordForm"
 							Classes="LogIn"
 							Content="Continue"
-							Width="180"
-							HorizontalAlignment="Right"
+							Width="221"
 							Click="GoToResetPasswordForm_Click"
 							/>
 						</DockPanel>
@@ -361,7 +489,7 @@
 					<StackPanel x:Name="ResetPasswordForm"
 								VerticalAlignment="Center"
 								IsVisible="False"
-								Width="280">
+								Width="350">
 						<TextBlock Text="Reset Password"
 								   FontSize="32"
 								   FontWeight="Bold"
@@ -377,6 +505,85 @@
 							<Border BorderThickness="0 0 0 4"
 								BorderBrush="Gray" 
 								CornerRadius="5"
+								Width="320"
+								Background="#404853">
+									<TextBox
+									x:Name="newPasswordTextBox"
+									Classes="DataBox"
+									Watermark="Password"
+									PasswordChar="*"
+									>
+									</TextBox>
+							</Border>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="RevealePasswordInNewPassword"
+								IsVisible="True"
+								Margin="33 0 8 8" PointerPressed="RevealePasswordInNewPassword_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/closeEye.png">
+							</Image>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="HidePasswordInNewPassword"
+								IsVisible="False"
+								Margin="33 0 8 8" PointerPressed="HidePasswordInNewPassword_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/openEye.png">
+							</Image>
+						</DockPanel>
+
+						
+						<DockPanel Margin="0 0 0 40">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Width="320"
+								Background="#404853">
+									<TextBox
+									x:Name="confirmPasswordTextBox"
+									Classes="DataBox"
+									Watermark="Password"
+									PasswordChar="*"
+									>
+									</TextBox>
+							</Border>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="RevealePasswordInConfirmPassword"
+								IsVisible="True"
+								Margin="33 0 8 8" PointerPressed="RevealePasswordInConfirmPassword_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/closeEye.png">
+							</Image>
+
+							<Image Width="20" Height="20"
+								VerticalAlignment="Bottom"
+								HorizontalAlignment="Right"
+								x:Name="HidePasswordInConfirmPassword"
+								IsVisible="False"
+								Margin="33 0 8 8" PointerPressed="HidePasswordInConfirmPassword_PointerPressed"
+								Source="avares://Uchat/Assets/Icons/openEye.png">
+							</Image>
+						</DockPanel>
+
+						<!-- ЕСЛИ НАПОРТАЧУ
+						<DockPanel Margin="0 0 0 25">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
+								   Source="avares://Uchat/Assets/Icons/lock.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="newPasswordTextBox"
@@ -388,14 +595,15 @@
 
 						</DockPanel>
 
-						<DockPanel Margin="0 0 0 40">
+												<DockPanel Margin="0 0 0 40">
 							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
 								   Source="avares://Uchat/Assets/Icons/lock.png">
 							</Image>
 
 							<Border BorderThickness="0 0 0 4"
-								BorderBrush="Gray" 
+								BorderBrush="Gray"
 								CornerRadius="5"
+								Width="320"
 								Background="#404853">
 								<TextBox
 								x:Name="confirmPasswordTextBox"
@@ -406,7 +614,8 @@
 							</Border>
 
 						</DockPanel>
-
+						-->
+						
 						<TextBlock
 						x:Name="invalidDataInResetPassword"
 						Classes="invalidData"
@@ -414,8 +623,10 @@
 
 						<Button x:Name="ChangePasswordButton"
 								Classes="LogIn"
+								Width="320"
 								Content="Change the password"
 								Click="ChangePasswordButton_Click"
+								HorizontalAlignment="Right"
 								/>
 					</StackPanel>
 				</Grid>

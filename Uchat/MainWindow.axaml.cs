@@ -80,6 +80,7 @@ namespace Uchat
             CodeVerification.IsVisible = false;
             ResetPasswordForm.IsVisible = false;
             GoToLogInButtonForgottenForm.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = false;
         }
 
         private void GoToLogInButton_Click(object? sender, RoutedEventArgs e)
@@ -88,6 +89,7 @@ namespace Uchat
             signUpForm.IsVisible = false;
             GoToSignUpButton.IsVisible = true;
             GoToLogInButton.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = false;
         }
 
         private void ForgotPasswordButton_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -104,6 +106,7 @@ namespace Uchat
             CodeVerification.IsVisible = false;
             ResetPasswordForm.IsVisible = false;
             GoToLogInButtonForgottenForm.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = false;
         }
 
         private void BackToEmailForm_Click(object? sender, RoutedEventArgs e)
@@ -115,6 +118,16 @@ namespace Uchat
         private void GoToResetPasswordForm_Click(object? sender, RoutedEventArgs e)
         {
             string code = codeVerificationTextBox.Text ?? string.Empty;
+
+            /*
+             if (code != //КОД ОТ EMAIL)
+            {
+                invalidDataInCodeVerification.Text = "Verification failed";
+                invalidDataInCodeVerification.IsVisible = true;
+                return;
+            }
+             */
+
             invalidDataInCodeVerification.IsVisible = false;
             CodeVerification.IsVisible = false;
             ResetPasswordForm.IsVisible = true;
@@ -128,7 +141,7 @@ namespace Uchat
             if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
             {
                 invalidDataInResetPassword.IsVisible = true;
-                invalidDataInResetPassword.Text = "Both fields cannot be empty";
+                invalidDataInResetPassword.Text = "Passwords fields are required";
                 return;
             }
 
@@ -152,21 +165,14 @@ namespace Uchat
             if (string.IsNullOrEmpty(emailAddress))
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Email field cannot be empty";
+                invalidDataInRecoveryEmail.Text = "Email is required";
                 return;
             }
 
             if (!emailAddress.EndsWith("@gmail.com"))
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "                 Invalid email address \nOnly [@gmail.com] is allowed";
-                return;
-            }
-
-            if (emailAddress.Length < 16 || emailAddress.Length > 40)
-            {
-                invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Email size must be [more 16 and less 40]";
+                invalidDataInRecoveryEmail.Text = "Invalid email address. Only [@gmail.com] is allowed";
                 return;
             }
 
@@ -178,6 +184,64 @@ namespace Uchat
         private void CloseLoginFormButton_Click(object? sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void RevealePasswordInLogIn_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInLogIn.IsVisible = false;
+            HidePasswordInLogIn.IsVisible = true;
+            passwordTextBox.PasswordChar = '\0';
+        }
+
+        private void HidePasswordInLogIn_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInLogIn.IsVisible = true;
+            HidePasswordInLogIn.IsVisible = false;
+            passwordTextBox.RevealPassword = false;
+            passwordTextBox.PasswordChar = '*';
+        }
+
+
+        private void RevealePasswordInSingUp_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInSingUp.IsVisible = false;
+            HidePasswordInSingUp.IsVisible = true;
+            createPasswordTextBox.PasswordChar = '\0';
+        }
+
+        private void HidePasswordInSingUp_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInSingUp.IsVisible = true;
+            HidePasswordInSingUp.IsVisible = false;
+            createPasswordTextBox.PasswordChar = '*';
+        }
+
+        private void RevealePasswordInNewPassword_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInNewPassword.IsVisible = false;
+            HidePasswordInNewPassword.IsVisible = true;
+            newPasswordTextBox.PasswordChar = '\0';
+        }
+
+        private void HidePasswordInNewPassword_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInNewPassword.IsVisible = true;
+            HidePasswordInNewPassword.IsVisible = false;
+            newPasswordTextBox.PasswordChar = '*';
+        }
+
+        private void RevealePasswordInConfirmPassword_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInConfirmPassword.IsVisible = false;
+            HidePasswordInConfirmPassword.IsVisible = true;
+            confirmPasswordTextBox.PasswordChar = '\0';
+        }
+
+        private void HidePasswordInConfirmPassword_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            RevealePasswordInConfirmPassword.IsVisible = true;
+            HidePasswordInConfirmPassword.IsVisible = false;
+            confirmPasswordTextBox.PasswordChar = '*';
         }
 
         // Authentication Methods
@@ -227,7 +291,7 @@ namespace Uchat
             }
         }
 
-        private async void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
+        private void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text ?? string.Empty;
             string password = createPasswordTextBox.Text ?? string.Empty;
@@ -250,6 +314,7 @@ namespace Uchat
             if (!System.Text.RegularExpressions.Regex.IsMatch(username, @"^[a-zA-Z0-9_]+$"))
             {
                 invalidDataInCreateAccount.IsVisible = true;
+                invalidDataInCreateAccount.HorizontalAlignment = HorizontalAlignment.Right;
                 invalidDataInCreateAccount.Text = "Username can only contain letters, numbers and underscore";
                 return;
             }
@@ -261,12 +326,41 @@ namespace Uchat
                 return;
             }
 
-            if (!email.Contains("@") || email.Length < 5)
+            if (!email.EndsWith("@gmail.com") || email.Length < 5)
             {
                 invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = "Invalid email address";
+                invalidDataInCreateAccount.Text = "Invalid email address. Only [@gmail.com] is allowed";
                 return;
             }
+
+            // ЕСЛИ ВСЕ ДАННЫЕ В НОРМЕ И МЫ ХОТИМ ПЕРЕЙТИ ПОДТВЕРЖНЕИЮ GMAIL!
+            signUpForm.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = true;
+            string emailAdress = email.Replace("@gmail.com", "");
+            CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{emailAdress}]";
+        }
+
+        private void BackToSignUp_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            signUpForm.IsVisible = true;
+            CodeVerificationSignUpForm.IsVisible = false;
+        }
+
+        private async void GoToMainProgram_Click(object? sender, RoutedEventArgs e)
+        {
+            string username = createUsernameTextBox.Text ?? string.Empty;
+            string password = createPasswordTextBox.Text ?? string.Empty;
+            string email = createEmailTextBox.Text ?? string.Empty;
+            string code = CodeVerificationSignUpFormTextBox.Text ?? string.Empty;
+
+            /*
+                         if (code != //КОД ОТ EMAIL)
+            {
+                invalidDataInCodeVerificationSignUpForm.Text = "Verification failed";
+                invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                return;
+            }
+             */
 
             try
             {
@@ -274,8 +368,8 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = ex.Message;
+                invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = ex.Message;
             }
         }
 
@@ -288,7 +382,9 @@ namespace Uchat
                 if (response != null)
                 {
                     UserSession.Instance.SetSession(response);
-                    invalidDataInCreateAccount.IsVisible = false;
+
+                    invalidDataInCodeVerificationSignUpForm.IsVisible = false;
+                    CodeVerificationSignUpForm.IsVisible = false;
 
                     // Switch to chat view
                     SwitchToChatView();
@@ -296,8 +392,8 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                invalidDataInCreateAccount.IsVisible = true;
-                invalidDataInCreateAccount.Text = ex.Message;
+                invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = ex.Message;
             }
         }
 
