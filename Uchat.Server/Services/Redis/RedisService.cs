@@ -15,6 +15,7 @@ public sealed class RedisService : IRedisService
     private readonly TimeSpan? _defaultTtl;
     private ConnectionMultiplexer? _multiplexer;
     private IDatabase? _database;
+    private ISubscriber? _subscriber;
 
     public bool IsAvailable => _database != null && _multiplexer?.IsConnected == true;
 
@@ -37,6 +38,7 @@ public sealed class RedisService : IRedisService
         {
             _multiplexer = ConnectionMultiplexer.Connect(_settings.ConnectionString);
             _database = _multiplexer.GetDatabase();
+            _subscriber = _multiplexer.GetSubscriber();
         }
         catch (Exception ex)
         {
@@ -86,6 +88,38 @@ public sealed class RedisService : IRedisService
         }
     }
 
+    public async Task<Dictionary<string, string?>> GetHashAsync(string key, IEnumerable<string> fields)
+    {
+        if (!IsAvailable)
+        {
+            return new Dictionary<string, string?>();
+        }
+
+        try
+        {
+            var fieldList = fields.ToList();
+            if (!fieldList.Any())
+            {
+                return new Dictionary<string, string?>();
+            }
+
+            var entries = await _database!.HashGetAsync(ApplyPrefix(key), fieldList.Select(k => (RedisValue)k).ToArray()).ConfigureAwait(false);
+            var result = new Dictionary<string, string?>();
+            for (var i = 0; i < fieldList.Count; i++)
+            {
+                var entry = entries[i];
+                result[fieldList[i]] = entry.IsNull ? null : entry.ToString();
+            }
+
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis multi-field GetHash failed for key {Key}", key);
+            return new Dictionary<string, string?>();
+        }
+    }
+
     public async Task UpdateSortedSetAsync(string key, string member, double score, TimeSpan? ttl = null)
     {
         if (!IsAvailable)
@@ -125,6 +159,49 @@ public sealed class RedisService : IRedisService
         {
             _logger.LogWarning(ex, "Redis SortedSetRange failed for key {Key}", key);
             return Array.Empty<string>();
+        }
+    }
+
+    public async Task<List<string>> GetSortedKeysAsync(string sortedSetKey)
+    {
+        var members = await GetSortedSetMembersAsync(sortedSetKey, 0, -1, Order.Descending);
+        return members.ToList();
+    }
+
+    public async Task<bool> HashDeleteAsync(string key, string field)
+    {
+        if (!IsAvailable)
+        {
+            return false;
+        }
+
+        try
+        {
+            return await _database!.HashDeleteAsync(ApplyPrefix(key), field).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis HashDelete failed for key {Key}", key);
+            return false;
+        }
+    }
+
+    public async Task<long> PublishAsync(string channel, string message)
+    {
+        if (!IsAvailable || _subscriber == null)
+        {
+            return 0;
+        }
+
+        try
+        {
+            var channelName = new RedisChannel(ApplyPrefix(channel) + "pub", RedisChannel.PatternMode.Literal);
+            return await _subscriber.PublishAsync(channelName, message).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis publish failed for channel {Channel}", channel);
+            return 0;
         }
     }
 

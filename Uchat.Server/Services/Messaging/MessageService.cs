@@ -15,6 +15,8 @@ using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Redis;
 using Uchat.Shared.DTOs;
 using SQLitePCL;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Uchat.Server.Services.Messaging;
 
@@ -30,6 +32,15 @@ public sealed class MessageService : IMessageService
     private readonly IRedisService _redisService;
     private readonly ILogger<MessageService> _logger;
     private readonly IMongoCollection<MongoMessage> _messages;
+
+    private static readonly JsonSerializerOptions CachedMessageSerializerOptions = new()
+    {
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
+    private static readonly TimeSpan LastMessageCacheTtl = TimeSpan.FromHours(24);
+    private const string ChatLastKey = "chat:last";
 
     private const int MaxMessageLength = 5000;
     private const int MaxAttachments = 10;
@@ -191,58 +202,23 @@ public sealed class MessageService : IMessageService
     public async Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(List<int> chatIds)
     {
         if (chatIds == null || !chatIds.Any())
-            return new Dictionary<int, MessageDto>();
-        
-        var filter = Builders<MongoMessage>.Filter.And(
-            Builders<MongoMessage>.Filter.In(m => m.ChatId, chatIds),
-            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
-        );
-
-        var aggregation = _messages.Aggregate()
-        .Match(filter)
-        .SortByDescending(m => m.SentAt)
-        .Group(m => m.ChatId, g => new 
-        { 
-            ChatId = g.Key, 
-            LastMessage = g.First() 
-        });
-
-        var results = await aggregation.ToListAsync();
-
-        var dict = new Dictionary<int, MessageDto>();
-
-        foreach (var item in results)
         {
-            var msg = item.LastMessage;
-            
-            // Превращаем Mongo-сущность в DTO
-            var dto = new MessageDto
-            {
-                Id = msg.Id,
-                ChatRoomId = msg.ChatId,
-                Content = msg.Content,
-                Type = msg.Type, // "text", "image", etc.
-                SentAt = msg.SentAt,
-                EditedAt = msg.EditedAt,
-                IsDeleted = msg.IsDeleted,
-                ReplyToMessageId = msg.ReplyToMessageId,
-                
-                Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
-
-                Attachments = msg.Attachments?.Select(a => new Shared.DTOs.MessageAttachment
-                {
-                    Id = Guid.NewGuid().ToString(), 
-                    ContentType = a.Type
-                }).ToList() ?? new List<Shared.DTOs.MessageAttachment>(),
-                
-                ReactionsCount = new Dictionary<string, int>(),
-                MyReactions = new List<string>()
-            };
-
-            dict[item.ChatId] = dto;
+            return new Dictionary<int, MessageDto>();
         }
 
-        return dict;
+        var cached = await TryGetCachedLastMessagesAsync(chatIds);
+        var missingIds = chatIds.Except(cached.Keys).ToList();
+
+        if (missingIds.Any())
+        {
+            var fallback = await FetchLastMessagesFromMongoAsync(missingIds);
+            foreach (var kvp in fallback)
+            {
+                cached[kvp.Key] = kvp.Value;
+            }
+        }
+
+        return cached;
     }
 
     public async Task<bool> MessageExistsAsync(string messageId, int chatId)
@@ -351,16 +327,9 @@ public sealed class MessageService : IMessageService
 
         try
         {
-            var key = GetChatLastMessageKey(chatId);
-            await _redisService.SetHashAsync(key, "messageId", message.Id);
-            await _redisService.SetHashAsync(key, "sentAt", message.SentAt.ToString("o"));
-            await _redisService.SetHashAsync(key, "content", message.Content ?? string.Empty);
-            await _redisService.SetHashAsync(key, "senderId", message.Sender.UserId.ToString());
-            await _redisService.SetHashAsync(key, "senderUsername", message.Sender.Username ?? string.Empty);
-            if (!string.IsNullOrWhiteSpace(message.Sender.AvatarUrl))
-            {
-                await _redisService.SetHashAsync(key, "senderAvatar", message.Sender.AvatarUrl);
-            }
+            var payload = BuildCachedLastMessage(message);
+            var serialized = JsonSerializer.Serialize(payload, CachedMessageSerializerOptions);
+            await _redisService.SetHashAsync(ChatLastKey, chatId.ToString(), serialized, LastMessageCacheTtl);
         }
         catch (Exception ex)
         {
@@ -368,7 +337,160 @@ public sealed class MessageService : IMessageService
         }
     }
 
-    private static string GetChatLastMessageKey(int chatId) => $"chat:{chatId}:last";
+    private async Task<Dictionary<int, MessageDto>> TryGetCachedLastMessagesAsync(IEnumerable<int> chatIds)
+    {
+        var result = new Dictionary<int, MessageDto>();
+        if (!_redisService.IsAvailable)
+        {
+            return result;
+        }
+
+        foreach (var chatId in chatIds.Distinct())
+        {
+            var cachedValue = await _redisService.GetHashAsync(ChatLastKey, chatId.ToString());
+            if (string.IsNullOrEmpty(cachedValue))
+            {
+                continue;
+            }
+
+            var dto = DeserializeCachedLastMessage(cachedValue);
+            if (dto != null)
+            {
+                result[chatId] = dto;
+            }
+        }
+
+        return result;
+    }
+
+    private async Task<Dictionary<int, MessageDto>> FetchLastMessagesFromMongoAsync(List<int> chatIds)
+    {
+        var filter = Builders<MongoMessage>.Filter.And(
+            Builders<MongoMessage>.Filter.In(m => m.ChatId, chatIds),
+            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
+        );
+
+        var aggregation = _messages.Aggregate()
+            .Match(filter)
+            .SortByDescending(m => m.SentAt)
+            .Group(m => m.ChatId, g => new
+            {
+                ChatId = g.Key,
+                LastMessage = g.First()
+            });
+
+        var results = await aggregation.ToListAsync();
+        var dict = new Dictionary<int, MessageDto>();
+
+        foreach (var item in results)
+        {
+            var msg = item.LastMessage;
+            var dto = new MessageDto
+            {
+                Id = msg.Id,
+                ChatRoomId = msg.ChatId,
+                Content = msg.Content,
+                Type = msg.Type,
+                SentAt = msg.SentAt,
+                EditedAt = msg.EditedAt,
+                IsDeleted = msg.IsDeleted,
+                ReplyToMessageId = msg.ReplyToMessageId,
+                Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
+                Attachments = msg.Attachments?.Select(a => new Uchat.Shared.DTOs.MessageAttachment
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ContentType = a.Type
+                }).ToList() ?? new List<Uchat.Shared.DTOs.MessageAttachment>(),
+                ReactionsCount = new Dictionary<string, int>(),
+                MyReactions = new List<string>()
+            };
+
+            dict[item.ChatId] = dto;
+            await CacheLastMessageAsync(item.ChatId, msg);
+        }
+
+        return dict;
+    }
+
+    private static MessageDto? DeserializeCachedLastMessage(string json)
+    {
+        try
+        {
+            var cached = JsonSerializer.Deserialize<CachedLastMessage>(json, CachedMessageSerializerOptions);
+            if (cached == null)
+            {
+                return null;
+            }
+
+            return new MessageDto
+            {
+                Id = cached.MessageId,
+                ChatRoomId = cached.ChatId,
+                Content = cached.Content,
+                Type = cached.Type,
+                SentAt = cached.SentAt,
+                EditedAt = cached.EditedAt,
+                IsDeleted = cached.IsDeleted,
+                Sender = new MessageSenderDto
+                {
+                    UserId = cached.SenderId,
+                    Username = cached.SenderUsername,
+                    AvatarUrl = cached.SenderAvatarUrl
+                },
+                ReactionsCount = new Dictionary<string, int>(),
+                MyReactions = new List<string>()
+            };
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
+    private static CachedLastMessage BuildCachedLastMessage(MongoMessage message) => new()
+    {
+        MessageId = message.Id,
+        ChatId = message.ChatId,
+        Content = message.Content ?? string.Empty,
+        Type = string.IsNullOrWhiteSpace(message.Type) ? "text" : message.Type,
+        SenderId = message.Sender.UserId,
+        SenderUsername = message.Sender.Username,
+        SenderAvatarUrl = message.Sender.AvatarUrl,
+        SentAt = message.SentAt,
+        EditedAt = message.EditedAt,
+        IsDeleted = message.IsDeleted
+    };
+
+    private async Task RefreshChatLastMessageCacheAsync(int chatId)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var latest = await _messageRepository.GetChatMessagesAsync(chatId, 1);
+        if (latest.Any())
+        {
+            await CacheLastMessageAsync(chatId, latest.First());
+            return;
+        }
+
+        await _redisService.HashDeleteAsync(ChatLastKey, chatId.ToString());
+    }
+
+    private sealed record CachedLastMessage
+    {
+        public string MessageId { get; init; } = string.Empty;
+        public int ChatId { get; init; }
+        public string Content { get; init; } = string.Empty;
+        public string Type { get; init; } = "text";
+        public int SenderId { get; init; }
+        public string? SenderUsername { get; init; }
+        public string? SenderAvatarUrl { get; init; }
+        public DateTime SentAt { get; init; }
+        public DateTime? EditedAt { get; init; }
+        public bool IsDeleted { get; init; }
+    }
 
     private static MongoMessage BuildMongoMessage(MessageCreateDto dto, User sender)
     {
@@ -508,6 +630,7 @@ public sealed class MessageService : IMessageService
                 // Уменьшаем счётчик сообщений в чате
                 chatRoom.TotalMessagesCount = Math.Max(0, chatRoom.TotalMessagesCount - 1);
                 await _context.SaveChangesAsync(cancellationToken);
+                await RefreshChatLastMessageCacheAsync(message.ChatId);
             }
 
             _logger.LogInformation("Message {MessageId} deleted by user {UserId}", messageId, userId);
@@ -562,6 +685,8 @@ public sealed class MessageService : IMessageService
             {
                 return MessagingResult.Failure("Failed to edit message.");
             }
+
+            await RefreshChatLastMessageCacheAsync(message.ChatId);
 
             _logger.LogInformation("Message {MessageId} edited by user {UserId}", messageId, userId);
             return MessagingResult.SuccessResult(messageId, DateTime.UtcNow);
