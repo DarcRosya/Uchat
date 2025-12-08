@@ -21,6 +21,7 @@ using Uchat.Server.Services.Contact;
 using Uchat.Server.Data;
 using Uchat.Server.Services.Presence;
 using Uchat.Server.Services.Redis;
+using Uchat.Server.Services.Unread;
 
 public class Program
 {
@@ -100,6 +101,7 @@ public class Program
         builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IContactService, ContactService>();
+        builder.Services.AddScoped<IUnreadCounterService, UnreadCounterService>();
         builder.Services.AddSingleton<IUserPresenceService, UserPresenceService>();
 
         // ============================================================================

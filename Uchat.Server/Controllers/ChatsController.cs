@@ -9,6 +9,7 @@ using Uchat.Server.DTOs;
 using Uchat.Shared.DTOs;
 using MongoDB.Driver;
 using Uchat.Server.Services.Messaging;
+using Uchat.Server.Services.Unread;
 
 namespace Uchat.Server.Controllers;
 
@@ -20,18 +21,21 @@ public class ChatsController : ControllerBase
     private readonly IChatRoomService _chatRoomService;
     private readonly IUserRepository _userRepository;
     private readonly MongoDbContext _mongoContext;
+    private readonly IUnreadCounterService _unreadCounterService;
     private readonly IMessageService _messageService;
 
     public ChatsController(
         IChatRoomService chatRoomService,
         IUserRepository userRepository,
         MongoDbContext mongoContext,
-        IMessageService messageService)
+        IMessageService messageService,
+        IUnreadCounterService unreadCounterService)
     {
         _chatRoomService = chatRoomService;
         _userRepository = userRepository;
         _mongoContext = mongoContext;
         _messageService = messageService;
+        _unreadCounterService = unreadCounterService;
     }
 
     /// <summary>
@@ -57,6 +61,7 @@ public class ChatsController : ControllerBase
                     .ToDictionary(u => u.Id);
 
         var lastMessagesDict = await _messageService.GetLastMessagesForChatsBatch(chatIds);
+        var unreadCounts = await _unreadCounterService.GetUnreadCountsAsync(userId, chatIds);
 
         foreach (var chat in chats)
         {
@@ -97,7 +102,7 @@ public class ChatsController : ControllerBase
                 dto.LastMessageContent = "";
             }
             
-            dto.UnreadCount = 0; 
+            dto.UnreadCount = unreadCounts.TryGetValue(chat.Id, out var unread) ? unread : 0;
             chatDtos.Add(dto);
         }
 

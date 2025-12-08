@@ -6,4 +6,5 @@ public static class RedisCacheKeys
 
     public static string GetUserChatSortedSetKey(int userId) => $"user:{userId}:chats";
     public static string GetPresenceKey(int userId) => $"presence:user:{userId}";
+    public static string GetChatUnreadKey(int chatId, int userId) => $"chat:{chatId}:unread:{userId}";
 }

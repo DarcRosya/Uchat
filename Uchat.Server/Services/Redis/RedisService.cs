@@ -73,7 +73,7 @@ public sealed class RedisService : IRedisService
         }
     }
 
-    private async Task SetKeyAsync(string key, string value, TimeSpan? ttl = null)
+    public async Task SetStringAsync(string key, string value, TimeSpan? ttl = null)
     {
         if (!IsAvailable)
         {
@@ -84,14 +84,60 @@ public sealed class RedisService : IRedisService
         {
             var fullKey = ApplyPrefix(key);
             await _database!.StringSetAsync(fullKey, value).ConfigureAwait(false);
-            if (ttl.HasValue)
+            var expiry = ttl ?? _defaultTtl;
+            if (expiry.HasValue)
             {
-                await _database.KeyExpireAsync(fullKey, ttl).ConfigureAwait(false);
+                await _database.KeyExpireAsync(fullKey, expiry).ConfigureAwait(false);
             }
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Redis StringSet failed for key {Key}", key);
+        }
+    }
+
+    public async Task<string?> GetStringAsync(string key)
+    {
+        if (!IsAvailable)
+        {
+            return null;
+        }
+
+        try
+        {
+            var raw = await _database!.StringGetAsync(ApplyPrefix(key)).ConfigureAwait(false);
+            return raw.IsNull ? null : raw.ToString();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis StringGet failed for key {Key}", key);
+            return null;
+        }
+    }
+
+    public async Task<long> IncrementAsync(string key, long value = 1, TimeSpan? ttl = null)
+    {
+        if (!IsAvailable)
+        {
+            return 0;
+        }
+
+        try
+        {
+            var fullKey = ApplyPrefix(key);
+            var newValue = await _database!.StringIncrementAsync(fullKey, value).ConfigureAwait(false);
+            var expiry = ttl ?? _defaultTtl;
+            if (expiry.HasValue)
+            {
+                await _database.KeyExpireAsync(fullKey, expiry).ConfigureAwait(false);
+            }
+
+            return newValue;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis StringIncrement failed for key {Key}", key);
+            return 0;
         }
     }
 
@@ -268,7 +314,7 @@ public sealed class RedisService : IRedisService
     }
 
     public Task SetPresenceAsync(string key, string value, TimeSpan ttl)
-        => SetKeyAsync(key, value, ttl);
+        => SetStringAsync(key, value, ttl);
 
     public async Task RefreshPresenceAsync(string key, TimeSpan ttl)
     {

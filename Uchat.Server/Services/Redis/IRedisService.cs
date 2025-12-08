@@ -12,6 +12,9 @@ public interface IRedisService : IDisposable
     Task SetHashAsync(string key, string field, string value, TimeSpan? ttl = null);
     Task<string?> GetHashAsync(string key, string field);
     Task<Dictionary<string, string?>> GetHashAsync(string key, IEnumerable<string> fields);
+    Task SetStringAsync(string key, string value, TimeSpan? ttl = null);
+    Task<string?> GetStringAsync(string key);
+    Task<long> IncrementAsync(string key, long value = 1, TimeSpan? ttl = null);
     Task UpdateSortedSetAsync(string key, string member, double score, TimeSpan? ttl = null);
     Task<IEnumerable<string>> GetSortedSetMembersAsync(string key, long start = 0, long stop = -1, Order order = Order.Descending);
     Task<List<string>> GetSortedKeysAsync(string sortedSetKey);

@@ -13,6 +13,7 @@ using Uchat.Database.Extensions;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Redis;
+using Uchat.Server.Services.Unread;
 using Uchat.Shared.DTOs;
 using SQLitePCL;
 using System.Text.Json;
@@ -32,6 +33,7 @@ public sealed class MessageService : IMessageService
     private readonly IRedisService _redisService;
     private readonly ILogger<MessageService> _logger;
     private readonly IMongoCollection<MongoMessage> _messages;
+    private readonly IUnreadCounterService _unreadCounterService;
 
     private static readonly JsonSerializerOptions CachedMessageSerializerOptions = new()
     {
@@ -50,12 +52,14 @@ public sealed class MessageService : IMessageService
         MongoDbContext mongoDbContext,
         IMessageRepository messageRepository,
         IRedisService redisService,
+        IUnreadCounterService unreadCounterService,
         ILogger<MessageService> logger)
     {
         _context = context;
         _mongoDbContext = mongoDbContext;
         _messageRepository = messageRepository;
         _redisService = redisService;
+        _unreadCounterService = unreadCounterService;
         _logger = logger;
         _messages = mongoDbContext.Messages;
     }
@@ -124,6 +128,10 @@ public sealed class MessageService : IMessageService
 
             await CacheLastMessageAsync(chatRoom.Id, mongoMessage);
             await UpdateChatSortedSetAsync(chatRoom.Id, mongoMessage.SentAt);
+            await _unreadCounterService.IncrementUnreadAsync(
+                chatRoom.Id,
+                chatRoom.Members.Select(m => m.UserId),
+                dto.SenderId);
 
             return MessagingResult.SuccessResult(messageId, mongoMessage.SentAt);
         }
@@ -780,6 +788,7 @@ public sealed class MessageService : IMessageService
             var count = await _messageRepository.MarkAsReadUntilAsync(chatId, userId, untilTimestamp);
             
             _logger.LogInformation("{Count} messages marked as read in chat {ChatId} by user {UserId}", count, chatId, userId);
+            await _unreadCounterService.ResetUnreadAsync(chatId, userId);
             return count;
         }
         catch (Exception ex)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Uchat.Server.Services.Contact;
 using Uchat.Server.Services.Chat;
+using Uchat.Server.Services.Unread;
 using Uchat.Server.Hubs;
 using Uchat.Shared.DTOs;
 using Uchat.Database.Entities;
@@ -22,19 +23,22 @@ public class ContactsController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly IHubContext<ChatHub> _hubContext;
     private readonly MongoDbContext _mongoContext;
+    private readonly IUnreadCounterService _unreadCounterService;
 
     public ContactsController(
         IContactService contactService,
         IChatRoomService chatRoomService,
         IUserRepository userRepository, 
         IHubContext<ChatHub> hubContext,
-        MongoDbContext mongoContext)
+        MongoDbContext mongoContext,
+        IUnreadCounterService unreadCounterService)
     {
         _contactService = contactService;
         _chatRoomService = chatRoomService;
         _userRepository = userRepository;
         _hubContext = hubContext;
         _mongoContext = mongoContext;
+        _unreadCounterService = unreadCounterService;
     }
 
     [HttpPost("send-request")]
@@ -236,7 +240,7 @@ public class ContactsController : ControllerBase
                     Status = (ContactStatusDto)contact.Status,
                     SavedChatRoomId = contact.SavedChatRoomId,
                     LastMessageContent = await GetLastMessageContentAsync(contact.SavedChatRoomId),
-                    UnreadCount = await GetUnreadCountAsync(contact.SavedChatRoomId, userId)
+                    UnreadCount = await _unreadCounterService.GetUnreadCountAsync(contact.SavedChatRoomId, userId)
                 });
             }
         }
@@ -262,20 +266,6 @@ public class ContactsController : ControllerBase
             return lastMessage.Content;
             
         return $"{lastMessage.Sender.DisplayName}: {lastMessage.Content}";
-    }
-    
-    private async Task<int> GetUnreadCountAsync(int? chatRoomId, int userId)
-    {
-        if (!chatRoomId.HasValue)
-            return 0;
-            
-        var count = await _mongoContext.Messages
-            .CountDocumentsAsync(m => 
-                m.ChatId == chatRoomId.Value && 
-                !m.IsDeleted &&
-                !m.ReadBy.Contains(userId));
-                
-        return (int)count;
     }
     
     /// <summary>
