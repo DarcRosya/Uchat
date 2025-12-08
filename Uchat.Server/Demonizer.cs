@@ -16,7 +16,7 @@ namespace Uchat.Server
             {
                 FileName = fileName,
                 Arguments = port,
-                UseShellExecute = false,
+                UseShellExecute = true,
                 CreateNoWindow = true
             };
 
@@ -39,10 +39,8 @@ namespace Uchat.Server
             foreach (var proc in processes)
             {
                 if (proc.Id == myId)
-                {
                     continue;
-                }
-
+                
                 try
                 {
                     proc.Kill();

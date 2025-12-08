@@ -28,35 +28,38 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        //Поддержка аргументов демонизации
-        if (args.Contains("-kill") && args.Contains("-start"))
+        try
         {
-            Console.WriteLine("Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
-            return;
-        }
-        if (!ConnectionConfig.ValidServerArgs(args))
-        {
-            Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill");
-            Environment.Exit(0);
-        }
+            //Поддержка аргументов демонизации
+            //if (args.Contains("-kill") && args.Contains("-start"))
+            //{
+            //    Console.WriteLine("Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
+            //    return;
+            //}
+            //if (!ConnectionConfig.ValidServerArgs(args))
+            //{
+            //    Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill");
+            //    Environment.Exit(0);
+            //}
 
-        if (args.Contains("-kill"))
-        {
-            SelfDaemon.KillExisting();
-            return;
-        }
-        else if (args.Contains("-start"))
-        {
-            SelfDaemon.RunDetached(args);
-            return;
-        }
+            //if (args.Contains("-kill"))
+            //{
+            //    SelfDaemon.KillExisting();
+            //    return;
+            //}
+            //else if (args.Contains("-start"))
+            //{
+            //    SelfDaemon.RunDetached(args);
+            //    return;
+            //}
 
-        int port = int.Parse(args[^1]);
-        //int port = 6000;
-        builder.WebHost.UseKestrel(options =>
-        {
-            options.ListenLocalhost(port);
-        });
+            //int port = int.Parse(args[^1]);
+            int port = 6000;
+            builder.WebHost.UseKestrel(options =>
+            {
+                options.ListenLocalhost(port);
+            });
+        }catch (Exception) { Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill"); return;}
 
         // ============================================================================
         // БАЗЫ ДАННЫХ
