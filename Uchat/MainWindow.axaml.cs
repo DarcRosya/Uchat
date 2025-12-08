@@ -15,6 +15,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Uchat.Services;
+using Uchat.Shared;
 
 namespace Uchat
 {

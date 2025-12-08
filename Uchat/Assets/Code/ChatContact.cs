@@ -7,6 +7,7 @@ using Avalonia.Platform;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using Uchat.Shared;
 
 
 namespace Uchat

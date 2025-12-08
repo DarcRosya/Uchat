@@ -8,6 +8,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using Uchat.Shared;
 
 
 namespace Uchat

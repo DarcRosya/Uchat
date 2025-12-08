@@ -1,0 +1,221 @@
+=== LOG STARTED AT 12/08/25 5:11:52 PM ===
+[17:11:52] User 123 (ID: 3) connected
+[17:11:52] [ONLINE] User 123 became ONLINE
+[17:11:52] [Auto-Join] User 123 added to group chat_4
+[17:11:52] [Auto-Join] User 123 added to group chat_5
+[17:11:52] [Auto-Join] User 123 joined 2 chat groups
+[17:12:25] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[17:13:06] User 123 disconnected
+[17:13:06] [OFFLINE] User 123 became OFFLINE
+[17:20:52] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:21:13] [CLIENT] Attempting login for: 123
+[17:21:14] [CLIENT] Login successful for 123
+[17:21:14] [CLIENT] TokenStorage initialized at: C:\Users\lukia\AppData\Local\Uchat\tokens.dat
+[17:21:14] [CLIENT] Tokens saved for user 123 (expires: 2025-12-08 17:51:14)
+[17:21:14] [CLIENT] Session set for user 123 (expires: 17:51:14)
+[17:21:14] [CLIENT] Auto-refresh timer started
+[17:21:14] [CLIENT] Session set for user 123 (expires: 17:51:14)
+[17:21:14] [CLIENT] Auto-refresh timer stopped
+[17:21:14] [CLIENT] Auto-refresh timer started
+[17:21:14] [CLIENT] Initializing API services for user: 123
+[17:21:14] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[17:21:14] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[17:21:14] [CLIENT] ContactApiService: Authorization header set
+[17:21:14] User 123 (ID: 3) connected
+[17:21:14] [ONLINE] User 123 became ONLINE
+[17:21:14] [Auto-Join] User 123 added to group chat_4
+[17:21:14] [Auto-Join] User 123 added to group chat_5
+[17:21:14] [Auto-Join] User 123 joined 2 chat groups
+[17:21:28] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[17:21:28] [CLIENT] Joined SignalR group for chat 3
+[17:21:28] [CLIENT] [DEBUG] Loading history for chat 3...
+[17:21:28] [CLIENT] [DEBUG] Messages count: 7
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936ed95df1b068f5d14de70, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936edb9df1b068f5d14de73, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936f5cee01a7455cecfd7d0, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936f6ece01a7455cecfd7fc, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936f6fae01a7455cecfd7fe, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 6936f72ee01a7455cecfd81e, ChatId in Msg: 3
+[17:21:28] [CLIENT] [DEBUG] Rendering msg 693706fff876af5bcfc4797c, ChatId in Msg: 3
+[17:21:43] [CLIENT] [Chat] Message sent successfully to 3
+[17:23:14] User 123 disconnected
+[17:23:14] [OFFLINE] User 123 became OFFLINE
+[17:47:35] [CLIENT] UserSession initialized with system arguments
+[17:47:35] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:47:48] [CLIENT] UserSession initialized with system arguments
+[17:47:49] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:48:00] [CLIENT] UserSession initialized with system arguments
+[17:48:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:48:13] [CLIENT] UserSession initialized with system arguments
+[17:48:13] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:48:41] [CLIENT] Attempting login for: 123
+[17:48:42] [CLIENT] Login successful for 123
+[17:48:42] [CLIENT] TokenStorage initialized at: C:\Users\lukia\AppData\Local\Uchat\tokens.dat
+[17:48:42] [CLIENT] Tokens saved for user 123 (expires: 2025-12-08 18:18:42)
+[17:48:42] [CLIENT] Session set for user 123 (expires: 18:18:42)
+[17:48:42] [CLIENT] Auto-refresh timer started
+[17:48:42] [CLIENT] Session set for user 123 (expires: 18:18:42)
+[17:48:42] [CLIENT] Auto-refresh timer stopped
+[17:48:42] [CLIENT] Auto-refresh timer started
+[17:48:42] [CLIENT] Initializing API services for user: 123
+[17:48:42] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[17:48:42] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[17:48:42] [CLIENT] ContactApiService: Authorization header set
+[17:48:42] User 123 (ID: 3) connected
+[17:48:42] [ONLINE] User 123 became ONLINE
+[17:48:42] [Auto-Join] User 123 added to group chat_4
+[17:48:42] [Auto-Join] User 123 added to group chat_5
+[17:48:42] [Auto-Join] User 123 joined 2 chat groups
+[17:48:51] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[17:48:51] [CLIENT] Joined SignalR group for chat 3
+[17:48:51] [CLIENT] [DEBUG] Loading history for chat 3...
+[17:48:51] [CLIENT] [DEBUG] Messages count: 8
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936ed95df1b068f5d14de70, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936edb9df1b068f5d14de73, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936f5cee01a7455cecfd7d0, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936f6ece01a7455cecfd7fc, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936f6fae01a7455cecfd7fe, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 6936f72ee01a7455cecfd81e, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 693706fff876af5bcfc4797c, ChatId in Msg: 3
+[17:48:51] [CLIENT] [DEBUG] Rendering msg 693709275f1e48bbd285ac86, ChatId in Msg: 3
+[17:48:57] User 123 disconnected
+[17:48:57] [OFFLINE] User 123 became OFFLINE
+[19:11:28] [CLIENT] UserSession initialized with system arguments
+[19:11:28] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:11:41] [CLIENT] Attempting login for: 123
+[19:11:42] [CLIENT] Login successful for 123
+[19:11:42] [CLIENT] TokenStorage initialized at: C:\Users\lukia\AppData\Local\Uchat\tokens.dat
+[19:11:42] [CLIENT] Tokens saved for user 123 (expires: 2025-12-08 19:41:41)
+[19:11:42] [CLIENT] Session set for user 123 (expires: 19:41:42)
+[19:11:42] [CLIENT] Auto-refresh timer started
+[19:11:42] [CLIENT] Session set for user 123 (expires: 19:41:42)
+[19:11:42] [CLIENT] Auto-refresh timer stopped
+[19:11:42] [CLIENT] Auto-refresh timer started
+[19:11:42] [CLIENT] Initializing API services for user: 123
+[19:11:42] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[19:11:42] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[19:11:42] [CLIENT] ContactApiService: Authorization header set
+[19:11:42] User 123 (ID: 3) connected
+[19:11:42] [ONLINE] User 123 became ONLINE
+[19:11:42] [Auto-Join] User 123 added to group chat_4
+[19:11:42] [Auto-Join] User 123 added to group chat_5
+[19:11:42] [Auto-Join] User 123 joined 2 chat groups
+[19:12:00] User 123 disconnected
+[19:12:00] [OFFLINE] User 123 became OFFLINE
+[19:18:10] User 123 (ID: 3) connected
+[19:18:11] [ONLINE] User 123 became ONLINE
+[19:18:11] [Auto-Join] User 123 added to group chat_4
+[19:18:11] [Auto-Join] User 123 added to group chat_5
+[19:18:12] [Auto-Join] User 123 joined 2 chat groups
+[19:18:25] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:18:37] User 123 disconnected
+[19:18:37] [OFFLINE] User 123 became OFFLINE
+[19:19:18] User 123 (ID: 3) connected
+[19:19:18] [ONLINE] User 123 became ONLINE
+[19:19:18] [Auto-Join] User 123 added to group chat_4
+[19:19:18] [Auto-Join] User 123 added to group chat_5
+[19:19:18] [Auto-Join] User 123 joined 2 chat groups
+[19:19:36] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:20:28] User 123 disconnected
+[19:20:28] [OFFLINE] User 123 became OFFLINE
+[19:24:24] User 123 (ID: 3) connected
+[19:24:24] [ONLINE] User 123 became ONLINE
+[19:24:24] [Auto-Join] User 123 added to group chat_4
+[19:24:24] [Auto-Join] User 123 added to group chat_5
+[19:24:24] [Auto-Join] User 123 joined 2 chat groups
+[19:24:30] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:24:48] [JoinChatGroup] 123 joined chat 1 (group: chat_1)
+[19:25:12] User 123 disconnected
+[19:25:12] [OFFLINE] User 123 became OFFLINE
+[19:35:51] [SERVER] User 123 (ID: 3) connected
+[19:35:51] [SERVER] [ONLINE] User 123 became ONLINE
+[19:35:51] [SERVER] [Auto-Join] User 123 added to group chat_4
+[19:35:51] [SERVER] [Auto-Join] User 123 added to group chat_5
+[19:35:51] [SERVER] [Auto-Join] User 123 joined 2 chat groups
+[19:35:56] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:36:25] [SERVER] User 123 disconnected
+[19:36:25] [SERVER] [OFFLINE] User 123 became OFFLINE
+[19:42:07] [SERVER] User 123 (ID: 3) connected
+[19:42:07] [SERVER] [ONLINE] User 123 became ONLINE
+[19:42:07] [SERVER] [Auto-Join] User 123 added to group chat_4
+[19:42:07] [SERVER] [Auto-Join] User 123 added to group chat_5
+[19:42:07] [SERVER] [Auto-Join] User 123 joined 2 chat groups
+[19:42:10] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:42:12] [SERVER] [JoinChatGroup] 123 joined chat 1 (group: chat_1)
+[19:42:16] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:42:29] [SERVER] User 123 disconnected
+[19:42:29] [SERVER] [OFFLINE] User 123 became OFFLINE
+[19:52:08] [SERVER] User 123 (ID: 3) connected
+[19:52:08] [SERVER] [ONLINE] User 123 became ONLINE
+[19:52:08] [SERVER] [Auto-Join] User 123 added to group chat_4
+[19:52:08] [SERVER] [Auto-Join] User 123 added to group chat_5
+[19:52:08] [SERVER] [Auto-Join] User 123 joined 2 chat groups
+[19:52:15] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:52:31] [SERVER] User 123 disconnected
+[19:52:31] [SERVER] [OFFLINE] User 123 became OFFLINE
+[19:55:24] [CLIENT] UserSession initialized with system arguments
+[19:55:24] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:55:29] [CLIENT] Attempting login for: 123
+[19:55:30] [CLIENT] Login successful for 123
+[19:55:30] [CLIENT] TokenStorage initialized at: C:\Users\lukia\AppData\Local\Uchat\tokens.dat
+[19:55:30] [CLIENT] Tokens saved for user 123 (expires: 2025-12-08 20:25:30)
+[19:55:30] [CLIENT] Session set for user 123 (expires: 20:25:30)
+[19:55:30] [CLIENT] Auto-refresh timer started
+[19:55:30] [CLIENT] Session set for user 123 (expires: 20:25:30)
+[19:55:30] [CLIENT] Auto-refresh timer stopped
+[19:55:30] [CLIENT] Auto-refresh timer started
+[19:55:30] [CLIENT] Initializing API services for user: 123
+[19:55:30] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[19:55:30] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[19:55:30] [CLIENT] ContactApiService: Authorization header set
+[19:55:30] [SERVER] User 123 (ID: 3) connected
+[19:55:30] [SERVER] [ONLINE] User 123 became ONLINE
+[19:55:30] [SERVER] [Auto-Join] User 123 added to group chat_4
+[19:55:30] [SERVER] [Auto-Join] User 123 added to group chat_5
+[19:55:30] [SERVER] [Auto-Join] User 123 joined 2 chat groups
+[19:55:44] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[19:55:44] [CLIENT] Joined SignalR group for chat 3
+[19:55:44] [CLIENT] [DEBUG] Loading history for chat 3...
+[19:55:44] [CLIENT] [DEBUG] Messages count: 13
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936ed95df1b068f5d14de70, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936edb9df1b068f5d14de73, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936f5cee01a7455cecfd7d0, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936f6ece01a7455cecfd7fc, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936f6fae01a7455cecfd7fe, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6936f72ee01a7455cecfd81e, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 693706fff876af5bcfc4797c, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 693709275f1e48bbd285ac86, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 693724cd69679938b7a30dfb, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 6937265a685eb2f246e5ef1f, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 693728a9cd61e1be227ab63c, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 69372a1bcd61e1be227ab658, ChatId in Msg: 3
+[19:55:44] [CLIENT] [DEBUG] Rendering msg 69372c72da4aae749b370d08, ChatId in Msg: 3
+[19:55:50] [CLIENT] [Chat] Message sent successfully to 3
+[19:56:00] [SERVER] User 123 disconnected
+[19:56:00] [SERVER] [OFFLINE] User 123 became OFFLINE
+[20:14:41] [CLIENT] UserSession initialized with system arguments
+[20:14:41] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:14:58] [CLIENT] UserSession initialized with system arguments
+[20:14:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:15:08] [CLIENT] Attempting login for: 123
+[20:15:09] [CLIENT] Login successful for 123
+[20:15:09] [CLIENT] TokenStorage initialized at: C:\Users\lukia\AppData\Local\Uchat\tokens.dat
+[20:15:09] [CLIENT] Tokens saved for user 123 (expires: 2025-12-08 20:45:09)
+[20:15:09] [CLIENT] Session set for user 123 (expires: 20:45:09)
+[20:15:09] [CLIENT] Auto-refresh timer started
+[20:15:09] [CLIENT] Session set for user 123 (expires: 20:45:09)
+[20:15:09] [CLIENT] Auto-refresh timer stopped
+[20:15:09] [CLIENT] Auto-refresh timer started
+[20:15:09] [CLIENT] Initializing API services for user: 123
+[20:15:09] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[20:15:09] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[20:15:09] [CLIENT] ContactApiService: Authorization header set
+[20:15:09] [SERVER] User 123 (ID: 3) connected
+[20:15:09] [SERVER] [ONLINE] User 123 became ONLINE
+[20:15:09] [SERVER] [Auto-Join] User 123 added to group chat_4
+[20:15:09] [SERVER] [Auto-Join] User 123 added to group chat_5
+[20:15:09] [SERVER] [Auto-Join] User 123 joined 2 chat groups
+[20:15:19] [SERVER] [JoinChatGroup] 123 joined chat 3 (group: chat_3)
+[20:15:49] [CLIENT] [Chat] Message sent successfully to 3
+[20:16:04] [SERVER] User 123 disconnected
+[20:16:04] [SERVER] [OFFLINE] User 123 became OFFLINE

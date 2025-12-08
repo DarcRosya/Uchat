@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Uchat.Services;
 using Uchat.Shared.DTOs;
+using Uchat.Shared;
 
 namespace Uchat
 {
@@ -440,7 +441,7 @@ namespace Uchat
                 try
                 {
                     await _hubConnection.InvokeAsync("JoinChatGroup", chatId);
-                    Logger.Log($"Joined SignalR group for chat {chatId}");
+                    //Logger.Log($"Joined SignalR group for chat {chatId}");
                 }
                 catch (Exception ex)
                 {
@@ -483,14 +484,14 @@ namespace Uchat
         {
             try
             {
-                Logger.Log($"[DEBUG] Loading history for chat {chatId}...");
+                //Logger.Log($"[DEBUG] Loading history for chat {chatId}...");
                 var result = await _messageApiService.GetMessagesAsync(chatId, limit);
                 
                 if (result == null)
                 {
                     return;
                 }
-                Logger.Log($"[DEBUG] Messages count: {result.Messages?.Count ?? 0}");
+                //Logger.Log($"[DEBUG] Messages count: {result.Messages?.Count ?? 0}");
                 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -509,7 +510,7 @@ namespace Uchat
                     
                     foreach (var msg in messages)
                     {
-                        Logger.Log($"[DEBUG] Rendering msg {msg.Id}, ChatId in Msg: {msg.ChatRoomId}");
+                        //Logger.Log($"[DEBUG] Rendering msg {msg.Id}, ChatId in Msg: {msg.ChatRoomId}");
                         msg.ChatRoomId = chatId;
                         DisplayMessage(msg);
                     }

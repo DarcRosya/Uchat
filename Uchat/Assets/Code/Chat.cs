@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Threading.Tasks;
 using static Uchat.MainWindow.Chat;
+using Uchat.Shared;
 
 namespace Uchat
 {
