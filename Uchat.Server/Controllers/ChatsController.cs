@@ -9,6 +9,7 @@ using Uchat.Server.DTOs;
 using Uchat.Shared.DTOs;
 using MongoDB.Driver;
 using Uchat.Server.Services.Messaging;
+using Uchat.Server.Services.Unread;
 
 namespace Uchat.Server.Controllers;
 
@@ -20,18 +21,21 @@ public class ChatsController : ControllerBase
     private readonly IChatRoomService _chatRoomService;
     private readonly IUserRepository _userRepository;
     private readonly MongoDbContext _mongoContext;
+    private readonly IUnreadCounterService _unreadCounterService;
     private readonly IMessageService _messageService;
 
     public ChatsController(
         IChatRoomService chatRoomService,
         IUserRepository userRepository,
         MongoDbContext mongoContext,
-        IMessageService messageService)
+        IMessageService messageService,
+        IUnreadCounterService unreadCounterService)
     {
         _chatRoomService = chatRoomService;
         _userRepository = userRepository;
         _mongoContext = mongoContext;
         _messageService = messageService;
+        _unreadCounterService = unreadCounterService;
     }
 
     /// <summary>
@@ -42,64 +46,11 @@ public class ChatsController : ControllerBase
     {
         var userId = GetCurrentUserId();
 
-        var memberships = await _chatRoomService.GetUserChatMembershipsAsync(userId);
-    
-        var chats = memberships.Select(m => m.ChatRoom).ToList();;
+        // Сервис сам сходит в Redis, в БД, смапит DTO и отсортирует
+        // Убедись, что метод в сервисе называется GetUserChatsAsync и возвращает List<ChatRoomDto>
+        var chatDtos = await _chatRoomService.GetUserChatsAsync(userId);
 
-        var clearDatesDict = memberships.ToDictionary(
-            m => m.ChatRoomId, 
-            m => m.ClearedHistoryAt 
-        );
-
-        var lastMessagesDict = await _messageService.GetLastMessagesForChatsBatch(clearDatesDict);
-
-        var partnerUserIds = new HashSet<int>();
-        foreach (var chat in chats.Where(c => c.Type == ChatRoomType.DirectMessage))
-        {
-            var partner = chat.Members?.FirstOrDefault(m => m.UserId != userId);
-            if (partner != null) partnerUserIds.Add(partner.UserId);
-        }
-
-        var usersDict = (await _userRepository.GetUsersByIdsAsync(partnerUserIds.ToList()))
-                    .ToDictionary(u => u.Id);
-
-        var chatDtos = new List<ChatRoomDto>();
-
-        foreach (var chat in chats)
-        {
-            var dto = chat.ToDto();
-
-            if (chat.Type == ChatRoomType.DirectMessage)
-            {
-                var partnerId = chat.Members?.FirstOrDefault(m => m.UserId != userId)?.UserId ?? 0;
-                if (partnerId > 0 && usersDict.TryGetValue(partnerId, out var partner))
-                {
-                    dto.Name = partner.DisplayName ?? partner.Username;
-                    dto.IconUrl = partner.AvatarUrl;
-                }
-                else
-                {
-                    dto.Name = "Unknown User"; 
-                }
-            }
-
-            if (lastMessagesDict.TryGetValue(chat.Id, out var lastMsgDto))
-            {
-                dto.LastMessageContent = lastMsgDto.Content;
-                dto.LastMessageAt = lastMsgDto.SentAt;
-            }
-            else
-            {
-                dto.LastMessageContent = "";
-                dto.LastMessageAt = chat.CreatedAt; 
-            }
-        
-            dto.UnreadCount = 0; 
-            chatDtos.Add(dto);
-        }
-
-        // Сортируем уже в памяти перед отдачей
-        return Ok(chatDtos.OrderByDescending(x => x.LastMessageAt));
+        return Ok(chatDtos);
     }
 
     [HttpGet("{id}")]
@@ -199,29 +150,4 @@ public class ChatsController : ControllerBase
         var claim = User.FindFirstValue(ClaimTypes.NameIdentifier);
         return int.Parse(claim!);
     }
-
-    // private string GetAttachmentPreview(Shared.DTOs.MessageAttachment attachment)
-    // {
-    //     if (attachment == null) return "";
-
-    //     var mime = attachment.ContentType?.ToLower() ?? "";
-    //     var fileName = attachment.FileName;
-
-    //     if (mime.Contains("gif")) 
-    //         return "👾 GIF";
-
-    //     if (mime.StartsWith("image")) 
-    //         return $"📷 {fileName}"; 
-
-    //     if (mime.StartsWith("video")) 
-    //         return $"🎥 {fileName}"; 
-
-    //     // 
-    //     // if (mime.StartsWith("audio"))
-    //     //     return "🎤 Voice message";
-
-    //     // 5. Обычные файлы (документы, архивы, код)
-    //     // Тут мы показываем скрепку + ИМЯ ФАЙЛА, как ты и хотел
-    //     return $"📎 {fileName}"; 
-    // }
 }

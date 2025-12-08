@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Uchat.Database.Entities;
 
 namespace Uchat.Database.Repositories.Interfaces;
@@ -36,4 +37,9 @@ public interface IChatRoomRepository
     /// Removes a membership row from the chat (hard delete).
     /// </summary>
     Task<bool> RemoveMemberAsync(int chatRoomId, int userId);
+
+    /// <summary>
+    /// Loads chat rooms by their identifiers (includes members).
+    /// </summary>
+    Task<List<ChatRoomMember>> GetMembersForUserByChatIdsAsync(int userId, IEnumerable<int> chatIds);
 }

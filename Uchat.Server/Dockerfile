@@ -6,14 +6,11 @@ ENV ASPNETCORE_URLS=http://+:8080
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Копируем csproj файлы
 COPY ["Uchat.Server/Uchat.Server.csproj", "Uchat.Server/"]
 COPY ["Database/Database.csproj", "Database/"]
 
-# Restore зависимостей
 RUN dotnet restore "Uchat.Server/Uchat.Server.csproj"
 
-# Копируем весь код
 COPY ["Uchat.Server/", "Uchat.Server/"]
 COPY ["Database/", "Database/"]
 
@@ -28,7 +25,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Создаём папку для БД
 RUN mkdir -p /app/data
 
 ENTRYPOINT ["dotnet", "Uchat.Server.dll"]

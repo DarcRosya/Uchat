@@ -3,30 +3,132 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Uchat.Server.Services.Messaging;
+using Uchat.Shared.DTOs;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Server.Services.Redis;
 
 namespace Uchat.Server.Services.Chat;
 
 public sealed class ChatRoomService : IChatRoomService
 {
     private readonly IChatRoomRepository _chatRoomRepository;
+    private readonly IMessageService _messageService;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ChatRoomService> _logger;
+    private readonly IRedisService _redisService;
+
+    private static readonly TimeSpan ChatListSortedSetTtl = TimeSpan.FromHours(24);
 
     public ChatRoomService(
         IChatRoomRepository chatRoomRepository,
         IUserRepository userRepository,
-        ILogger<ChatRoomService> logger)
+        IMessageService messageService,
+        ILogger<ChatRoomService> logger,
+        IRedisService redisService)
     {
         _chatRoomRepository = chatRoomRepository;
+        _messageService = messageService;
         _userRepository = userRepository;
         _logger = logger;
+        _redisService = redisService;
     }
 
-    public async Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId)
+    public async Task<List<ChatRoomDto>> GetUserChatsAsync(int userId)
     {
-        return await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
+        List<ChatRoomMember> members;
+        
+        var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
+        var cachedIds = await _redisService.GetSortedKeysAsync(sortedKey);
+
+        var chatIds = cachedIds
+            .Select(idStr => int.TryParse(idStr, out var id) ? id : (int?)null)
+            .Where(x => x.HasValue)
+            .Select(x => x!.Value)
+            .ToList();
+
+        if (chatIds.Any())
+        {
+            // Загружаем из БД только нужные мембершипы
+            var unsortedMembers = await _chatRoomRepository.GetMembersForUserByChatIdsAsync(userId, chatIds);
+            
+            // ВАЖНО: БД вернет данные в разнобой. Нам нужно восстановить порядок, который был в Redis.
+            var memberLookup = unsortedMembers.ToDictionary(m => m.ChatRoomId);
+            
+            members = new List<ChatRoomMember>();
+            foreach (var id in chatIds)
+            {
+                // Если чат есть в Redis, но удален из БД — пропускаем (самовосстановление)
+                if (memberLookup.TryGetValue(id, out var member))
+                {
+                    members.Add(member);
+                }
+            }
+        }
+        // 3. СЦЕНАРИЙ Б: КЭША НЕТ (Redis пуст или упал)
+        else
+        {
+            // Грузим всё из базы (уже с сортировкой)
+            members = await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
+            
+            // И сразу восстанавливаем кэш на будущее (фоновая задача)
+            if (members.Any())
+            {
+                await RebuildUserChatSortedSetAsync(userId, members);
+            }
+        }
+
+        // 4. ПОДГОТОВКА ДЛЯ ПОЛУЧЕНИЯ СООБЩЕНИЙ
+        // Создаем словарь: ID Чата -> Когда МЫ очистили историю
+        var chatsWithClearDates = members.ToDictionary(
+            m => m.ChatRoomId, 
+            m => m.ClearedHistoryAt
+        );
+
+        // 5. Загружаем последние сообщения (с учетом очистки истории!)
+        // Этот метод мы исправляли в прошлом шаге (в MessageService)
+        var lastMessages = await _messageService.GetLastMessagesForChatsBatch(chatsWithClearDates);
+
+        // 6. Маппинг в DTO
+        var result = members.Select(m => 
+        {
+            var chat = m.ChatRoom;
+            
+            // Ищем последнее сообщение для этого чата
+            lastMessages.TryGetValue(chat.Id, out var lastMsg);
+
+            // Если сообщения нет (оно скрыто историей или чат новый)
+            string lastContent = lastMsg?.Content ?? "";
+            DateTime? lastDate = lastMsg?.SentAt;
+
+            // Определяем название и аватарку чата (для личных чатов берем собеседника)
+            string chatName = chat.Name;
+            bool isOnline = false;
+
+            if (chat.Type == ChatRoomType.DirectMessage)
+            {
+                var otherMember = chat.Members.FirstOrDefault(x => x.UserId != userId);
+                if (otherMember != null)
+                {
+                    // Тут можно подтянуть данные юзера, если они не загружены
+                    // (обычно они есть в Include(cr => cr.Members).ThenInclude(m => m.User))
+                    // chatName = otherMember.User.DisplayName...
+                }
+            }
+
+            return new ChatRoomDto
+            {
+                Id = chat.Id,
+                Type = chat.Type.ToString(),
+                Name = chatName,
+                UnreadCount = 0, // Тут вызов _unreadCounterService.GetUnreadCount(...)
+                LastMessageContent = lastContent,
+                LastMessageAt = lastDate,
+            };
+        }).ToList();
+
+        return result;
     }
 
     public async Task<ChatResult> GetChatDetailsAsync(int chatId, int userId)
@@ -182,5 +284,32 @@ public sealed class ChatRoomService : IChatRoomService
         }
 
         return ChatResult.Success(chat);
+    }
+
+    private async Task RebuildUserChatSortedSetAsync(int userId, IEnumerable<ChatRoomMember> members)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
+        
+        // Берем дату активности из самого чата
+        var tasks = members.Select(member =>
+        {
+            var chat = member.ChatRoom;
+            // Если LastActivityAt null, берем CreatedAt
+            var score = new DateTimeOffset(chat.LastActivityAt ?? chat.CreatedAt).ToUnixTimeSeconds();
+            
+            return _redisService.UpdateSortedSetAsync(
+                sortedKey, 
+                chat.Id.ToString(), 
+                score, 
+                RedisCacheKeys.ChatListSortedSetTtl // Используем константу TTL
+            );
+        });
+
+        await Task.WhenAll(tasks);
     }
 }

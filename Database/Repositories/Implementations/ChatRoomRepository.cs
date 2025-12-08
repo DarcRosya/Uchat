@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
@@ -44,6 +45,7 @@ public class ChatRoomRepository : IChatRoomRepository
             .Include(m => m.ChatRoom)
                 .ThenInclude(cr => cr.Members) 
             .Where(m => m.UserId == userId && !m.IsDeleted) 
+            .OrderByDescending(m => m.ChatRoom.LastActivityAt ?? m.ChatRoom.CreatedAt)
             .ToListAsync();
     }
 
@@ -71,5 +73,24 @@ public class ChatRoomRepository : IChatRoomRepository
 
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<ChatRoomMember>> GetMembersForUserByChatIdsAsync(int userId, IEnumerable<int> chatIds)
+    {
+        var ids = chatIds.Distinct().ToList();
+        
+        if (!ids.Any())
+        {
+            return new List<ChatRoomMember>();
+        }
+
+        return await _context.ChatRoomMembers
+            .AsNoTracking() 
+            .Include(m => m.ChatRoom)           
+                .ThenInclude(cr => cr.Members)  
+            .Where(m => m.UserId == userId     
+                        && ids.Contains(m.ChatRoomId) 
+                        && !m.IsDeleted)       
+            .ToListAsync();
     }
 }
