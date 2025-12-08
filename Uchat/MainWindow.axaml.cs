@@ -418,5 +418,41 @@ namespace Uchat
             // Initialize chat components with current session
             InitializeChatComponents();
         }
+
+        private void ExitInfoAboutGroup_Click(object? sender, RoutedEventArgs e)
+        {
+            groupInfoBox.IsVisible = false;
+            backgroundForGroupInfo.IsVisible = false;
+        }
+
+        private void groupTopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
+        {
+            groupInfoBox.IsVisible = true;
+            backgroundForGroupInfo.IsVisible = true;
+
+            e.Handled = true;
+        }
+
+        private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
+        {
+            if (!groupInfoBox.IsVisible)
+            {
+                return;
+            }
+
+            var clickPoint = e.GetPosition(this);
+            var offset = groupInfoBox.TranslatePoint(new Point(0, 0), this);
+
+            if (offset.HasValue)
+            {
+                var groupRect = new Rect(offset.Value, groupInfoBox.Bounds.Size);
+
+                if (!groupRect.Contains(clickPoint))
+                {
+                    groupInfoBox.IsVisible = false;
+                    backgroundForGroupInfo.IsVisible = false;
+                }
+            }
+        }
     }
 }

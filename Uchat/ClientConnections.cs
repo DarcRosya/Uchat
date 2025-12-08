@@ -851,5 +851,44 @@ namespace Uchat
                 }
             }
         }
+
+        private void groupInfoAddMemberButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            AddPersonToGroup.IsVisible = true;
+        }
+
+        private void groupInfoLeaveButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LeaveGroupAndConfirm.IsVisible = true;
+        }
+
+        private void ConfirmLeaveGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LeaveGroupAndConfirm.IsVisible = false;
+            // удаляем полностью группу!!!!
+            groupInfoBox.IsVisible = false;
+        }
+
+        private void CancelLeaveGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            LeaveGroupAndConfirm.IsVisible = false;
+
+        }
+
+        private void InvitePersonToChat_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            // ЛОГИКА ДОБАВЛЕНИЕ ЧУВАКА!
+
+            // ЕСЛИ ЧТО-ТО НЕ ТАК, ЛИБО ЧУВАК УЖЕ ДОБАВЛЯН ЛИБО ЕГО ПРОСТО НЕТ 
+            /*
+             invalidDataInAddingPersontoGroup.IsVisible = true;
+             invalidDataInAddingPersontoGroupText.Text = "User not found!";  или что-то в этом роде
+             */
+        }
+
+        private void CancelAddingGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            AddPersonToGroup.IsVisible = false;
+        }
     }
 }

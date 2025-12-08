@@ -6,13 +6,14 @@
 		x:Class="Uchat.MainWindow"
 		Width="1280" Height="720"
 		MinWidth="700"
-		MinHeight="300"
+		MinHeight="400"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaChromeHints="NoChrome"
 		ExtendClientAreaTitleBarHeightHint="17"
 		Background="Transparent"
 		KeyDown="MainWindow_KeyDown"
+		PointerPressed="Window_PointerPressed"
 		>
 
 	<Grid>
@@ -687,11 +688,19 @@
 				</Grid>
 
 				<!-- Middle Top Bar -->
-				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013">
+				<Grid Grid.Column="2" x:Name="friendTopBar" Grid.Row="0" Background="#0e1013">
 					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-						<TextBlock Text=" ENDGAME" FontSize="15" Foreground="White" Margin="5,4,0,0" />
+						<TextBlock x:Name="friendTopBarName" Text="ENDGAME" FontSize="15" Foreground="White" FontWeight="Bold" Margin="5,4,0,0" />
+					</StackPanel>
+				</Grid>
 
-						<!-- ЗАПИХНУТЬ СЮДА КНОПКУ С ДАННЫМИ КАКИМИ-ТО ПРО ГРУППУ, ДРУГА ИЛИ ЕЩЁ ЧТО-ТО.  -->
+
+				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013" x:Name="groupTopBar" Cursor="Hand"
+						PointerPressed="groupTopBar_PointerPressed"
+						IsVisible="False">
+					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+							<TextBlock x:Name="groupTopBarName" Text="ENDGAME-UCHAT" FontSize="15" Foreground="White" FontWeight="Bold" />
+							<TextBlock x:Name="groupTopBarNumberOfMembers" Text="6 members" Foreground="#AAAAAA" FontSize="12" HorizontalAlignment="Center"/>
 					</StackPanel>
 				</Grid>
 
@@ -941,6 +950,181 @@
 							<!-- Friend requests will be dynamically added here -->
 						</StackPanel>
 					</ScrollViewer>
+				</Border>
+			</Grid>
+		</Border>
+
+			<Grid x:Name="backgroundForGroupInfo" Background="Transparent"
+		  IsVisible="False">
+		<Border x:Name="groupInfoBox" CornerRadius="5" Background="#333A44"
+				Width="300" MaxHeight="400" IsVisible="False">
+
+			<Grid RowDefinitions="Auto, Auto, *" Margin="0 10 0 0">
+
+				<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+					<StackPanel Margin="10 0">
+						<TextBlock x:Name="groupInfoName" Text="ENDGAME-UCHAT" FontWeight="Bold" Foreground="White" FontSize="16"/>
+						<TextBlock x:Name="groupInfoNumberOfMembers" Text="6 members" Foreground="#AAAAAA" FontSize="12"/>
+					</StackPanel>
+					<Button Grid.Column="1" x:Name="ExitInfoAboutGroup" Margin="0 -5 0 0"
+							Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"
+							Click="ExitInfoAboutGroup_Click">
+						<Image Width="20" Height="20" Source="avares://Uchat/Assets/Icons/exit.png"/>
+					</Button>
+				</Grid>
+
+				<Separator Grid.Row="1" Margin="0 5 0 5" Foreground="Gray"/>
+
+				<ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+					<StackPanel>
+
+						<DockPanel x:Name="groupInfoLeaveAndAddButton" HorizontalAlignment="Center" Margin="0 0 5 0">
+							<Button x:Name="groupInfoLeaveButton" Grid.Column="0" Classes="iconButton" Background="Transparent"
+									BorderThickness="0" Margin="0 0 50 0" Click="groupInfoLeaveButton_Click">
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/groupLeave.png"/>
+							</Button>
+							<Button x:Name="groupInfoAddMemberButton" Grid.Column="1" Classes="iconButton" Background="Transparent"
+									BorderThickness="0" Margin="50 0 0 0" Click="groupInfoAddMemberButton_Click">
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/add_friend.png"/>
+							</Button>
+						</DockPanel>
+
+						<StackPanel x:Name="groupInfoMembersStackPanel" Margin="0 5 0 0">
+							<DockPanel Height="40" Background="DarkSlateGray">
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/avatar.png" Margin="10 0 10 0"/>
+								<TextBlock Text="Работяга0" Foreground="White" FontWeight="Bold"  VerticalAlignment="Center"/>
+								<TextBlock Text="Creator" Foreground="#AAAAAA" HorizontalAlignment="Right" Margin="0 0 20 0" VerticalAlignment="Center"/>
+							</DockPanel>
+
+							<DockPanel Height="40">
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/avatar.png" Margin="10 0 10 0"/>
+								<TextBlock Text="Работяга112341234" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+							</DockPanel>
+
+							<DockPanel Height="40">
+								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/avatar.png" Margin="10 0 10 0"/>
+								<TextBlock Text="Работяга12345234513" Foreground="White" FontWeight="Bold" VerticalAlignment="Center"/>
+							</DockPanel>
+						</StackPanel>
+					</StackPanel>
+				</ScrollViewer>
+			</Grid>
+		</Border>
+		</Grid>
+
+		<Border x:Name="LeaveGroupAndConfirm" Background="Transparent" IsVisible="False"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    
+			<Grid Background="#CC000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"> 
+    
+				<Border CornerRadius="5" Background="#333A44"
+						Width="300" Height="152" HorizontalAlignment="Center" VerticalAlignment="Center" 
+						Padding="15">
+        
+					<StackPanel Spacing="15">
+            
+						<TextBlock Text="Leaving Group" 
+								   Foreground="White" FontWeight="Bold" FontSize="18" 
+								   HorizontalAlignment="Center"/>
+                
+						<TextBlock
+								   Foreground="#AAAAAA" TextWrapping="Wrap" 
+								   HorizontalAlignment="Center" TextAlignment="Center"
+								   >
+							Are you sure <LineBreak/> you want to leave the group?
+						</TextBlock>
+                
+						<DockPanel Margin="0 5 0 0" HorizontalAlignment="Center">
+                
+							<Button
+								Content="No"
+								Width="63"
+								Cursor="Hand"
+								HorizontalContentAlignment="Center"
+									Background="#555555" Foreground="White" CornerRadius="5"
+									Click="CancelLeaveGroup_Click"
+								>
+							</Button>
+                            
+							<Button Content="Yes"
+									Width="167"
+									Cursor="Hand"
+									HorizontalContentAlignment="Center"
+									Foreground="White" CornerRadius="5"
+									Margin="20 0 0 0" FontWeight="Bold"
+									Classes="leaveTheGroup"
+									Click="ConfirmLeaveGroup_Click"/>
+						</DockPanel>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</Border>
+
+		<Border x:Name="AddPersonToGroup" Background="Transparent" IsVisible="False"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    
+			<Grid Background="#CC000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"> 
+    
+				<Border CornerRadius="5" Background="#333A44"
+						Width="300" MinHeight="150" HorizontalAlignment="Center" VerticalAlignment="Center" 
+						Padding="15">
+        
+					<StackPanel Spacing="15">
+            
+						<TextBlock Text="Send Invite" 
+								   Foreground="White" FontWeight="Bold" FontSize="18" 
+								   HorizontalAlignment="Center"/>
+                
+						<DockPanel Margin="0 5 0 0">
+							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 7"
+								   Source="avares://Uchat/Assets/Icons/person.png">
+							</Image>
+
+							<Border BorderThickness="0 0 0 4"
+								BorderBrush="Gray" 
+								CornerRadius="5"
+								Height="30"
+								Width="250"
+								Background="#404853">
+								<TextBox
+								x:Name="usernameSendInviteTextBox"
+								Classes="DataBox"
+								Watermark="Username"
+								/>
+							</Border>
+						</DockPanel>
+
+						<TextBlock
+							IsVisible="False"
+							x:Name="invalidDataInAddingPersontoGroup"
+							TextWrapping="Wrap"
+							Margin="74 -10 0 0"
+							Classes="invalidData"
+						/>
+
+						<DockPanel HorizontalAlignment="Center">
+                
+							<Button
+									x:Name="CancelAddingGroup"
+									Content="Cancel" 
+									Width="63"
+									Cursor="Hand"
+									Background="#555555" Foreground="White" CornerRadius="5"
+									Click="CancelAddingGroup_Click"
+								>
+							</Button>
+                            
+							<Button Content="Invite"
+									Width="167"
+									Cursor="Hand"
+									HorizontalAlignment="Center"
+									HorizontalContentAlignment="Center"
+									x:Name="InvitePersonToChat"
+									Foreground="White" CornerRadius="5"
+									Margin="20 0 -30 0" FontWeight="Bold"
+									Click="InvitePersonToChat_Click"/>
+						</DockPanel>
+					</StackPanel>
 				</Border>
 			</Grid>
 		</Border>
