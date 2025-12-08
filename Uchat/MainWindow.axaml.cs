@@ -43,20 +43,19 @@ namespace Uchat
         {
             Logger.Log("=== MainWindow loaded, auto-login disabled for testing ===");
 
-            // AUTO-LOGIN DISABLED FOR TESTING - UNCOMMENT TO RE-ENABLE:
-            /*
+            // AUTO-LOGIN DISABLED FOR TESTING - UNCOMMENT TO RE-ENABLE
             var restored = await UserSession.Instance.TryRestoreSessionAsync();
             
             if (restored)
             {
                 Logger.Log("Session restored, switching to chat view");
-                SwitchToChatView();
+                SwitchToChatView("username");
             }
             else
             {
                 Logger.Log("No valid session, showing login form");
             }
-            */
+            
         }
 
         private void ChatLayout_LayoutUpdated(object? sender, EventArgs e)
