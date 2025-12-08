@@ -11,11 +11,11 @@ public class ChatApiService
 {
     private readonly HttpClient _httpClient;
 
-    public ChatApiService()
+    public ChatApiService(string[] args)
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(ServerConfig.ServerUrl)
+            BaseAddress = new Uri(ConnectionConfig.GetServerUrl(args))
         };
     }
 

@@ -14,11 +14,11 @@ public class MessageApiService
 {
     private readonly HttpClient _httpClient;
 
-    public MessageApiService()
+    public MessageApiService(string[] systemArgs)
     {
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(ServerConfig.ServerUrl)
+            BaseAddress = new Uri(ConnectionConfig.GetServerUrl(systemArgs))
         };
     }
 

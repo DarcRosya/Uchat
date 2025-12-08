@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Uchat.Shared;
 using Uchat.Shared.DTOs;
 
 namespace Uchat.Services
@@ -14,11 +15,11 @@ namespace Uchat.Services
         private readonly HttpClient _httpClient;
         private string? _authToken;
 
-        public ContactApiService()
+        public ContactApiService(string[] args)
         {
             _httpClient = new HttpClient
             {
-                BaseAddress = new Uri(ServerConfig.ServerUrl)
+                BaseAddress = new Uri(ConnectionConfig.GetServerUrl(args))
             };
         }
 

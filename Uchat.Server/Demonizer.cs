@@ -7,48 +7,54 @@ namespace Uchat.Server
     {
         public static void RunDetached(string[] args)
         {
-            var fileName = Process.GetCurrentProcess().MainModule!.FileName!;
+            var fileName = Process.GetCurrentProcess().MainModule.FileName;
+            var port = args.Last();
 
-            var arguments = string.Join(" ", args.Where(a => a != "-start"));
+            Console.WriteLine($"Starting server on port {port}...");
 
             var startInfo = new ProcessStartInfo
             {
                 FileName = fileName,
-                Arguments = arguments, // new args
+                Arguments = port,
                 UseShellExecute = false,
-                CreateNoWindow = true, // true, if window isn't needed
-                WindowStyle = ProcessWindowStyle.Normal
+                CreateNoWindow = true
             };
 
-            Console.WriteLine($"Starting detached process: {fileName} {arguments}");
-
-            var process = Process.Start(startInfo);
-            if (process != null)
+            try
             {
-                Console.WriteLine($"Started process with ID: {process.Id}");
+                var process = Process.Start(startInfo);
+                Console.WriteLine($"Server started with PID: {process.Id}");
             }
-
-            Environment.Exit(0);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         public static void KillExisting()
         {
-            var currentProcessId = Process.GetCurrentProcess().Id;
+            var myId = Process.GetCurrentProcess().Id;
             var processes = Process.GetProcessesByName("Uchat.Server");
+
             foreach (var proc in processes)
             {
-                if (proc.Id == currentProcessId) continue;
+                if (proc.Id == myId)
+                {
+                    continue;
+                }
 
                 try
                 {
-                    proc.Kill(true);
-                    Console.WriteLine($"Killed process {proc.Id}");
+                    proc.Kill();
+                    Console.WriteLine($"Killed PID: {proc.Id}");
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Failed to kill process {proc.Id}: {ex.Message}");
+                    Console.WriteLine($"Failed to kill PID: {proc.Id}");
                 }
             }
+
+            Console.WriteLine("Killed all server instances");
         }
     }
 }

@@ -52,13 +52,13 @@ namespace Uchat
             Logger.Log($"Initializing API services for user: {_currentUsername}");
             Logger.Log($"Token length: {token.Length}, Token preview: {(token.Length > 10 ? token.Substring(0, 10) + "..." : token)}");
 
-            _chatApiService = new ChatApiService();
+            _chatApiService = new ChatApiService(systemArgs);
             _chatApiService.SetAuthToken(token);
             
-            _messageApiService = new MessageApiService();
+            _messageApiService = new MessageApiService(systemArgs);
             _messageApiService.SetAuthToken(token);
             
-            _contactApiService = new ContactApiService();
+            _contactApiService = new ContactApiService(systemArgs);
             _contactApiService.SetAuthToken(token);
             
             ConnectToSignalR();
@@ -74,7 +74,7 @@ namespace Uchat
             }
             
             _hubConnection = new HubConnectionBuilder()
-                .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={token}", options =>
+                .WithUrl($"{ConnectionConfig.GetServerUrl(systemArgs)}/chatHub?access_token={token}", options =>
                 {
                     options.AccessTokenProvider = () => Task.FromResult<string?>(token);
                     

@@ -15,6 +15,7 @@ public class UserSession
     private static readonly object _lock = new object();
     private Timer? _refreshTimer;
     private AuthApiService? _authService;
+    private string[]? _systemArgs;
 
     public static UserSession Instance
     {
@@ -44,6 +45,15 @@ public class UserSession
     
     public bool NeedsRefresh => DateTime.UtcNow >= TokenExpiresAt.AddMinutes(-5);
 
+    /// <summary>
+    /// Initialize the session with system arguments (call this once at startup)
+    /// </summary>
+    public void Initialize(string[] systemArgs)
+    {
+        _systemArgs = systemArgs;
+        Logger.Log("UserSession initialized with system arguments");
+    }
+
     public void SetSession(string accessToken, string refreshToken, int userId, string username, string email = "")
     {
         AccessToken = accessToken;
@@ -67,7 +77,13 @@ public class UserSession
     {
         StopAutoRefresh();
         
-        _authService = new AuthApiService();
+        if (_systemArgs == null)
+        {
+            Logger.Error("Cannot start auto-refresh: system arguments not initialized", new Exception("Call UserSession.Instance.Initialize(args) at application startup"));
+            return;
+        }
+        
+        _authService = new AuthApiService(_systemArgs);
         
         // Проверяем каждые 60 секунд
         _refreshTimer = new Timer(async _ => await TryAutoRefresh(), null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
@@ -94,7 +110,12 @@ public class UserSession
             
             if (_authService == null)
             {
-                _authService = new AuthApiService();
+                if (_systemArgs == null)
+                {
+                    Logger.Error("Auto-refresh failed: system arguments not available", new Exception("UserSession not properly initialized"));
+                    return;
+                }
+                _authService = new AuthApiService(_systemArgs);
             }
 
             var result = await _authService.RefreshTokenAsync(RefreshToken);
@@ -155,6 +176,12 @@ public class UserSession
             return false;
         }
 
+        if (_systemArgs == null)
+        {
+            Logger.Error("Cannot restore session: system arguments not initialized", new Exception("Call UserSession.Instance.Initialize(args) at application startup"));
+            return false;
+        }
+
         // Проверяем не истек ли access token
         if (savedTokens.ExpiresAt > DateTime.UtcNow.AddMinutes(5))
         {
@@ -168,7 +195,7 @@ public class UserSession
         // Access token истек, пробуем refresh
         Logger.Log("Saved access token expired, attempting refresh");
         
-        _authService = new AuthApiService();
+        _authService = new AuthApiService(_systemArgs);
         var result = await _authService.RefreshTokenAsync(savedTokens.RefreshToken);
         
         if (result != null)

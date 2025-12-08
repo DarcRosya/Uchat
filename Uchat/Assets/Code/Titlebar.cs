@@ -17,7 +17,7 @@ namespace Uchat
         {
 			try
 			{
-				var authService = new Services.AuthApiService();
+				var authService = new Services.AuthApiService(systemArgs);
 				await authService.LogoutAsync(
 					Services.UserSession.Instance.AccessToken, 
 					Services.UserSession.Instance.RefreshToken

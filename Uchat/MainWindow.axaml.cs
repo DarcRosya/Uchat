@@ -21,13 +21,18 @@ namespace Uchat
     public partial class MainWindow : Window
     {
         private readonly AuthApiService _authService;
+        private string[] systemArgs;
 
-        public MainWindow()
+        public MainWindow(string[] args)
         {
             InitializeComponent();
-            _authService = new AuthApiService();
+            string[] dev = {"-local", "6000"};
+            systemArgs = dev;
+            _authService = new AuthApiService(systemArgs);
 
-            // Попытка восстановить сессию при запуске
+            // Initialize UserSession with system arguments BEFORE Loaded event
+            UserSession.Instance.Initialize(systemArgs);
+
             Loaded += MainWindow_Loaded;
 
 

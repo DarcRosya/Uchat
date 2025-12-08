@@ -34,7 +34,7 @@ namespace Uchat
 				private int unreadMessages = 0;
 				private int chatId = 0;
 
-				private MainWindow mainWindow = new MainWindow();
+				private MainWindow mainWindow;
                 private Grid contactGrid = new Grid();
 
 				private Border avatarIconBorder = new Border();

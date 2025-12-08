@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using System.Text;
 using System.Threading.RateLimiting;
+using Uchat;
+using Uchat.Shared;
 using Uchat.Database.Context;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories;
@@ -26,11 +28,16 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Поддержка аргументов демонизации
+        //Поддержка аргументов демонизации
         if (args.Contains("-kill") && args.Contains("-start"))
         {
             Console.WriteLine("Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
             return;
+        }
+        if (!ConnectionConfig.ValidServerArgs(args))
+        {
+            Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill");
+            Environment.Exit(0);
         }
 
         if (args.Contains("-kill"))
@@ -44,13 +51,8 @@ public class Program
             return;
         }
 
-        int port = 6000;
-        if (args.Length > 0 && !int.TryParse(args[^1], out port))
-        {
-            Console.WriteLine("Invalid port. Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
-            return;
-        }
-
+        int port = int.Parse(args[^1]);
+        //int port = 6000;
         builder.WebHost.UseKestrel(options =>
         {
             options.ListenLocalhost(port);
@@ -99,8 +101,8 @@ public class Program
         // JWT АУТЕНТИФИКАЦИЯ
         // ============================================================================
 
-        var jwtSettings = builder.Configuration.GetSection("Jwt");
-        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+            var jwtSettings = builder.Configuration.GetSection("Jwt");
+            var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
         builder.Services.AddAuthentication(options =>
         {
@@ -128,18 +130,18 @@ public class Program
                     var accessToken = context.Request.Query["access_token"];
                     var path = context.HttpContext.Request.Path;
 
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
-                    {
-                        context.Token = accessToken;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
                     }
-                    return Task.CompletedTask;
-                }
-            };
-        });
+                };
+            });
 
-        builder.Services.AddAuthorization();
-        builder.Services.AddControllers();
-        builder.Services.AddSignalR();
+            builder.Services.AddAuthorization();
+            builder.Services.AddControllers();
+            builder.Services.AddSignalR();
 
         builder.Services.AddCors(options =>
         {
@@ -152,8 +154,8 @@ public class Program
             });
         });
 
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
 
         // Rate Limiting
         builder.Services.AddRateLimiter(options =>
@@ -165,23 +167,23 @@ public class Program
                 opt.QueueLimit = 0;
             });
 
-            options.AddFixedWindowLimiter("api", opt =>
-            {
-                opt.Window = TimeSpan.FromMinutes(1);
-                opt.PermitLimit = 100;
-                opt.QueueLimit = 0;
+                options.AddFixedWindowLimiter("api", opt =>
+                {
+                    opt.Window = TimeSpan.FromMinutes(1);
+                    opt.PermitLimit = 100;
+                    opt.QueueLimit = 0;
+                });
+
+                options.OnRejected = async (context, token) =>
+                {
+                    context.HttpContext.Response.StatusCode = 429;
+                    await context.HttpContext.Response.WriteAsync(
+                        "Too many requests. Please try again later.",
+                        cancellationToken: token);
+                };
             });
 
-            options.OnRejected = async (context, token) =>
-            {
-                context.HttpContext.Response.StatusCode = 429;
-                await context.HttpContext.Response.WriteAsync(
-                    "Too many requests. Please try again later.",
-                    cancellationToken: token);
-            };
-        });
-
-        var app = builder.Build();
+            var app = builder.Build();
 
         // ============================================================================
         // ИНИЦИАЛИЗАЦИЯ БАЗ ДАННЫХ
@@ -214,13 +216,13 @@ public class Program
             }
         }
 
-        app.UseMiddleware<ExceptionHandlerMiddleware>();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
         app.UseCors("AllowAll");
         app.UseRateLimiter();
