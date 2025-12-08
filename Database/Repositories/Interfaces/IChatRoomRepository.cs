@@ -30,7 +30,7 @@ public interface IChatRoomRepository
     /// <summary>
     /// Loads rooms for a specific user (joins handled via the repository).
     /// </summary>
-    Task<IEnumerable<ChatRoom>> GetUserChatRoomsAsync(int userId);
+    Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId);
 
     /// <summary>
     /// Removes a membership row from the chat (hard delete).

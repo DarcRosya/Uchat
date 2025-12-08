@@ -24,10 +24,9 @@ public sealed class ChatRoomService : IChatRoomService
         _logger = logger;
     }
 
-    public async Task<List<ChatRoom>> GetUserChatsAsync(int userId)
+    public async Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId)
     {
-        var chats = await _chatRoomRepository.GetUserChatRoomsAsync(userId);
-        return chats.ToList();
+        return await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
     }
 
     public async Task<ChatResult> GetChatDetailsAsync(int chatId, int userId)
@@ -38,7 +37,7 @@ public sealed class ChatRoomService : IChatRoomService
             return ChatResult.NotFound();
 
         // Проверка доступа
-        bool isMember = chat.Members.Any(m => m.UserId == userId);
+        bool isMember = chat.Members.Any(crm => crm.UserId == userId && !crm.IsDeleted);
         if (!isMember && chat.Type != ChatRoomType.Public)
         {
             return ChatResult.Forbidden();

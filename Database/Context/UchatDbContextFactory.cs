@@ -10,7 +10,7 @@ public class UchatDbContextFactory : IDesignTimeDbContextFactory<UchatDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<UchatDbContext>();
         
-        // PostgreSQL из Docker для всех
+        // PostgreSQL from Docker 
         optionsBuilder.UseNpgsql("Host=localhost;Port=5433;Database=uchat;Username=uchat;Password=uchat123");
         
         return new UchatDbContext(optionsBuilder.Options);

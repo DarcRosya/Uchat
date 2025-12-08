@@ -38,11 +38,12 @@ public class ChatRoomRepository : IChatRoomRepository
             .FirstOrDefaultAsync(cr => cr.Name == name);
     }
 
-    public async Task<IEnumerable<ChatRoom>> GetUserChatRoomsAsync(int userId)
+    public async Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId)
     {
-        return await _context.ChatRooms
-            .Include(c => c.Members)
-            .Where(c => c.Members.Any(m => m.UserId == userId))
+        return await _context.ChatRoomMembers
+            .Include(m => m.ChatRoom)
+                .ThenInclude(cr => cr.Members) 
+            .Where(m => m.UserId == userId && !m.IsDeleted) 
             .ToListAsync();
     }
 
@@ -60,13 +61,14 @@ public class ChatRoomRepository : IChatRoomRepository
     public async Task<bool> RemoveMemberAsync(int chatRoomId, int userId)
     {
         var member = await _context.ChatRoomMembers
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
+            .FirstOrDefaultAsync(crm => crm.ChatRoomId == chatRoomId && crm.UserId == userId);
 
         if (member == null)
             return false;
 
-        // Hard delete: удаляем участника из группы
-        _context.ChatRoomMembers.Remove(member);
+        member.ClearedHistoryAt = DateTime.UtcNow;
+        member.IsDeleted = true;
+
         await _context.SaveChangesAsync();
         return true;
     }

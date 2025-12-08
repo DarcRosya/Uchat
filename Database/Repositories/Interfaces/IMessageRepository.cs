@@ -2,9 +2,10 @@ using Uchat.Database.MongoDB;
 
 namespace Uchat.Database.Repositories.Interfaces;
 
+// Naaah, no comments here, i'm tired
 public interface IMessageRepository
 {
-    Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, int limit = 50, DateTime? lastTimestamp = null);
+    Task<List<MongoMessage>> GetChatMessagesAsync(int chatId, DateTime? minDate, int limit = 50, DateTime? lastTimestamp = null);
     
     Task<MongoMessage?> GetMessageByIdAsync(string messageId);
     

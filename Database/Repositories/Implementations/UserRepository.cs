@@ -84,7 +84,7 @@ public class UserRepository : IUserRepository
     }
 
     // UPDATE
-    public async Task<bool> UpdateProfileAsync(int userId, string? displayName = null, string? bio = null, string? avatarUrl = null)
+    public async Task<bool> UpdateProfileAsync(int userId, string? displayName = null, string? avatarUrl = null)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
@@ -168,7 +168,7 @@ public class UserRepository : IUserRepository
         return await _context.Users.LongCountAsync();
     }
 
-    // Вспомогательные методы
+    // Supporting methods
     private string GenerateSalt()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));

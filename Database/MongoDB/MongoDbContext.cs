@@ -40,19 +40,6 @@ public class MongoDbContext
     {
         var messagesCollection = Messages;
         
-        // ====================================================================
-        // ИНДЕКС 1: COMPOSITE INDEX (chatId, sentAt DESC)
-        // ====================================================================
-        // Для cursor-based pagination:
-        //   db.messages
-        //     .find({ chatId: 1, sentAt: { $lt: lastTimestamp } })
-        //     .sort({ sentAt: -1 })
-        //     .limit(50)
-        // 
-        // MongoDB использует ОДИН индекс на весь запрос
-        // Сначала chatId (точное совпадение), потом sentAt (сортировка)
-        // ====================================================================
-        
         var chatIdSentAtIndex = Builders<MongoMessage>.IndexKeys
             .Ascending(m => m.ChatId)
             .Descending(m => m.SentAt);
@@ -69,15 +56,10 @@ public class MongoDbContext
         }
         catch (MongoCommandException)
         {
-            // Индекс уже существует, игнорируем
+            // index already exists, we ignoring so...
         }
         
-        // ====================================================================
-        // ИНДЕКС 2: SINGLE INDEX (chatId)
-        // ====================================================================
-        // Для поиска всех сообщений в чате (без фильтра по времени)
-        // ====================================================================
-        
+        // To search for all messages in the chat (without filtering by time) 
         var chatIdIndex = Builders<MongoMessage>.IndexKeys
             .Ascending(m => m.ChatId);
         
@@ -93,15 +75,10 @@ public class MongoDbContext
         }
         catch (MongoCommandException)
         {
-            // Индекс уже существует
+            // index already exists
         }
         
-        // ====================================================================
-        // ИНДЕКС 3: SINGLE INDEX (sentAt)
-        // ====================================================================
-        // Для сортировки по времени (глобальный поиск)
-        // ====================================================================
-        
+        // To sort by time (global search)
         var sentAtIndex = Builders<MongoMessage>.IndexKeys
             .Descending(m => m.SentAt);
         
@@ -117,15 +94,11 @@ public class MongoDbContext
         }
         catch (MongoCommandException)
         {
-            // Индекс уже существует
+            // index already exists
         }
         
-        // ====================================================================
-        // ИНДЕКС 4: SINGLE INDEX (sender.userId)
-        // ====================================================================
-        // Для поиска всех сообщений от пользователя
-        // ====================================================================
-        
+
+        // To search for all messages from a user
         var senderUserIdIndex = Builders<MongoMessage>.IndexKeys
             .Ascending("sender.userId");
         
@@ -141,7 +114,7 @@ public class MongoDbContext
         }
         catch (MongoCommandException)
         {
-            // Индекс уже существует
+            // index already exists
         }
     }
 }

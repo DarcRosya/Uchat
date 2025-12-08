@@ -154,6 +154,8 @@ public class UchatDbContext : DbContext
             entity.Property(crm => crm.JoinedAt)
                 .HasDefaultValueSql("NOW()");
 
+            entity.Property(crm => crm.ClearedHistoryAt);
+
             // ChatRoomMember -> InvitedBy (who invited)
             entity.HasOne(crm => crm.InvitedBy)
                 .WithMany()  

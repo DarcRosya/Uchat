@@ -4,28 +4,28 @@ namespace Uchat.Database.Repositories.Interfaces;
 
 public interface IRefreshTokenRepository
 {
-    /// Создать новый refresh token в БД
-    /// ВАЖНО: TokenHash должен быть уже вычислен в сервисе!
+    /// Create a new refresh token in the database.
+    /// IMPORTANT: TokenHash must already be calculated in the service!
     Task<RefreshToken> CreateAsync(RefreshToken token);
 
-    /// Найти активный refresh token по хешу
-    /// Возвращает NULL если токен не найден, отозван или истёк
-    /// Загружает связанного User через Include
+    /// Find active refresh token by hash
+    /// Returns NULL if token is not found, revoked, or expired
+    /// Loads associated User via Include
     Task<RefreshToken?> GetByTokenHashAsync(string tokenHash);
     
-    /// Получить все активные токены пользователя
-    /// Используется для проверки plain text токена через BCrypt.Verify в сервисе
+    /// Get all active user tokens
+    /// Used to verify plain text tokens via BCrypt.Verify in the service
     Task<List<RefreshToken>> GetUserTokensAsync(int userId);
 
-    /// Отозвать refresh token (установить IsRevoked = true)
-    /// Используется при logout
+    /// Revoke refresh token (set IsRevoked = true)
+    /// Used during logout
     Task<bool> RevokeTokenAsync(string tokenHash);
 
-    /// Отозвать ВСЕ активные refresh tokens пользователя
-    /// Используется при "Выйти со всех устройств"
+    /// Revoke ALL active refresh tokens for the user
+    /// Used for “Sign out of all devices”
     Task<int> RevokeAllUserTokensAsync(int userId);
 
-    /// [Background Job] Удалить истекшие и отозванные токены
-    /// Возвращает количество удалённых записей
+    /// [Background Job] Delete expired and revoked tokens
+    /// Returns the number of deleted records
     Task<int> CleanupExpiredTokensAsync();
 }

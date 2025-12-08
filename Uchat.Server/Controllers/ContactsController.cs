@@ -164,13 +164,21 @@ public class ContactsController : ControllerBase
     [HttpPost("{contactId}/reject")]
     public async Task<IActionResult> RejectFriendRequest(int contactId)
     {
-        var userIdClaim = User.FindFirst("UserId")?.Value;
+        var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                        ?? User.FindFirst("UserId")?.Value;
+        
         if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
             return Unauthorized();
 
         var result = await _contactService.RejectFriendRequestAsync(userId, contactId);
+        
         if (!result.Success)
             return BadRequest(new { message = result.Message });
+
+        int requesterUserId = result.Data;
+
+        await _hubContext.Clients.User(requesterUserId.ToString())
+            .SendAsync("FriendRequestRejected", userId);
 
         return Ok(new { message = "Friend request rejected" });
     }

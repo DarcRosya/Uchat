@@ -49,7 +49,7 @@ namespace Uchat
 					{
                         Source = new Bitmap(AssetLoader.Open(icon)),
                         Width = 16,
-                        Height = 14
+                        Height = 14,
                     };
                     acceptRequestButton.Click += AcceptRequestButton_Click;
 
@@ -59,7 +59,7 @@ namespace Uchat
 					{
 						Source = new Bitmap(AssetLoader.Open(icon)),
 						Width = 12,
-						Height = 12
+						Height = 12,
 					};
 					rejectRequestButton.Click += RejectRequestButton_Click;
 
@@ -87,6 +87,10 @@ namespace Uchat
 							
 							await mainWindow.LoadUserChatsAsync();
 						}
+						else
+						{
+							Logger.Error("Server failed to accept request");
+						}
 					}
 					catch (Exception ex)
 					{
@@ -98,14 +102,20 @@ namespace Uchat
                 {
 					try
 					{
-						await mainWindow._contactApiService.RejectFriendRequestAsync(contactId);
+						bool success = await mainWindow._contactApiService.RejectFriendRequestAsync(contactId);
 						
-                        mainWindow.requestList.Children.Remove(friendRequestGrid);
-						
+						if (success)
+						{
+							mainWindow.requestList.Children.Remove(friendRequestGrid);
+						}
+						else
+						{
+							Logger.Error("Server failed to reject request");
+						}
 					}
 					catch (Exception ex)
 					{
-						Console.WriteLine($"Error rejecting friend request: {ex.Message}");
+						Logger.Error($"Error rejecting friend request: {ex.Message}");
 					}
                 }
 

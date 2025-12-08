@@ -29,8 +29,7 @@ public sealed class MessageService : IMessageService
     private readonly ILogger<MessageService> _logger;
     private readonly IMongoCollection<MongoMessage> _messages;
 
-    private const int MaxMessageLength = 5000;
-    private const int MaxAttachments = 10;
+    private const int MaxMessageLength = 1500;
 
     public MessageService(
         UchatDbContext context,
@@ -52,7 +51,6 @@ public sealed class MessageService : IMessageService
             throw new ArgumentNullException(nameof(dto));
         }
 
-        // Validate message content
         var validationError = ValidateMessage(dto);
         if (validationError != null)
         {
@@ -62,10 +60,12 @@ public sealed class MessageService : IMessageService
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         MongoMessage? mongoMessage = null;
         string? messageId = null;
+        int? resurrectedUserId = null;
 
         try
         {
             var chatRoom = await _context.ChatRooms
+                .IgnoreQueryFilters()
                 .Include(cr => cr.Members)
                 .FirstOrDefaultAsync(cr => cr.Id == dto.ChatRoomId, cancellationToken);
 
@@ -78,6 +78,21 @@ public sealed class MessageService : IMessageService
             if (senderMember == null)
             {
                 return MessagingResult.Failure("Sender is not a member of the chat.");
+            }
+
+            if (chatRoom.Type == ChatRoomType.DirectMessage)
+            {
+                var otherMember = chatRoom.Members.FirstOrDefault(m => m.UserId != dto.SenderId);
+                
+                if (otherMember != null && otherMember.IsDeleted)
+                {
+                    _logger.LogInformation("Resurrecting user {UserId} in chat {ChatId}", otherMember.UserId, dto.ChatRoomId);
+                    
+                    otherMember.IsDeleted = false;
+                    otherMember.ClearedHistoryAt = DateTime.UtcNow.AddSeconds(-5); 
+                    
+                    resurrectedUserId = otherMember.UserId; 
+                }
             }
 
             var sender = await _context.Users.FindAsync(new object[] { dto.SenderId }, cancellationToken: cancellationToken);
@@ -107,7 +122,11 @@ public sealed class MessageService : IMessageService
 
             await transaction.CommitAsync(cancellationToken);
 
-            return MessagingResult.SuccessResult(messageId, mongoMessage.SentAt);
+            return MessagingResult.SuccessResult(
+                messageId, 
+                mongoMessage.SentAt, 
+                resurrectedUserId: resurrectedUserId
+            );
         }
         catch (Exception ex)
         {
@@ -159,17 +178,6 @@ public sealed class MessageService : IMessageService
             Content = mongoMessage.Content,
             Type = mongoMessage.Type,
             ReplyToMessageId = mongoMessage.ReplyToMessageId,
-            Attachments = mongoMessage.Attachments.Select(a => new Uchat.Shared.DTOs.MessageAttachment
-            {
-                Id = mongoMessage.Id + "_" + mongoMessage.Attachments.IndexOf(a),
-                FileName = a.FileName ?? "file",
-                ContentType = a.Type,
-                FileSize = a.Size,
-                Url = a.Url,
-                ThumbnailUrl = a.ThumbnailUrl,
-                Width = a.Width,
-                Height = a.Height
-            }).ToList(),
             ReactionsCount = mongoMessage.Reactions.ToDictionary(
                 kvp => kvp.Key,
                 kvp => kvp.Value.Count
@@ -182,24 +190,41 @@ public sealed class MessageService : IMessageService
         };
     }
 
-    public async Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(List<int> chatIds)
+    public async Task<Dictionary<int, MessageDto>> GetLastMessagesForChatsBatch(Dictionary<int, DateTime?> chatsWithClearDates)
     {
-        if (chatIds == null || !chatIds.Any())
-            return new Dictionary<int, MessageDto>();
+        if (chatsWithClearDates == null || !chatsWithClearDates.Any())
+                return new Dictionary<int, MessageDto>();
         
-        var filter = Builders<MongoMessage>.Filter.And(
-            Builders<MongoMessage>.Filter.In(m => m.ChatId, chatIds),
-            Builders<MongoMessage>.Filter.Eq(m => m.IsDeleted, false)
-        );
+        var builder = Builders<MongoMessage>.Filter;
+        var filtersList = new List<FilterDefinition<MongoMessage>>();
+
+        // 1. Генерируем индивидуальный фильтр для каждого чата
+        foreach (var chat in chatsWithClearDates)
+        {
+            var chatId = chat.Key;
+            var minDate = chat.Value;
+
+            var chatFilter = builder.Eq(m => m.ChatId, chatId) & 
+                            builder.Eq(m => m.IsDeleted, false);
+
+            if (minDate.HasValue)
+            {
+                chatFilter &= builder.Gt(m => m.SentAt, minDate.Value);
+            }
+
+            filtersList.Add(chatFilter);
+        }
+
+        var globalFilter = builder.Or(filtersList);
 
         var aggregation = _messages.Aggregate()
-        .Match(filter)
-        .SortByDescending(m => m.SentAt)
-        .Group(m => m.ChatId, g => new 
-        { 
-            ChatId = g.Key, 
-            LastMessage = g.First() 
-        });
+            .Match(globalFilter)             
+            .SortByDescending(m => m.SentAt) 
+            .Group(m => m.ChatId, g => new 
+            { 
+                ChatId = g.Key, 
+                LastMessage = g.First()      
+            });
 
         var results = await aggregation.ToListAsync();
 
@@ -209,25 +234,18 @@ public sealed class MessageService : IMessageService
         {
             var msg = item.LastMessage;
             
-            // Превращаем Mongo-сущность в DTO
             var dto = new MessageDto
             {
                 Id = msg.Id,
                 ChatRoomId = msg.ChatId,
                 Content = msg.Content,
-                Type = msg.Type, // "text", "image", etc.
+                Type = msg.Type, 
                 SentAt = msg.SentAt,
                 EditedAt = msg.EditedAt,
                 IsDeleted = msg.IsDeleted,
                 ReplyToMessageId = msg.ReplyToMessageId,
                 
                 Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
-
-                Attachments = msg.Attachments?.Select(a => new Shared.DTOs.MessageAttachment
-                {
-                    Id = Guid.NewGuid().ToString(), 
-                    ContentType = a.Type
-                }).ToList() ?? new List<Shared.DTOs.MessageAttachment>(),
                 
                 ReactionsCount = new Dictionary<string, int>(),
                 MyReactions = new List<string>()
@@ -245,10 +263,18 @@ public sealed class MessageService : IMessageService
         return message != null && message.ChatId == chatId && !message.IsDeleted;
     }
 
-    public async Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int limit = 50, DateTime? before = null)
+    public async Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int userId, int limit = 50, DateTime? before = null)
     {
+        var member = await _context.ChatRoomMembers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.ChatRoomId == chatId && m.UserId == userId);
+
+        if (member == null) return new PaginatedMessagesDto();
+
+        DateTime? minDate = member.ClearedHistoryAt;
+
         // Получаем сообщения из MongoDB (limit + 1 для определения HasMore)
-        var mongoMessages = await _messageRepository.GetChatMessagesAsync(chatId, limit + 1, before);
+        var mongoMessages = await _messageRepository.GetChatMessagesAsync(chatId, minDate, limit + 1, before);
         
         // Проверяем, есть ли ещё сообщения
         bool hasMore = mongoMessages.Count > limit;
@@ -295,17 +321,6 @@ public sealed class MessageService : IMessageService
             Content = m.Content,
             Type = m.Type,
             ReplyToMessageId = m.ReplyToMessageId,
-            Attachments = m.Attachments.Select(a => new Uchat.Shared.DTOs.MessageAttachment
-            {
-                Id = m.Id + "_" + m.Attachments.IndexOf(a),
-                FileName = a.FileName ?? "file",
-                ContentType = a.Type,
-                FileSize = a.Size,
-                Url = a.Url,
-                ThumbnailUrl = a.ThumbnailUrl,
-                Width = a.Width,
-                Height = a.Height
-            }).ToList(),
             ReactionsCount = m.Reactions.ToDictionary(
                 kvp => kvp.Key,
                 kvp => kvp.Value.Count
@@ -350,7 +365,6 @@ public sealed class MessageService : IMessageService
             },
             Content = dto.Content ?? string.Empty,
             Type = string.IsNullOrWhiteSpace(dto.Type) ? "text" : dto.Type,
-            Attachments = new List<Database.MongoDB.MessageAttachment>(), // TODO: Добавить поддержку
             ReplyToMessageId = dto.ReplyToMessageId,
             SentAt = DateTime.UtcNow
         };
@@ -408,8 +422,6 @@ public sealed class MessageService : IMessageService
         {
             return $"Message content exceeds maximum length of {MaxMessageLength} characters.";
         }
-
-        // TODO: Добавить валидацию Attachments
 
         return null;
     }
@@ -477,7 +489,11 @@ public sealed class MessageService : IMessageService
             }
 
             _logger.LogInformation("Message {MessageId} deleted by user {UserId}", messageId, userId);
-            return MessagingResult.SuccessResult(messageId, DateTime.UtcNow, clearedReplies);
+            return MessagingResult.SuccessResult(
+                messageId, 
+                DateTime.UtcNow, 
+                clearedReplyMessageIds: clearedReplies 
+            );
         }
         catch (Exception ex)
         {

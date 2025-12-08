@@ -6,7 +6,7 @@ namespace Uchat.Server.Services.Chat;
 
 public interface IChatRoomService
 {
-    Task<List<ChatRoom>> GetUserChatsAsync(int userId);
+    Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId);
     Task<ChatResult> GetChatDetailsAsync(int chatId, int userId);
     Task<ChatResult> CreateChatAsync(int creatorId, string name, ChatRoomType type, string? description, IEnumerable<int>? initialMemberIds);
     Task<ChatResult> AddMemberAsync(int chatId, int actorUserId, int memberUserId);

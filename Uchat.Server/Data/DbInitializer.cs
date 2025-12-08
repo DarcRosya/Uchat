@@ -26,7 +26,6 @@ public static class DbInitializer
                 DisplayName = "System Bot",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("SYSTEM_NO_LOGIN_" + Guid.NewGuid()), // Невозможно войти
                 CreatedAt = DateTime.UtcNow,
-                Role = UserRole.Admin,
                 EmailConfirmed = true
             };
             context.Users.Add(systemUser);

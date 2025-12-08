@@ -4,15 +4,8 @@ using Uchat.Shared.DTOs;
 
 namespace Uchat.Server.DTOs;
 
-// ========================================================================
-// EXTENSION METHODS (Маппинг Entity -> DTO)
-// ========================================================================
-
 public static class ChatRoomMappingExtensions
 {
-    /// <summary>
-    /// Конвертирует ChatRoom в краткий DTO
-    /// </summary>
     public static ChatRoomDto ToDto(this ChatRoom chatRoom)
     {
         return new ChatRoomDto
@@ -27,10 +20,6 @@ public static class ChatRoomMappingExtensions
             MemberCount = chatRoom.Members?.Count ?? 0
         };
     }
-
-    /// <summary>
-    /// Конвертирует ChatRoom в детальный DTO
-    /// </summary>
     public static ChatRoomDetailDto ToDetailDto(this ChatRoom chatRoom)
     {
         return new ChatRoomDetailDto
@@ -48,7 +37,6 @@ public static class ChatRoomMappingExtensions
             {
                 UserId = m.UserId,
                 Username = m.User?.Username ?? "Unknown",
-                Role = "Member", // TODO: добавить роли
                 JoinedAt = m.JoinedAt
             }).ToList() ?? new List<ChatMemberDto>()
         };

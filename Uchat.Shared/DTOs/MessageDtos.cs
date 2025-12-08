@@ -34,7 +34,6 @@ public sealed class MessageDto
     public string Content { get; set; } = string.Empty;
     public string Type { get; set; } = "text";
     public string? ReplyToMessageId { get; set; }
-    public List<MessageAttachment> Attachments { get; set; } = new();
     public Dictionary<string, int> ReactionsCount { get; set; } = new();
     public List<string> MyReactions { get; set; } = new();
     public DateTime SentAt { get; set; }
@@ -45,18 +44,6 @@ public sealed class MessageDto
     /// Информация о сообщении, на которое отвечают (если это ответ)
     /// </summary>
     public MessageReplyDto? ReplyTo { get; set; }
-}
-
-public class MessageAttachment
-{
-    public string Id { get; set; } = string.Empty;
-    public string FileName { get; set; } = string.Empty;
-    public string ContentType { get; set; } = string.Empty; // image/jpeg, video/mp4, etc.
-    public long FileSize { get; set; }
-    public string Url { get; set; } = string.Empty;
-    public string? ThumbnailUrl { get; set; } // Для превью картинок/видео
-    public int? Width { get; set; }  // Для изображений
-    public int? Height { get; set; }
 }
 
 public class MessageSenderDto 
