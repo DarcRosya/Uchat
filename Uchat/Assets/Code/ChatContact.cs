@@ -16,7 +16,9 @@ namespace Uchat
 	{
 		public partial class Chat
 		{
-			public static List<Contact> chatsList = new List<Contact>();
+			public static string ClientName = "Uchat Client";
+
+            public static List<Contact> chatsList = new List<Contact>();
 			public static bool GroupsActive = false;
 
 			public static void ShowGroups(bool groupsNeeded)
@@ -28,6 +30,8 @@ namespace Uchat
             }
 			public class Contact
 			{
+				private List<string> membersList = new List<string>();
+
 				private bool isGroupChat = false;
 				private bool isPinned = false;
 				private string chatName = "";
@@ -142,6 +146,10 @@ namespace Uchat
                 public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
 				public string ChatName { get { return chatName; } }
+				public void AddMember(string name)
+				{
+					membersList.Add(name);
+				}
 				
 				/// <summary>
 				/// Обновить последнее сообщение и счетчик непрочитанных

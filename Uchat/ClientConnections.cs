@@ -667,7 +667,9 @@ namespace Uchat
                                 this, 
                                 notification.chatRoomId
                             );
-                            
+                            newContact.AddMember(Chat.ClientName);
+                            newContact.AddMember(notification.friendDisplayName);
+
                             _chatContacts[notification.chatRoomId] = newContact;
                             contactsStackPanel.Children.Insert(0, newContact.Box);
                         }
@@ -709,7 +711,8 @@ namespace Uchat
                 message.Id,
                 message.EditedAt.HasValue,
                 message.ReplyToMessageId,
-                message.Sender.DisplayName ?? message.Sender.Username
+                message.Sender.DisplayName ?? message.Sender.Username,
+                Chat.ReplyToUserName
             );
             
             _messageCache[message.Id] = chatMessage;

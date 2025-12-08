@@ -420,6 +420,7 @@ namespace Uchat
             LoginProgram.IsVisible = false;
             MainProgram.IsVisible = true;
             userNameTextBlock.Text = username;
+            Chat.ClientName = username;
 
             // Initialize chat components with current session
             InitializeChatComponents();
