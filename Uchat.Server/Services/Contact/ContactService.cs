@@ -9,6 +9,8 @@ using Uchat.Database.Repositories.Interfaces;
 using Uchat.Database.MongoDB;
 using Uchat.Server.Services.Redis;
 using Uchat.Shared.DTOs;
+using Microsoft.AspNetCore.Identity;
+using Uchat.Shared;
 
 namespace Uchat.Server.Services.Contact;
 

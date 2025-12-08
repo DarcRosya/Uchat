@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Chat;
+using Uchat.Shared;
 using Uchat.Server.Services.Presence;
 
 namespace Uchat.Server.Hubs;

@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Uchat.Shared.DTOs;
+using Uchat.Shared;
 
 namespace Uchat.Services;
 
@@ -95,6 +96,7 @@ public class MessageApiService
                 throw new Exception($"Failed to send message: {error}");
             }
 
+            Logger.Log($"[Chat] Message sent successfully to {chatId}");
             return await response.Content.ReadFromJsonAsync<MessageDto>();
         }
         catch (HttpRequestException ex)

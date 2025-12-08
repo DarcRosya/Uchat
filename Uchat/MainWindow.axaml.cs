@@ -15,6 +15,7 @@ using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 using Uchat.Services;
+using Uchat.Shared;
 
 namespace Uchat
 {
@@ -419,6 +420,7 @@ namespace Uchat
             LoginProgram.IsVisible = false;
             MainProgram.IsVisible = true;
             userNameTextBlock.Text = username;
+            Chat.ClientName = username;
 
             // Initialize chat components with current session
             InitializeChatComponents();

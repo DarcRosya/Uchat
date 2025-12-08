@@ -8,17 +8,22 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Net.NetworkInformation;
 
 
 namespace Uchat
 {
 	public partial class MainWindow : Window
 	{
-		public partial class Chat
+        public partial class Chat
 		{
+            public static string? SelectedUserName = "";
+            public static string? ReplyToUserName = "";
             public class Message
             {
                 private string? serverId; // ID сообщения в LiteDB
+                private string? sender;
+                private string? replyToUserName;
                 private string content;
                 private string time;
                 private bool isGuest;
@@ -41,10 +46,12 @@ namespace Uchat
                 
                 public Border? ReplyPreviewBorder { get; set; }
 
-                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null, string? username = null)
+                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null, string? username = null, string? replyToUsername = null)
                 {
                     this.serverId = serverId;
+                    sender = username;
                     content = text;
+                    replyToUserName = replyToUsername;
                     time = timestamp;
                     isGuest = type;
                     this.isEdited = isEdited;
@@ -64,7 +71,7 @@ namespace Uchat
                     if (isGuest)
                     { 
                         userNameTextBlock.Classes.Add("username");
-                        userNameTextBlock.Text = username ?? "Unknown";
+                        userNameTextBlock.Text = sender ?? "Unknown";
                         messageStackPanel.Children.Add(userNameTextBlock);
                     }
 
@@ -102,7 +109,7 @@ namespace Uchat
                         this.ReplyPreviewBorder = replyToMessageBorder;
 
                         replyUserName.Classes.Add("replyUserName");
-                        replyUserName.Text = (isGuest) ? username : "Me";
+                        replyUserName.Text = replyToUserName;
                         replyTextBlock.Classes.Add("replyTextBlock");
                         replyTextBlock.Text = replyToContent ?? "(no content)";
 
@@ -121,6 +128,8 @@ namespace Uchat
                     set { content = value; }
                 }
                 public string Time { get { return time; } }
+                public string Sender { get { return sender; } set { sender = value; } }
+                public string ReplyToUserName { get { return replyToUserName; } set { replyToUserName = value; } }
                 public bool IsEdited { get { return isEdited; } set { isEdited = value; } }
                 public bool IsGuest { get { return isGuest; } set { isGuest = value; } }
                 public bool IsAnswer { get { return isReply; } set { isReply = value; } }
@@ -221,9 +230,14 @@ namespace Uchat
                     
                     mainWindow.replyToMessageId = chatMessage.ServerId ?? "";
                     mainWindow.replyToMessageContent = chatMessage.Content;
-                    mainWindow.replyTheMessageUsername.Text = "Replying to User Name";
 
-					if (!mainWindow.isReplied)
+                    string userName = (chatMessage.Sender == Chat.ClientName) ? "yourself" : chatMessage.Sender;
+                    mainWindow.replyTheMessageUsername.Text = $"Replying to {userName}";
+
+                    Chat.ReplyToUserName = chatMessage.Sender;
+
+
+                    if (!mainWindow.isReplied)
 					{
                         mainWindow.chatTextBoxForReply.Text = mainWindow.chatTextBox.Text;
 					}
