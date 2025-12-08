@@ -4,6 +4,7 @@ using System.Security.Claims;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Chat;
+using Uchat.Server.Services.Presence;
 
 namespace Uchat.Server.Hubs;
 
@@ -12,14 +13,16 @@ public class ChatHub : Hub
 {
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly IChatRoomService _chatRoomService;
+    private readonly IUserPresenceService _presenceService;
 
     // Active online users
     private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
 
-    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService)
+    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService, IUserPresenceService presenceService)
     {
         _chatRoomRepository = chatRoomRepository;
         _chatRoomService = chatRoomService;
+        _presenceService = presenceService;
     }
 
     public override async Task OnConnectedAsync()
@@ -38,6 +41,8 @@ public class ChatHub : Hub
 
             OnlineUsers[userId].Add(connectionId);
         }
+
+        await _presenceService.MarkOnlineAsync(userId);
 
         // Notify all clients if user became online
         if (OnlineUsers[userId].Count == 1)
@@ -97,6 +102,7 @@ public class ChatHub : Hub
         {
             await Clients.All.SendAsync("UserOffline", userId);
             Logger.Write($"[OFFLINE] User {username} became OFFLINE");
+            await _presenceService.MarkOfflineAsync(userId);
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -120,6 +126,17 @@ public class ChatHub : Hub
     {
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
         Logger.Write($"[LeaveGroup] {GetUsername()} left {groupName}");
+    }
+
+    public Task Heartbeat()
+    {
+        var userId = GetUserId();
+        if (userId == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        return _presenceService.RefreshAsync(userId);
     }
     
     // Getters

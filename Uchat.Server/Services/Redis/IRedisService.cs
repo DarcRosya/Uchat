@@ -19,4 +19,7 @@ public interface IRedisService : IDisposable
     Task<bool> HashDeleteAsync(string key, string field);
     Task<long> PublishAsync(string channel, string message);
     Task<bool> KeyDeleteAsync(string key);
+    Task SetPresenceAsync(string key, string value, TimeSpan ttl);
+    Task RefreshPresenceAsync(string key, TimeSpan ttl);
+    Task<bool> IsOnlineAsync(string key);
 }

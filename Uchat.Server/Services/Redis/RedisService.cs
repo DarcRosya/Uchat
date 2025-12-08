@@ -13,6 +13,7 @@ public sealed class RedisService : IRedisService
     private readonly RedisSettings _settings;
     private readonly string _keyPrefix;
     private readonly TimeSpan? _defaultTtl;
+    private readonly TimeSpan _presenceTtl;
     private ConnectionMultiplexer? _multiplexer;
     private IDatabase? _database;
     private ISubscriber? _subscriber;
@@ -27,6 +28,9 @@ public sealed class RedisService : IRedisService
         _defaultTtl = _settings.DefaultEntryTtlSeconds > 0
             ? TimeSpan.FromSeconds(_settings.DefaultEntryTtlSeconds)
             : null;
+        _presenceTtl = _settings.PresenceTtlSeconds > 0
+            ? TimeSpan.FromSeconds(_settings.PresenceTtlSeconds)
+            : TimeSpan.FromSeconds(60);
 
         if (string.IsNullOrWhiteSpace(_settings.ConnectionString))
         {
@@ -66,6 +70,28 @@ public sealed class RedisService : IRedisService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Redis SetHash failed for key {Key}", key);
+        }
+    }
+
+    private async Task SetKeyAsync(string key, string value, TimeSpan? ttl = null)
+    {
+        if (!IsAvailable)
+        {
+            return;
+        }
+
+        try
+        {
+            var fullKey = ApplyPrefix(key);
+            await _database!.StringSetAsync(fullKey, value).ConfigureAwait(false);
+            if (ttl.HasValue)
+            {
+                await _database.KeyExpireAsync(fullKey, ttl).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis StringSet failed for key {Key}", key);
         }
     }
 
@@ -237,6 +263,44 @@ public sealed class RedisService : IRedisService
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Redis KeyDelete failed for key {Key}", key);
+            return false;
+        }
+    }
+
+    public Task SetPresenceAsync(string key, string value, TimeSpan ttl)
+        => SetKeyAsync(key, value, ttl);
+
+    public async Task RefreshPresenceAsync(string key, TimeSpan ttl)
+    {
+        if (!IsAvailable)
+        {
+            return;
+        }
+
+        try
+        {
+            await _database!.KeyExpireAsync(ApplyPrefix(key), ttl).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis RefreshPresence failed for key {Key}", key);
+        }
+    }
+
+    public async Task<bool> IsOnlineAsync(string key)
+    {
+        if (!IsAvailable)
+        {
+            return false;
+        }
+
+        try
+        {
+            return await _database!.KeyExistsAsync(ApplyPrefix(key)).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis KeyExists failed for key {Key}", key);
             return false;
         }
     }

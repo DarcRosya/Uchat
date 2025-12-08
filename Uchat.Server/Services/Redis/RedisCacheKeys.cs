@@ -5,4 +5,5 @@ public static class RedisCacheKeys
     public const string ChatLastMessagesKey = "chat:last";
 
     public static string GetUserChatSortedSetKey(int userId) => $"user:{userId}:chats";
+    public static string GetPresenceKey(int userId) => $"presence:user:{userId}";
 }
