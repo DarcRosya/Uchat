@@ -242,7 +242,8 @@ namespace Uchat
 
                     // FIX: Добавляем в начало списка
                     requestList.Children.Insert(0, requestItem.Box);
-                    
+                    notificationButton.IsVisible = false;
+                    notificationButton.InvalidateVisual();
                     // FIX: Принудительно обновляем layout
                     requestList.InvalidateVisual();
                     
@@ -914,17 +915,6 @@ namespace Uchat
         {
             LeaveGroupAndConfirm.IsVisible = false;
 
-        }
-
-        private void InvitePersonToChat_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
-        {
-            // ЛОГИКА ДОБАВЛЕНИЕ ЧУВАКА!
-
-            // ЕСЛИ ЧТО-ТО НЕ ТАК, ЛИБО ЧУВАК УЖЕ ДОБАВЛЯН ЛИБО ЕГО ПРОСТО НЕТ 
-            /*
-             invalidDataInAddingPersontoGroup.IsVisible = true;
-             invalidDataInAddingPersontoGroupText.Text = "User not found!";  или что-то в этом роде
-             */
         }
 
         private void CancelAddingGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

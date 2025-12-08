@@ -28,47 +28,65 @@ namespace Uchat
 			if (String.IsNullOrEmpty(searchTextBox.Text)) return;
 
 			string input = searchTextBox.Text;
-
-			if (Chat.GroupsActive)
+			try
 			{
-				// Create a new group
-				var request = new Shared.DTOs.CreateChatRequestDto
+				if (Chat.GroupsActive)
 				{
-					Name = input,
-					Type = "group",
-					Description = null
-				};
-				var newChat = await _chatApiService.CreateChatAsync(request);
+					// Create a new group
+					var request = new Shared.DTOs.CreateChatRequestDto
+					{
+						Name = input,
+						Type = "group",
+						Description = null
+					};
+					var newChat = await _chatApiService.CreateChatAsync(request);
 
-				if (newChat != null)
+					if (newChat != null)
+					{
+						// Add group to UI
+						await LoadUserChatsAsync();
+
+						// Open the new chat
+						await OpenChatAsync(newChat.Id);
+					}
+				}
+				else
 				{
-					// Add group to UI
-					await LoadUserChatsAsync();
+					// Send friend request
+					var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
 
-					// Open the new chat
-					await OpenChatAsync(newChat.Id);
+					if (!success)
+					{
+						// Show error message
+						//AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
+						//AddContactErrorText.IsVisible = true;
+						//return; // Don't close overlay
+					}
+
+					//// Success - hide error and reload
+					//AddContactErrorText.IsVisible = false;
 				}
 			}
-			else
+			catch (Exception ex) 
 			{
-				// Send friend request
-				var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
+                searchTextBox.Text = string.Empty;
+            }
 
-				if (!success)
-				{
-					// Show error message
-					//AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
-					//AddContactErrorText.IsVisible = true;
-					return; // Don't close overlay
-				}
-
-				//// Success - hide error and reload
-				//AddContactErrorText.IsVisible = false;
-			}
-
-			// Clear textbox and hide overlay
-			searchTextBox.Text = string.Empty;
+            // Clear textbox and hide overlay
+            searchTextBox.Text = string.Empty;
 		}
+
+        private async void InvitePersonToChat_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            // ЛОГИКА ДОБАВЛЕНИЕ ЧУВАКА!
+            // Create a new group
+
+            // ЕСЛИ ЧТО-ТО НЕ ТАК, ЛИБО ЧУВАК УЖЕ ДОБАВЛЯН ЛИБО ЕГО ПРОСТО НЕТ 
+            /*
+             invalidDataInAddingPersontoGroup.IsVisible = true;
+             invalidDataInAddingPersontoGroupText.Text = "User not found!";  или что-то в этом роде
+             */
+        }
 
         private async Task LoadPendingFriendRequestsAsync()
         {
