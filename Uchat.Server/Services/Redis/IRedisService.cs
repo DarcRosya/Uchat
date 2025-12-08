@@ -15,6 +15,7 @@ public interface IRedisService : IDisposable
     Task UpdateSortedSetAsync(string key, string member, double score, TimeSpan? ttl = null);
     Task<IEnumerable<string>> GetSortedSetMembersAsync(string key, long start = 0, long stop = -1, Order order = Order.Descending);
     Task<List<string>> GetSortedKeysAsync(string sortedSetKey);
+    Task<bool> RemoveSortedSetMemberAsync(string key, string member);
     Task<bool> HashDeleteAsync(string key, string field);
     Task<long> PublishAsync(string channel, string message);
     Task<bool> KeyDeleteAsync(string key);

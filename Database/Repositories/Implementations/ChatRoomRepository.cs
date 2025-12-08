@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
@@ -69,5 +70,19 @@ public class ChatRoomRepository : IChatRoomRepository
         _context.ChatRoomMembers.Remove(member);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<IEnumerable<ChatRoom>> GetChatRoomsByIdsAsync(IEnumerable<int> chatIds)
+    {
+        var ids = chatIds.Distinct().ToList();
+        if (!ids.Any())
+        {
+            return Enumerable.Empty<ChatRoom>();
+        }
+
+        return await _context.ChatRooms
+            .Include(c => c.Members)
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync();
     }
 }

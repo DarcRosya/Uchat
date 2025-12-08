@@ -168,6 +168,24 @@ public sealed class RedisService : IRedisService
         return members.ToList();
     }
 
+    public async Task<bool> RemoveSortedSetMemberAsync(string key, string member)
+    {
+        if (!IsAvailable)
+        {
+            return false;
+        }
+
+        try
+        {
+            return await _database!.SortedSetRemoveAsync(ApplyPrefix(key), member).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Redis SortedSetRemove failed for key {Key}", key);
+            return false;
+        }
+    }
+
     public async Task<bool> HashDeleteAsync(string key, string field)
     {
         if (!IsAvailable)

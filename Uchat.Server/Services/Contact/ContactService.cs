@@ -1,8 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Database.MongoDB;
+using Uchat.Server.Services.Redis;
 using Uchat.Shared.DTOs;
 
 namespace Uchat.Server.Services.Contact;
@@ -14,19 +19,24 @@ public class ContactService : IContactService
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly UchatDbContext _context;
     private readonly MongoDbContext _mongoContext;
+    private readonly IRedisService _redisService;
+
+    private static readonly TimeSpan SortedSetEntryTtl = TimeSpan.FromHours(24);
 
     public ContactService(
         IContactRepository contactRepository,
         IUserRepository userRepository,
         IChatRoomRepository chatRoomRepository,
         UchatDbContext context,
-        MongoDbContext mongoContext)
+        MongoDbContext mongoContext,
+        IRedisService redisService)
     {
         _contactRepository = contactRepository;
         _userRepository = userRepository;
         _chatRoomRepository = chatRoomRepository;
         _context = context;
         _mongoContext = mongoContext;
+        _redisService = redisService;
     }
 
     public async Task<ServiceResult> SendFriendRequestAsync(int senderId, int receiverId)
@@ -175,6 +185,7 @@ public class ContactService : IContactService
             }
 
             await transaction.CommitAsync();
+            await TrackChatSortedSetForUsersAsync(finalChatId, new[] { userId, requesterId }, DateTime.UtcNow);
             
             // Возвращаем ID чата
             return ServiceResult<int>.SuccessResult(finalChatId);
@@ -239,6 +250,17 @@ public class ContactService : IContactService
             await _contactRepository.UpdateStatusAsync(friendContact.Id, ContactStatus.None);
 
             await transaction.CommitAsync();
+            var savedChatIds = new[] { userContact.SavedChatRoomId, friendContact.SavedChatRoomId }
+                .Where(id => id.HasValue)
+                .Select(id => id!.Value)
+                .Distinct()
+                .ToList();
+
+            if (savedChatIds.Any())
+            {
+                await RemoveChatFromUsersSortedSetAsync(savedChatIds, new[] { userId, friendId });
+            }
+
             return ServiceResult.SuccessResult();
         }
         catch (Exception)
@@ -397,6 +419,54 @@ public class ContactService : IContactService
 
         await _contactRepository.SetFavoriteAsync(contact.Id, isFavorite);
         return ServiceResult.SuccessResult();
+    }
+
+    private async Task TrackChatSortedSetForUsersAsync(int chatId, IEnumerable<int> userIds, DateTime lastActivity)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var targets = userIds.Distinct().ToList();
+        if (!targets.Any())
+        {
+            return;
+        }
+
+        var score = new DateTimeOffset(lastActivity.ToUniversalTime()).ToUnixTimeSeconds();
+        var tasks = targets.Select(userId => _redisService.UpdateSortedSetAsync(
+            RedisCacheKeys.GetUserChatSortedSetKey(userId),
+            chatId.ToString(),
+            score,
+            SortedSetEntryTtl));
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task RemoveChatFromUsersSortedSetAsync(IEnumerable<int> chatIds, IEnumerable<int> userIds)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var targets = chatIds.Distinct().ToList();
+        if (!targets.Any())
+        {
+            return;
+        }
+
+        var users = userIds.Distinct().ToList();
+        if (!users.Any())
+        {
+            return;
+        }
+
+        var tasks = targets.SelectMany(chatId => users.Select(userId =>
+            _redisService.RemoveSortedSetMemberAsync(RedisCacheKeys.GetUserChatSortedSetKey(userId), chatId.ToString())));
+
+        await Task.WhenAll(tasks);
     }
 
     public async Task<ServiceResult> SetNicknameAsync(int userId, int contactUserId, string? nickname)

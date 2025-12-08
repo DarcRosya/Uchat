@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
+using Uchat.Server.Services.Redis;
 
 namespace Uchat.Server.Services.Chat;
 
@@ -13,21 +14,49 @@ public sealed class ChatRoomService : IChatRoomService
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ChatRoomService> _logger;
+    private readonly IRedisService _redisService;
+
+    private static readonly TimeSpan ChatListSortedSetTtl = TimeSpan.FromHours(24);
 
     public ChatRoomService(
         IChatRoomRepository chatRoomRepository,
         IUserRepository userRepository,
-        ILogger<ChatRoomService> logger)
+        ILogger<ChatRoomService> logger,
+        IRedisService redisService)
     {
         _chatRoomRepository = chatRoomRepository;
         _userRepository = userRepository;
         _logger = logger;
+        _redisService = redisService;
     }
 
     public async Task<List<ChatRoom>> GetUserChatsAsync(int userId)
     {
-        var chats = await _chatRoomRepository.GetUserChatRoomsAsync(userId);
-        return chats.ToList();
+        var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
+        var cachedIds = (await _redisService.GetSortedKeysAsync(sortedKey))
+            .Select(candidate => int.TryParse(candidate, out var parsed) ? parsed : (int?)null)
+            .Where(id => id.HasValue)
+            .Select(id => id!.Value)
+            .ToList();
+
+        if (cachedIds.Any())
+        {
+            var cachedChats = await _chatRoomRepository.GetChatRoomsByIdsAsync(cachedIds);
+            var chatLookup = cachedChats.ToDictionary(c => c.Id);
+            if (cachedIds.All(id => chatLookup.ContainsKey(id)))
+            {
+                var ordered = cachedIds.Select(id => chatLookup[id]).ToList();
+                return ordered;
+            }
+        }
+
+        var chats = (await _chatRoomRepository.GetUserChatRoomsAsync(userId)).ToList();
+        if (chats.Any())
+        {
+            await RebuildUserChatSortedSetAsync(userId, chats);
+        }
+
+        return chats;
     }
 
     public async Task<ChatResult> GetChatDetailsAsync(int chatId, int userId)
@@ -183,5 +212,22 @@ public sealed class ChatRoomService : IChatRoomService
         }
 
         return ChatResult.Success(chat);
+    }
+
+    private async Task RebuildUserChatSortedSetAsync(int userId, IEnumerable<ChatRoom> chats)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
+        var tasks = chats.Select(chat =>
+        {
+            var score = new DateTimeOffset(chat.LastActivityAt ?? chat.CreatedAt).ToUnixTimeSeconds();
+            return _redisService.UpdateSortedSetAsync(sortedKey, chat.Id.ToString(), score, ChatListSortedSetTtl);
+        });
+
+        await Task.WhenAll(tasks);
     }
 }

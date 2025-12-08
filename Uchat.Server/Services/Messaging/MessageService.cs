@@ -40,7 +40,7 @@ public sealed class MessageService : IMessageService
     };
 
     private static readonly TimeSpan LastMessageCacheTtl = TimeSpan.FromHours(24);
-    private const string ChatLastKey = "chat:last";
+    private static readonly TimeSpan SortedSetEntryTtl = TimeSpan.FromHours(24);
 
     private const int MaxMessageLength = 5000;
     private const int MaxAttachments = 10;
@@ -123,6 +123,7 @@ public sealed class MessageService : IMessageService
             await transaction.CommitAsync(cancellationToken);
 
             await CacheLastMessageAsync(chatRoom.Id, mongoMessage);
+            await UpdateChatSortedSetAsync(chatRoom.Id, mongoMessage.SentAt);
 
             return MessagingResult.SuccessResult(messageId, mongoMessage.SentAt);
         }
@@ -329,12 +330,64 @@ public sealed class MessageService : IMessageService
         {
             var payload = BuildCachedLastMessage(message);
             var serialized = JsonSerializer.Serialize(payload, CachedMessageSerializerOptions);
-            await _redisService.SetHashAsync(ChatLastKey, chatId.ToString(), serialized, LastMessageCacheTtl);
+            await _redisService.SetHashAsync(RedisCacheKeys.ChatLastMessagesKey, chatId.ToString(), serialized, LastMessageCacheTtl);
         }
         catch (Exception ex)
         {
             _logger.LogDebug(ex, "Unable to cache last message for chat {ChatId}", chatId);
         }
+    }
+
+    private async Task UpdateChatSortedSetAsync(int chatId, DateTime lastActivity)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var memberIds = await _context.ChatRoomMembers
+            .Where(m => m.ChatRoomId == chatId)
+            .Select(m => m.UserId)
+            .ToListAsync();
+
+        if (!memberIds.Any())
+        {
+            return;
+        }
+
+        var score = new DateTimeOffset(lastActivity.ToUniversalTime()).ToUnixTimeSeconds();
+
+        var tasks = memberIds.Select(userId => _redisService.UpdateSortedSetAsync(
+            RedisCacheKeys.GetUserChatSortedSetKey(userId),
+            chatId.ToString(),
+            score,
+            SortedSetEntryTtl));
+
+        await Task.WhenAll(tasks);
+    }
+
+    private async Task RemoveChatFromSortedSetsAsync(int chatId)
+    {
+        if (!_redisService.IsAvailable)
+        {
+            return;
+        }
+
+        var memberIds = await _context.ChatRoomMembers
+            .Where(m => m.ChatRoomId == chatId)
+            .Select(m => m.UserId)
+            .ToListAsync();
+
+        if (!memberIds.Any())
+        {
+            return;
+        }
+
+        var tasks = memberIds.Select(userId => _redisService.RemoveSortedSetMemberAsync(
+            RedisCacheKeys.GetUserChatSortedSetKey(userId),
+            chatId.ToString()));
+
+        await Task.WhenAll(tasks);
     }
 
     private async Task<Dictionary<int, MessageDto>> TryGetCachedLastMessagesAsync(IEnumerable<int> chatIds)
@@ -347,7 +400,7 @@ public sealed class MessageService : IMessageService
 
         foreach (var chatId in chatIds.Distinct())
         {
-            var cachedValue = await _redisService.GetHashAsync(ChatLastKey, chatId.ToString());
+            var cachedValue = await _redisService.GetHashAsync(RedisCacheKeys.ChatLastMessagesKey, chatId.ToString());
             if (string.IsNullOrEmpty(cachedValue))
             {
                 continue;
@@ -416,7 +469,7 @@ public sealed class MessageService : IMessageService
     {
         try
         {
-            var cached = JsonSerializer.Deserialize<CachedLastMessage>(json, CachedMessageSerializerOptions);
+            var cached = JsonSerializer.Deserialize<CachedLastMessage?>(json, CachedMessageSerializerOptions);
             if (cached == null)
             {
                 return null;
@@ -469,13 +522,16 @@ public sealed class MessageService : IMessageService
         }
 
         var latest = await _messageRepository.GetChatMessagesAsync(chatId, 1);
-        if (latest.Any())
+        if (latest.Count > 0)
         {
-            await CacheLastMessageAsync(chatId, latest.First());
+            var latestMessage = latest[0];
+            await CacheLastMessageAsync(chatId, latestMessage);
+            await UpdateChatSortedSetAsync(chatId, latestMessage.SentAt);
             return;
         }
 
-        await _redisService.HashDeleteAsync(ChatLastKey, chatId.ToString());
+        await _redisService.HashDeleteAsync(RedisCacheKeys.ChatLastMessagesKey, chatId.ToString());
+        await RemoveChatFromSortedSetsAsync(chatId);
     }
 
     private sealed record CachedLastMessage
