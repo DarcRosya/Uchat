@@ -285,10 +285,5 @@ namespace Uchat
             if (NotificationBox.IsVisible)
                 await LoadPendingFriendRequestsAsync();
         }
-
-		private void SettingsButton_Click(object sender, RoutedEventArgs  e)
-		{
-
-		}
     }
 }

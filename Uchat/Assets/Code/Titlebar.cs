@@ -7,7 +7,7 @@ namespace Uchat
 {
     public partial class MainWindow : Window
     {
-        private void Options_Click(object sender, RoutedEventArgs e)
+        private void LogOutButton_Click(object sender, RoutedEventArgs e)
 		{
 			// UNCOMMENT TO ADD LOGOUT BUTTON:
 			// LogoutAsync();

@@ -120,15 +120,16 @@
           <Setter Property="Height" Value="20"/>
           <Setter Property="Margin" Value="0,0,1,1"/>
           <Setter Property="BorderBrush" Value="#171a20"/>
+          <Setter Property="Background" Value="#4da64d"/>
           <Setter Property="BorderThickness" Value="4"/>
-          <Setter Property="CornerRadius" Value="16"/>
+          <Setter Property="CornerRadius" Value="5"/>
           <Setter Property="HorizontalAlignment" Value="Right"/>
           <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
 
          <!-- Avatar Status Ellipse-->
          <Style Selector="Ellipse.contactStatusEllipse">
-             <Setter Property="Fill" Value="#4da64d"/>
+             
          </Style>
 
         <!-- Name -->
@@ -161,7 +162,7 @@
           <Setter Property="FontWeight" Value="SemiBold"/>
           <Setter Property="VerticalAlignment" Value="Center"/>
           <Setter Property="HorizontalAlignment" Value="Center"/>
-          <Setter Property="Margin" Value="0,0,0,0"/>
+          <Setter Property="Margin" Value="1,0,0,0"/>
         </Style>
       </Styles>
 

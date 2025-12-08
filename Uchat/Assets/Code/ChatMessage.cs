@@ -56,7 +56,6 @@ namespace Uchat
                     messageBorder.Classes.Add(messageBorderStyle);
                     messageBorder.Child = messageStackPanel;
                     
-                    // Alignment: свои сообщения справа, чужие слева
                     messageBorder.HorizontalAlignment = isGuest ? HorizontalAlignment.Left : HorizontalAlignment.Right;
 
                     timeStackPanel.Classes.Add("timeStackPanel");
@@ -103,7 +102,7 @@ namespace Uchat
                         this.ReplyPreviewBorder = replyToMessageBorder;
 
                         replyUserName.Classes.Add("replyUserName");
-                        replyUserName.Text = (isGuest) ? "Guest" : "Me";
+                        replyUserName.Text = (isGuest) ? username : "Me";
                         replyTextBlock.Classes.Add("replyTextBlock");
                         replyTextBlock.Text = replyToContent ?? "(no content)";
 
