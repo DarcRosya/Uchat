@@ -23,6 +23,7 @@ namespace Uchat
     {
         private readonly AuthApiService _authService;
         private string? _pendingEmail = null;
+        private string? _pendingResetEmail = null;
         private string? _pendingUsername = null;
         private string? _pendingPassword = null;
         private string[] systemArgs;
@@ -135,70 +136,135 @@ namespace Uchat
             EmailVerification.IsVisible = true;
         }
 
-        private void GoToResetPasswordForm_Click(object? sender, RoutedEventArgs e)
+        private async void GoToResetPasswordForm_Click(object? sender, RoutedEventArgs e)
         {
             string code = codeVerificationTextBox.Text ?? string.Empty;
 
-            /*
-             if (code != //КОД ОТ EMAIL)
+            if (string.IsNullOrEmpty(code))
             {
-                invalidDataInCodeVerification.Text = "Verification failed";
+                invalidDataInCodeVerification.Text = "Code is required";
                 invalidDataInCodeVerification.IsVisible = true;
                 return;
             }
-             */
+            
+            // Проверяем, не потерялась ли почта
+            if (string.IsNullOrEmpty(_pendingResetEmail))
+            {
+                invalidDataInCodeVerification.Text = "Session error. Please restart.";
+                invalidDataInCodeVerification.IsVisible = true;
+                return;
+            }
 
-            invalidDataInCodeVerification.IsVisible = false;
-            CodeVerification.IsVisible = false;
-            ResetPasswordForm.IsVisible = true;
+            try
+            {
+                // Проверяем валидность кода на сервере
+                await _authService.VerifyResetCodeAsync(_pendingResetEmail, code);
+
+                // Если все ок - идем к смене пароля
+                invalidDataInCodeVerification.IsVisible = false;
+                CodeVerification.IsVisible = false;
+                ResetPasswordForm.IsVisible = true;
+                
+                // Очищаем поля паролей
+                newPasswordTextBox.Text = string.Empty;
+                confirmPasswordTextBox.Text = string.Empty;
+                invalidDataInResetPassword.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+                invalidDataInCodeVerification.Text = ex.Message;
+                invalidDataInCodeVerification.IsVisible = true;
+            }
         }
 
-        private void ChangePasswordButton_Click(object? sender, RoutedEventArgs e)
+        private async void ChangePasswordButton_Click(object? sender, RoutedEventArgs e)
         {
-            string newPassword = newPasswordTextBox.Text ?? string.Empty;
-            string confirmPassword = confirmPasswordTextBox.Text ?? string.Empty;
+            // Берем данные
+            string newPass = newPasswordTextBox.Text ?? string.Empty;
+            string confirmPass = confirmPasswordTextBox.Text ?? string.Empty;
+            
+            // Код берем из предыдущего TextBox (он еще хранит значение)
+            string code = codeVerificationTextBox.Text ?? string.Empty; 
 
-            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+            // === ВАЖНО: Проверка двух полей на клиенте ===
+            
+            if (string.IsNullOrWhiteSpace(newPass))
             {
+                invalidDataInResetPassword.Text = "Password cannot be empty";
                 invalidDataInResetPassword.IsVisible = true;
-                invalidDataInResetPassword.Text = "Passwords fields are required";
                 return;
             }
 
-            if (newPassword != confirmPassword)
+            if (newPass.Length < 6)
             {
+                invalidDataInResetPassword.Text = "Password must be at least 6 characters";
                 invalidDataInResetPassword.IsVisible = true;
-                invalidDataInResetPassword.Text = "Passwords do not match";
                 return;
             }
 
-            invalidDataInResetPassword.IsVisible = false;
-            loginForm.IsVisible = true;
-            ResetPasswordForm.IsVisible = false;
-            GoToLogInButtonForgottenForm.IsVisible = false;
+            if (newPass != confirmPass)
+            {
+                invalidDataInResetPassword.Text = "Passwords do not match"; // Ошибка, если не совпали
+                invalidDataInResetPassword.IsVisible = true;
+                return;
+            }
+
+            try
+            {
+                // Отправляем на сервер только ОДИН (новый) пароль
+                await _authService.ResetPasswordAsync(_pendingResetEmail!, code, newPass);
+
+                // Успех
+                invalidDataInResetPassword.IsVisible = false;
+                ResetPasswordForm.IsVisible = false;
+                
+                // Возвращаем на логин
+                loginForm.IsVisible = true;
+                
+                // Чистим переменную
+                _pendingResetEmail = null;
+                
+                // Можно показать сообщение "Password changed! Please login."
+            }
+            catch (Exception ex)
+            {
+                invalidDataInResetPassword.Text = ex.Message;
+                invalidDataInResetPassword.IsVisible = true;
+            }
         }
 
-        private void GoToCodeVerification_Click(object? sender, RoutedEventArgs e)
+        private async void GoToCodeVerification_Click(object? sender, RoutedEventArgs e)
         {
-            string emailAddress = emailInRecoveryEmailTextBox.Text ?? string.Empty;
+            string email = emailInRecoveryEmailTextBox.Text ?? string.Empty;
 
-            if (string.IsNullOrEmpty(emailAddress))
+            if (string.IsNullOrEmpty(email) || !email.EndsWith("@gmail.com")) // Твоя валидация
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Email is required";
+                invalidDataInRecoveryEmail.Text = "Invalid email format";
                 return;
             }
 
-            if (!emailAddress.EndsWith("@gmail.com"))
+            try
+            {
+                // 1. Отправляем запрос
+                await _authService.ForgotPasswordAsync(email);
+
+                // 2. Запоминаем почту и переключаем UI
+                _pendingResetEmail = email;
+                
+                invalidDataInRecoveryEmail.IsVisible = false;
+                EmailVerification.IsVisible = false;
+                
+                CodeVerification.IsVisible = true;
+                // Очищаем поле кода
+                codeVerificationTextBox.Text = string.Empty;
+                invalidDataInCodeVerification.IsVisible = false;
+            }
+            catch (Exception ex)
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Invalid email address. Only [@gmail.com] is allowed";
-                return;
+                invalidDataInRecoveryEmail.Text = ex.Message;
             }
-
-            invalidDataInRecoveryEmail.IsVisible = false;
-            CodeVerification.IsVisible = true;
-            EmailVerification.IsVisible = false;
         }
 
         private void CloseLoginFormButton_Click(object? sender, RoutedEventArgs e)

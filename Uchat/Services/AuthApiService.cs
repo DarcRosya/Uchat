@@ -206,4 +206,30 @@ public class AuthApiService
             // Ignore logout errors
         }
     }
+
+    public async Task ForgotPasswordAsync(string email)
+    {
+        var response = await _httpClient.PostAsJsonAsync("/api/auth/forgot-password", new { email });
+        // Тут можно не проверять success, так как сервер всегда отвечает OK в целях безопасности
+    }
+
+    public async Task VerifyResetCodeAsync(string email, string code)
+    {
+        var response = await _httpClient.PostAsJsonAsync("/api/auth/verify-reset-code", new { email, code });
+        if (!response.IsSuccessStatusCode)
+        {
+            var err = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
+            throw new Exception(err?.Error ?? "Invalid code");
+        }
+    }
+
+    public async Task ResetPasswordAsync(string email, string code, string newPassword)
+    {
+        var response = await _httpClient.PostAsJsonAsync("/api/auth/reset-password", new { email, code, newPassword });
+        if (!response.IsSuccessStatusCode)
+        {
+            var err = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
+            throw new Exception(err?.Error ?? "Failed to reset password");
+        }
+    }
 }

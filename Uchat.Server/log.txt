@@ -1029,3 +1029,54 @@
 [16:51:09] [CLIENT] UserSession initialized with system arguments
 [16:51:09] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
 [16:51:19] [CLIENT] Attempting registration for: piki
+[17:00:01] [CLIENT] UserSession initialized with system arguments
+[17:00:01] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:09:27] [CLIENT] UserSession initialized with system arguments
+[17:09:27] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:14:11] [CLIENT] UserSession initialized with system arguments
+[17:14:11] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:15:09] [CLIENT] Attempting login for: jopa
+[17:15:09] [CLIENT] Login successful for jopa
+[17:15:09] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[17:15:09] [CLIENT] Tokens saved for user jopa (expires: 2025-12-09 15:45:09)
+[17:15:09] [CLIENT] Session set for user jopa (expires: 15:45:09)
+[17:15:09] [CLIENT] Auto-refresh timer started
+[17:15:09] [CLIENT] Session set for user jopa (expires: 15:45:09)
+[17:15:09] [CLIENT] Auto-refresh timer stopped
+[17:15:09] [CLIENT] Auto-refresh timer started
+[17:15:09] [CLIENT] Initializing API services for user: jopa
+[17:15:09] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[17:15:09] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[17:15:09] [CLIENT] ContactApiService: Authorization header set
+[17:15:09] [SERVER] User jopa (ID: 2) connected
+[17:15:09] [SERVER] [ONLINE] User jopa became ONLINE
+[17:15:09] [SERVER] [Auto-Join] User jopa added to group chat_2
+[17:15:09] [SERVER] [Auto-Join] User jopa added to group chat_3
+[17:15:09] [SERVER] [Auto-Join] User jopa joined 2 chat groups
+[17:15:10] [SERVER] [JoinChatGroup] jopa joined chat 2 (group: chat_2)
+[17:15:11] [SERVER] [JoinChatGroup] jopa joined chat 1 (group: chat_1)
+[17:15:12] [SERVER] User jopa disconnected
+[17:15:12] [SERVER] [OFFLINE] User jopa became OFFLINE
+[17:16:55] [CLIENT] UserSession initialized with system arguments
+[17:16:55] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:17:56] [CLIENT] Attempting login for: jopa
+[17:17:56] [CLIENT] Login successful for jopa
+[17:17:56] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[17:17:56] [CLIENT] Tokens saved for user jopa (expires: 2025-12-09 15:47:56)
+[17:17:56] [CLIENT] Session set for user jopa (expires: 15:47:56)
+[17:17:56] [CLIENT] Auto-refresh timer started
+[17:17:56] [CLIENT] Session set for user jopa (expires: 15:47:56)
+[17:17:56] [CLIENT] Auto-refresh timer stopped
+[17:17:56] [CLIENT] Auto-refresh timer started
+[17:17:56] [CLIENT] Initializing API services for user: jopa
+[17:17:56] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[17:17:56] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[17:17:56] [CLIENT] ContactApiService: Authorization header set
+[17:17:56] [SERVER] User jopa (ID: 2) connected
+[17:17:56] [SERVER] [ONLINE] User jopa became ONLINE
+[17:17:56] [SERVER] [Auto-Join] User jopa added to group chat_2
+[17:17:56] [SERVER] [Auto-Join] User jopa added to group chat_3
+[17:17:56] [SERVER] [Auto-Join] User jopa joined 2 chat groups
+[17:17:57] [SERVER] [JoinChatGroup] jopa joined chat 2 (group: chat_2)
+[17:17:58] [SERVER] User jopa disconnected
+[17:17:58] [SERVER] [OFFLINE] User jopa became OFFLINE

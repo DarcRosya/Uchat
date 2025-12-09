@@ -127,6 +127,12 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    public async Task UpdateAsync(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
     // DELETE
     public async Task<bool> SoftDeleteAsync(int userId)
     {

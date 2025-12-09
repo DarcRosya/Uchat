@@ -92,12 +92,35 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Logged out successfully" });
     }
 
-    [Authorize]
-    [HttpPost("logout-all")]
-    public async Task<IActionResult> LogoutAll()
+    [HttpPost("forgot-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
     {
-        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var count = await _authService.LogoutAllAsync(userId);
-        return Ok(new { message = $"Logged out from {count} devices" });
+        await _authService.ForgotPasswordAsync(dto.Email);
+        return Ok(new { message = "If the email exists, a code has been sent." });
+    }
+
+    [HttpPost("verify-reset-code")]
+    [AllowAnonymous]
+    public async Task<IActionResult> VerifyResetCode([FromBody] VerifyResetCodeDto dto)
+    {
+        var isValid = await _authService.VerifyResetCodeAsync(dto.Email, dto.Code);
+        if (!isValid) return BadRequest(new { error = "Invalid or expired code" });
+        return Ok(new { message = "Code is valid" });
+    }
+
+    [HttpPost("reset-password")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+    {
+        try 
+        {
+            await _authService.ResetPasswordAsync(dto.Email, dto.Code, dto.NewPassword);
+            return Ok(new { message = "Password changed successfully" });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
     }
 }

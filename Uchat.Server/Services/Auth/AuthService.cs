@@ -64,8 +64,7 @@ public class AuthService
 
         await _pendingRepo.CreateOrUpdateAsync(pending);
 
-        string htmlBody = GenerateEmailBody(dto.Username, code);
-
+        string htmlBody = await LoadEmailTemplateAsync("ConfirmEmail.html", dto.Username, code);
         await _emailSender.SendEmailAsync(dto.Email, "Confirm your Uchat account", htmlBody);
 
         return new RegisterResultDto
@@ -252,9 +251,65 @@ public class AuthService
         await _refreshTokenRepository.RevokeTokenAsync(tokenHash);
     }
 
-    public async Task<int> LogoutAllAsync(int userId)
+    public async Task ForgotPasswordAsync(string email)
     {
-        return await _refreshTokenRepository.RevokeAllUserTokensAsync(userId);
+        var user = await _userRepository.GetByEmailAsync(email);
+        
+        // Если юзера нет, мы делаем вид, что все ок (security best practice),
+        // чтобы хакеры не могли перебирать базу email-ов.
+        if (user == null) return; 
+
+        var code = GenerateNumericCode(6); // Используем твой метод генерации цифр
+        
+        user.PasswordResetCode = code;
+        user.PasswordResetCodeExpiresAt = DateTime.UtcNow.AddMinutes(15);
+        
+        // Используем новый метод UpdateAsync
+        await _userRepository.UpdateAsync(user);
+
+        string htmlBody = await LoadEmailTemplateAsync("ResetPassword.html", user.Username, code);
+        await _emailSender.SendEmailAsync(email, "Reset Password Request", htmlBody);
+    }
+
+    public async Task<bool> VerifyResetCodeAsync(string email, string code)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        
+        if (user == null || 
+            user.PasswordResetCode != code || 
+            !user.PasswordResetCodeExpiresAt.HasValue ||
+            user.PasswordResetCodeExpiresAt < DateTime.UtcNow)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public async Task ResetPasswordAsync(string email, string code, string newPassword)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+
+        if (user == null) throw new InvalidOperationException("User not found");
+        
+        // Повторная проверка кода (обязательно!)
+        if (user.PasswordResetCode != code || 
+            user.PasswordResetCodeExpiresAt < DateTime.UtcNow)
+        {
+             throw new InvalidOperationException("Invalid or expired code");
+        }
+
+        // Хешируем новый пароль
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        
+        // Очищаем код, чтобы его нельзя было использовать второй раз
+        user.PasswordResetCode = null;
+        user.PasswordResetCodeExpiresAt = null;
+
+        await _userRepository.UpdateAsync(user);
+        
+        // Опционально: можно сбросить все RefreshToken-ы пользователя, чтобы выкинуть его со всех устройств
+        await _refreshTokenRepository.RevokeAllUserTokensAsync(user.Id);
     }
 
     private async Task CreatePersonalNotesChat(int userId, string username)
@@ -309,5 +364,33 @@ public class AuthService
         {
             Console.WriteLine($"[ERROR] Failed to add user {username} to global chat: {ex.Message}");
         }
+    }
+
+    private async Task<string> LoadEmailTemplateAsync(string templateName, string username, string code)
+    {
+        // Ищем в папке EmailTemplates
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "EmailTemplates", templateName);
+        
+        if (File.Exists(templatePath))
+        {
+            try
+            {
+                var html = await File.ReadAllTextAsync(templatePath);
+                return html.Replace("{Code}", code)
+                        .Replace("{Username}", username);
+                        // .Replace("{Greetings}", ...) // Если используешь старый плейсхолдер
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AuthService] Error reading template {templateName}: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"[AuthService] Template not found at: {templatePath}");
+        }
+
+        // Запасной вариант (Fallback), если файл не найден
+        return $"<h3>Hello {username}</h3><p>Your code: <strong>{code}</strong></p>";
     }
 }

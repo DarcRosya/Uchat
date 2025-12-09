@@ -18,6 +18,8 @@ public class User
     public string? AvatarUrl { get; set; }
 
     public DateTime CreatedAt { get; set; }
+    public string? PasswordResetCode { get; set; }
+    public DateTime? PasswordResetCodeExpiresAt { get; set; }
 
     public bool EmailConfirmed { get; set; } = false; 
     public bool IsDeleted { get; set; } = false; // (soft delete)
