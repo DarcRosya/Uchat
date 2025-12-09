@@ -482,9 +482,9 @@ namespace Uchat
             {
                 contactsStackPanel.Children.Remove(contact.Box);
 
-                if (Chat.chatsList.Contains(contact))
+                if (Chat.ChatsList.Contains(contact))
                 {
-                    Chat.chatsList.Remove(contact);
+                    Chat.ChatsList.Remove(contact);
                 }
 
                 _chatContacts.Remove(chatRoomId);

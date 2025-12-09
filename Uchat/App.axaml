@@ -127,11 +127,6 @@
           <Setter Property="VerticalAlignment" Value="Bottom"/>
         </Style>
 
-         <!-- Avatar Status Ellipse-->
-         <Style Selector="Ellipse.contactStatusEllipse">
-             
-         </Style>
-
         <!-- Name -->
         <Style Selector="TextBlock.contactName">
           <Setter Property="Foreground" Value="#FFFFFF"/>

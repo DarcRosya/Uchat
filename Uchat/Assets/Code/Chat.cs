@@ -56,15 +56,16 @@ namespace Uchat
 
 				if (!success)
 				{
-					// Show error message
-					//AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
-					//AddContactErrorText.IsVisible = true;
-					return; // Don't close overlay
+                    // Show error message
+                    //AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
+                    //AddContactErrorText.IsVisible = true;
+                    searchTextBox.Text = string.Empty;
+                    return; // Don't close overlay
 				}
-
-				//// Success - hide error and reload
-				//AddContactErrorText.IsVisible = false;
-			}
+				Chat.requestListener = input;
+                //// Success - hide error and reload
+                //AddContactErrorText.IsVisible = false;
+            }
 
 			// Clear textbox and hide overlay
 			searchTextBox.Text = string.Empty;
@@ -90,6 +91,7 @@ namespace Uchat
                             Margin = new Thickness(0, 20, 0, 0)
                         };
                         requestList.Children.Add(noRequestsText);
+						notificationButton.Background = Brushes.Transparent;
                     }
                     else
                     {
@@ -102,6 +104,7 @@ namespace Uchat
                             );
                             requestList.Children.Add(friendRequest.Box);
                         }
+                        notificationButton.Background = Brush.Parse("#4da64d");
                     }
                 });
             }
