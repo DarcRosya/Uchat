@@ -127,7 +127,6 @@ namespace Uchat
             ContactsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.Normal;
             GroupsButton.FontWeight = FontWeight.SemiBold;
-            groupTopBar.IsVisible = true;
 
             Chat.ShowGroups(true);
         }
@@ -139,7 +138,6 @@ namespace Uchat
             GroupsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.SemiBold;
             GroupsButton.FontWeight = FontWeight.Normal;
-            groupTopBar.IsVisible = false;
 
             Chat.ShowGroups(false);
         }

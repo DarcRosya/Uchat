@@ -17,7 +17,7 @@
 		>
 
 	<Grid>
-		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="False">
+		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="True">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1.2*"/>
 				<ColumnDefinition Width="1.5*"/>
@@ -635,7 +635,7 @@
 			</Border>
 		</Grid>
 
-		<Grid x:Name="MainProgram" IsVisible="True">
+		<Grid x:Name="MainProgram" IsVisible="False">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="30"/>
 				<RowDefinition Height="*"/>
@@ -689,7 +689,7 @@
 
 				<!-- Middle Top Bar -->
 				<Grid Grid.Column="2" x:Name="friendTopBar" Grid.Row="0" Background="#0e1013">
-					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+					<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
 						<TextBlock x:Name="friendTopBarName" FontSize="15" Foreground="White" FontWeight="Bold" Margin="5 4 0 0" />
 					</StackPanel>
 				</Grid>
@@ -698,25 +698,19 @@
 				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013" x:Name="groupTopBar" Cursor="Hand"
 					  PointerPressed="groupTopBar_PointerPressed"
 					  IsVisible="False">
-					<DockPanel VerticalAlignment="Center"> 
+					<DockPanel VerticalAlignment="Center" HorizontalAlignment="Center"> 
 						<Image DockPanel.Dock="Right"  
 							   Width="20" Height="20" Margin="0 0 15 0" Cursor="Hand" Source="avares://Uchat/Assets/Icons/options.png" 
-							   VerticalAlignment="Center" />
+							   VerticalAlignment="Center" HorizontalAlignment="Right"/>
         
-						<Grid RowDefinitions="Auto Auto" ColumnDefinitions="*" Margin="15 0 20 0">
+						<Grid RowDefinitions="Auto Auto" ColumnDefinitions="*">
 							<TextBlock x:Name="groupTopBarName" 
-									   Text="ЗАПИХНУТЬ СЮДА ЗАГРУШКУ. ТИПА НЕТ ВЫБРАННЫХ ЧАТОВ!" 
+									   Text="" 
 									   FontSize="15" 
 									   Foreground="White" 
 									   FontWeight="Bold"
 									   TextTrimming="CharacterEllipsis"  
 									   />
-                       
-							<TextBlock x:Name="groupTopBarNumberOfMembers" 
-									   Grid.Row="1" 
-									   Text="КОЛИЧЕСТВО УЧАСТНИКОВ" 
-									   Foreground="#AAAAAA" 
-									   FontSize="10"/>
 						</Grid>
 					</DockPanel>
 				</Grid>
@@ -778,6 +772,10 @@
 					<Grid/>
 
 				<!-- Chat Container -->
+				<TextBlock Name="PlaceHolder" FontWeight="SemiBold" FontSize="15" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center">
+					Select a chat to start messaging 
+				</TextBlock>
+
 				<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
 					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
 				</ScrollViewer>
@@ -883,9 +881,11 @@
 
 					<!-- Bottom Container -->
 					<Border Grid.Row="1"
+							Name="BottomContainer"
 							Background="Black"
 							Margin="10,0,10,10"
-							CornerRadius="5">
+							CornerRadius="5"
+							IsVisible="False">
 						<Grid ColumnDefinitions="*,70">
 
 							<TextBox Name="chatTextBox"

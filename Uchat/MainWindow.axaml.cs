@@ -452,7 +452,6 @@ namespace Uchat
             groupInfoBox.IsVisible = true;
             groupInfoName.Text = groupTopBarName.Text;
             backgroundForGroupInfo.IsVisible = true;
-            groupInfoNumberOfMembers.Text = groupTopBarNumberOfMembers.Text;
 
             e.Handled = true;
         }

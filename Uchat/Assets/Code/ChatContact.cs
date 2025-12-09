@@ -17,15 +17,10 @@ namespace Uchat
 			public static string ClientName = "Uchat Client";
 
             public static List<Contact> ChatsList = new List<Contact>();
-            public static List<Contact> PinnedChats = new List<Contact>();
             public static bool GroupsActive = false;
 
 			public static void ShowGroups(bool groupsNeeded)
 			{
-                foreach (Contact contact in Chat.PinnedChats)
-                {
-                    contact.IsVisible = (contact.IsGroupChat == true) ? groupsNeeded : !groupsNeeded;
-                }
                 foreach (Contact contact in Chat.ChatsList)
                 {
                     contact.IsVisible = (contact.IsGroupChat == true) ? groupsNeeded : !groupsNeeded;
@@ -79,7 +74,6 @@ namespace Uchat
                     avatarIcon.Classes.Add("avatarIcon");
 					var uriString = "avares://Uchat/Assets/Icons/avatar.png";
                     avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
-
 
                     contactStatusBorder.Classes.Add("contactStatusBorder");
 
@@ -155,15 +149,8 @@ namespace Uchat
 						? "avares://Uchat/Assets/Icons/group.png" 
 						: "avares://Uchat/Assets/Icons/avatar.png";
 
-					try
-					{
-						avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
-                        contactStatusBorder.IsVisible = !isGroupChat;
-                    }
-					catch
-					{
-						// Игнорируем ошибки загрузки ассетов
-					}
+                    avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
+                    contactStatusBorder.IsVisible = !isGroupChat;
 				}
 				
 				/// <summary>
@@ -192,13 +179,6 @@ namespace Uchat
 					string color = (GroupsActive == true) ? "#4a8284" : "#4b678a";
 
                     foreach (Contact contact in Chat.ChatsList)
-                    {
-                        contact.Background = Brush.Parse("#171a20");
-                        contact.LastMessageForeground = Brush.Parse("#999999");
-                        contact.StatusBackground = Brush.Parse("#171a20");
-                    }
-
-                    foreach (Contact contact in Chat.ChatsList)
 					{
 						contact.Background = Brush.Parse("#171a20");
 						contact.LastMessageForeground = Brush.Parse("#999999");
@@ -209,6 +189,9 @@ namespace Uchat
 					this.StatusBackground = Brush.Parse(color);
 
                     mainWindow.groupTopBarName.Text = this.ChatName;
+                    mainWindow.groupTopBar.IsVisible = this.IsGroupChat;
+					mainWindow.PlaceHolder.IsVisible = false;
+                    mainWindow.BottomContainer.IsVisible = true;
 
                     if (chatId > 0)
 					{
