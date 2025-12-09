@@ -21,12 +21,7 @@ public class MongoMessage
     // - “text” - regular text message
     [BsonElement("type")]
     public string Type { get; set; } = "text";
-    
-    /// {
-    ///   "😎": [100, 200, 300],  // userIds who placed 😎
-    ///   "❤️": [150, 250],       
-    ///   "😨": [100]             
-    /// }
+
     [BsonElement("reactions")]
     public Dictionary<string, List<int>> Reactions { get; set; } = new();
     
@@ -56,6 +51,9 @@ public class MongoMessage
     
     [BsonElement("replyToContent")]
     public string? ReplyToContent { get; set; }
+
+    [BsonElement("replyToSenderName")]
+    public string? ReplyToSenderName { get; set; }
 }
 
 public class MessageSender

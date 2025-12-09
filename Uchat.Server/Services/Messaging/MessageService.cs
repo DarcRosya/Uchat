@@ -119,6 +119,23 @@ public sealed class MessageService : IMessageService
             }
 
             mongoMessage = BuildMongoMessage(dto, sender);
+
+            if (!string.IsNullOrEmpty(dto.ReplyToMessageId))
+            {
+                // Ищем оригинальное сообщение по ID
+                var originalMessage = await _mongoDbContext.Messages
+                    .Find(m => m.Id == dto.ReplyToMessageId)
+                    .FirstOrDefaultAsync(cancellationToken);
+
+                if (originalMessage != null)
+                {
+                    // Сохраняем имя того, кому отвечаем
+                    mongoMessage.ReplyToSenderName = originalMessage.Sender.DisplayName ?? originalMessage.Sender.Username;
+                    
+                    // Также полезно явно сохранить текст (если BuildMongoMessage этого не сделал)
+                    mongoMessage.ReplyToContent = originalMessage.Content;
+                }
+            }
             
             // Сохранение в MongoDB
             if (string.IsNullOrEmpty(mongoMessage.Id))

@@ -724,6 +724,7 @@ namespace Uchat
             var timestamp = message.SentAt.ToLocalTime().ToString("HH:mm");
             bool isGuest = (message.Sender.Username != _currentUsername);
             bool hasReply = message.ReplyTo != null;
+            string? replyToName = message.ReplyTo?.SenderName;
             string? replyContent = message.ReplyTo?.Content;
             
             var chatMessage = new MainWindow.Chat.Message(
@@ -736,7 +737,7 @@ namespace Uchat
                 message.EditedAt.HasValue,
                 message.ReplyToMessageId,
                 message.Sender.DisplayName ?? message.Sender.Username,
-                Chat.ReplyToUserName
+                replyToName
             );
             
             _messageCache[message.Id] = chatMessage;
