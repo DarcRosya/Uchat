@@ -178,7 +178,7 @@ public class AuthService
             var result = await _chatRoomService.CreateChatAsync(
                 creatorId: userId,
                 name: "Notes",
-                type: ChatRoomType.Private,
+                type: ChatRoomType.DirectMessage,
                 description: "Personal notes and reminders",
                 initialMemberIds: null // Создатель добавляется автоматически
             );

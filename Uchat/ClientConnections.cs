@@ -19,6 +19,7 @@ namespace Uchat
     {
         public int contactId { get; set; }
         public int chatRoomId { get; set; }
+        public string Type { get; set; }
         public string friendUsername { get; set; } = string.Empty;
         public string friendDisplayName { get; set; } = string.Empty;
     }
@@ -344,9 +345,28 @@ namespace Uchat
                         bool isGroup = chat.Type != "DirectMessage";
                         
                         // Текст превью
-                        string previewText = !string.IsNullOrEmpty(chat.LastMessageContent) 
-                            ? chat.LastMessageContent 
-                            : "New Friend!";
+                        string previewText;
+
+                        if (!string.IsNullOrEmpty(chat.LastMessageContent))
+                        {
+                            previewText = chat.LastMessageContent;
+                        }
+
+                        else
+                        {
+                            if (chat.Name == "Notes")
+                            {
+                                previewText = string.Empty;
+                            }
+                            else if (chat.Type == "DirectMessage")
+                            {
+                                previewText = "New Friend!";
+                            }
+                            else
+                            {
+                                previewText = "New Group!";
+                            }
+                        }
 
                         if (_chatContacts.TryGetValue(chat.Id, out var existingContact))
                         {
@@ -644,42 +664,46 @@ namespace Uchat
             {
                 try
                 {
+                    var options = new System.Text.Json.JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
                     var json = System.Text.Json.JsonSerializer.Serialize(data);
-                    var notification = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json);
+                    var notification = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json, options);
 
                     if (notification != null && notification.chatRoomId > 0)
                     {
-                        try 
-                        {
-                            await _hubConnection.InvokeAsync("JoinChatGroup", notification.chatRoomId);;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"Failed to join SignalR group: {ex.Message}");
-                        }
+                        _ = _hubConnection.InvokeAsync("JoinChatGroup", notification.chatRoomId)
+                            .ContinueWith(t => Console.WriteLine($"SignalR Join Error: {t.Exception?.InnerException?.Message}"), TaskContinuationOptions.OnlyOnFaulted);
 
-                        if (!_chatContacts.ContainsKey(notification.chatRoomId))
+                        string initMsg = notification.Type switch
                         {
-                            var newContact = new MainWindow.Chat.Contact(
+                            "DirectMessage" => "New Friend!",
+                            _ => "New Group!"
+                        };
+
+                        if (!_chatContacts.TryGetValue(notification.chatRoomId, out var contact))
+                        {
+                            contact = new MainWindow.Chat.Contact(
                                 notification.friendDisplayName, 
-                                "New Friend!",
+                                initMsg, 
                                 0, 
                                 this, 
                                 notification.chatRoomId
                             );
-                            newContact.AddMember(Chat.ClientName);
-                            newContact.AddMember(notification.friendDisplayName);
+                            contact.AddMember(Chat.ClientName);
+                            contact.AddMember(notification.friendDisplayName);
 
-                            _chatContacts[notification.chatRoomId] = newContact;
-                            contactsStackPanel.Children.Insert(0, newContact.Box);
+                            _chatContacts[notification.chatRoomId] = contact;
+                            contactsStackPanel.Children.Insert(0, contact.Box);
                         }
                         else 
                         {
-                            var existingContact = _chatContacts[notification.chatRoomId];
-                            existingContact.UpdateLastMessage("New Friend!"); 
+                            contact.UpdateLastMessage(initMsg);
 
-                            contactsStackPanel.Children.Remove(existingContact.Box);
-                            contactsStackPanel.Children.Insert(0, existingContact.Box);
+                            contactsStackPanel.Children.Remove(contact.Box);
+                            contactsStackPanel.Children.Insert(0, contact.Box);
                         }
                     }
                 }
@@ -736,6 +760,14 @@ namespace Uchat
             if (string.IsNullOrWhiteSpace(messageText) || !_currentChatId.HasValue)
             {
                 return;
+            }
+            
+            if (_chatContacts.TryGetValue(_currentChatId.Value, out var contact))
+            {
+                contact.UpdateLastMessage(messageText);
+
+                contactsStackPanel.Children.Remove(contact.Box);
+                contactsStackPanel.Children.Insert(0, contact.Box);
             }
             
             try

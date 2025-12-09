@@ -12,6 +12,8 @@ public class ChatRoom
     public int? MaxMembers { get; set; }
     public int TotalMessagesCount { get; set; }
     public DateTime? LastActivityAt { get; set; }
+    public string? LastMessageContent { get; set; }
+    public DateTime? LastMessageAt { get; set; }
     public User Creator { get; set; } = null!;
     public ICollection<ChatRoomMember> Members { get; set; } = new List<ChatRoomMember>();
 }

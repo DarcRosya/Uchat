@@ -1,0 +1,5 @@
+[ERROR] [CLIENT] [09.12.2025 11:37:59] Error accepting friend request
+Failed to get chats: {"error":"The Include path \u0027ChatRoom-\u003EMembers\u0027 results in a cycle. Cycles are not allowed in no-tracking queries; either use a tracking query or remove the cycle.","statusCode":400}
+   at Uchat.Services.ChatApiService.GetUserChatsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ChatApiService.cs:line 37
+   at Uchat.MainWindow.LoadUserChatsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 317
+   at Uchat.MainWindow.Chat.FriendRequest.AcceptRequestButton_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\Assets\Code\Notificationbox.cs:line 89

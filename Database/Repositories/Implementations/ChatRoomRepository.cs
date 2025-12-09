@@ -85,11 +85,10 @@ public class ChatRoomRepository : IChatRoomRepository
         }
 
         return await _context.ChatRoomMembers
-            .AsNoTracking() 
             .Include(m => m.ChatRoom)           
                 .ThenInclude(cr => cr.Members)  
             .Where(m => m.UserId == userId     
-                        && ids.Contains(m.ChatRoomId) 
+                        && ids.Contains(m.ChatRoomId)   
                         && !m.IsDeleted)       
             .ToListAsync();
     }

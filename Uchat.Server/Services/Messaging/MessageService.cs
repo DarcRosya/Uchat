@@ -134,6 +134,15 @@ public sealed class MessageService : IMessageService
             chatRoom.LastActivityAt = mongoMessage.SentAt;
             chatRoom.TotalMessagesCount++;
 
+            var previewContent = dto.Type == "image" ? "📷 Image" : dto.Content;
+            if (previewContent != null && previewContent.Length > 100) 
+            {
+                previewContent = previewContent.Substring(0, 30) + "...";
+            }
+
+            chatRoom.LastMessageContent = previewContent; // <--- Сохраняем текст в Postgres
+            chatRoom.LastMessageAt = mongoMessage.SentAt;
+
             await UpdateContactStatsAsync(chatRoom.Members.Select(m => m.UserId), dto.SenderId, mongoMessage.SentAt, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 

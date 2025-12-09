@@ -219,3 +219,522 @@
 [20:15:49] [CLIENT] [Chat] Message sent successfully to 3
 [20:16:04] [SERVER] User 123 disconnected
 [20:16:04] [SERVER] [OFFLINE] User 123 became OFFLINE
+[23:46:34] [CLIENT] UserSession initialized with system arguments
+[23:46:34] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[23:46:47] [CLIENT] UserSession initialized with system arguments
+[23:46:47] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[23:46:50] [CLIENT] Attempting login for: eee
+[23:46:50] [CLIENT] Login successful for eee
+[23:46:50] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[23:46:50] [CLIENT] Tokens saved for user eee (expires: 2025-12-08 22:16:50)
+[23:46:50] [CLIENT] Session set for user eee (expires: 22:16:50)
+[23:46:50] [CLIENT] Auto-refresh timer started
+[23:46:50] [CLIENT] Session set for user eee (expires: 22:16:50)
+[23:46:50] [CLIENT] Auto-refresh timer stopped
+[23:46:50] [CLIENT] Auto-refresh timer started
+[23:46:50] [CLIENT] Initializing API services for user: eee
+[23:46:50] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[23:46:50] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[23:46:50] [CLIENT] ContactApiService: Authorization header set
+[23:46:55] [CLIENT] Attempting login for: qqq
+[23:46:55] [CLIENT] Login successful for qqq
+[23:46:55] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[23:46:55] [CLIENT] Tokens saved for user qqq (expires: 2025-12-08 22:16:55)
+[23:46:55] [CLIENT] Session set for user qqq (expires: 22:16:55)
+[23:46:55] [CLIENT] Auto-refresh timer started
+[23:46:55] [CLIENT] Session set for user qqq (expires: 22:16:55)
+[23:46:55] [CLIENT] Auto-refresh timer stopped
+[23:46:55] [CLIENT] Auto-refresh timer started
+[23:46:55] [CLIENT] Initializing API services for user: qqq
+[23:46:55] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[23:46:55] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[23:46:55] [CLIENT] ContactApiService: Authorization header set
+[23:47:03] [CLIENT] UserSession initialized with system arguments
+[23:47:04] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[23:47:08] [CLIENT] Attempting login for: qqq
+[23:47:08] [CLIENT] Login successful for qqq
+[23:47:08] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[23:47:08] [CLIENT] Tokens saved for user qqq (expires: 2025-12-08 22:17:08)
+[23:47:08] [CLIENT] Session set for user qqq (expires: 22:17:08)
+[23:47:08] [CLIENT] Auto-refresh timer started
+[23:47:08] [CLIENT] Session set for user qqq (expires: 22:17:08)
+[23:47:08] [CLIENT] Auto-refresh timer stopped
+[23:47:08] [CLIENT] Auto-refresh timer started
+[23:47:08] [CLIENT] Initializing API services for user: qqq
+[23:47:08] [CLIENT] Token length: 523, Token preview: eyJhbGciOi...
+[23:47:08] [CLIENT] ContactApiService: Setting auth token (length: 523)
+[23:47:08] [CLIENT] ContactApiService: Authorization header set
+[23:47:16] [CLIENT] Deleting contact by chatRoomId: 4
+[23:47:16] [CLIENT] Friend removed, chat ID: 4
+[23:47:16] [CLIENT] Chat 4 removed from UI and Cache
+[23:47:16] [CLIENT] Chat area cleared
+[23:47:16] [CLIENT] Delete contact response: OK
+[23:47:19] [CLIENT] [Chat] Message sent successfully to 4
+[23:47:19] [CLIENT] Received message for hidden chat 4. Resurrecting in UI...
+[23:47:27] [CLIENT] API: GET /api/contacts/pending
+[23:47:27] [CLIENT] API: Token length: 523
+[23:47:27] [CLIENT] API: Authorization header explicitly set on request
+[23:47:27] [CLIENT] API Response: OK
+[23:47:27] [CLIENT] API Response: 0 pending requests
+[23:47:28] [CLIENT] API: GET /api/contacts/pending
+[23:47:28] [CLIENT] API: Token length: 523
+[23:47:28] [CLIENT] API: Authorization header explicitly set on request
+[23:47:28] [CLIENT] API Response: OK
+[23:47:28] [CLIENT] API Response: 0 pending requests
+[11:17:29] [CLIENT] UserSession initialized with system arguments
+[11:17:29] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:17:43] [CLIENT] Attempting login for: eee
+[11:17:52] [CLIENT] Login successful for eee
+[11:17:52] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:17:52] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 09:47:52)
+[11:17:52] [CLIENT] Session set for user eee (expires: 09:47:52)
+[11:17:52] [CLIENT] Auto-refresh timer started
+[11:17:52] [CLIENT] Session set for user eee (expires: 09:47:52)
+[11:17:52] [CLIENT] Auto-refresh timer stopped
+[11:17:52] [CLIENT] Auto-refresh timer started
+[11:17:52] [CLIENT] Initializing API services for user: eee
+[11:17:52] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:17:52] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:17:52] [CLIENT] ContactApiService: Authorization header set
+[11:17:52] [SERVER] User eee (ID: 3) connected
+[11:17:52] [SERVER] [ONLINE] User eee became ONLINE
+[11:17:52] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:17:52] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:17:52] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:17:52] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:18:44] [SERVER] User eee (ID: 3) connected
+[11:18:44] [SERVER] User eee disconnected
+[11:18:44] [SERVER] [Auto-Join ERROR] An exception has been raised that is likely due to a transient failure.
+[11:19:38] [CLIENT] UserSession initialized with system arguments
+[11:19:38] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:19:42] [CLIENT] Attempting login for: eee
+[11:19:50] [CLIENT] Login successful for eee
+[11:19:50] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:19:50] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 09:49:50)
+[11:19:50] [CLIENT] Session set for user eee (expires: 09:49:50)
+[11:19:50] [CLIENT] Auto-refresh timer started
+[11:19:50] [CLIENT] Session set for user eee (expires: 09:49:50)
+[11:19:50] [CLIENT] Auto-refresh timer stopped
+[11:19:50] [CLIENT] Auto-refresh timer started
+[11:19:50] [CLIENT] Initializing API services for user: eee
+[11:19:50] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:19:50] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:19:50] [CLIENT] ContactApiService: Authorization header set
+[11:19:50] [SERVER] User eee (ID: 3) connected
+[11:19:50] [SERVER] [ONLINE] User eee became ONLINE
+[11:19:50] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:19:50] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:19:50] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:19:50] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:21:07] [SERVER] User eee disconnected
+[11:21:07] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:21:15] [CLIENT] UserSession initialized with system arguments
+[11:21:16] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:21:18] [CLIENT] Attempting login for: eee
+[11:21:19] [SERVER] User eee (ID: 3) connected
+[11:21:19] [SERVER] [ONLINE] User eee became ONLINE
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:21:20] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:21:20] [SERVER] User eee disconnected
+[11:21:20] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:21:20] [CLIENT] Login successful for eee
+[11:21:20] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:21:20] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 09:51:20)
+[11:21:20] [CLIENT] Session set for user eee (expires: 09:51:20)
+[11:21:20] [CLIENT] Auto-refresh timer started
+[11:21:20] [CLIENT] Session set for user eee (expires: 09:51:20)
+[11:21:20] [CLIENT] Auto-refresh timer stopped
+[11:21:20] [CLIENT] Auto-refresh timer started
+[11:21:20] [CLIENT] Initializing API services for user: eee
+[11:21:20] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:21:20] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:21:20] [CLIENT] ContactApiService: Authorization header set
+[11:21:20] [SERVER] User eee (ID: 3) connected
+[11:21:20] [SERVER] [ONLINE] User eee became ONLINE
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:21:20] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:21:20] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:22:04] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:22:11] [SERVER] [JoinChatGroup] eee joined chat 3 (group: chat_3)
+[11:22:12] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[11:22:13] [SERVER] [JoinChatGroup] eee joined chat 3 (group: chat_3)
+[11:22:14] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:22:14] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:22:15] [SERVER] User eee disconnected
+[11:22:15] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:31:18] [CLIENT] UserSession initialized with system arguments
+[11:31:18] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:31:26] [CLIENT] Attempting login for: eee
+[11:31:34] [CLIENT] Login successful for eee
+[11:31:34] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:31:34] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:01:34)
+[11:31:34] [CLIENT] Session set for user eee (expires: 10:01:34)
+[11:31:34] [CLIENT] Auto-refresh timer started
+[11:31:34] [CLIENT] Session set for user eee (expires: 10:01:34)
+[11:31:34] [CLIENT] Auto-refresh timer stopped
+[11:31:34] [CLIENT] Auto-refresh timer started
+[11:31:34] [CLIENT] Initializing API services for user: eee
+[11:31:34] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:31:34] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:31:34] [CLIENT] ContactApiService: Authorization header set
+[11:31:34] [SERVER] User eee (ID: 3) connected
+[11:31:34] [SERVER] [ONLINE] User eee became ONLINE
+[11:31:35] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:31:35] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:31:35] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:31:35] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:31:50] [SERVER] [JoinChatGroup] eee joined chat 3 (group: chat_3)
+[11:31:53] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:31:55] [CLIENT] [Chat] Message sent successfully to 4
+[11:31:57] [SERVER] [JoinChatGroup] eee joined chat 3 (group: chat_3)
+[11:31:58] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[11:31:59] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:00] [SERVER] [JoinChatGroup] eee joined chat 3 (group: chat_3)
+[11:32:02] [CLIENT] [Chat] Message sent successfully to 3
+[11:32:03] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[11:32:04] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:06] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:07] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:08] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:09] [CLIENT] [Chat] Message sent successfully to 1
+[11:32:12] [SERVER] User eee disconnected
+[11:32:12] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:32:55] [CLIENT] UserSession initialized with system arguments
+[11:32:55] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:32:58] [CLIENT] Attempting login for: eee
+[11:33:06] [CLIENT] Login successful for eee
+[11:33:06] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:33:06] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:03:06)
+[11:33:06] [CLIENT] Session set for user eee (expires: 10:03:06)
+[11:33:06] [CLIENT] Auto-refresh timer started
+[11:33:06] [CLIENT] Session set for user eee (expires: 10:03:06)
+[11:33:06] [CLIENT] Auto-refresh timer stopped
+[11:33:06] [CLIENT] Auto-refresh timer started
+[11:33:06] [CLIENT] Initializing API services for user: eee
+[11:33:06] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:33:06] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:33:06] [CLIENT] ContactApiService: Authorization header set
+[11:33:06] [SERVER] User eee (ID: 3) connected
+[11:33:06] [SERVER] [ONLINE] User eee became ONLINE
+[11:33:06] [SERVER] [Auto-Join] User eee added to group chat_5
+[11:33:06] [SERVER] [Auto-Join] User eee added to group chat_4
+[11:33:06] [SERVER] [Auto-Join] User eee added to group chat_7
+[11:33:06] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:34:45] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:34:51] [SERVER] User eee disconnected
+[11:34:51] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:36:34] [CLIENT] UserSession initialized with system arguments
+[11:36:34] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:36:37] [CLIENT] Attempting login for: eee
+[11:36:37] [CLIENT] Login failed: BadRequest
+[11:36:41] [CLIENT] Attempting login for: eee
+[11:36:41] [CLIENT] Login failed: BadRequest
+[11:37:02] [CLIENT] Attempting registration for: eee
+[11:37:02] [CLIENT] Registration successful for eee
+[11:37:02] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:37:02] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:07:02)
+[11:37:02] [CLIENT] Session set for user eee (expires: 10:07:02)
+[11:37:02] [CLIENT] Auto-refresh timer started
+[11:37:02] [CLIENT] Session set for user eee (expires: 10:07:02)
+[11:37:02] [CLIENT] Auto-refresh timer stopped
+[11:37:02] [CLIENT] Auto-refresh timer started
+[11:37:02] [CLIENT] Initializing API services for user: eee
+[11:37:02] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:37:02] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:37:02] [CLIENT] ContactApiService: Authorization header set
+[11:37:02] [SERVER] User eee (ID: 2) connected
+[11:37:02] [SERVER] [ONLINE] User eee became ONLINE
+[11:37:02] [SERVER] [Auto-Join] User eee added to group chat_2
+[11:37:02] [SERVER] [Auto-Join] User eee added to group chat_3
+[11:37:02] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[11:37:09] [SERVER] User eee disconnected
+[11:37:09] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:37:12] [CLIENT] UserSession initialized with system arguments
+[11:37:12] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:37:19] [CLIENT] Attempting registration for: qqq
+[11:37:19] [CLIENT] Registration successful for qqq
+[11:37:19] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:37:19] [CLIENT] Tokens saved for user qqq (expires: 2025-12-09 10:07:19)
+[11:37:19] [CLIENT] Session set for user qqq (expires: 10:07:19)
+[11:37:19] [CLIENT] Auto-refresh timer started
+[11:37:19] [CLIENT] Session set for user qqq (expires: 10:07:19)
+[11:37:19] [CLIENT] Auto-refresh timer stopped
+[11:37:19] [CLIENT] Auto-refresh timer started
+[11:37:19] [CLIENT] Initializing API services for user: qqq
+[11:37:19] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:37:19] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:37:19] [CLIENT] ContactApiService: Authorization header set
+[11:37:19] [SERVER] User qqq (ID: 3) connected
+[11:37:19] [SERVER] [ONLINE] User qqq became ONLINE
+[11:37:19] [SERVER] [Auto-Join] User qqq added to group chat_4
+[11:37:19] [SERVER] [Auto-Join] User qqq added to group chat_5
+[11:37:19] [SERVER] [Auto-Join] User qqq joined 2 chat groups
+[11:37:25] [CLIENT] Sending friend request to: eee
+[11:37:25] [CLIENT] Response status: OK
+[11:37:29] [SERVER] User qqq disconnected
+[11:37:29] [SERVER] [OFFLINE] User qqq became OFFLINE
+[11:37:39] [CLIENT] UserSession initialized with system arguments
+[11:37:39] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:37:46] [CLIENT] UserSession initialized with system arguments
+[11:37:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:37:48] [CLIENT] Attempting login for: eee
+[11:37:48] [CLIENT] Login successful for eee
+[11:37:48] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:37:48] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:07:48)
+[11:37:48] [CLIENT] Session set for user eee (expires: 10:07:48)
+[11:37:48] [CLIENT] Auto-refresh timer started
+[11:37:48] [CLIENT] Session set for user eee (expires: 10:07:48)
+[11:37:48] [CLIENT] Auto-refresh timer stopped
+[11:37:48] [CLIENT] Auto-refresh timer started
+[11:37:48] [CLIENT] Initializing API services for user: eee
+[11:37:48] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:37:48] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:37:48] [CLIENT] ContactApiService: Authorization header set
+[11:37:48] [SERVER] User eee (ID: 2) connected
+[11:37:48] [SERVER] [ONLINE] User eee became ONLINE
+[11:37:48] [SERVER] [Auto-Join] User eee added to group chat_2
+[11:37:48] [SERVER] [Auto-Join] User eee added to group chat_3
+[11:37:48] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[11:37:53] [CLIENT] Attempting login for: qqq
+[11:37:53] [CLIENT] Login successful for qqq
+[11:37:53] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:37:53] [CLIENT] Tokens saved for user qqq (expires: 2025-12-09 10:07:53)
+[11:37:53] [CLIENT] Session set for user qqq (expires: 10:07:53)
+[11:37:53] [CLIENT] Auto-refresh timer started
+[11:37:53] [CLIENT] Session set for user qqq (expires: 10:07:53)
+[11:37:53] [CLIENT] Auto-refresh timer stopped
+[11:37:53] [CLIENT] Auto-refresh timer started
+[11:37:53] [CLIENT] Initializing API services for user: qqq
+[11:37:53] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:37:53] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:37:53] [CLIENT] ContactApiService: Authorization header set
+[11:37:53] [SERVER] User qqq (ID: 3) connected
+[11:37:53] [SERVER] [ONLINE] User qqq became ONLINE
+[11:37:53] [SERVER] [Auto-Join] User qqq added to group chat_4
+[11:37:53] [SERVER] [Auto-Join] User qqq added to group chat_5
+[11:37:53] [SERVER] [Auto-Join] User qqq joined 2 chat groups
+[11:37:58] [CLIENT] API: GET /api/contacts/pending
+[11:37:58] [CLIENT] API: Token length: 524
+[11:37:58] [CLIENT] API: Authorization header explicitly set on request
+[11:37:58] [CLIENT] API Response: OK
+[11:37:58] [CLIENT] API Response: 0 pending requests
+[11:37:59] [CLIENT] API: GET /api/contacts/pending
+[11:37:59] [CLIENT] API: Token length: 524
+[11:37:59] [CLIENT] API: Authorization header explicitly set on request
+[11:37:59] [CLIENT] API Response: OK
+[11:37:59] [CLIENT] API Response: 1 pending requests
+[11:37:59] [CLIENT]   - Request: ID=2, Username=qqq, Status=RequestReceived
+[11:37:59] [SERVER] [JoinChatGroup] qqq joined chat 4 (group: chat_4)
+[11:37:59] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:38:08] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:38:09] [CLIENT] [Chat] Message sent successfully to 4
+[11:38:09] [CLIENT] Received message for hidden chat 4. Resurrecting in UI...
+[11:38:09] [SERVER] User qqq disconnected
+[11:38:09] [SERVER] [OFFLINE] User qqq became OFFLINE
+[11:38:13] [CLIENT] [Chat] Message sent successfully to 4
+[11:39:23] [CLIENT] [Chat] Message sent successfully to 4
+[11:39:29] [SERVER] User eee disconnected
+[11:39:29] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:41:31] [CLIENT] UserSession initialized with system arguments
+[11:41:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:41:32] [CLIENT] UserSession initialized with system arguments
+[11:41:32] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:41:35] [CLIENT] Attempting login for: eee
+[11:41:36] [CLIENT] Login successful for eee
+[11:41:36] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:41:36] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:11:36)
+[11:41:36] [CLIENT] Session set for user eee (expires: 10:11:36)
+[11:41:36] [CLIENT] Auto-refresh timer started
+[11:41:36] [CLIENT] Session set for user eee (expires: 10:11:36)
+[11:41:36] [CLIENT] Auto-refresh timer stopped
+[11:41:36] [CLIENT] Auto-refresh timer started
+[11:41:36] [CLIENT] Initializing API services for user: eee
+[11:41:36] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:41:36] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:41:36] [CLIENT] ContactApiService: Authorization header set
+[11:41:36] [SERVER] User eee (ID: 2) connected
+[11:41:36] [SERVER] [ONLINE] User eee became ONLINE
+[11:41:36] [SERVER] [Auto-Join] User eee added to group chat_6
+[11:41:36] [SERVER] [Auto-Join] User eee added to group chat_2
+[11:41:36] [SERVER] [Auto-Join] User eee added to group chat_3
+[11:41:36] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[11:41:41] [CLIENT] Attempting login for: qqq
+[11:41:41] [CLIENT] Login successful for qqq
+[11:41:41] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[11:41:41] [CLIENT] Tokens saved for user qqq (expires: 2025-12-09 10:11:41)
+[11:41:41] [CLIENT] Session set for user qqq (expires: 10:11:41)
+[11:41:41] [CLIENT] Auto-refresh timer started
+[11:41:41] [CLIENT] Session set for user qqq (expires: 10:11:41)
+[11:41:41] [CLIENT] Auto-refresh timer stopped
+[11:41:41] [CLIENT] Auto-refresh timer started
+[11:41:41] [CLIENT] Initializing API services for user: qqq
+[11:41:41] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[11:41:41] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[11:41:41] [CLIENT] ContactApiService: Authorization header set
+[11:41:41] [SERVER] User qqq (ID: 3) connected
+[11:41:41] [SERVER] [ONLINE] User qqq became ONLINE
+[11:41:41] [SERVER] [Auto-Join] User qqq added to group chat_7
+[11:41:41] [SERVER] [Auto-Join] User qqq added to group chat_4
+[11:41:41] [SERVER] [Auto-Join] User qqq added to group chat_5
+[11:41:41] [SERVER] [Auto-Join] User qqq joined 3 chat groups
+[11:41:45] [SERVER] [JoinChatGroup] eee joined chat 4 (group: chat_4)
+[11:41:46] [CLIENT] [Chat] Message sent successfully to 4
+[11:41:46] [CLIENT] Received message for hidden chat 4. Resurrecting in UI...
+[11:41:50] [CLIENT] Received message for hidden chat 4. Resurrecting in UI...
+[11:41:50] [CLIENT] [Chat] Message sent successfully to 4
+[11:41:54] [SERVER] [JoinChatGroup] qqq joined chat 1 (group: chat_1)
+[11:41:58] [CLIENT] [Chat] Message sent successfully to 1
+[11:42:05] [CLIENT] Saved draft for chat 4
+[11:42:05] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[11:42:09] [SERVER] [JoinChatGroup] eee joined chat 2 (group: chat_2)
+[11:42:10] [CLIENT] [Chat] Message sent successfully to 2
+[11:42:12] [SERVER] [JoinChatGroup] qqq joined chat 3 (group: chat_3)
+[11:42:13] [SERVER] [JoinChatGroup] qqq joined chat 1 (group: chat_1)
+[11:42:14] [CLIENT] Received message for hidden chat 1. Resurrecting in UI...
+[11:42:14] [CLIENT] [Chat] Message sent successfully to 1
+[11:42:16] [SERVER] [JoinChatGroup] qqq joined chat 1 (group: chat_1)
+[11:42:17] [CLIENT] [Chat] Message sent successfully to 1
+[11:42:17] [CLIENT] Received message for hidden chat 1. Resurrecting in UI...
+[11:42:19] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[11:42:21] [SERVER] User eee disconnected
+[11:42:21] [SERVER] [OFFLINE] User eee became OFFLINE
+[11:42:22] [SERVER] User qqq disconnected
+[11:42:22] [SERVER] [OFFLINE] User qqq became OFFLINE
+[12:04:01] [CLIENT] UserSession initialized with system arguments
+[12:04:02] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:04:02] [CLIENT] UserSession initialized with system arguments
+[12:04:02] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:04:05] [CLIENT] Attempting login for: eee
+[12:04:19] [CLIENT] UserSession initialized with system arguments
+[12:04:19] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:04:19] [CLIENT] UserSession initialized with system arguments
+[12:04:20] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:04:21] [CLIENT] Attempting login for: eee
+[12:04:22] [CLIENT] Login successful for eee
+[12:04:22] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[12:04:22] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:34:22)
+[12:04:22] [CLIENT] Session set for user eee (expires: 10:34:22)
+[12:04:22] [CLIENT] Auto-refresh timer started
+[12:04:22] [CLIENT] Session set for user eee (expires: 10:34:22)
+[12:04:22] [CLIENT] Auto-refresh timer stopped
+[12:04:22] [CLIENT] Auto-refresh timer started
+[12:04:22] [CLIENT] Initializing API services for user: eee
+[12:04:22] [CLIENT] Token length: 524, Token preview: eyJhbGciOi...
+[12:04:22] [CLIENT] ContactApiService: Setting auth token (length: 524)
+[12:04:22] [CLIENT] ContactApiService: Authorization header set
+[12:04:22] [SERVER] User eee (ID: 2) connected
+[12:04:22] [SERVER] [ONLINE] User eee became ONLINE
+[12:04:22] [SERVER] [Auto-Join] User eee added to group chat_3
+[12:04:22] [SERVER] [Auto-Join] User eee added to group chat_2
+[12:04:22] [SERVER] [Auto-Join] User eee added to group chat_6
+[12:04:22] [SERVER] [Auto-Join] User eee joined 3 chat groups
+[12:04:35] [CLIENT] Attempting registration for: www
+[12:04:35] [CLIENT] Registration successful for www
+[12:04:35] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[12:04:35] [CLIENT] Tokens saved for user www (expires: 2025-12-09 10:34:35)
+[12:04:35] [CLIENT] Session set for user www (expires: 10:34:35)
+[12:04:35] [CLIENT] Auto-refresh timer started
+[12:04:35] [CLIENT] Session set for user www (expires: 10:34:35)
+[12:04:35] [CLIENT] Auto-refresh timer stopped
+[12:04:35] [CLIENT] Auto-refresh timer started
+[12:04:35] [CLIENT] Initializing API services for user: www
+[12:04:35] [CLIENT] Token length: 527, Token preview: eyJhbGciOi...
+[12:04:35] [CLIENT] ContactApiService: Setting auth token (length: 527)
+[12:04:35] [CLIENT] ContactApiService: Authorization header set
+[12:04:36] [SERVER] User www (ID: 4) connected
+[12:04:36] [SERVER] [ONLINE] User www became ONLINE
+[12:04:36] [SERVER] [Auto-Join] User www added to group chat_8
+[12:04:36] [SERVER] [Auto-Join] User www added to group chat_9
+[12:04:36] [SERVER] [Auto-Join] User www joined 2 chat groups
+[12:04:48] [CLIENT] Sending friend request to: eee
+[12:04:48] [CLIENT] Response status: OK
+[12:04:51] [CLIENT] API: GET /api/contacts/pending
+[12:04:51] [CLIENT] API: Token length: 524
+[12:04:51] [CLIENT] API: Authorization header explicitly set on request
+[12:04:51] [CLIENT] API Response: OK
+[12:04:51] [CLIENT] API Response: 1 pending requests
+[12:04:51] [CLIENT]   - Request: ID=4, Username=www, Status=RequestReceived
+[12:04:51] [SERVER] [JoinChatGroup] eee joined chat 6 (group: chat_6)
+[12:04:51] [SERVER] [JoinChatGroup] www joined chat 6 (group: chat_6)
+[12:05:11] [SERVER] User eee disconnected
+[12:05:11] [SERVER] [OFFLINE] User eee became OFFLINE
+[12:05:12] [SERVER] User www disconnected
+[12:05:12] [SERVER] [OFFLINE] User www became OFFLINE
+[12:19:59] [CLIENT] UserSession initialized with system arguments
+[12:20:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:20:00] [CLIENT] UserSession initialized with system arguments
+[12:20:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:20:32] [CLIENT] UserSession initialized with system arguments
+[12:20:32] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:20:34] [CLIENT] UserSession initialized with system arguments
+[12:20:34] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:20:46] [CLIENT] Attempting registration for: eee
+[12:20:47] [CLIENT] Registration successful for eee
+[12:20:47] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[12:20:47] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:50:47)
+[12:20:47] [CLIENT] Session set for user eee (expires: 10:50:47)
+[12:20:47] [CLIENT] Auto-refresh timer started
+[12:20:47] [CLIENT] Session set for user eee (expires: 10:50:47)
+[12:20:47] [CLIENT] Auto-refresh timer stopped
+[12:20:47] [CLIENT] Auto-refresh timer started
+[12:20:47] [CLIENT] Initializing API services for user: eee
+[12:20:47] [CLIENT] Token length: 525, Token preview: eyJhbGciOi...
+[12:20:47] [CLIENT] ContactApiService: Setting auth token (length: 525)
+[12:20:47] [CLIENT] ContactApiService: Authorization header set
+[12:20:47] [SERVER] User eee (ID: 2) connected
+[12:20:47] [SERVER] [ONLINE] User eee became ONLINE
+[12:20:47] [SERVER] [Auto-Join] User eee added to group chat_2
+[12:20:47] [SERVER] [Auto-Join] User eee added to group chat_3
+[12:20:47] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[12:20:59] [SERVER] User eee disconnected
+[12:20:59] [SERVER] [OFFLINE] User eee became OFFLINE
+[12:24:57] [CLIENT] UserSession initialized with system arguments
+[12:24:57] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:24:58] [CLIENT] UserSession initialized with system arguments
+[12:24:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:25:00] [CLIENT] Attempting login for: eee
+[12:25:00] [CLIENT] Login successful for eee
+[12:25:00] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[12:25:00] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 10:55:00)
+[12:25:00] [CLIENT] Session set for user eee (expires: 10:55:00)
+[12:25:00] [CLIENT] Auto-refresh timer started
+[12:25:00] [CLIENT] Session set for user eee (expires: 10:55:00)
+[12:25:00] [CLIENT] Auto-refresh timer stopped
+[12:25:00] [CLIENT] Auto-refresh timer started
+[12:25:00] [CLIENT] Initializing API services for user: eee
+[12:25:00] [CLIENT] Token length: 525, Token preview: eyJhbGciOi...
+[12:25:00] [CLIENT] ContactApiService: Setting auth token (length: 525)
+[12:25:00] [CLIENT] ContactApiService: Authorization header set
+[12:25:00] [SERVER] User eee (ID: 2) connected
+[12:25:00] [SERVER] [ONLINE] User eee became ONLINE
+[12:25:00] [SERVER] [Auto-Join] User eee added to group chat_2
+[12:25:00] [SERVER] [Auto-Join] User eee added to group chat_3
+[12:25:00] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[12:25:04] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[12:25:07] [SERVER] User eee disconnected
+[12:25:07] [SERVER] [OFFLINE] User eee became OFFLINE
+[12:32:45] [CLIENT] UserSession initialized with system arguments
+[12:32:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:32:47] [CLIENT] Attempting login for: eee
+[12:32:48] [CLIENT] Login successful for eee
+[12:32:48] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[12:32:48] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 11:02:48)
+[12:32:48] [CLIENT] Session set for user eee (expires: 11:02:48)
+[12:32:48] [CLIENT] Auto-refresh timer started
+[12:32:48] [CLIENT] Session set for user eee (expires: 11:02:48)
+[12:32:48] [CLIENT] Auto-refresh timer stopped
+[12:32:48] [CLIENT] Auto-refresh timer started
+[12:32:48] [CLIENT] Initializing API services for user: eee
+[12:32:48] [CLIENT] Token length: 525, Token preview: eyJhbGciOi...
+[12:32:48] [CLIENT] ContactApiService: Setting auth token (length: 525)
+[12:32:48] [CLIENT] ContactApiService: Authorization header set
+[12:32:48] [SERVER] User eee (ID: 2) connected
+[12:32:48] [SERVER] [ONLINE] User eee became ONLINE
+[12:32:48] [SERVER] [Auto-Join] User eee added to group chat_2
+[12:32:48] [SERVER] [Auto-Join] User eee added to group chat_3
+[12:32:48] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[12:32:54] [SERVER] User eee disconnected
+[12:32:54] [SERVER] [OFFLINE] User eee became OFFLINE

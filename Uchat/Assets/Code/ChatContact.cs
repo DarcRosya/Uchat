@@ -142,13 +142,29 @@ namespace Uchat
 
                 public IBrush LastMessageForeground { get { return lastMessageTextBlock.Foreground; } set { lastMessageTextBlock.Foreground = value; } }
                 public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
-                public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; } }
+                public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; UpdateIcon(); } }
                 public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
 				public string ChatName { get { return chatName; } }
 				public void AddMember(string name)
 				{
 					membersList.Add(name);
+				}
+
+				private void UpdateIcon()
+				{
+					var uriString = isGroupChat 
+						? "avares://Uchat/Assets/Icons/group.png" 
+						: "avares://Uchat/Assets/Icons/avatar.png";
+
+					try
+					{
+						avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
+					}
+					catch
+					{
+						// Игнорируем ошибки загрузки ассетов
+					}
 				}
 				
 				/// <summary>

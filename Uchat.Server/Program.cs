@@ -63,21 +63,24 @@ public class Program
                 options.ListenLocalhost(port);
             });
         }catch (Exception) { Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill"); return;}
-
-        // ============================================================================
-        // БАЗЫ ДАННЫХ
-        // ============================================================================
         
-        // PostgreSQL для пользователей, чатов, контактов (из Docker)
         builder.Services.AddDbContext<UchatDbContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"));
             Console.WriteLine("Using PostgreSQL (Docker shared database)");
         });
 
-        // MongoDB для сообщений (из Docker)
         builder.Services.Configure<MongoDbSettings>(
             builder.Configuration.GetSection("MongoDB"));
+
+        var runningInContainer = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
+        var redisConn = builder.Configuration.GetSection("Redis")["ConnectionString"];
+        if (runningInContainer && (string.IsNullOrWhiteSpace(redisConn) || redisConn.Contains("localhost", StringComparison.OrdinalIgnoreCase)))
+        {
+            builder.Configuration["Redis:ConnectionString"] = "redis:6379";
+            Console.WriteLine("Detected container environment — overriding Redis:ConnectionString to 'redis:6379'");
+        }
+
         builder.Services.Configure<RedisSettings>(
             builder.Configuration.GetSection("Redis"));
 
@@ -88,10 +91,6 @@ public class Program
         });
 
         builder.Services.AddSingleton<IRedisService, RedisService>();
-
-        // ============================================================================
-        // РЕПОЗИТОРИИ 
-        // ============================================================================
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
@@ -109,12 +108,8 @@ public class Program
         builder.Services.AddScoped<IUnreadCounterService, UnreadCounterService>();
         builder.Services.AddSingleton<IUserPresenceService, UserPresenceService>();
 
-        // ============================================================================
-        // JWT АУТЕНТИФИКАЦИЯ
-        // ============================================================================
-
-            var jwtSettings = builder.Configuration.GetSection("Jwt");
-            var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+        var jwtSettings = builder.Configuration.GetSection("Jwt");
+        var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
         builder.Services.AddAuthentication(options =>
         {
@@ -142,18 +137,18 @@ public class Program
                     var accessToken = context.Request.Query["access_token"];
                     var path = context.HttpContext.Request.Path;
 
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
-                        {
-                            context.Token = accessToken;
-                        }
-                        return Task.CompletedTask;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+                    {
+                        context.Token = accessToken;
                     }
-                };
-            });
+                    return Task.CompletedTask;
+                }
+            };
+        });
 
-            builder.Services.AddAuthorization();
-            builder.Services.AddControllers();
-            builder.Services.AddSignalR();
+        builder.Services.AddAuthorization();
+        builder.Services.AddControllers();
+        builder.Services.AddSignalR();
 
         builder.Services.AddCors(options =>
         {
@@ -179,62 +174,76 @@ public class Program
                 opt.QueueLimit = 0;
             });
 
-                options.AddFixedWindowLimiter("api", opt =>
-                {
-                    opt.Window = TimeSpan.FromMinutes(1);
-                    opt.PermitLimit = 100;
-                    opt.QueueLimit = 0;
-                });
-
-                options.OnRejected = async (context, token) =>
-                {
-                    context.HttpContext.Response.StatusCode = 429;
-                    await context.HttpContext.Response.WriteAsync(
-                        "Too many requests. Please try again later.",
-                        cancellationToken: token);
-                };
+            options.AddFixedWindowLimiter("api", opt =>
+            {
+                opt.Window = TimeSpan.FromMinutes(1);
+                opt.PermitLimit = 100;
+                opt.QueueLimit = 0;
             });
 
-            var app = builder.Build();
+            options.OnRejected = async (context, token) =>
+            {
+                context.HttpContext.Response.StatusCode = 429;
+                await context.HttpContext.Response.WriteAsync(
+                    "Too many requests. Please try again later.",
+                    cancellationToken: token);
+            };
+        });
 
-        // ============================================================================
-        // ИНИЦИАЛИЗАЦИЯ БАЗ ДАННЫХ
-        // ============================================================================
+        var app = builder.Build();
+
         using (var scope = app.Services.CreateScope())
         {
-            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            var services = scope.ServiceProvider;
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            var dbContext = services.GetRequiredService<UchatDbContext>();
 
-            try
+            int maxRetries = 10;
+            for (int i = 0; i < maxRetries; i++)
             {
-                logger.LogInformation("Applying PostgreSQL migrations...");
-                var dbContext = scope.ServiceProvider.GetRequiredService<UchatDbContext>();
-                dbContext.Database.Migrate();
-                logger.LogInformation("PostgreSQL migrations applied successfully");
-                
-                // Инициализация системных сущностей (System User + Global Chat)
-                logger.LogInformation("Initializing system data (seeding)...");
-                await DbInitializer.InitializeAsync(dbContext);
-                logger.LogInformation("System data initialized successfully");
+                try
+                {
+                    logger.LogInformation($"Attempt {i + 1}/{maxRetries} to connect and migrate...");
 
-                logger.LogInformation("Initializing MongoDB...");
-                var mongoDbContext = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
-                var messageCount = mongoDbContext.Messages.CountDocuments(Builders<MongoMessage>.Filter.Empty);
-                logger.LogInformation("MongoDB initialized: {MessageCount} messages", messageCount);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "Database initialization failed");
-                throw;
+                    dbContext.Database.Migrate();
+                    
+                    logger.LogInformation("PostgreSQL migrations applied successfully.");
+
+                    // 2. Seeding
+                    logger.LogInformation("Initializing system data (seeding)...");
+                    await DbInitializer.InitializeAsync(dbContext);
+                    logger.LogInformation("System data initialized successfully");
+
+                    // 3. Mongo
+                    logger.LogInformation("Initializing MongoDB...");
+                    var mongoDbContext = services.GetRequiredService<MongoDbContext>();
+                    var messageCount = mongoDbContext.Messages.CountDocuments(Builders<MongoMessage>.Filter.Empty);
+                    logger.LogInformation("MongoDB initialized: {MessageCount} messages", messageCount);
+                    break; 
+                }
+                catch (Exception ex)
+                {
+                    if (i == maxRetries - 1) 
+                    {
+                        logger.LogCritical(ex, "FATAL ERROR: Database did not start after multiple attempts.");
+                        throw; 
+                    }
+
+                    logger.LogWarning($"Database not ready yet. Error: {ex.Message}");
+                    logger.LogWarning($"Waiting 3 seconds before retry...");
+                    
+                    await Task.Delay(3000);
+                }
             }
         }
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
+        app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
 
         app.UseCors("AllowAll");
         app.UseRateLimiter();

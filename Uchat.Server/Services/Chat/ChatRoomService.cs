@@ -8,6 +8,7 @@ using Uchat.Shared.DTOs;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Redis;
+using Uchat.Server.Services.Unread;
 
 namespace Uchat.Server.Services.Chat;
 
@@ -18,6 +19,7 @@ public sealed class ChatRoomService : IChatRoomService
     private readonly IUserRepository _userRepository;
     private readonly ILogger<ChatRoomService> _logger;
     private readonly IRedisService _redisService;
+    private readonly IUnreadCounterService _unreadCounterService;
 
     private static readonly TimeSpan ChatListSortedSetTtl = TimeSpan.FromHours(24);
 
@@ -26,13 +28,15 @@ public sealed class ChatRoomService : IChatRoomService
         IUserRepository userRepository,
         IMessageService messageService,
         ILogger<ChatRoomService> logger,
-        IRedisService redisService)
+        IRedisService redisService,
+        IUnreadCounterService unreadCounterService)
     {
         _chatRoomRepository = chatRoomRepository;
         _messageService = messageService;
         _userRepository = userRepository;
         _logger = logger;
         _redisService = redisService;
+        _unreadCounterService = unreadCounterService;
     }
 
     public async Task<List<ChatRoomDto>> GetUserChatsAsync(int userId)
@@ -40,91 +44,106 @@ public sealed class ChatRoomService : IChatRoomService
         List<ChatRoomMember> members;
         
         var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
-        var cachedIds = await _redisService.GetSortedKeysAsync(sortedKey);
+        var cachedIdsRaw = await _redisService.GetSortedKeysAsync(sortedKey);
 
-        var chatIds = cachedIds
-            .Select(idStr => int.TryParse(idStr, out var id) ? id : (int?)null)
-            .Where(x => x.HasValue)
-            .Select(x => x!.Value)
-            .ToList();
+        var chatIdsFromRedis = cachedIdsRaw
+                .Select(idStr => int.TryParse(idStr, out var id) ? id : (int?)null)
+                .Where(x => x.HasValue)
+                .Select(x => x!.Value)
+                .ToList();
 
-        if (chatIds.Any())
+        if (chatIdsFromRedis.Any())
         {
-            // Загружаем из БД только нужные мембершипы
-            var unsortedMembers = await _chatRoomRepository.GetMembersForUserByChatIdsAsync(userId, chatIds);
-            
-            // ВАЖНО: БД вернет данные в разнобой. Нам нужно восстановить порядок, который был в Redis.
+            var unsortedMembers = await _chatRoomRepository.GetMembersForUserByChatIdsAsync(userId, chatIdsFromRedis);
             var memberLookup = unsortedMembers.ToDictionary(m => m.ChatRoomId);
             
             members = new List<ChatRoomMember>();
-            foreach (var id in chatIds)
+            foreach (var id in chatIdsFromRedis)
             {
-                // Если чат есть в Redis, но удален из БД — пропускаем (самовосстановление)
-                if (memberLookup.TryGetValue(id, out var member))
-                {
-                    members.Add(member);
-                }
+                if (memberLookup.TryGetValue(id, out var member)) members.Add(member);
             }
         }
-        // 3. СЦЕНАРИЙ Б: КЭША НЕТ (Redis пуст или упал)
+        // СЦЕНАРИЙ Б: КЭША НЕТ (Redis пуст или упал)
         else
         {
-            // Грузим всё из базы (уже с сортировкой)
             members = await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
-            
-            // И сразу восстанавливаем кэш на будущее (фоновая задача)
-            if (members.Any())
-            {
-                await RebuildUserChatSortedSetAsync(userId, members);
-            }
+            if (members.Any()) await RebuildUserChatSortedSetAsync(userId, members);
         }
 
-        // 4. ПОДГОТОВКА ДЛЯ ПОЛУЧЕНИЯ СООБЩЕНИЙ
-        // Создаем словарь: ID Чата -> Когда МЫ очистили историю
-        var chatsWithClearDates = members.ToDictionary(
-            m => m.ChatRoomId, 
-            m => m.ClearedHistoryAt
-        );
+        if (!members.Any()) return new List<ChatRoomDto>();
 
-        // 5. Загружаем последние сообщения (с учетом очистки истории!)
-        // Этот метод мы исправляли в прошлом шаге (в MessageService)
-        var lastMessages = await _messageService.GetLastMessagesForChatsBatch(chatsWithClearDates);
+        // ---------------------------------------------------------
+        // 2. ПАРАЛЛЕЛЬНАЯ ЗАГРУЗКА ДАННЫХ
+        // ---------------------------------------------------------
+        
+        // А) Словари для MessageService
+        var clearDatesDict = members.ToDictionary(m => m.ChatRoomId, m => m.ClearedHistoryAt);
+        var allChatIds = members.Select(m => m.ChatRoomId).ToList();
 
-        // 6. Маппинг в DTO
+        // Б) Собираем ID собеседников для личных чатов, чтобы узнать их Имена/Аватарки
+        var partnerIds = members
+            .Where(m => m.ChatRoom.Type == ChatRoomType.DirectMessage)
+            .SelectMany(m => m.ChatRoom.Members) // Берем всех участников чата
+            .Where(m => m.UserId != userId)      // Исключаем себя
+            .Select(m => m.UserId)
+            .Distinct()
+            .ToList();
+
+        // В) Запускаем задачи параллельно
+        var messagesTask = _messageService.GetLastMessagesForChatsBatch(clearDatesDict);
+        var unreadTask = _unreadCounterService.GetUnreadCountsAsync(userId, allChatIds);
+        var usersTask = _userRepository.GetUsersByIdsAsync(partnerIds);
+
+        await Task.WhenAll(messagesTask, unreadTask, usersTask);
+
+        var lastMessages = messagesTask.Result;
+        var unreadCounts = unreadTask.Result;
+        var usersDict = usersTask.Result.ToDictionary(u => u.Id); // Dictionary<int, User>
+
+        // ---------------------------------------------------------
+        // 3. СБОРКА DTO
+        // ---------------------------------------------------------
         var result = members.Select(m => 
         {
             var chat = m.ChatRoom;
             
-            // Ищем последнее сообщение для этого чата
-            lastMessages.TryGetValue(chat.Id, out var lastMsg);
-
-            // Если сообщения нет (оно скрыто историей или чат новый)
-            string lastContent = lastMsg?.Content ?? "";
-            DateTime? lastDate = lastMsg?.SentAt;
-
-            // Определяем название и аватарку чата (для личных чатов берем собеседника)
-            string chatName = chat.Name;
-            bool isOnline = false;
+            // --- 3.1. Данные собеседника ---
+            string chatName = chat.Name ?? "Unknown";
 
             if (chat.Type == ChatRoomType.DirectMessage)
             {
-                var otherMember = chat.Members.FirstOrDefault(x => x.UserId != userId);
-                if (otherMember != null)
+                // Находим ID партнера в списке участников чата
+                var partnerId = chat.Members.FirstOrDefault(x => x.UserId != userId)?.UserId;
+                
+                if (partnerId.HasValue && usersDict.TryGetValue(partnerId.Value, out var partnerUser))
                 {
-                    // Тут можно подтянуть данные юзера, если они не загружены
-                    // (обычно они есть в Include(cr => cr.Members).ThenInclude(m => m.User))
-                    // chatName = otherMember.User.DisplayName...
+                    chatName = partnerUser.DisplayName ?? partnerUser.Username;
                 }
             }
+
+            // --- 3.2. Последнее сообщение ---
+            string lastContent = "";
+            DateTime? lastDate = chat.LastActivityAt ?? chat.CreatedAt;
+
+            if (lastMessages.TryGetValue(chat.Id, out var msgDto))
+            {
+                lastContent = msgDto.Content;
+                lastDate = msgDto.SentAt;
+            }
+
+            // --- 3.3. Непрочитанные ---
+            int unread = unreadCounts.TryGetValue(chat.Id, out var count) ? count : 0;
 
             return new ChatRoomDto
             {
                 Id = chat.Id,
                 Type = chat.Type.ToString(),
                 Name = chatName,
-                UnreadCount = 0, // Тут вызов _unreadCounterService.GetUnreadCount(...)
+                UnreadCount = unread, // Заполнили реальный счетчик
                 LastMessageContent = lastContent,
                 LastMessageAt = lastDate,
+                CreatedAt = chat.CreatedAt,
+                MemberCount = chat.Members.Count
             };
         }).ToList();
 

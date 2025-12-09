@@ -146,6 +146,7 @@ public class ContactsController : ControllerBase
                 { 
                     contactId, 
                     chatRoomId = finalChatId, 
+                    Type = "DirectMessage",
                     friendUsername = me?.Username ?? "Unknown",
                     friendDisplayName = me?.DisplayName ?? "Unknown"
                 });
@@ -155,6 +156,7 @@ public class ContactsController : ControllerBase
                 .SendAsync("FriendAdded", new 
                 { 
                     chatRoomId = finalChatId, 
+                    Type = "DirectMessage",
                     friendUsername = friend?.Username ?? "Unknown",
                     friendDisplayName = friend?.DisplayName ?? "Unknown"
                 });

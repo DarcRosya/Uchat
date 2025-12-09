@@ -40,9 +40,24 @@ public sealed class RedisService : IRedisService
 
         try
         {
-            _multiplexer = ConnectionMultiplexer.Connect(_settings.ConnectionString);
-            _database = _multiplexer.GetDatabase();
-            _subscriber = _multiplexer.GetSubscriber();
+            // Prefer explicit ConfigurationOptions so we can set AbortOnConnectFail=false
+            // which allows the multiplexer to keep retrying instead of throwing immediately.
+            var cfg = ConfigurationOptions.Parse(_settings.ConnectionString);
+            cfg.AbortOnConnectFail = false;
+            cfg.ConnectRetry = Math.Max(cfg.ConnectRetry, 3);
+            cfg.ConnectTimeout = Math.Max(cfg.ConnectTimeout, 5000);
+
+            _multiplexer = ConnectionMultiplexer.Connect(cfg);
+            if (_multiplexer != null && _multiplexer.IsConnected)
+            {
+                _database = _multiplexer.GetDatabase();
+                _subscriber = _multiplexer.GetSubscriber();
+                _logger.LogInformation("Connected to Redis at {Conn}", _settings.ConnectionString);
+            }
+            else
+            {
+                _logger.LogWarning("Redis ConnectionMultiplexer created but not connected immediately; multiplexing will retry.");
+            }
         }
         catch (Exception ex)
         {
