@@ -208,6 +208,8 @@ namespace Uchat
                     this.LastMessageForeground = Brush.Parse("#FFFFFF");
 					this.StatusBackground = Brush.Parse(color);
 
+                    mainWindow.groupTopBarName.Text = this.ChatName;
+
                     if (chatId > 0)
 					{
 						_ = mainWindow.OpenChatAsync(chatId);

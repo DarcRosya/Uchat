@@ -17,7 +17,7 @@
 		>
 
 	<Grid>
-		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="True">
+		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="False">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1.2*"/>
 				<ColumnDefinition Width="1.5*"/>
@@ -635,7 +635,7 @@
 			</Border>
 		</Grid>
 
-		<Grid x:Name="MainProgram" IsVisible="False">
+		<Grid x:Name="MainProgram" IsVisible="True">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="30"/>
 				<RowDefinition Height="*"/>
@@ -690,23 +690,40 @@
 				<!-- Middle Top Bar -->
 				<Grid Grid.Column="2" x:Name="friendTopBar" Grid.Row="0" Background="#0e1013">
 					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-						<TextBlock x:Name="friendTopBarName" Text="ENDGAME" FontSize="15" Foreground="White" FontWeight="Bold" Margin="5,4,0,0" />
+						<TextBlock x:Name="friendTopBarName" FontSize="15" Foreground="White" FontWeight="Bold" Margin="5 4 0 0" />
 					</StackPanel>
 				</Grid>
 
 
 				<Grid Grid.Column="2" Grid.Row="0" Background="#0e1013" x:Name="groupTopBar" Cursor="Hand"
-						PointerPressed="groupTopBar_PointerPressed"
-						IsVisible="False">
-					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-							<TextBlock x:Name="groupTopBarName" Text="ENDGAME-UCHAT" FontSize="15" Foreground="White" FontWeight="Bold" />
-							<TextBlock x:Name="groupTopBarNumberOfMembers" Text="6 members" Foreground="#AAAAAA" FontSize="12" HorizontalAlignment="Center"/>
-					</StackPanel>
+					  PointerPressed="groupTopBar_PointerPressed"
+					  IsVisible="False">
+					<DockPanel VerticalAlignment="Center"> 
+						<Image DockPanel.Dock="Right"  
+							   Width="20" Height="20" Margin="0 0 15 0" Cursor="Hand" Source="avares://Uchat/Assets/Icons/options.png" 
+							   VerticalAlignment="Center" />
+        
+						<Grid RowDefinitions="Auto Auto" ColumnDefinitions="*" Margin="15 0 20 0">
+							<TextBlock x:Name="groupTopBarName" 
+									   Text="ЗАПИХНУТЬ СЮДА ЗАГРУШКУ. ТИПА НЕТ ВЫБРАННЫХ ЧАТОВ!" 
+									   FontSize="15" 
+									   Foreground="White" 
+									   FontWeight="Bold"
+									   TextTrimming="CharacterEllipsis"  
+									   />
+                       
+							<TextBlock x:Name="groupTopBarNumberOfMembers" 
+									   Grid.Row="1" 
+									   Text="КОЛИЧЕСТВО УЧАСТНИКОВ" 
+									   Foreground="#AAAAAA" 
+									   FontSize="10"/>
+						</Grid>
+					</DockPanel>
 				</Grid>
 
 				<!-- Contacts Left Menu -->
-				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40,*, 50" Background="#20242d">
-					<Grid Background="#3e4042" ColumnDefinitions="*,*">
+				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40 * 50" Background="#20242d">
+					<Grid Background="#3e4042" ColumnDefinitions="* *">
 						<Button Name="ContactsButton" Content="Contacts" CornerRadius="0" Background="#5e81ac" Foreground="White"
 							    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 								Click="SwitchToContacts_Click"/>
@@ -763,16 +780,17 @@
 				<!-- Chat Container -->
 				<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
 					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
-				</ScrollViewer>	<Border Background="#2a2c31"
-			BorderBrush="#93a6b7"
-			BorderThickness="4,0,0,0"
-			CornerRadius="5"
-			Padding="8, 5, 0, 5"
-			Margin="10,0,10,10"
-			Height="43"
-			IsVisible="False"
-			VerticalAlignment="Bottom"
-			x:Name="replyTheMessageBox">
+				</ScrollViewer>
+			<Border Background="#2a2c31"
+				BorderBrush="#93a6b7"
+				BorderThickness="4,0,0,0"
+				CornerRadius="5"
+				Padding="8, 5, 0, 5"
+				Margin="10,0,10,10"
+				Height="43"
+				IsVisible="False"
+				VerticalAlignment="Bottom"
+				x:Name="replyTheMessageBox">
 		<Grid>
 	        <DockPanel>
 		        <Image
@@ -955,16 +973,37 @@
 			</Grid>
 		</Border>
 
-			<Grid x:Name="backgroundForGroupInfo" Background="Transparent"
+			<Grid x:Name="backgroundForGroupInfo" Background="#50000000"
 		  IsVisible="False">
 		<Border x:Name="groupInfoBox" CornerRadius="5" Background="#333A44"
 				Width="300" MaxHeight="400" IsVisible="False">
 
-			<Grid RowDefinitions="Auto, Auto, *" Margin="0 10 0 0">
+			<Grid RowDefinitions="Auto Auto *" Margin="0 10 0 0">
 
-				<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+				<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0 0 0 10">
 					<StackPanel Margin="10 0">
-						<TextBlock x:Name="groupInfoName" Text="ENDGAME-UCHAT" FontWeight="Bold" Foreground="White" FontSize="16"/>
+
+						<DockPanel x:Name="PanelForGroupName" IsVisible="True" VerticalAlignment="Center">
+							<TextBlock x:Name="groupInfoName"
+							FontWeight="Bold" Foreground="White" FontSize="16" MaxWidth="210" TextTrimming = "CharacterEllipsis"/>
+								
+							<Button Classes="iconButton" Background="Transparent"
+									BorderThickness="0" Margin="5 -1 0 0" x:Name="editTheGroupNameButton" Click="editTheGroupNameButton_Click">
+								<Image Width="15" Height="15" Source="avares://Uchat/Assets/Icons/edit.png"/>
+							</Button>
+						</DockPanel>
+
+						<DockPanel x:Name="PanelForGroupNameEdit" IsVisible="False">
+							<Border BorderThickness="4 0 0 0" BorderBrush="Gray" CornerRadius="5">
+								<TextBox Classes="editGroupName" x:Name="editTheGroupNameTextBox" MaxWidth="205" FontWeight="Bold" FontSize="16"
+									Watermark="Group name"/>
+							</Border>
+							<Button Classes="iconButton" Background="Transparent"
+									BorderThickness="0" Margin="5 5 0 0" x:Name="acceptNewNameForGroup" Click="acceptNewNameForGroup_Click">
+								<Image Width="15" Height="15" Source="avares://Uchat/Assets/Icons/accept.png"/>
+							</Button>
+						</DockPanel>
+						
 						<TextBlock x:Name="groupInfoNumberOfMembers" Text="6 members" Foreground="#AAAAAA" FontSize="12"/>
 					</StackPanel>
 					<Button Grid.Column="1" x:Name="ExitInfoAboutGroup" Margin="0 -5 0 0"
