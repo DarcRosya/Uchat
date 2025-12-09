@@ -140,7 +140,7 @@ namespace Uchat
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; } }
                 public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
-				public string ChatName { get { return chatName; } }
+				public string ChatName { get { return chatName; } set { chatName = value; } }
 				
 				/// <summary>
 				/// Обновить последнее сообщение и счетчик непрочитанных
@@ -177,6 +177,8 @@ namespace Uchat
                     this.LastMessageForeground = Brush.Parse("#FFFFFF");
 					this.StatusBackground = Brush.Parse(color);
 
+                    mainWindow.groupTopBarName.Text = this.ChatName;
+
                     if (chatId > 0)
 					{
 						_ = mainWindow.OpenChatAsync(chatId);
@@ -192,7 +194,6 @@ namespace Uchat
 				{
 
 				}
-
 			}
 
             public class ContactContextMenu

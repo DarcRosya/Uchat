@@ -21,7 +21,7 @@ namespace Uchat
         public string friendUsername { get; set; } = string.Empty;
         public string friendDisplayName { get; set; } = string.Empty;
     }
-    
+
     public partial class MainWindow : Window
     {
         private SemaphoreSlim _chatsLoadingSemaphore = new SemaphoreSlim(1, 1);
@@ -35,51 +35,51 @@ namespace Uchat
         public Dictionary<int, MainWindow.Chat.Contact> _chatContacts = new();
         // Словарь для сохранения текста (драфтов) по ID чата
         private Dictionary<int, string> _messageDrafts = new();
-        
+
         private int? _currentChatId = null;
         private string _currentUsername = "Unknown";
-        
+
         private DateTime? _oldestMessageDate = null;
         private bool _hasMoreMessages = true;
         private bool _isLoadingHistory = false;
-        
+
         private void InitializeChatComponents()
         {
             _currentUsername = UserSession.Instance.Username ?? "Unknown";
-            
+
             _connectionStatusIndicator = this.FindControl<TextBlock>("ConnectionStatusText") ?? new TextBlock();
-            
+
             var token = UserSession.Instance.AccessToken ?? string.Empty;
-            
+
             Logger.Log($"Initializing API services for user: {_currentUsername}");
             Logger.Log($"Token length: {token.Length}, Token preview: {(token.Length > 10 ? token.Substring(0, 10) + "..." : token)}");
 
             _chatApiService = new ChatApiService();
             _chatApiService.SetAuthToken(token);
-            
+
             _messageApiService = new MessageApiService();
             _messageApiService.SetAuthToken(token);
-            
+
             _contactApiService = new ContactApiService();
             _contactApiService.SetAuthToken(token);
-            
+
             ConnectToSignalR();
         }
         private async void ConnectToSignalR()
         {
             var token = UserSession.Instance.AccessToken;
-            
+
             if (string.IsNullOrEmpty(token))
             {
                 UpdateConnectionStatus("● No token - Login first!", Brushes.Red);
                 return;
             }
-            
+
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl($"{ServerConfig.ServerUrl}/chatHub?access_token={token}", options =>
                 {
                     options.AccessTokenProvider = () => Task.FromResult<string?>(token);
-                    
+
                     // Игнорируем SSL ошибки для WebSocket/LongPolling в разработке
                     options.HttpMessageHandlerFactory = (message) =>
                     {
@@ -99,11 +99,11 @@ namespace Uchat
             try
             {
                 UpdateConnectionStatus("● Connecting...", Brushes.Orange);
-                
+
                 await _hubConnection.StartAsync();
-                
+
                 UpdateConnectionStatus("● Connected", Brushes.Green);
-                
+
                 await LoadUserChatsAsync();
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace Uchat
                         chatItem.UpdateLastMessage(preview);
 
                         // Move chat to top of list
-                        contactsStackPanel.Children.Remove(chatItem.Box); 
+                        contactsStackPanel.Children.Remove(chatItem.Box);
                         contactsStackPanel.Children.Insert(0, chatItem.Box);
                     }
 
@@ -143,31 +143,31 @@ namespace Uchat
                         Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
                         ChatScrollViewer.ScrollToEnd();
                     }
-                    else 
+                    else
+                    {
+                        // === FIX: ЕСЛИ ЧАТА НЕТ В UI (ОН БЫЛ УДАЛЕН), НО ПРИШЛО СООБЩЕНИЕ ===
+                        Logger.Log($"Received message for hidden chat {message.ChatRoomId}. Resurrecting in UI...");
+
+                        // Перезагружаем список чатов с сервера, так как нас только что "воскресили"
+                        await LoadUserChatsAsync();
+
+                        // Если даже после загрузки чат не появился (рассинхрон), создаем его вручную
+                        if (!_chatContacts.TryGetValue(message.ChatRoomId, out chatItem))
                         {
-                            // === FIX: ЕСЛИ ЧАТА НЕТ В UI (ОН БЫЛ УДАЛЕН), НО ПРИШЛО СООБЩЕНИЕ ===
-                            Logger.Log($"Received message for hidden chat {message.ChatRoomId}. Resurrecting in UI...");
-                            
-                            // Перезагружаем список чатов с сервера, так как нас только что "воскресили"
-                            await LoadUserChatsAsync();
-                            
-                            // Если даже после загрузки чат не появился (рассинхрон), создаем его вручную
-                            if (!_chatContacts.TryGetValue(message.ChatRoomId, out chatItem))
-                            {
-                                var newContact = new MainWindow.Chat.Contact(
-                                    message.Sender.DisplayName ?? message.Sender.Username, // Имя отправителя пока сойдет
-                                    message.Content,
-                                    1,
-                                    this,
-                                    message.ChatRoomId
-                                );
-                                _chatContacts[message.ChatRoomId] = newContact;
-                                contactsStackPanel.Children.Insert(0, newContact.Box);
-                            }
+                            var newContact = new MainWindow.Chat.Contact(
+                                message.Sender.DisplayName ?? message.Sender.Username, // Имя отправителя пока сойдет
+                                message.Content,
+                                1,
+                                this,
+                                message.ChatRoomId
+                            );
+                            _chatContacts[message.ChatRoomId] = newContact;
+                            contactsStackPanel.Children.Insert(0, newContact.Box);
                         }
+                    }
                 });
             });
-            
+
             _hubConnection.On<string, string, DateTime>("MessageEdited", (messageId, newContent, editedAt) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -177,7 +177,7 @@ namespace Uchat
                         cachedMsg.Content = newContent; // Update internal content field
                         cachedMsg.ContentTextBlock.Text = newContent;
                         AddEditedLabel(cachedMsg);
-                        
+
                         // Update all reply previews that reference this message
                         foreach (var msg in _messageCache.Values)
                         {
@@ -187,7 +187,7 @@ namespace Uchat
                             }
                         }
                     }
-                    
+
                     // FIX 1: Обновляем LastMessage в сайдбаре, если это последнее сообщение
                     if (_currentChatId.HasValue && _chatContacts.TryGetValue(_currentChatId.Value, out var chatItem))
                     {
@@ -196,7 +196,7 @@ namespace Uchat
                     }
                 });
             });
-            
+
             _hubConnection.On<string>("MessageDeleted", (messageId) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -206,11 +206,11 @@ namespace Uchat
                         RemoveMessageFromUI(cachedMsg);
                         _messageCache.Remove(messageId);
                     }
-                    
+
                     CleanupReplyReferences(messageId);
                 });
             });
-            
+
             _hubConnection.On<List<string>>("RepliesCleared", (messageIds) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -224,14 +224,14 @@ namespace Uchat
                     }
                 });
             });
-            
+
             // Friend request handlers
             _hubConnection.On<Shared.DTOs.ContactDto>("FriendRequestReceived", (contact) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
                     Console.WriteLine($"Friend request received from {contact.ContactUsername}");
-                    
+
                     // FIX: Удаляем placeholder, если он есть
                     var placeholder = requestList.Children.OfType<TextBlock>()
                         .FirstOrDefault(t => t.Text == "No pending requests");
@@ -249,20 +249,20 @@ namespace Uchat
 
                     // FIX: Добавляем в начало списка
                     requestList.Children.Insert(0, requestItem.Box);
-                    
+
                     // FIX: Принудительно обновляем layout
                     requestList.InvalidateVisual();
-                    
+
                     Logger.Log($"Added friend request from {contact.ContactUsername} to notification panel");
                 });
             });
-            
+
             // Handler for when someone accepts YOUR friend request (you are the requester)
             _hubConnection.On<object>("FriendRequestAccepted", HandleNewFriendChat);
-            
+
             // Handler for when YOU accept someone's friend request (you are the accepter)
             _hubConnection.On<object>("FriendAdded", HandleNewFriendChat);
-            
+
             _hubConnection.On<int>("FriendRequestRejected", (contactId) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -270,7 +270,7 @@ namespace Uchat
                     Console.WriteLine($"Friend request rejected: {contactId}");
                 });
             });
-            
+
             // Handler for when someone removes you from friends or you remove them
             _hubConnection.On<int>("FriendRemoved", (chatRoomId) =>
             {
@@ -281,7 +281,7 @@ namespace Uchat
                 });
             });
         }
-        
+
         /// <summary>
         /// Очистить правую панель чата (при удалении или закрытии)
         /// </summary>
@@ -293,78 +293,78 @@ namespace Uchat
             chatTextBox.Text = string.Empty;
             chatTextBox.IsVisible = false;
             replyTheMessageBox.IsVisible = false; // Скрываем панель ответа
-            
+
             // Можно добавить заглушку "Выберите чат"
             Logger.Log("Chat area cleared");
         }
 
         public async Task LoadUserChatsAsync()
         {
-            if (_chatsLoadingSemaphore.CurrentCount == 0) 
+            if (_chatsLoadingSemaphore.CurrentCount == 0)
             {
                 Logger.Log("LoadUserChatsAsync skipped: already loading.");
-                return; 
+                return;
             }
 
             await _chatsLoadingSemaphore.WaitAsync();
 
             try
-                {
-                    Logger.Log("=== LoadUserChatsAsync START ===");
-                    
-                    // 1. Грузим заявки
-                    await LoadPendingFriendRequestsAsync();
+            {
+                Logger.Log("=== LoadUserChatsAsync START ===");
 
-                    // 2. Загружаем чаты
-                    Logger.Log("Calling GetUserChatsAsync...");
-                    var chats = await _chatApiService.GetUserChatsAsync();
-                    Logger.Log($"Received {chats.Count} chats from API");
-                    
-                    var sortedChats = chats
-                        .OrderByDescending(c => c.LastMessageAt ?? DateTime.MinValue)
-                        .ToList();
-                    
-                    await Dispatcher.UIThread.InvokeAsync(() => // Используй InvokeAsync для ожидания
+                // 1. Грузим заявки
+                await LoadPendingFriendRequestsAsync();
+
+                // 2. Загружаем чаты
+                Logger.Log("Calling GetUserChatsAsync...");
+                var chats = await _chatApiService.GetUserChatsAsync();
+                Logger.Log($"Received {chats.Count} chats from API");
+
+                var sortedChats = chats
+                    .OrderByDescending(c => c.LastMessageAt ?? DateTime.MinValue)
+                    .ToList();
+
+                await Dispatcher.UIThread.InvokeAsync(() => // Используй InvokeAsync для ожидания
+                {
+                    Logger.Log("UI Thread: Clearing contactsStackPanel...");
+
+                    // ВАЖНО: Не очищай список полностью, если хочешь избежать мигания, 
+                    // но для простоты решения проблемы "пропадания" пока оставим Clear,
+                    // так как Семафор решит главную проблему.
+                    contactsStackPanel.Children.Clear();
+                    _chatContacts.Clear();
+
+                    foreach (var chat in sortedChats)
                     {
-                        Logger.Log("UI Thread: Clearing contactsStackPanel...");
-                        
-                        // ВАЖНО: Не очищай список полностью, если хочешь избежать мигания, 
-                        // но для простоты решения проблемы "пропадания" пока оставим Clear,
-                        // так как Семафор решит главную проблему.
-                        contactsStackPanel.Children.Clear();
-                        _chatContacts.Clear(); 
-                        
-                        foreach (var chat in sortedChats)
-                        {
-                            bool isGroup = chat.Type != "DirectMessage";
-                            
-                            var chatItem = new MainWindow.Chat.Contact(
-                                chat.Name ?? $"Chat {chat.Id}",
-                                chat.LastMessageContent ?? "",
-                                chat.UnreadCount,
-                                this,
-                                chat.Id
-                            );
-                            
-                            chatItem.IsGroupChat = isGroup;
-                            chatItem.IsVisible = isGroup ? Chat.GroupsActive : !Chat.GroupsActive;
-                            
-                            contactsStackPanel.Children.Add(chatItem.Box);
-                            _chatContacts[chat.Id] = chatItem;
-                        }
-                        
-                        Logger.Log($"Added {sortedChats.Count} chats to UI");
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error loading chats: {ex.Message}");
-                }
-                finally
-                {
-                    _chatsLoadingSemaphore.Release();
-                }
+                        bool isGroup = chat.Type != "DirectMessage";
+
+                        var chatItem = new MainWindow.Chat.Contact(
+                            chat.Name ?? $"Chat {chat.Id}",
+                            chat.LastMessageContent ?? "",
+                            chat.UnreadCount,
+                            this,
+                            chat.Id
+                        );
+
+                        chatItem.IsGroupChat = isGroup;
+                        chatItem.IsVisible = isGroup ? Chat.GroupsActive : !Chat.GroupsActive;
+
+                        contactsStackPanel.Children.Add(chatItem.Box);
+                        _chatContacts[chat.Id] = chatItem;
+                    }
+
+                    Logger.Log($"Added {sortedChats.Count} chats to UI");
+                });
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading chats: {ex.Message}");
+            }
+            finally
+            {
+                _chatsLoadingSemaphore.Release();
+            }
+        }
 
         public async Task OpenChatAsync(int chatId)
         {
@@ -376,15 +376,15 @@ namespace Uchat
                     _messageDrafts[_currentChatId.Value] = chatTextBox.Text;
                     Logger.Log($"Saved draft for chat {_currentChatId.Value}");
                 }
-                
+
                 _currentChatId = chatId;
-                
+
                 // Clear current messages
                 Dispatcher.UIThread.Post(() =>
                 {
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
-                    
+
                     // FIX 2: Restore draft or clear textbox
                     if (_messageDrafts.TryGetValue(chatId, out var draft))
                     {
@@ -395,13 +395,13 @@ namespace Uchat
                     {
                         chatTextBox.Text = string.Empty;
                     }
-                    
+
                     // FIX 2: Show and enable textbox
                     chatTextBox.IsVisible = true;
                     chatTextBox.IsEnabled = true;
                     replyTheMessageBox.IsVisible = false;
                 });
-                
+
                 // Подключаемся к SignalR группе чата для получения сообщений в реальном времени
                 try
                 {
@@ -412,7 +412,7 @@ namespace Uchat
                 {
                     Logger.Log($"WARNING: Failed to join chat group {chatId}: {ex.Message}");
                 }
-                
+
                 await LoadChatHistoryAsync(chatId);
             }
             catch (Exception ex)
@@ -428,7 +428,7 @@ namespace Uchat
             {
                 // 2. Удаляем визуальный элемент из панели контактов
                 contactsStackPanel.Children.Remove(contact.Box);
-                
+
                 // 3. Удаляем из статического списка (если он используется для группировки)
                 if (Chat.chatsList.Contains(contact))
                 {
@@ -437,10 +437,10 @@ namespace Uchat
 
                 // 4. Удаляем из словаря быстрого доступа
                 _chatContacts.Remove(chatRoomId);
-                
+
                 // 5. Удаляем сохраненный черновик сообщения, если был
                 _messageDrafts.Remove(chatRoomId);
-                
+
                 Logger.Log($"Chat {chatRoomId} removed from UI and Cache");
             }
 
@@ -456,32 +456,32 @@ namespace Uchat
             try
             {
                 var result = await _messageApiService.GetMessagesAsync(chatId, limit);
-                
+
                 if (result == null)
                 {
                     return;
                 }
-                
+
                 Dispatcher.UIThread.Post(() =>
                 {
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
-                    
+
                     var messages = result.Messages;
                     messages.Reverse();
-                    
+
                     // Обновляем состояние пагинации
                     _hasMoreMessages = result.Pagination.HasMore;
                     if (messages.Count > 0)
                     {
                         _oldestMessageDate = messages[0].SentAt; // Самое старое сообщение
                     }
-                    
+
                     foreach (var msg in messages)
                     {
                         DisplayMessage(msg);
                     }
-                    
+
                     ChatScrollViewer.ScrollToEnd();
                 });
             }
@@ -503,8 +503,8 @@ namespace Uchat
             try
             {
                 var result = await _messageApiService.GetMessagesAsync(
-                    _currentChatId.Value, 
-                    limit: 30, 
+                    _currentChatId.Value,
+                    limit: 30,
                     before: _oldestMessageDate.Value
                 );
 
@@ -520,7 +520,7 @@ namespace Uchat
 
                     double oldExtentHeight = scrollViewer.Extent.Height;
                     double oldOffset = scrollViewer.Offset.Y;
-                    
+
                     var messages = result.Messages;
                     messages.Reverse();
 
@@ -557,7 +557,7 @@ namespace Uchat
                         var messageContextMenu = new MainWindow.Chat.MessageContextMenu(this, chatMessage, grid);
                         chatMessage.Bubble.ContextMenu = messageContextMenu.Result();
                         // -------------------------------------
-                        
+
                         newControls.Add(grid);
                     }
 
@@ -566,7 +566,7 @@ namespace Uchat
                     Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
 
                     double newExtentHeight = scrollViewer.Extent.Height;
-                    
+
                     double heightDifference = newExtentHeight - oldExtentHeight;
 
                     if (heightDifference > 0)
@@ -582,7 +582,7 @@ namespace Uchat
             finally
             {
                 // Небольшая задержка, чтобы UI не дергался
-                await Task.Delay(200); 
+                await Task.Delay(200);
                 _isLoadingHistory = false;
             }
         }
@@ -620,20 +620,20 @@ namespace Uchat
                         if (!_chatContacts.ContainsKey(notification.chatRoomId))
                         {
                             var newContact = new MainWindow.Chat.Contact(
-                                notification.friendDisplayName, 
+                                notification.friendDisplayName,
                                 "New Friend!",
-                                0, 
-                                this, 
+                                0,
+                                this,
                                 notification.chatRoomId
                             );
-                            
+
                             _chatContacts[notification.chatRoomId] = newContact;
                             contactsStackPanel.Children.Insert(0, newContact.Box);
                         }
-                        else 
+                        else
                         {
                             var existingContact = _chatContacts[notification.chatRoomId];
-                            existingContact.UpdateLastMessage("New Friend!"); 
+                            existingContact.UpdateLastMessage("New Friend!");
 
                             contactsStackPanel.Children.Remove(existingContact.Box);
                             contactsStackPanel.Children.Insert(0, existingContact.Box);
@@ -658,7 +658,7 @@ namespace Uchat
             bool isGuest = (message.Sender.Username != _currentUsername);
             bool hasReply = message.ReplyTo != null;
             string? replyContent = message.ReplyTo?.Content;
-            
+
             var chatMessage = new MainWindow.Chat.Message(
                 hasReply,
                 message.Content,
@@ -670,7 +670,7 @@ namespace Uchat
                 message.ReplyToMessageId,
                 message.Sender.DisplayName ?? message.Sender.Username
             );
-            
+
             _messageCache[message.Id] = chatMessage;
 
             var grid = new Grid
@@ -693,7 +693,7 @@ namespace Uchat
             {
                 return;
             }
-            
+
             try
             {
                 var dto = new MessageCreateDto
@@ -704,9 +704,9 @@ namespace Uchat
                     Type = "text",
                     ReplyToMessageId = isReplied ? replyToMessageId : null
                 };
-                
+
                 var sentMessage = await _messageApiService.SendMessageAsync(_currentChatId.Value, dto);
-                
+
                 replyToMessageContent = "";
                 replyToMessageId = "";
                 isReplied = false;
@@ -723,7 +723,7 @@ namespace Uchat
             {
                 return;
             }
-            
+
             try
             {
                 await _messageApiService.EditMessageAsync(_currentChatId.Value, messageId, newContent);
@@ -740,7 +740,7 @@ namespace Uchat
             {
                 return;
             }
-            
+
             try
             {
                 await _messageApiService.DeleteMessageAsync(_currentChatId.Value, messageId);
@@ -772,7 +772,7 @@ namespace Uchat
                 return "Server not found";
             if (ex.Message.Contains("Connection refused") || ex.Message.Contains("No connection"))
                 return "Server offline";
-            
+
             return "Connection failed";
         }
 
@@ -780,13 +780,13 @@ namespace Uchat
         {
             var timeStackPanel = message.Bubble.Child as StackPanel;
             if (timeStackPanel == null) return;
-            
+
             var lastChild = timeStackPanel.Children[timeStackPanel.Children.Count - 1] as StackPanel;
             if (lastChild == null) return;
-            
+
             bool hasEditedLabel = lastChild.Children.OfType<TextBlock>()
                 .Any(tb => tb.Text == "edited");
-            
+
             if (!hasEditedLabel)
             {
                 var editedLabel = new TextBlock
@@ -799,7 +799,7 @@ namespace Uchat
                     FontStyle = FontStyle.Italic,
                     HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right
                 };
-                lastChild.Children.Add(editedLabel);
+                lastChild.Children.Insert(0, editedLabel);
             }
         }
 
@@ -817,16 +817,16 @@ namespace Uchat
             foreach (var kvp in _messageCache.ToList())
             {
                 var msg = kvp.Value;
-                
+
                 if (msg.ReplyToMessageId == deletedMessageId)
                 {
                     msg.ReplyToMessageId = null;
-                    
+
                     RemoveReplyUI(msg);
                 }
             }
         }
-        
+
         private void RemoveReplyUI(MainWindow.Chat.Message message)
         {
             if (message.ReplyPreviewBorder != null)
@@ -889,6 +889,32 @@ namespace Uchat
         private void CancelAddingGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             AddPersonToGroup.IsVisible = false;
+        }
+
+        private void editTheGroupNameButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            PanelForGroupName.IsVisible = false;
+            PanelForGroupNameEdit.IsVisible = true;
+
+            editTheGroupNameTextBox.Text = groupInfoName.Text;
+        }
+
+        private void acceptNewNameForGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(editTheGroupNameTextBox.Text.Trim()))
+            {
+                PanelForGroupNameEdit.IsVisible = false;
+                PanelForGroupName.IsVisible = true;
+                return;
+            }
+
+            string newNameForGroup = editTheGroupNameTextBox.Text.Trim();
+
+            groupInfoName.Text = newNameForGroup;
+            groupTopBarName.Text = newNameForGroup;
+
+            PanelForGroupNameEdit.IsVisible = false;
+            PanelForGroupName.IsVisible = true;
         }
     }
 }

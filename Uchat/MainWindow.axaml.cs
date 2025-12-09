@@ -428,14 +428,16 @@ namespace Uchat
         private void groupTopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
             groupInfoBox.IsVisible = true;
+            groupInfoName.Text = groupTopBarName.Text;
             backgroundForGroupInfo.IsVisible = true;
+            groupInfoNumberOfMembers.Text = groupTopBarNumberOfMembers.Text;
 
             e.Handled = true;
         }
 
         private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
         {
-            if (!groupInfoBox.IsVisible)
+            if (!groupInfoBox.IsVisible || LeaveGroupAndConfirm.IsVisible || AddPersonToGroup.IsVisible)
             {
                 return;
             }
@@ -451,6 +453,9 @@ namespace Uchat
                 {
                     groupInfoBox.IsVisible = false;
                     backgroundForGroupInfo.IsVisible = false;
+
+                    PanelForGroupNameEdit.IsVisible = false;
+                    PanelForGroupName.IsVisible = true;
                 }
             }
         }
