@@ -72,6 +72,16 @@ public class ChatsController : ControllerBase
         return Ok(result.ChatRoom!.ToDetailDto());
     }
 
+    [HttpGet("invites/pending")]
+    public async Task<ActionResult<List<ChatRoomDto>>> GetPendingInvites()
+    {
+        var userId = GetCurrentUserId();
+        if (userId == 0) return Unauthorized();
+
+        var invites = await _chatRoomService.GetPendingGroupInvitesAsync(userId);
+        return Ok(invites);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateChat([FromBody] CreateChatRequestDto request)
     {
@@ -104,15 +114,25 @@ public class ChatsController : ControllerBase
     [HttpPost("{chatId}/members")]
     public async Task<IActionResult> AddMember(int chatId, [FromBody] AddMemberRequestDto request)
     {
-        if (!ModelState.IsValid) 
-            return BadRequest(ModelState);
+        if (string.IsNullOrWhiteSpace(request.Username))
+            return BadRequest(new { error = "Username is required" });
 
-        var userId = GetCurrentUserId();
-        var result = await _chatRoomService.AddMemberAsync(chatId, userId, request.UserId);
+        // Находим пользователя по имени (предполагаем, что такой метод есть в репозитории)
+        var userToAdd = await _userRepository.GetByUsernameAsync(request.Username);
+        if (userToAdd == null)
+        {
+            return NotFound(new { error = $"User '{request.Username}' not found" });
+        }
+
+        var currentUserId = GetCurrentUserId();
+        
+        // Вызываем сервис уже с ID
+        var result = await _chatRoomService.AddMemberAsync(chatId, currentUserId, userToAdd.Id);
 
         if (!result.IsSuccess)
         {
-            return result.ErrorType switch
+            // Обработка ошибок (как у тебя было)
+             return result.ErrorType switch
             {
                 ChatErrorType.NotFound => NotFound(new { error = "Chat not found" }),
                 ChatErrorType.Forbidden => Forbid(),
@@ -121,6 +141,92 @@ public class ChatsController : ControllerBase
         }
 
         return Ok(new { message = "Member added successfully" });
+    }
+
+    [HttpPost("{chatId}/leave")]
+    public async Task<IActionResult> LeaveChat(int chatId)
+    {
+        var userId = GetCurrentUserId();
+        
+        // Используем RemoveMemberAsync, где actorId и memberId совпадают
+        var result = await _chatRoomService.RemoveMemberAsync(chatId, userId, userId);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+
+        return Ok(new { message = "You left the chat" });
+    }
+
+    [HttpPut("{chatId}")]
+    public async Task<IActionResult> UpdateChat(int chatId, [FromBody] UpdateChatRequestDto request)
+    {
+        var userId = GetCurrentUserId();
+        var result = await _chatRoomService.UpdateChatAsync(chatId, userId, request.Name, request.Description);
+
+        if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
+
+        return Ok(new { message = "Chat updated" });
+    }
+
+    [HttpPost("{chatId}/accept")]
+    public async Task<IActionResult> AcceptInvite(int chatId)
+    {
+        var userId = GetCurrentUserId(); // ID того, кто нажал кнопку
+        
+        // Сервис ищет запись, где ChatId == chatId AND UserId == userId
+        // И меняет IsPending c true на false
+        var result = await _chatRoomService.AcceptInviteAsync(chatId, userId);
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+
+        return Ok(new { message = "Invite accepted", chat = result.ChatRoom!.ToDto() });
+    }
+
+    /// <summary>
+    /// Отклонить приглашение в группу
+    /// </summary>
+    [HttpPost("{chatId}/reject")]
+    public async Task<IActionResult> RejectInvite(int chatId)
+    {
+        var userId = GetCurrentUserId();
+        var result = await _chatRoomService.RejectInviteAsync(chatId, userId);
+
+        if (!result.IsSuccess)
+        {
+            return result.ErrorType switch
+            {
+                ChatErrorType.NotFound => NotFound(new { error = "Invite not found" }),
+                _ => BadRequest(new { error = result.ErrorMessage })
+            };
+        }
+
+        return Ok(new { message = "Invite rejected" });
+    }
+
+    [HttpPost("join/{name}")]
+    public async Task<IActionResult> JoinPublicGroupByName(string name)
+    {
+        var userId = GetCurrentUserId();
+        
+        // Этот метод нужно реализовать в ChatRoomService
+        // Он должен найти чат по имени, проверить, что Type == Public, и добавить участника
+        var result = await _chatRoomService.JoinPublicChatByNameAsync(name, userId);
+
+        if (!result.IsSuccess)
+        {
+            return result.ErrorType switch
+            {
+                ChatErrorType.NotFound => NotFound(new { error = "Public group not found" }),
+                _ => BadRequest(new { error = result.ErrorMessage })
+            };
+        }
+
+        return Ok(result.ChatRoom!.ToDto());
     }
 
     /// <summary>

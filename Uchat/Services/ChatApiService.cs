@@ -45,19 +45,16 @@ public class ChatApiService
         }
     }
 
-    public async Task<ChatRoomDetailDto?> GetChatByIdAsync(int chatId)
+    public async Task<ChatRoomDetailDto?> GetChatDetailsAsync(int chatId)
     {
         try
         {
-            var response = await _httpClient.GetAsync($"/api/chats/{chatId}");
-            
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            return await response.Content.ReadFromJsonAsync<ChatRoomDetailDto>();
+            var result = await _httpClient.GetFromJsonAsync<ChatRoomDetailDto>($"/api/chats/{chatId}");
+            return result;
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine($"Error getting chat details: {ex.Message}");
             return null;
         }
     }
@@ -82,22 +79,146 @@ public class ChatApiService
         }
     }
 
-    public async Task AddMemberAsync(int chatId, int userId, string? role = null)
+    public async Task<bool> AcceptGroupInviteAsync(int chatId)
     {
         try
         {
-            var request = new { userId, role };
+            var response = await _httpClient.PostAsync($"/api/chats/{chatId}/accept", null);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Failed to accept invite: {error}");
+                return false;
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error accepting invite: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> RejectGroupInviteAsync(int chatId)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsync($"/api/chats/{chatId}/reject", null);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Failed to reject invite: {error}");
+                return false;
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error rejecting invite: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> AddMemberAsync(int chatId, string username)
+    {
+        try
+        {
+            // Отправляем объект с полем Username, как ждет обновленный DTO на сервере
+            var request = new { Username = username };
+            
             var response = await _httpClient.PostAsJsonAsync($"/api/chats/{chatId}/members", request);
             
             if (!response.IsSuccessStatusCode)
             {
                 var error = await response.Content.ReadAsStringAsync();
-                throw new Exception($"Failed to add member: {error}");
+                Console.WriteLine($"Failed to add member: {error}");
+                return false;
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Network error: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> LeaveChatAsync(int chatId)
+    {
+        try
+        {
+            // Вызываем эндпоинт выхода
+            var response = await _httpClient.PostAsync($"/api/chats/{chatId}/leave", null);
+            
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error leaving chat: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<List<ChatRoomDto>> GetPendingInvitesAsync()
+    {
+        try
+        {
+            var response = await _httpClient.GetAsync("/api/chats/invites/pending");
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<List<ChatRoomDto>>();
+                return result ?? new List<ChatRoomDto>();
+            }
+            else 
+            {
+                Console.WriteLine($"[API Error] Group Invites: {response.StatusCode}");
             }
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex)
         {
-            throw new Exception($"Network error: {ex.Message}");
+            Console.WriteLine($"[Exception] GetPendingInvitesAsync: {ex.Message}");
+        }
+
+        return new List<ChatRoomDto>();
+    }
+
+    public async Task<ChatRoomDto?> JoinPublicGroupByNameAsync(string groupName)
+    {
+        try
+        {
+            // Отправляем POST запрос. Имя группы кодируем, чтобы спецсимволы не сломали URL
+            var encodedName = Uri.EscapeDataString(groupName);
+            var response = await _httpClient.PostAsync($"/api/chats/join/{encodedName}", null);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null; // Группа не найдена или ошибка
+            }
+
+            return await response.Content.ReadFromJsonAsync<ChatRoomDto>();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<bool> UpdateChatAsync(int chatId, object updateDto)
+    {
+        try
+        {
+            // updateDto должен содержать Name и Description
+            var response = await _httpClient.PutAsJsonAsync($"/api/chats/{chatId}", updateDto);
+            
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating chat: {ex.Message}");
+            return false;
         }
     }
 

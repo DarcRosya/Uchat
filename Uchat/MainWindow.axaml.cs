@@ -15,7 +15,6 @@ using System;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using Uchat.Services;
 using Uchat.Shared;
 
@@ -36,6 +35,7 @@ namespace Uchat
             InitializeComponent();
             string[] dev = {"-local", "6000"};
             systemArgs = dev;
+        
             _authService = new AuthApiService(systemArgs);
 
             // Initialize UserSession with system arguments BEFORE Loaded event
@@ -49,7 +49,7 @@ namespace Uchat
 
         private void ChatTicks()
         {
-           LoadPendingFriendRequestsAsync();
+            LoadPendingFriendRequestsAsync();
         }
 
         private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -563,35 +563,19 @@ namespace Uchat
             userNameTextBlock.Text = username;
             Chat.ClientName = username;
 
-            // Start tick-based functions
             _timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(1)
             };
             _timer.Tick += (_, _) => ChatTicks();
             _timer.Start();
+
             // Initialize chat components with current session
             InitializeChatComponents();
         }
-
-        private void ExitInfoAboutGroup_Click(object? sender, RoutedEventArgs e)
-        {
-            groupInfoBox.IsVisible = false;
-            backgroundForGroupInfo.IsVisible = false;
-        }
-
-        private void groupTopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            groupInfoBox.IsVisible = true;
-            groupInfoName.Text = groupTopBarName.Text;
-            backgroundForGroupInfo.IsVisible = true;
-
-            e.Handled = true;
-        }
-
         private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
         {
-            if (!groupInfoBox.IsVisible || LeaveGroupAndConfirm.IsVisible || AddPersonToGroup.IsVisible)
+            if (!groupInfoBox.IsVisible)
             {
                 return;
             }
@@ -607,9 +591,6 @@ namespace Uchat
                 {
                     groupInfoBox.IsVisible = false;
                     backgroundForGroupInfo.IsVisible = false;
-
-                    PanelForGroupNameEdit.IsVisible = false;
-                    PanelForGroupName.IsVisible = true;
                 }
             }
         }

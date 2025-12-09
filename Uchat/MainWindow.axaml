@@ -668,14 +668,22 @@
 				<!-- Left Search -->
 				<Grid MinWidth="200" Grid.Column="0" Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,40">
 					<Border Grid.Column="0" Background="#FF3E4047" Margin="5,5,5,5" CornerRadius="3">
-						<TextBox Name="searchTextBox" MinHeight="100" Watermark="Find friend" Background="Transparent" BorderThickness="0"
-								 Foreground="White" FontWeight="DemiBold" HorizontalContentAlignment="Left"
-								 VerticalContentAlignment="Center"/>
+						<TextBox Name="searchTextBox" 
+								MinHeight="100" 
+								Watermark="Find group or chat..." 
+								Background="Transparent" 
+								BorderThickness="0"
+								Foreground="White" 
+								FontWeight="DemiBold" 
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								KeyDown="SearchTextBox_KeyDown"
+								TextChanged="SearchTextBox_TextChanged"/> 
 					</Border>
 
 					<Button Grid.Column="0" Background="Transparent" Foreground="White"
 							CornerRadius="5" Margin="0,5,5,5" HorizontalAlignment="Right"
-							Click="addFriend_Click">
+							Click="SearchButton_Click">
 						<Image Source="avares://Uchat/Assets/Icons/search.png"/>
 					</Button>
 

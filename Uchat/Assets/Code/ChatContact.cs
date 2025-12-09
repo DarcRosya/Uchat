@@ -152,6 +152,13 @@ namespace Uchat
                     avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
                     contactStatusBorder.IsVisible = !isGroupChat;
 				}
+
+				public void UpdateName(string newName)
+				{
+					chatName = newName;
+
+					contactNameTextBlock.Text = newName;
+				}
 				
 				/// <summary>
 				/// Обновить последнее сообщение и счетчик непрочитанных
@@ -257,30 +264,50 @@ namespace Uchat
                 }
 
                 private async void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
-				{
-					if (contact.ChatName == "Notes") return;
+                {
+                    // 1. Защита: нельзя удалить чат "Notes" (Избранное)
+                    if (contact.ChatName == "Notes") return;
 
-					contact.Box.IsEnabled = false;
+                    // Блокируем элемент, чтобы пользователь не нажал дважды
+                    contact.Box.IsEnabled = false;
 
-					try 
-					{
-						var success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
+                    try 
+                    {
+                        bool success = false;
 
-						if (success)
-						{
-							mainWindow.RemoveChatFromUI(contact.ChatId);
-						}
-						else
-						{
-							contact.Box.IsEnabled = true;
-						}
-					}
-					catch (Exception ex)
-					{
-						Logger.Error("Failed to delete chat", ex);
-						contact.Box.IsEnabled = true;
-					}
-				}
+                        // 2. ПРОВЕРКА: Группа это или Личный чат?
+                        if (contact.IsGroupChat)
+                        {
+                            // === ЛОГИКА ДЛЯ ГРУПП ===
+                            // Мы "покидаем" группу на сервере
+                            success = await mainWindow._chatApiService.LeaveChatAsync(contact.ChatId);
+                        }
+                        else
+                        {
+                            // === ЛОГИКА ДЛЯ ЛИЧНЫХ ЧАТОВ ===
+                            // Мы удаляем контакт/историю (как было раньше)
+                            success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
+                        }
+
+                        // 3. Обработка результата
+                        if (success)
+                        {
+                            // Если сервер сказал "ОК" — удаляем чат из интерфейса
+                            mainWindow.RemoveChatFromUI(contact.ChatId);
+                        }
+                        else
+                        {
+                            // Если ошибка — разблокируем обратно
+                            contact.Box.IsEnabled = true;
+                            Logger.Log("Server returned false when deleting/leaving chat");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Failed to delete/leave chat", ex);
+                        contact.Box.IsEnabled = true;
+                    }
+                }
 			}
         }
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
