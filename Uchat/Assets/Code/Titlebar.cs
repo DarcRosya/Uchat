@@ -11,7 +11,9 @@ namespace Uchat
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
 		{
 			// UNCOMMENT TO ADD LOGOUT BUTTON:
-			// LogoutAsync();
+			LogoutAsync();
+			NotificationBox.IsVisible = false;
+			LoginProgram.IsVisible = true;
         }
         
         private async void LogoutAsync()
