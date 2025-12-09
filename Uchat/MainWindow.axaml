@@ -697,7 +697,7 @@
 
 				<!-- Middle Top Bar -->
 				<Grid Grid.Column="2" x:Name="friendTopBar" Grid.Row="0" Background="#0e1013">
-					<StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+					<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 						<TextBlock x:Name="friendTopBarName" FontSize="15" Foreground="White" FontWeight="Bold" Margin="5 4 0 0" />
 					</StackPanel>
 				</Grid>
@@ -780,7 +780,7 @@
 					<Grid/>
 
 				<!-- Chat Container -->
-				<TextBlock Name="PlaceHolder" FontWeight="SemiBold" FontSize="15" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<TextBlock Name="PlaceHolder" FontWeight="SemiBold" FontSize="15" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="True">
 					Select a chat to start messaging 
 				</TextBlock>
 

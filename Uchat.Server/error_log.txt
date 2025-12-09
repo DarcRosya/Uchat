@@ -414,3 +414,33 @@ Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: M
    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
    at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 23:45:15] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:40:14] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:41:33] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:43:21] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:44:31] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:54:31] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113

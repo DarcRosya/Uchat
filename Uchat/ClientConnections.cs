@@ -549,11 +549,11 @@ namespace Uchat
                     _messageCache.Clear();
                     PlaceHolder.IsVisible = false;
 
-                    if (groupTopBar != null)
-                    {
-                        groupTopBar.IsVisible = true; 
-                        groupTopBarName.Text = chatName; 
-                    }
+                    //if (groupTopBar != null)
+                    //{
+                    //    groupTopBar.IsVisible = true; 
+                    //    groupTopBarName.Text = chatName; 
+                    //}
 
                     if (_messageDrafts.TryGetValue(chatId, out var draft))
                     {
@@ -565,10 +565,10 @@ namespace Uchat
                         chatTextBox.Text = string.Empty;
                     }
 
-                    BottomContainer.IsVisible = true;
-                    chatTextBox.IsVisible = true;
-                    chatTextBox.IsEnabled = true;
-                    replyTheMessageBox.IsVisible = false;
+                    //BottomContainer.IsVisible = true;
+                    //chatTextBox.IsVisible = true;
+                    //chatTextBox.IsEnabled = true;
+                    //replyTheMessageBox.IsVisible = false;
 
                     if (AddPersonToGroup != null) AddPersonToGroup.IsVisible = false;
                     if (LeaveGroupAndConfirm != null) LeaveGroupAndConfirm.IsVisible = false;
@@ -1121,8 +1121,13 @@ namespace Uchat
                     groupInfoBox.IsVisible = false;
                     backgroundForGroupInfo.IsVisible = false; // Убираем затемнение
                     RemoveChatFromUI(chatIdToLeave);
-                    ClearChatArea(); 
-                    
+                    ClearChatArea();
+
+                    friendTopBarName.Text = "";
+                    friendTopBar.IsVisible = true;
+                    PlaceHolder.IsVisible = true;
+                    BottomContainer.IsVisible = false;
+
                     Logger.Log($"Successfully left chat {chatIdToLeave}");
                 }
                 else

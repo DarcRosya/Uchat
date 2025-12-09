@@ -177,10 +177,9 @@ namespace Uchat
 				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
-					// FIX 3: Only handle left mouse button clicks
 					if (!e.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
 					{
-						return; // Right click will show context menu automatically
+						return;
 					}
 					
 					string color = (GroupsActive == true) ? "#4a8284" : "#4b678a";
@@ -195,9 +194,13 @@ namespace Uchat
                     this.LastMessageForeground = Brush.Parse("#FFFFFF");
 					this.StatusBackground = Brush.Parse(color);
 
+                    mainWindow.groupTopBar.IsVisible = this.isGroupChat;
+                    mainWindow.friendTopBar.IsVisible = !this.isGroupChat;
+
                     mainWindow.groupTopBarName.Text = this.ChatName;
-                    mainWindow.groupTopBar.IsVisible = this.IsGroupChat;
-					mainWindow.PlaceHolder.IsVisible = false;
+                    mainWindow.friendTopBarName.Text = this.ChatName;
+
+                    mainWindow.PlaceHolder.IsVisible = false;
                     mainWindow.BottomContainer.IsVisible = true;
 
                     if (chatId > 0)
