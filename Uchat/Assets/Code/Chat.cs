@@ -114,9 +114,50 @@ namespace Uchat
             }
         }
 
-		//создание групи туууууут
 		private async void CreateGroupButton_Click(object sender, RoutedEventArgs e)
 		{
+        }
+
+        private void InvitePersonToChat_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+			string username = usernameSendInviteTextBox.Text.Trim();
+            if (string.IsNullOrEmpty(username))
+            {
+                return;
+            }
+
+            if (_currentChatId == null || !_chatContacts.TryGetValue(_currentChatId.Value, out var contact))
+            {
+                return;
+            }
+            var memberPanel = new DockPanel
+            {
+                Height = 40,
+                LastChildFill = true
+            };
+
+            var img = new Image
+            {
+                Width = 25,
+                Height = 25,
+                Margin = new Thickness(10, 0, 10, 0),
+                Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/avatar.png")))
+            };
+            memberPanel.Children.Add(img);
+
+            var name = new TextBlock
+            {
+                Text = username,
+                Foreground = Brushes.White,
+                FontWeight = FontWeight.Bold,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
+            memberPanel.Children.Add(name);
+
+            groupInfoMembersStackPanel.Children.Add(memberPanel);
+            usernameSendInviteTextBox.Text = "";
+            invalidDataInAddingPersontoGroup.IsVisible = false;
+            AddPersonToGroup.IsVisible = false;
         }
 
         private void SwitchToGroups_Click(object? sender, RoutedEventArgs e)
