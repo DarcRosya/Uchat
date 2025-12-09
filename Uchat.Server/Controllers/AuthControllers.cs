@@ -64,6 +64,26 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("confirm-email")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto dto)
+    {
+        try
+        {
+            var result = await _authService.ConfirmEmailAsync(dto.Email, dto.Code);
+            return Ok(result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"ConfirmEmail Error: {ex}");
+            return StatusCode(500, new { error = "Internal server error" });
+        }
+    }
+
     [Authorize]
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] RefreshTokenDto dto)

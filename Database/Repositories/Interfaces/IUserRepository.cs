@@ -52,4 +52,7 @@ public interface IUserRepository
     
     /// Statistics
     Task<long> GetTotalUsersCountAsync();
+    
+    /// Set or unset the EmailConfirmed flag for a user
+    Task<bool> SetEmailConfirmedAsync(int userId, bool confirmed);
 }

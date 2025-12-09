@@ -168,6 +168,15 @@ public class UserRepository : IUserRepository
         return await _context.Users.LongCountAsync();
     }
 
+    public async Task<bool> SetEmailConfirmedAsync(int userId, bool confirmed)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+        user.EmailConfirmed = confirmed;
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     // Supporting methods
     private string GenerateSalt()
     {

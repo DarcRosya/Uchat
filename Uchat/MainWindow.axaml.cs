@@ -22,6 +22,9 @@ namespace Uchat
     public partial class MainWindow : Window
     {
         private readonly AuthApiService _authService;
+        private string? _pendingEmail = null;
+        private string? _pendingUsername = null;
+        private string? _pendingPassword = null;
         private string[] systemArgs;
 
         public MainWindow(string[] args)
@@ -200,6 +203,9 @@ namespace Uchat
 
         private void CloseLoginFormButton_Click(object? sender, RoutedEventArgs e)
         {
+            _pendingEmail = null;
+            _pendingUsername = null;
+            _pendingPassword = null;
             this.Close();
         }
 
@@ -308,7 +314,7 @@ namespace Uchat
             }
         }
 
-        private void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
+        private async void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text ?? string.Empty;
             string password = createPasswordTextBox.Text ?? string.Empty;
@@ -350,11 +356,38 @@ namespace Uchat
                 return;
             }
 
-            // ЕСЛИ ВСЕ ДАННЫЕ В НОРМЕ И МЫ ХОТИМ ПЕРЕЙТИ ПОДТВЕРЖНЕИЮ GMAIL!
-            signUpForm.IsVisible = false;
-            CodeVerificationSignUpForm.IsVisible = true;
-            string emailAdress = email.Replace("@gmail.com", "");
-            CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{emailAdress}]";
+            if (_pendingEmail == email && 
+                _pendingUsername == username && 
+                _pendingPassword == password) 
+            {
+                invalidDataInCreateAccount.IsVisible = false;
+                SwitchToVerificationUI(email);
+                return;
+            }
+
+            try
+            {
+                var regResult = await _authService.RegisterAsync(username, email, password);
+                
+                if (regResult != null && regResult.RequiresConfirmation)
+                {
+                    // Успех! Запоминаем ТЕКУЩИЕ данные (включая новый пароль)
+                    _pendingEmail = email;
+                    _pendingUsername = username;
+                    _pendingPassword = password; // <--- Запоминаем новый пароль
+                    
+                    invalidDataInCreateAccount.IsVisible = false;
+                    SwitchToVerificationUI(email);
+                }
+                else
+                {
+                    SwitchToChatView(username);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowCreateAccountError(ex.Message);
+            }
         }
 
         private void BackToSignUp_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -366,22 +399,34 @@ namespace Uchat
         private async void GoToMainProgram_Click(object? sender, RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text ?? string.Empty;
-            string password = createPasswordTextBox.Text ?? string.Empty;
-            string email = createEmailTextBox.Text ?? string.Empty;
             string code = CodeVerificationSignUpFormTextBox.Text ?? string.Empty;
 
-            /*
-                         if (code != //КОД ОТ EMAIL)
+            if (string.IsNullOrWhiteSpace(code))
             {
-                invalidDataInCodeVerificationSignUpForm.Text = "Verification failed";
                 invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = "Code is required";
                 return;
             }
-             */
+
+            if (string.IsNullOrEmpty(_pendingEmail))
+            {
+                invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = "Session expired. Please register again.";
+                return;
+            }
 
             try
             {
-                await HandleRegisterAsync(username, email, password);
+                var auth = await _authService.ConfirmEmailAsync(_pendingEmail, code);
+                
+                if (auth != null)
+                {
+                    invalidDataInCodeVerificationSignUpForm.IsVisible = false;
+                    CodeVerificationSignUpForm.IsVisible = false;
+                    
+                    _pendingEmail = null;
+                    SwitchToChatView(username);
+                }
             }
             catch (Exception ex)
             {
@@ -394,17 +439,24 @@ namespace Uchat
         {
             try
             {
-                var response = await _authService.RegisterAsync(username, email, password);
+                var result = await _authService.RegisterAsync(username, email, password);
 
-                if (response != null)
+                if (result != null)
                 {
-                    UserSession.Instance.SetSession(response);
-
-                    invalidDataInCodeVerificationSignUpForm.IsVisible = false;
-                    CodeVerificationSignUpForm.IsVisible = false;
-
-                    // Switch to chat view
-                    SwitchToChatView(username);
+                    if (!result.RequiresConfirmation)
+                    {
+                        // No confirmation required — proceed
+                        invalidDataInCodeVerificationSignUpForm.IsVisible = false;
+                        CodeVerificationSignUpForm.IsVisible = false;
+                        SwitchToChatView(username);
+                    }
+                    else
+                    {
+                        // Show verification UI
+                        signUpForm.IsVisible = false;
+                        CodeVerificationSignUpForm.IsVisible = true;
+                        CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{email.Replace("@gmail.com", "")} ]";
+                    }
                 }
             }
             catch (Exception ex)
@@ -412,6 +464,21 @@ namespace Uchat
                 invalidDataInCodeVerificationSignUpForm.IsVisible = true;
                 invalidDataInCodeVerificationSignUpForm.Text = ex.Message;
             }
+        }
+
+        private void SwitchToVerificationUI(string email)
+        {
+            signUpForm.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = true;
+            
+            string emailDisplay = email.Replace("@gmail.com", "");
+            CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{emailDisplay}]";
+        }
+
+        private void ShowCreateAccountError(string message)
+        {
+            invalidDataInCreateAccount.IsVisible = true;
+            invalidDataInCreateAccount.Text = message;
         }
 
         private void SwitchToChatView(string username)

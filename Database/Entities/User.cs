@@ -16,12 +16,10 @@ public class User
     public required string PasswordHash { get; set; } = string.Empty;
 
     public string? AvatarUrl { get; set; }
-    public DateTime? DateOfBirth { get; set; } // Correct format is [ DD.MM.YYYY ]
 
     public DateTime CreatedAt { get; set; }
 
     public bool EmailConfirmed { get; set; } = false; 
-    public string LanguageCode { get; set; } = "en";
     public bool IsDeleted { get; set; } = false; // (soft delete)
     
     public ICollection<ChatRoomMember> ChatRoomMemberships { get; set; } = new List<ChatRoomMember>();
@@ -46,20 +44,4 @@ public enum TokenType
 {
     EmailConfirmation = 1,
     PasswordReset = 2
-}
-
-public static class SupportedLanguages
-{
-    public const string English = "en";
-    public const string Ukrainian = "uk";
-
-    public static readonly string[] All = new[]
-    {
-        English, Ukrainian, 
-    };
-    
-    public static bool IsSupported(string code)
-    {
-        return All.Contains(code);
-    }
 }

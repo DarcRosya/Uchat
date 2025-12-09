@@ -24,7 +24,7 @@ public class AuthApiService
         };
     }
 
-    public async Task<AuthResponseDto?> RegisterAsync(string username, string email, string password)
+    public async Task<RegisterResultDto?> RegisterAsync(string username, string email, string password)
     {
         try
         {
@@ -38,7 +38,7 @@ public class AuthApiService
             };
 
             var response = await _httpClient.PostAsJsonAsync("/api/auth/register", request);
-            
+
             if (!response.IsSuccessStatusCode)
             {
                 Logger.Log($"Registration failed: {response.StatusCode}");
@@ -54,20 +54,61 @@ public class AuthApiService
                 }
             }
 
-            var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
-            
-            if (result != null)
+            try
             {
-                Logger.Log($"Registration successful for {username}");
-                TokenStorage.SaveTokens(result.AccessToken, result.RefreshToken, result.ExpiresAt, result.UserId, result.Username);
-                UserSession.Instance.SetSession(result.AccessToken, result.RefreshToken, result.UserId, result.Username);
+                var result = await response.Content.ReadFromJsonAsync<RegisterResultDto>(_jsonOptions);
+                return result;
             }
-            
-            return result;
+            catch 
+            {
+                return new RegisterResultDto { RequiresConfirmation = false };
+            }
         }
         catch (HttpRequestException ex)
         {
             Logger.Error("Network error during registration", ex);
+            throw new Exception($"Network error: {ex.Message}");
+        }
+    }
+
+    public async Task<AuthResponseDto?> ConfirmEmailAsync(string email, string code)
+    {
+        try
+        {
+            var request = new 
+            { 
+                email = email, 
+                code = code 
+            };
+            
+            var response = await _httpClient.PostAsJsonAsync("/api/auth/confirm-email", request);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    var err = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
+                    throw new Exception(err?.Error ?? "Confirmation failed");
+                }
+                catch
+                {
+                    var text = await response.Content.ReadAsStringAsync();
+                    throw new Exception(text);
+                }
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
+            if (result != null)
+            {
+                TokenStorage.SaveTokens(result.AccessToken, result.RefreshToken, result.ExpiresAt, result.UserId, result.Username);
+                UserSession.Instance.SetSession(result.AccessToken, result.RefreshToken, result.UserId, result.Username);
+            }
+
+            return result;
+        }
+        catch (HttpRequestException ex)
+        {
+            Logger.Error("Network error during confirmation", ex);
             throw new Exception($"Network error: {ex.Message}");
         }
     }

@@ -905,3 +905,127 @@
 [14:08:51] [SERVER] [OFFLINE] User qqq became OFFLINE
 [14:08:51] [SERVER] User eee disconnected
 [14:08:51] [SERVER] [OFFLINE] User eee became OFFLINE
+[14:43:34] [CLIENT] UserSession initialized with system arguments
+[14:43:34] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[15:07:00] [CLIENT] UserSession initialized with system arguments
+[15:07:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[15:07:15] [CLIENT] Attempting registration for: Jopa
+[15:07:16] [CLIENT] Registration failed: InternalServerError
+[15:23:20] [CLIENT] UserSession initialized with system arguments
+[15:23:20] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[15:23:29] [CLIENT] Attempting registration for: ttt
+[15:23:30] [CLIENT] Registration failed: BadRequest
+[15:31:59] [CLIENT] UserSession initialized with system arguments
+[15:31:59] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[15:32:04] [CLIENT] Attempting login for: eee
+[15:32:04] [CLIENT] Login failed: BadRequest
+[15:41:45] [CLIENT] Attempting registration for: eee
+[15:41:46] [CLIENT] Registration failed: InternalServerError
+[15:41:53] [CLIENT] UserSession initialized with system arguments
+[15:41:53] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[15:42:02] [CLIENT] Attempting registration for: eee
+[15:42:03] [CLIENT] Registration failed: BadRequest
+[16:04:11] [CLIENT] UserSession initialized with system arguments
+[16:04:11] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:04:22] [CLIENT] Attempting registration for: eee
+[16:04:22] [CLIENT] Registration failed: InternalServerError
+[16:05:55] [CLIENT] UserSession initialized with system arguments
+[16:05:55] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:06:12] [CLIENT] UserSession initialized with system arguments
+[16:06:12] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:06:26] [CLIENT] Attempting registration for: qqq
+[16:06:27] [CLIENT] Registration failed: InternalServerError
+[16:16:58] [CLIENT] UserSession initialized with system arguments
+[16:16:59] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:17:07] [CLIENT] Attempting registration for: eee
+[16:17:31] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[16:17:31] [CLIENT] Tokens saved for user eee (expires: 2025-12-09 14:47:31)
+[16:17:31] [CLIENT] Session set for user eee (expires: 14:47:31)
+[16:17:31] [CLIENT] Auto-refresh timer started
+[16:17:31] [CLIENT] Initializing API services for user: eee
+[16:17:31] [CLIENT] Token length: 529, Token preview: eyJhbGciOi...
+[16:17:31] [CLIENT] ContactApiService: Setting auth token (length: 529)
+[16:17:31] [CLIENT] ContactApiService: Authorization header set
+[16:17:31] [SERVER] User eee (ID: 2) connected
+[16:17:31] [SERVER] [ONLINE] User eee became ONLINE
+[16:17:31] [SERVER] [Auto-Join] User eee added to group chat_2
+[16:17:31] [SERVER] [Auto-Join] User eee added to group chat_3
+[16:17:31] [SERVER] [Auto-Join] User eee joined 2 chat groups
+[16:17:32] [SERVER] [JoinChatGroup] eee joined chat 2 (group: chat_2)
+[16:17:33] [SERVER] [JoinChatGroup] eee joined chat 1 (group: chat_1)
+[16:17:35] [SERVER] User eee disconnected
+[16:17:35] [SERVER] [OFFLINE] User eee became OFFLINE
+[16:25:30] [CLIENT] UserSession initialized with system arguments
+[16:25:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:25:43] [CLIENT] Attempting registration for: jopa
+[16:25:43] [CLIENT] Registration failed: BadRequest
+[16:25:50] [CLIENT] Attempting registration for: jopa
+[16:25:50] [CLIENT] Registration failed: InternalServerError
+[16:31:53] [CLIENT] UserSession initialized with system arguments
+[16:31:54] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:32:03] [CLIENT] Attempting registration for: eee
+[16:32:03] [CLIENT] Registration failed: BadRequest
+[16:32:07] [CLIENT] Attempting registration for: jopa
+[16:32:08] [CLIENT] Registration failed: InternalServerError
+[16:32:13] [CLIENT] Attempting registration for: penis
+[16:32:14] [CLIENT] Registration failed: InternalServerError
+[16:35:31] [CLIENT] UserSession initialized with system arguments
+[16:35:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:35:41] [CLIENT] Attempting registration for: jopa
+[16:35:43] [CLIENT] Registration failed: InternalServerError
+[16:39:11] [CLIENT] UserSession initialized with system arguments
+[16:39:11] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:39:23] [CLIENT] Attempting registration for: jopa
+[16:39:24] [CLIENT] Registration failed: BadRequest
+[16:39:53] [CLIENT] UserSession initialized with system arguments
+[16:39:54] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:40:04] [CLIENT] Attempting registration for: jopa
+[16:40:10] [CLIENT] Attempting registration for: jopa
+[16:40:36] [CLIENT] Attempting registration for: jopa
+[16:45:43] [CLIENT] UserSession initialized with system arguments
+[16:45:44] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:45:55] [CLIENT] Attempting registration for: jopa
+[16:46:24] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[16:46:24] [CLIENT] Tokens saved for user jopa (expires: 2025-12-09 15:16:24)
+[16:46:24] [CLIENT] Session set for user jopa (expires: 15:16:24)
+[16:46:24] [CLIENT] Auto-refresh timer started
+[16:46:24] [CLIENT] Initializing API services for user: jopa
+[16:46:24] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[16:46:24] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[16:46:24] [CLIENT] ContactApiService: Authorization header set
+[16:46:24] [SERVER] User jopa (ID: 2) connected
+[16:46:24] [SERVER] [ONLINE] User jopa became ONLINE
+[16:46:24] [SERVER] [Auto-Join] User jopa added to group chat_2
+[16:46:24] [SERVER] [Auto-Join] User jopa added to group chat_3
+[16:46:24] [SERVER] [Auto-Join] User jopa joined 2 chat groups
+[16:46:25] [SERVER] [JoinChatGroup] jopa joined chat 2 (group: chat_2)
+[16:46:28] [SERVER] User jopa disconnected
+[16:46:28] [SERVER] [OFFLINE] User jopa became OFFLINE
+[16:46:31] [CLIENT] UserSession initialized with system arguments
+[16:46:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:46:36] [CLIENT] Attempting login for: jopa
+[16:46:36] [CLIENT] Login successful for jopa
+[16:46:36] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\Uchat\tokens.dat
+[16:46:36] [CLIENT] Tokens saved for user jopa (expires: 2025-12-09 15:16:36)
+[16:46:36] [CLIENT] Session set for user jopa (expires: 15:16:36)
+[16:46:36] [CLIENT] Auto-refresh timer started
+[16:46:36] [CLIENT] Session set for user jopa (expires: 15:16:36)
+[16:46:36] [CLIENT] Auto-refresh timer stopped
+[16:46:36] [CLIENT] Auto-refresh timer started
+[16:46:36] [CLIENT] Initializing API services for user: jopa
+[16:46:36] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[16:46:36] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[16:46:36] [CLIENT] ContactApiService: Authorization header set
+[16:46:36] [SERVER] User jopa (ID: 2) connected
+[16:46:36] [SERVER] [ONLINE] User jopa became ONLINE
+[16:46:36] [SERVER] [Auto-Join] User jopa added to group chat_2
+[16:46:36] [SERVER] [Auto-Join] User jopa added to group chat_3
+[16:46:36] [SERVER] [Auto-Join] User jopa joined 2 chat groups
+[16:46:37] [SERVER] User jopa disconnected
+[16:46:37] [SERVER] [OFFLINE] User jopa became OFFLINE
+[16:50:49] [CLIENT] UserSession initialized with system arguments
+[16:50:49] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:51:00] [CLIENT] Attempting registration for: piki
+[16:51:09] [CLIENT] UserSession initialized with system arguments
+[16:51:09] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:51:19] [CLIENT] Attempting registration for: piki
