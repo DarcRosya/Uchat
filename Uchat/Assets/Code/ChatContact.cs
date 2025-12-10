@@ -216,15 +216,15 @@ namespace Uchat
                     var iconPinURL = new Uri("avares://Uchat/Assets/Icons/pin.png");
                     var iconDeleteURL = new Uri("avares://Uchat/Assets/Icons/delete.png");
 
-                    MenuItem menuItemPinContact = new MenuItem
+					MenuItem menuItemPinContact = new MenuItem
 					{
-                        Icon = new Image
-                        {
-                            Source = new Bitmap(AssetLoader.Open(iconPinURL)),
-                            Width = 16,
-                            Height = 16
-                        },
-                        Header = "Pin",
+						Icon = new Image
+						{
+							Source = new Bitmap(AssetLoader.Open(iconPinURL)),
+							Width = 16,
+							Height = 16
+						},
+						Header = "Pin",
                     };
                     menuItemPinContact.Click += menuItemPinContact_Click;
                     contextMenu.Items.Add(menuItemPinContact);

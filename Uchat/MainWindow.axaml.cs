@@ -264,6 +264,8 @@ namespace Uchat
                 EmailVerification.IsVisible = false;
                 
                 CodeVerification.IsVisible = true;
+                string emailDisplay = email.Replace("@gmail.com", "");
+                codeVerificationTextBox.Watermark = $"Check email [{emailDisplay}]";
                 // Очищаем поле кода
                 codeVerificationTextBox.Text = string.Empty;
                 invalidDataInCodeVerification.IsVisible = false;
