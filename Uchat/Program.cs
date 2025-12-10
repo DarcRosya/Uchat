@@ -17,8 +17,8 @@ namespace Uchat
             //    Console.WriteLine("Usage:\nUchat.exe -local port (four digits)\nor\nUchat.exe -ngrok");
             //    Environment.Exit(0);
             //}
-            //BuildAvaloniaApp()
-            .StartWithClassicDesktopLifetime(args);
+            BuildAvaloniaApp()
+                .StartWithClassicDesktopLifetime(args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.

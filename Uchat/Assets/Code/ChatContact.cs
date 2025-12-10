@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Uchat.Shared;
+using Avalonia.Threading;
 
 
 namespace Uchat 
@@ -235,7 +236,14 @@ namespace Uchat
 				public void UpdateName(string newName)
 				{
 					chatName = newName;
-					contactNameTextBlock.Text = newName;
+					
+                    Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        if (contactNameTextBlock != null)
+                        {
+                            contactNameTextBlock.Text = newName;
+                        }
+                    });
 				}
 				
 				public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)

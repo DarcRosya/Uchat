@@ -18,11 +18,6 @@ public class CreateChatRequestDto
     [Required(ErrorMessage = "Chat type is required")]
     public string Type { get; set; } = "Private";
 
-    [MaxLength(500)]
-    public string? Description { get; set; }
-
-    public string? IconUrl { get; set; }
-
     public IEnumerable<int>? InitialMemberIds { get; set; }
 
     public int? ParentChatRoomId { get; set; }
@@ -36,10 +31,9 @@ public class AddMemberRequestDto
     public string Username { get; set; } = string.Empty;
 }
 
-public class UpdateChatRequestDto
+public class UpdateChatDto
 {
     public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
 }
 
 public class ChatRoomDto

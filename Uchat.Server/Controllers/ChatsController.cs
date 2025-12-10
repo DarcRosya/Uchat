@@ -170,16 +170,16 @@ public class ChatsController : ControllerBase
         return Ok(new { message = "You left the chat" });
     }
 
-    // [HttpPut("{chatId}")]
-    // public async Task<IActionResult> UpdateChat(int chatId, [FromBody] UpdateChatRequestDto request)
-    // {
-    //     var userId = GetCurrentUserId();
-    //     var result = await _chatRoomService.UpdateChatAsync(chatId, userId, request.Name);
+    [HttpPut("{chatId}")]
+    public async Task<IActionResult> UpdateChat(int chatId, [FromBody] UpdateChatDto request)
+    {
+        var userId = GetCurrentUserId();
+        var result = await _chatRoomService.UpdateChatNameAsync(chatId, userId, request.Name);
 
-    //     if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
+        if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
 
-    //     return Ok(new { message = "Chat updated" });
-    // }
+        return Ok(new { message = "Chat updated" });
+    }
 
     [HttpPost("{chatId}/accept")]
     public async Task<IActionResult> AcceptInvite(int chatId)

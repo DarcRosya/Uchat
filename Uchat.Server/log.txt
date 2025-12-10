@@ -317,3 +317,238 @@
 [19:46:06] [CLIENT] ContactApiService: Authorization header set
 [19:46:07] [CLIENT] [RECONNECTION] State reset
 [19:46:07] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:11:05] [CLIENT] UserSession initialized with system arguments
+[20:11:05] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:11:08] [CLIENT] UserSession initialized with system arguments
+[20:11:09] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:11:22] [CLIENT] Attempting login for: eee
+[20:11:23] [CLIENT] Login successful for eee
+[20:11:23] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:11:23] [CLIENT] Tokens saved for user eee (expires: 2025-12-10 18:41:22)
+[20:11:23] [CLIENT] Session set for user eee (expires: 18:41:23)
+[20:11:23] [CLIENT] Auto-refresh timer started
+[20:11:23] [CLIENT] Session set for user eee (expires: 18:41:23)
+[20:11:23] [CLIENT] Auto-refresh timer stopped
+[20:11:23] [CLIENT] Auto-refresh timer started
+[20:11:23] [CLIENT] Initializing API services for user: eee
+[20:11:23] [CLIENT] Token length: 529, Token preview: eyJhbGciOi...
+[20:11:23] [CLIENT] ContactApiService: Setting auth token (length: 529)
+[20:11:23] [CLIENT] ContactApiService: Authorization header set
+[20:11:23] [CLIENT] [RECONNECTION] State reset
+[20:11:23] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:11:23] [SERVER] [RECONNECTION] User eee (ID: 3) connected with sessionId: 8e69b8f4-4b62-4639-9d4a-8a897dc065d8
+[20:11:23] [SERVER] User eee (ID: 3) connected
+[20:11:23] [SERVER] [ONLINE] User eee became ONLINE
+[20:11:23] [SERVER] [Auto-Join] User eee added to group chat_22
+[20:11:23] [SERVER] [Auto-Join] User eee added to group chat_10
+[20:11:23] [SERVER] [Auto-Join] User eee added to group chat_21
+[20:11:23] [SERVER] [Auto-Join] User eee added to group chat_4
+[20:11:23] [SERVER] [Auto-Join] User eee added to group chat_5
+[20:11:23] [SERVER] [Auto-Join] User eee joined 5 chat groups
+[20:11:29] [CLIENT] Attempting login for: qqq
+[20:11:29] [CLIENT] Login successful for qqq
+[20:11:29] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:11:29] [CLIENT] Tokens saved for user qqq (expires: 2025-12-10 18:41:29)
+[20:11:29] [CLIENT] Session set for user qqq (expires: 18:41:29)
+[20:11:29] [CLIENT] Auto-refresh timer started
+[20:11:29] [CLIENT] Session set for user qqq (expires: 18:41:29)
+[20:11:29] [CLIENT] Auto-refresh timer stopped
+[20:11:29] [CLIENT] Auto-refresh timer started
+[20:11:29] [CLIENT] Initializing API services for user: qqq
+[20:11:29] [CLIENT] Token length: 531, Token preview: eyJhbGciOi...
+[20:11:29] [CLIENT] ContactApiService: Setting auth token (length: 531)
+[20:11:29] [CLIENT] ContactApiService: Authorization header set
+[20:11:29] [SERVER] [RECONNECTION] User qqq (ID: 2) connected with sessionId: 9d52b153-29d4-4b0b-8788-83cb26439090
+[20:11:29] [SERVER] User qqq (ID: 2) connected
+[20:11:29] [SERVER] [ONLINE] User qqq became ONLINE
+[20:11:29] [CLIENT] [RECONNECTION] State reset
+[20:11:29] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_23
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_19
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_11
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_26
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_24
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_20
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_2
+[20:11:29] [SERVER] [Auto-Join] User qqq added to group chat_3
+[20:11:29] [SERVER] [Auto-Join] User qqq joined 8 chat groups
+[20:11:33] [SERVER] [JoinChatGroup] eee joined chat 8 (group: chat_8)
+[20:11:38] [SERVER] [JoinChatGroup] qqq joined chat 8 (group: chat_8)
+[20:11:43] [SERVER] [JoinChatGroup] qqq joined chat 2 (group: chat_2)
+[20:11:44] [CLIENT] [Chat] Message sent successfully to 8
+[20:11:46] [SERVER] [JoinChatGroup] qqq joined chat 8 (group: chat_8)
+[20:11:50] [SERVER] [JoinChatGroup] eee joined chat 21 (group: chat_21)
+[20:11:51] [SERVER] [JoinChatGroup] eee joined chat 22 (group: chat_22)
+[20:11:53] [CLIENT] [HEARTBEAT] Pong received
+[20:11:53] [SERVER] [JoinChatGroup] eee joined chat 23 (group: chat_23)
+[20:11:54] [SERVER] [JoinChatGroup] eee joined chat 24 (group: chat_24)
+[20:11:54] [SERVER] [JoinChatGroup] eee joined chat 24 (group: chat_24)
+[20:11:59] [CLIENT] [HEARTBEAT] Pong received
+[20:12:08] [SERVER] [JoinChatGroup] eee joined chat 23 (group: chat_23)
+[20:12:08] [SERVER] [JoinChatGroup] eee joined chat 24 (group: chat_24)
+[20:12:10] [SERVER] [JoinChatGroup] eee joined chat 25 (group: chat_25)
+[20:12:12] [SERVER] [DISCONNECT] User eee (ID: 3) disconnected
+[20:12:12] [SERVER] [OFFLINE] User eee became OFFLINE
+[20:12:13] [SERVER] [DISCONNECT] User qqq (ID: 2) disconnected
+[20:12:13] [SERVER] [OFFLINE] User qqq became OFFLINE
+[20:12:38] [CLIENT] UserSession initialized with system arguments
+[20:12:38] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:12:40] [CLIENT] Attempting login for: eee
+[20:12:40] [CLIENT] Login successful for eee
+[20:12:40] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:12:40] [CLIENT] Tokens saved for user eee (expires: 2025-12-10 18:42:40)
+[20:12:40] [CLIENT] Session set for user eee (expires: 18:42:40)
+[20:12:40] [CLIENT] Auto-refresh timer started
+[20:12:40] [CLIENT] Session set for user eee (expires: 18:42:40)
+[20:12:40] [CLIENT] Auto-refresh timer stopped
+[20:12:40] [CLIENT] Auto-refresh timer started
+[20:12:40] [CLIENT] Initializing API services for user: eee
+[20:12:40] [CLIENT] Token length: 529, Token preview: eyJhbGciOi...
+[20:12:40] [CLIENT] ContactApiService: Setting auth token (length: 529)
+[20:12:40] [CLIENT] ContactApiService: Authorization header set
+[20:12:40] [SERVER] [RECONNECTION] User eee (ID: 3) connected with sessionId: 4a843563-eca0-46c0-b66c-6273010e1b57
+[20:12:40] [SERVER] User eee (ID: 3) connected
+[20:12:40] [SERVER] [ONLINE] User eee became ONLINE
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_31
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_30
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_29
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_28
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_27
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_10
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_22
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_21
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_4
+[20:12:40] [SERVER] [Auto-Join] User eee added to group chat_5
+[20:12:40] [SERVER] [Auto-Join] User eee joined 10 chat groups
+[20:12:40] [CLIENT] [RECONNECTION] State reset
+[20:12:40] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:12:41] [SERVER] [JoinChatGroup] eee joined chat 26 (group: chat_26)
+[20:12:42] [SERVER] [JoinChatGroup] eee joined chat 26 (group: chat_26)
+[20:12:47] [SERVER] [DISCONNECT] User eee (ID: 3) disconnected
+[20:12:47] [SERVER] [OFFLINE] User eee became OFFLINE
+[20:17:12] [SERVER] [RECONNECTION] Cleared reconnection state for user eee
+[20:17:13] [SERVER] [RECONNECTION] Cleared reconnection state for user qqq
+[20:17:47] [SERVER] [RECONNECTION] Cleared reconnection state for user eee
+[20:23:42] [CLIENT] UserSession initialized with system arguments
+[20:23:42] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:23:43] [CLIENT] UserSession initialized with system arguments
+[20:23:43] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:23:46] [CLIENT] Attempting login for: eee
+[20:23:46] [CLIENT] Login successful for eee
+[20:23:46] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:23:46] [CLIENT] Tokens saved for user eee (expires: 2025-12-10 18:53:46)
+[20:23:46] [CLIENT] Session set for user eee (expires: 18:53:46)
+[20:23:46] [CLIENT] Auto-refresh timer started
+[20:23:46] [CLIENT] Session set for user eee (expires: 18:53:46)
+[20:23:46] [CLIENT] Auto-refresh timer stopped
+[20:23:46] [CLIENT] Auto-refresh timer started
+[20:23:46] [CLIENT] Initializing API services for user: eee
+[20:23:46] [CLIENT] Token length: 529, Token preview: eyJhbGciOi...
+[20:23:46] [CLIENT] ContactApiService: Setting auth token (length: 529)
+[20:23:46] [CLIENT] ContactApiService: Authorization header set
+[20:23:46] [CLIENT] [RECONNECTION] State reset
+[20:23:46] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:23:46] [SERVER] [RECONNECTION] User eee (ID: 3) connected with sessionId: 644aa76f-3f34-4a15-9277-9352f3bdea43
+[20:23:46] [SERVER] User eee (ID: 3) connected
+[20:23:46] [SERVER] [ONLINE] User eee became ONLINE
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_32
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_31
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_30
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_29
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_28
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_27
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_10
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_22
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_21
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_4
+[20:23:46] [SERVER] [Auto-Join] User eee added to group chat_5
+[20:23:46] [SERVER] [Auto-Join] User eee joined 11 chat groups
+[20:23:48] [SERVER] [JoinChatGroup] eee joined chat 26 (group: chat_26)
+[20:23:54] [SERVER] [JoinChatGroup] eee joined chat 27 (group: chat_27)
+[20:23:56] [SERVER] [JoinChatGroup] eee joined chat 28 (group: chat_28)
+[20:23:57] [SERVER] [JoinChatGroup] eee joined chat 29 (group: chat_29)
+[20:23:57] [SERVER] [JoinChatGroup] eee joined chat 30 (group: chat_30)
+[20:24:04] [SERVER] [JoinChatGroup] eee joined chat 25 (group: chat_25)
+[20:24:12] [SERVER] [JoinChatGroup] eee joined chat 31 (group: chat_31)
+[20:24:16] [CLIENT] [HEARTBEAT] Pong received
+[20:24:17] [SERVER] [JoinChatGroup] eee joined chat 32 (group: chat_32)
+[20:24:32] [SERVER] [JoinChatGroup] eee joined chat 33 (group: chat_33)
+[20:24:38] [SERVER] [JoinChatGroup] eee joined chat 34 (group: chat_34)
+[20:24:40] [CLIENT] Chat 34 removed from UI and Cache
+[20:24:40] [CLIENT] Chat area cleared
+[20:24:40] [CLIENT] Chat 33 removed from UI and Cache
+[20:24:41] [CLIENT] Chat 32 removed from UI and Cache
+[20:24:42] [CLIENT] Chat 31 removed from UI and Cache
+[20:24:42] [CLIENT] Chat 30 removed from UI and Cache
+[20:24:43] [CLIENT] Chat 29 removed from UI and Cache
+[20:24:43] [CLIENT] Chat 28 removed from UI and Cache
+[20:24:44] [CLIENT] Chat 27 removed from UI and Cache
+[20:24:45] [CLIENT] Chat 26 removed from UI and Cache
+[20:24:46] [CLIENT] [HEARTBEAT] Pong received
+[20:24:47] [CLIENT] Chat 25 removed from UI and Cache
+[20:24:47] [CLIENT] Chat 24 removed from UI and Cache
+[20:24:48] [CLIENT] Chat 23 removed from UI and Cache
+[20:24:49] [CLIENT] Chat 22 removed from UI and Cache
+[20:24:49] [CLIENT] Chat 21 removed from UI and Cache
+[20:24:56] [CLIENT] Attempting login for: qqq
+[20:24:57] [CLIENT] Login successful for qqq
+[20:24:57] [CLIENT] TokenStorage initialized at: C:\Users\Zero\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:24:57] [CLIENT] Tokens saved for user qqq (expires: 2025-12-10 18:54:57)
+[20:24:57] [CLIENT] Session set for user qqq (expires: 18:54:57)
+[20:24:57] [CLIENT] Auto-refresh timer started
+[20:24:57] [CLIENT] Session set for user qqq (expires: 18:54:57)
+[20:24:57] [CLIENT] Auto-refresh timer stopped
+[20:24:57] [CLIENT] Auto-refresh timer started
+[20:24:57] [CLIENT] Initializing API services for user: qqq
+[20:24:57] [CLIENT] Token length: 531, Token preview: eyJhbGciOi...
+[20:24:57] [CLIENT] ContactApiService: Setting auth token (length: 531)
+[20:24:57] [CLIENT] ContactApiService: Authorization header set
+[20:24:57] [SERVER] [RECONNECTION] User qqq (ID: 2) connected with sessionId: 386ca7ea-c5c3-41e4-8f54-d114bfd7732d
+[20:24:57] [SERVER] User qqq (ID: 2) connected
+[20:24:57] [SERVER] [ONLINE] User qqq became ONLINE
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_11
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_23
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_19
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_26
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_24
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_20
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_2
+[20:24:57] [SERVER] [Auto-Join] User qqq added to group chat_3
+[20:24:57] [SERVER] [Auto-Join] User qqq joined 8 chat groups
+[20:24:57] [CLIENT] [RECONNECTION] State reset
+[20:24:57] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:25:08] [SERVER] [JoinChatGroup] eee joined chat 15 (group: chat_15)
+[20:25:12] [SERVER] [JoinChatGroup] qqq joined chat 17 (group: chat_17)
+[20:25:13] [SERVER] [JoinChatGroup] qqq joined chat 15 (group: chat_15)
+[20:25:14] [SERVER] [JoinChatGroup] qqq joined chat 20 (group: chat_20)
+[20:25:16] [SERVER] [JoinChatGroup] qqq joined chat 17 (group: chat_17)
+[20:25:16] [CLIENT] [HEARTBEAT] Pong received
+[20:25:26] [SERVER] [JoinChatGroup] eee joined chat 17 (group: chat_17)
+[20:25:27] [CLIENT] [HEARTBEAT] Pong received
+[20:25:43] [CLIENT] Chat 15 removed from UI and Cache
+[20:25:44] [CLIENT] Chat 16 removed from UI and Cache
+[20:25:46] [CLIENT] [HEARTBEAT] Pong received
+[20:25:49] [CLIENT] Chat 15 removed from UI and Cache
+[20:25:49] [CLIENT] Chat 20 removed from UI and Cache
+[20:25:50] [CLIENT] Chat 18 removed from UI and Cache
+[20:25:51] [CLIENT] Chat 16 removed from UI and Cache
+[20:25:54] [CLIENT] Chat 17 removed from UI and Cache
+[20:25:54] [CLIENT] Chat area cleared
+[20:25:55] [CLIENT] [Chat] Message sent successfully to 17
+[20:25:57] [CLIENT] [HEARTBEAT] Pong received
+[20:26:07] [SERVER] [JoinChatGroup] eee joined chat 17 (group: chat_17)
+[20:26:11] [SERVER] [JoinChatGroup] eee joined chat 35 (group: chat_35)
+[20:26:16] [CLIENT] [HEARTBEAT] Pong received
+[20:26:17] [CLIENT] [Chat] Message sent successfully to 17
+[20:26:19] [SERVER] [JoinChatGroup] eee joined chat 17 (group: chat_17)
+[20:26:22] [CLIENT] Chat 17 removed from UI and Cache
+[20:26:22] [CLIENT] Chat area cleared
+[20:26:24] [CLIENT] [Chat] Message sent successfully to 17
+[20:26:25] [CLIENT] [Chat] Message sent successfully to 17
+[20:26:26] [CLIENT] [Chat] Message sent successfully to 17
+[20:26:27] [CLIENT] [HEARTBEAT] Pong received
+[20:26:32] [SERVER] [JoinChatGroup] eee joined chat 17 (group: chat_17)
+[20:26:37] [SERVER] [DISCONNECT] User eee (ID: 3) disconnected
+[20:26:37] [SERVER] [OFFLINE] User eee became OFFLINE
+[20:26:46] [SERVER] [DISCONNECT] User qqq (ID: 2) disconnected
+[20:26:46] [SERVER] [OFFLINE] User qqq became OFFLINE
