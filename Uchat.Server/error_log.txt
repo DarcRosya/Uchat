@@ -3,3 +3,455 @@ Failed to get chats: {"error":"The Include path \u0027ChatRoom-\u003EMembers\u00
    at Uchat.Services.ChatApiService.GetUserChatsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ChatApiService.cs:line 37
    at Uchat.MainWindow.LoadUserChatsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 317
    at Uchat.MainWindow.Chat.FriendRequest.AcceptRequestButton_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\Assets\Code\Notificationbox.cs:line 89
+[ERROR] [CLIENT] [09.12.2025 15:00:34] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in E:\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 16:00:27] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:00:28] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:00:29] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:00:30] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:00:31] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:00:32] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:32] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:33] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:34] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:35] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:36] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:51] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:52] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:53] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:54] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:55] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:02:56] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:09:58] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:09:59] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:00] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:01] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:02] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:11] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:12] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:13] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:14] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:15] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:16] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:10:17] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:41] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:42] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:43] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:44] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:45] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:46] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:47] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:48] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:49] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:58] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:14:59] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:15:00] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:15:01] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:15:02] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:15:03] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 16:15:04] Error loading pending friend requests
+Object reference not set to an instance of an object.
+   at Uchat.MainWindow.LoadPendingFriendRequestsAsync() in E:\Uchat\Uchat\Assets\Code\Chat.cs:line 78
+[ERROR] [CLIENT] [09.12.2025 17:56:50] Network error during login
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.AuthApiService.LoginAsync(String identifier, String password) in E:\Uchat\Uchat\Services\AuthApiService.cs:line 128
+[ERROR] [CLIENT] [09.12.2025 17:56:52] Network error during login
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.AuthApiService.LoginAsync(String identifier, String password) in E:\Uchat\Uchat\Services\AuthApiService.cs:line 128
+[ERROR] [CLIENT] [09.12.2025 18:48:18] Failed to create group
+Failed to create chat: {"error":"Invalid chat type"}
+   at Uchat.Services.ChatApiService.CreateChatAsync(CreateChatRequestDto request) in C:\Users\Zero\Documents\Uchat\Uchat\Services\ChatApiService.cs:line 74
+   at Uchat.MainWindow.CreateGroupButton_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\Assets\Code\Chat.cs:line 137
+[ERROR] [CLIENT] [09.12.2025 20:30:05] Network error during login
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.AuthApiService.LoginAsync(String identifier, String password) in C:\Users\Zero\Documents\Uchat\Uchat\Services\AuthApiService.cs:line 128
+[ERROR] [CLIENT] [09.12.2025 21:31:11] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1084
+[ERROR] [CLIENT] [09.12.2025 21:31:29] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1084
+[ERROR] [CLIENT] [09.12.2025 21:43:35] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1084
+[ERROR] [CLIENT] [09.12.2025 22:05:22] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1084
+[ERROR] [CLIENT] [09.12.2025 22:05:27] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1084
+[ERROR] [CLIENT] [09.12.2025 22:09:55] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 22:32:56] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 22:40:56] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:57] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:58] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:59] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:59] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:59] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:40:59] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:00] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:00] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:00] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:01] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:01] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:01] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:02] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:03] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:04] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:41:05] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:18] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:19] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:19] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:19] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:31] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:33] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:36] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:36] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:36] Server failed to accept request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:39] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:42] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:42] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:42] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:43:42] Server failed to reject request (DirectMessage)
+[ERROR] [CLIENT] [09.12.2025 22:46:46] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:47] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:48] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:49] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:50] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:51] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:52] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:53] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:54] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:55] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:56] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:46:57] API: Failed to get pending requests
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.ContactApiService.GetPendingRequestsAsync() in C:\Users\Zero\Documents\Uchat\Uchat\Services\ContactApiService.cs:line 169
+[ERROR] [CLIENT] [09.12.2025 22:48:10] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 22:57:29] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 22:57:51] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 22:58:28] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in C:\Users\Zero\Documents\Uchat\Uchat\ClientConnections.cs:line 1095
+[ERROR] [CLIENT] [09.12.2025 23:45:15] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:40:14] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:41:33] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:43:21] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:44:31] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 00:54:31] Failed to leave SignalR group
+Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: Method does not exist.
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
+   at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 11:56:54] Network error during login
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.AuthApiService.LoginAsync(String identifier, String password) in C:\Users\Zero\Documents\Uchat\Uchat\Services\AuthApiService.cs:line 128

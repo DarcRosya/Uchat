@@ -148,27 +148,27 @@ namespace Uchat.Services
         {
             try
             {
-                Logger.Log("API: GET /api/contacts/pending");
-                Logger.Log($"API: Token length: {_authToken?.Length ?? 0}");
+                //Logger.Log("API: GET /api/contacts/pending");
+                //Logger.Log($"API: Token length: {_authToken?.Length ?? 0}");
 
                 // Создаем запрос вручную чтобы контролировать заголовки
                 var request = new HttpRequestMessage(HttpMethod.Get, "/api/contacts/pending");
 
                 // Явно прибиваем токен к запросу
-                if (!string.IsNullOrEmpty(_authToken))
-                {
-                    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authToken);
-                    Logger.Log("API: Authorization header explicitly set on request");
-                }
-                else
-                {
-                    Logger.Log("ALARM: Token is empty in GetPendingRequestsAsync!");
-                }
+                //if (!string.IsNullOrEmpty(_authToken))
+                //{
+                //    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authToken);
+                //    Logger.Log("API: Authorization header explicitly set on request");
+                //}
+                //else
+                //{
+                //    Logger.Log("ALARM: Token is empty in GetPendingRequestsAsync!");
+                //}
 
                 // Отправляем
                 var response = await _httpClient.SendAsync(request);
                 
-                Logger.Log($"API Response: {response.StatusCode}");
+                //Logger.Log($"API Response: {response.StatusCode}");
 
                 // Читаем ответ
                 if (!response.IsSuccessStatusCode)
@@ -186,7 +186,7 @@ namespace Uchat.Services
                 };
 
                 var data = await response.Content.ReadFromJsonAsync<List<ContactDto>>(options);
-                Logger.Log($"API Response: {data?.Count ?? 0} pending requests");
+                //Logger.Log($"API Response: {data?.Count ?? 0} pending requests");
                 
                 if (data != null && data.Count > 0)
                 {

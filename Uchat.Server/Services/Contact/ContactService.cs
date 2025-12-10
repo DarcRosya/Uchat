@@ -11,6 +11,8 @@ using Uchat.Server.Services.Redis;
 using Uchat.Shared.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Uchat.Shared;
+using Microsoft.AspNetCore.SignalR;
+using Uchat.Server.Hubs;
 
 namespace Uchat.Server.Services.Contact;
 
@@ -20,6 +22,7 @@ public class ContactService : IContactService
     private readonly IUserRepository _userRepository;
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly UchatDbContext _context;
+    private readonly IHubContext<ChatHub> _hubContext;
     private readonly MongoDbContext _mongoContext;
     private readonly IRedisService _redisService;
 
@@ -30,6 +33,7 @@ public class ContactService : IContactService
         IUserRepository userRepository,
         IChatRoomRepository chatRoomRepository,
         UchatDbContext context,
+        IHubContext<ChatHub> hubContext,
         MongoDbContext mongoContext,
         IRedisService redisService)
     {
@@ -37,6 +41,7 @@ public class ContactService : IContactService
         _userRepository = userRepository;
         _chatRoomRepository = chatRoomRepository;
         _context = context;
+        _hubContext = hubContext;
         _mongoContext = mongoContext;
         _redisService = redisService;
     }
@@ -109,6 +114,32 @@ public class ContactService : IContactService
             await _contactRepository.UpdateStatusAsync(existingReceiver!.Id, ContactStatus.RequestReceived);
 
             await transaction.CommitAsync();
+
+            try 
+            {
+                // Нам нужно получить данные отправителя, чтобы показать имя в уведомлении
+                var senderUser = await _userRepository.GetByIdAsync(senderId);
+
+                var notificationData = new ContactDto
+                {
+                    OwnerId = receiverId, 
+                    ContactUserId = senderId,             
+                    ContactUsername = senderUser.Username, 
+                    Nickname = senderUser.Username,      
+                    Status = ContactStatusDto.RequestReceived,  
+                    LastMessageContent = "Friend request received"
+                };
+
+                // Отправляем уведомление получателю (receiverId)
+                await _hubContext.Clients.User(receiverId.ToString())
+                    .SendAsync("FriendRequestReceived", notificationData);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to send SignalR notification for friend request", ex);
+                // Не прерываем выполнение, так как в БД уже записалось
+            }
+
             return ServiceResult.SuccessResult();
         }
         catch (Exception)
@@ -222,6 +253,20 @@ public class ContactService : IContactService
 
             await transaction.CommitAsync();
             await TrackChatSortedSetForUsersAsync(finalChatId, new[] { userId, requesterId }, DateTime.UtcNow);
+
+            var acceptorUser = await _userRepository.GetByIdAsync(userId);
+
+            var notificationData = new 
+            { 
+                contactId = userId, // ID того, кто принял
+                chatRoomId = finalChatId,
+                friendDisplayName = acceptorUser.Username,
+                Type = "DirectMessage"
+            };
+
+            // Отправляем тому, кто кидал заявку (requesterId)
+            await _hubContext.Clients.User(requesterId.ToString())
+                .SendAsync("FriendRequestAccepted", notificationData);
             
             // Возвращаем ID чата
             return ServiceResult<int>.SuccessResult(finalChatId);
@@ -234,9 +279,9 @@ public class ContactService : IContactService
         }
     }
 
-    public async Task<ServiceResult<int>> RejectFriendRequestAsync(int currentUserId, int contactId)
+    public async Task<ServiceResult<int>> RejectFriendRequestAsync(int currentUserId, int requesterId)
     {
-        var userContact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
+        var userContact = await _contactRepository.FindContactAsync(currentUserId, requesterId);
 
         if (userContact == null)
             return ServiceResult<int>.Failure("Contact request not found");
@@ -247,22 +292,17 @@ public class ContactService : IContactService
         if (userContact.Status != ContactStatus.RequestReceived)
             return ServiceResult<int>.Failure("No pending friend request found");
 
-        int requesterId = userContact.ContactUserId;
-
-        // 5. Находим зеркальный контакт (у друга)
         var requesterContact = await _contactRepository.FindContactAsync(requesterId, currentUserId);
 
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             userContact.Status = ContactStatus.None;
-            // _context.Contacts.Update(userContact); // EF Core и так отслеживает, но можно явно
 
             if (requesterContact != null)
             {
                 requesterContact.Status = ContactStatus.None;
                 requesterContact.FriendRequestRejectedAt = DateTime.UtcNow;
-                // _context.Contacts.Update(requesterContact);
             }
 
             await _context.SaveChangesAsync();
@@ -525,5 +565,25 @@ public class ContactService : IContactService
 
         await _contactRepository.SetNicknameAsync(contact.Id, nickname);
         return ServiceResult.SuccessResult();
+    }
+
+    private async Task TrackChatSortedSetForUsersAsync(int chatId, int[] userIds, DateTime activityDate)
+    {
+        // Если Redis выключен или недоступен — выходим
+        if (!_redisService.IsAvailable) return;
+
+        // Превращаем дату в число (Score для сортировки)
+        double score = new DateTimeOffset(activityDate).ToUnixTimeSeconds();
+
+        // Пробегаемся по всем участникам (ты и твой новый друг)
+        foreach (var userId in userIds)
+        {
+            // Получаем ключ Redis для списка чатов конкретного юзера
+            var key = RedisCacheKeys.GetUserChatSortedSetKey(userId);
+            
+            // Добавляем ID чата в этот список
+            // TimeSpan.FromHours(24) — это TTL (время жизни кэша)
+            await _redisService.UpdateSortedSetAsync(key, chatId.ToString(), score, TimeSpan.FromHours(24));
+        }
     }
 }

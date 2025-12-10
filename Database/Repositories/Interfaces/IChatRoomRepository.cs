@@ -13,6 +13,8 @@ public interface IChatRoomRepository
     /// </summary>
     Task<ChatRoom> CreateAsync(ChatRoom chatRoom);
 
+    Task<List<ChatRoomMember>> GetPendingMembershipsAsync(int userId);
+
     /// <summary>
     /// Persists a membership record with the supplied join metadata.
     /// </summary>
@@ -32,6 +34,14 @@ public interface IChatRoomRepository
     /// Loads rooms for a specific user (joins handled via the repository).
     /// </summary>
     Task<List<ChatRoomMember>> GetUserChatMembershipsAsync(int userId);
+
+    Task UpdateAsync(ChatRoom chatRoom);
+
+    Task<ChatRoomMember?> GetMemberAsync(int chatRoomId, int userId);
+
+    Task UpdateMemberAsync(ChatRoomMember member);
+
+    Task RemoveMemberEntityAsync(ChatRoomMember member);
 
     /// <summary>
     /// Removes a membership row from the chat (hard delete).

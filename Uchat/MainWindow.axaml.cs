@@ -10,6 +10,7 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using System;
 using System.Collections.Specialized;
 using System.Threading;
@@ -21,7 +22,12 @@ namespace Uchat
 {
     public partial class MainWindow : Window
     {
+        private DispatcherTimer _timer;
         private readonly AuthApiService _authService;
+        private string? _pendingEmail = null;
+        private string? _pendingResetEmail = null;
+        private string? _pendingUsername = null;
+        private string? _pendingPassword = null;
         private string[] systemArgs;
 
         public MainWindow(string[] args)
@@ -29,6 +35,7 @@ namespace Uchat
             InitializeComponent();
             string[] dev = {"-local", "6000"};
             systemArgs = dev;
+        
             _authService = new AuthApiService(systemArgs);
 
             // Initialize UserSession with system arguments BEFORE Loaded event
@@ -38,6 +45,11 @@ namespace Uchat
 
 
             chatLayout.LayoutUpdated += ChatLayout_LayoutUpdated;
+        }
+
+        private void ChatTicks()
+        {
+            LoadPendingFriendRequestsAsync();
         }
 
         private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)
@@ -132,74 +144,142 @@ namespace Uchat
             EmailVerification.IsVisible = true;
         }
 
-        private void GoToResetPasswordForm_Click(object? sender, RoutedEventArgs e)
+        private async void GoToResetPasswordForm_Click(object? sender, RoutedEventArgs e)
         {
             string code = codeVerificationTextBox.Text ?? string.Empty;
 
-            /*
-             if (code != //КОД ОТ EMAIL)
+            if (string.IsNullOrEmpty(code))
             {
-                invalidDataInCodeVerification.Text = "Verification failed";
+                invalidDataInCodeVerification.Text = "Code is required";
                 invalidDataInCodeVerification.IsVisible = true;
                 return;
             }
-             */
+            
+            // Проверяем, не потерялась ли почта
+            if (string.IsNullOrEmpty(_pendingResetEmail))
+            {
+                invalidDataInCodeVerification.Text = "Session error. Please restart.";
+                invalidDataInCodeVerification.IsVisible = true;
+                return;
+            }
 
-            invalidDataInCodeVerification.IsVisible = false;
-            CodeVerification.IsVisible = false;
-            ResetPasswordForm.IsVisible = true;
+            try
+            {
+                // Проверяем валидность кода на сервере
+                await _authService.VerifyResetCodeAsync(_pendingResetEmail, code);
+
+                // Если все ок - идем к смене пароля
+                invalidDataInCodeVerification.IsVisible = false;
+                CodeVerification.IsVisible = false;
+                ResetPasswordForm.IsVisible = true;
+                
+                // Очищаем поля паролей
+                newPasswordTextBox.Text = string.Empty;
+                confirmPasswordTextBox.Text = string.Empty;
+                invalidDataInResetPassword.IsVisible = false;
+            }
+            catch (Exception ex)
+            {
+                invalidDataInCodeVerification.Text = ex.Message;
+                invalidDataInCodeVerification.IsVisible = true;
+            }
         }
 
-        private void ChangePasswordButton_Click(object? sender, RoutedEventArgs e)
+        private async void ChangePasswordButton_Click(object? sender, RoutedEventArgs e)
         {
-            string newPassword = newPasswordTextBox.Text ?? string.Empty;
-            string confirmPassword = confirmPasswordTextBox.Text ?? string.Empty;
+            // Берем данные
+            string newPass = newPasswordTextBox.Text ?? string.Empty;
+            string confirmPass = confirmPasswordTextBox.Text ?? string.Empty;
+            
+            // Код берем из предыдущего TextBox (он еще хранит значение)
+            string code = codeVerificationTextBox.Text ?? string.Empty; 
 
-            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+            // === ВАЖНО: Проверка двух полей на клиенте ===
+            
+            if (string.IsNullOrWhiteSpace(newPass))
             {
+                invalidDataInResetPassword.Text = "Password cannot be empty";
                 invalidDataInResetPassword.IsVisible = true;
-                invalidDataInResetPassword.Text = "Passwords fields are required";
                 return;
             }
 
-            if (newPassword != confirmPassword)
+            if (newPass.Length < 6)
             {
+                invalidDataInResetPassword.Text = "Password must be at least 6 characters";
                 invalidDataInResetPassword.IsVisible = true;
-                invalidDataInResetPassword.Text = "Passwords do not match";
                 return;
             }
 
-            invalidDataInResetPassword.IsVisible = false;
-            loginForm.IsVisible = true;
-            ResetPasswordForm.IsVisible = false;
-            GoToLogInButtonForgottenForm.IsVisible = false;
+            if (newPass != confirmPass)
+            {
+                invalidDataInResetPassword.Text = "Passwords do not match"; // Ошибка, если не совпали
+                invalidDataInResetPassword.IsVisible = true;
+                return;
+            }
+
+            try
+            {
+                // Отправляем на сервер только ОДИН (новый) пароль
+                await _authService.ResetPasswordAsync(_pendingResetEmail!, code, newPass);
+
+                // Успех
+                invalidDataInResetPassword.IsVisible = false;
+                ResetPasswordForm.IsVisible = false;
+                
+                // Возвращаем на логин
+                loginForm.IsVisible = true;
+                
+                // Чистим переменную
+                _pendingResetEmail = null;
+                
+                // Можно показать сообщение "Password changed! Please login."
+            }
+            catch (Exception ex)
+            {
+                invalidDataInResetPassword.Text = ex.Message;
+                invalidDataInResetPassword.IsVisible = true;
+            }
         }
 
-        private void GoToCodeVerification_Click(object? sender, RoutedEventArgs e)
+        private async void GoToCodeVerification_Click(object? sender, RoutedEventArgs e)
         {
-            string emailAddress = emailInRecoveryEmailTextBox.Text ?? string.Empty;
+            string email = emailInRecoveryEmailTextBox.Text ?? string.Empty;
 
-            if (string.IsNullOrEmpty(emailAddress))
+            if (string.IsNullOrEmpty(email) || !email.EndsWith("@gmail.com")) // Твоя валидация
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Email is required";
+                invalidDataInRecoveryEmail.Text = "Invalid email format";
                 return;
             }
 
-            if (!emailAddress.EndsWith("@gmail.com"))
+            try
+            {
+                // 1. Отправляем запрос
+                await _authService.ForgotPasswordAsync(email);
+
+                // 2. Запоминаем почту и переключаем UI
+                _pendingResetEmail = email;
+                
+                invalidDataInRecoveryEmail.IsVisible = false;
+                EmailVerification.IsVisible = false;
+                
+                CodeVerification.IsVisible = true;
+                // Очищаем поле кода
+                codeVerificationTextBox.Text = string.Empty;
+                invalidDataInCodeVerification.IsVisible = false;
+            }
+            catch (Exception ex)
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
-                invalidDataInRecoveryEmail.Text = "Invalid email address. Only [@gmail.com] is allowed";
-                return;
+                invalidDataInRecoveryEmail.Text = ex.Message;
             }
-
-            invalidDataInRecoveryEmail.IsVisible = false;
-            CodeVerification.IsVisible = true;
-            EmailVerification.IsVisible = false;
         }
 
         private void CloseLoginFormButton_Click(object? sender, RoutedEventArgs e)
         {
+            _pendingEmail = null;
+            _pendingUsername = null;
+            _pendingPassword = null;
             this.Close();
         }
 
@@ -308,7 +388,7 @@ namespace Uchat
             }
         }
 
-        private void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
+        private async void CreateAccountButton_Click(object? sender, RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text ?? string.Empty;
             string password = createPasswordTextBox.Text ?? string.Empty;
@@ -350,11 +430,38 @@ namespace Uchat
                 return;
             }
 
-            // ЕСЛИ ВСЕ ДАННЫЕ В НОРМЕ И МЫ ХОТИМ ПЕРЕЙТИ ПОДТВЕРЖНЕИЮ GMAIL!
-            signUpForm.IsVisible = false;
-            CodeVerificationSignUpForm.IsVisible = true;
-            string emailAdress = email.Replace("@gmail.com", "");
-            CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{emailAdress}]";
+            if (_pendingEmail == email && 
+                _pendingUsername == username && 
+                _pendingPassword == password) 
+            {
+                invalidDataInCreateAccount.IsVisible = false;
+                SwitchToVerificationUI(email);
+                return;
+            }
+
+            try
+            {
+                var regResult = await _authService.RegisterAsync(username, email, password);
+                
+                if (regResult != null && regResult.RequiresConfirmation)
+                {
+                    // Успех! Запоминаем ТЕКУЩИЕ данные (включая новый пароль)
+                    _pendingEmail = email;
+                    _pendingUsername = username;
+                    _pendingPassword = password; // <--- Запоминаем новый пароль
+                    
+                    invalidDataInCreateAccount.IsVisible = false;
+                    SwitchToVerificationUI(email);
+                }
+                else
+                {
+                    SwitchToChatView(username);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowCreateAccountError(ex.Message);
+            }
         }
 
         private void BackToSignUp_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -366,22 +473,34 @@ namespace Uchat
         private async void GoToMainProgram_Click(object? sender, RoutedEventArgs e)
         {
             string username = createUsernameTextBox.Text ?? string.Empty;
-            string password = createPasswordTextBox.Text ?? string.Empty;
-            string email = createEmailTextBox.Text ?? string.Empty;
             string code = CodeVerificationSignUpFormTextBox.Text ?? string.Empty;
 
-            /*
-                         if (code != //КОД ОТ EMAIL)
+            if (string.IsNullOrWhiteSpace(code))
             {
-                invalidDataInCodeVerificationSignUpForm.Text = "Verification failed";
                 invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = "Code is required";
                 return;
             }
-             */
+
+            if (string.IsNullOrEmpty(_pendingEmail))
+            {
+                invalidDataInCodeVerificationSignUpForm.IsVisible = true;
+                invalidDataInCodeVerificationSignUpForm.Text = "Session expired. Please register again.";
+                return;
+            }
 
             try
             {
-                await HandleRegisterAsync(username, email, password);
+                var auth = await _authService.ConfirmEmailAsync(_pendingEmail, code);
+                
+                if (auth != null)
+                {
+                    invalidDataInCodeVerificationSignUpForm.IsVisible = false;
+                    CodeVerificationSignUpForm.IsVisible = false;
+                    
+                    _pendingEmail = null;
+                    SwitchToChatView(username);
+                }
             }
             catch (Exception ex)
             {
@@ -394,17 +513,24 @@ namespace Uchat
         {
             try
             {
-                var response = await _authService.RegisterAsync(username, email, password);
+                var result = await _authService.RegisterAsync(username, email, password);
 
-                if (response != null)
+                if (result != null)
                 {
-                    UserSession.Instance.SetSession(response);
-
-                    invalidDataInCodeVerificationSignUpForm.IsVisible = false;
-                    CodeVerificationSignUpForm.IsVisible = false;
-
-                    // Switch to chat view
-                    SwitchToChatView(username);
+                    if (!result.RequiresConfirmation)
+                    {
+                        // No confirmation required — proceed
+                        invalidDataInCodeVerificationSignUpForm.IsVisible = false;
+                        CodeVerificationSignUpForm.IsVisible = false;
+                        SwitchToChatView(username);
+                    }
+                    else
+                    {
+                        // Show verification UI
+                        signUpForm.IsVisible = false;
+                        CodeVerificationSignUpForm.IsVisible = true;
+                        CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{email.Replace("@gmail.com", "")} ]";
+                    }
                 }
             }
             catch (Exception ex)
@@ -412,6 +538,21 @@ namespace Uchat
                 invalidDataInCodeVerificationSignUpForm.IsVisible = true;
                 invalidDataInCodeVerificationSignUpForm.Text = ex.Message;
             }
+        }
+
+        private void SwitchToVerificationUI(string email)
+        {
+            signUpForm.IsVisible = false;
+            CodeVerificationSignUpForm.IsVisible = true;
+            
+            string emailDisplay = email.Replace("@gmail.com", "");
+            CodeVerificationSignUpFormTextBox.Watermark = $"Check email [{emailDisplay}]";
+        }
+
+        private void ShowCreateAccountError(string message)
+        {
+            invalidDataInCreateAccount.IsVisible = true;
+            invalidDataInCreateAccount.Text = message;
         }
 
         private void SwitchToChatView(string username)
@@ -422,24 +563,16 @@ namespace Uchat
             userNameTextBlock.Text = username;
             Chat.ClientName = username;
 
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _timer.Tick += (_, _) => ChatTicks();
+            _timer.Start();
+
             // Initialize chat components with current session
             InitializeChatComponents();
         }
-
-        private void ExitInfoAboutGroup_Click(object? sender, RoutedEventArgs e)
-        {
-            groupInfoBox.IsVisible = false;
-            backgroundForGroupInfo.IsVisible = false;
-        }
-
-        private void groupTopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
-        {
-            groupInfoBox.IsVisible = true;
-            backgroundForGroupInfo.IsVisible = true;
-
-            e.Handled = true;
-        }
-
         private void Window_PointerPressed(object sender, PointerPressedEventArgs e)
         {
             if (!groupInfoBox.IsVisible)

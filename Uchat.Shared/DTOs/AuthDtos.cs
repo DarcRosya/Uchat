@@ -38,6 +38,12 @@ public class RefreshTokenDto
     public string RefreshToken { get; set; } = string.Empty;
 }
 
+public class ConfirmEmailDto
+{
+    public required string Email { get; set; }
+    public required string Code { get; set; }
+}
+
 // ========================================================================
 // RESPONSE DTOs
 // ========================================================================
@@ -52,7 +58,33 @@ public class AuthResponseDto
     public DateTime ExpiresAt { get; set; }
 }
 
+public class RegisterResultDto
+{
+    public bool RequiresConfirmation { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public int? PendingId { get; set; }
+}
+
 public class ErrorResponse
 {
     public string Error { get; set; } = string.Empty;
+}
+
+
+public class ForgotPasswordDto
+{
+    public string Email { get; set; } = string.Empty;
+}
+
+public class VerifyResetCodeDto
+{
+    public string Email { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+}
+
+public class ResetPasswordDto
+{
+    public string Email { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
 }

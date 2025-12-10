@@ -93,20 +93,29 @@ public class Program
         builder.Services.AddSingleton<IRedisService, RedisService>();
 
         builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IPendingRegistrationRepository, PendingRegistrationRepository>();
         builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
         builder.Services.AddScoped<IContactRepository, ContactRepository>();
+        builder.Services.AddScoped<IUserSecurityTokenRepository, UserSecurityTokenRepository>();
         builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         builder.Services.AddScoped<IMessageRepository, MessageRepository>();
         builder.Services.AddScoped<ITransactionRunner, TransactionRunner>();
 
         // Services
         builder.Services.AddScoped<JwtService>();
+        // Email settings & sender
+        builder.Services.Configure<Uchat.Server.Services.Email.EmailSettings>(builder.Configuration.GetSection("Email"));
+        builder.Services.AddScoped<Uchat.Server.Services.Email.IEmailSender, Uchat.Server.Services.Email.SmtpEmailSender>();
+
+        builder.Services.AddScoped<UserSecurityService>();
+
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IContactService, ContactService>();
         builder.Services.AddScoped<IUnreadCounterService, UnreadCounterService>();
         builder.Services.AddSingleton<IUserPresenceService, UserPresenceService>();
+        builder.Services.AddHostedService<Uchat.Server.Services.Background.PendingCleanupService>();
 
         var jwtSettings = builder.Configuration.GetSection("Jwt");
         var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
@@ -147,6 +156,11 @@ public class Program
         });
 
         builder.Services.AddAuthorization();
+        // Allow controller to handle modelstate errors and return custom error format
+        builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
         builder.Services.AddControllers();
         builder.Services.AddSignalR();
 

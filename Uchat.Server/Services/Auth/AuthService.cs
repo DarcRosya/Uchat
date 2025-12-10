@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Security.Cryptography;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
@@ -14,22 +16,30 @@ public class AuthService
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly IChatRoomService _chatRoomService;
     private readonly JwtService _jwtService;
+    private readonly UserSecurityService _userSecurityService;
+    private readonly Uchat.Server.Services.Email.IEmailSender _emailSender;
+    private readonly IPendingRegistrationRepository _pendingRepo;
 
     public AuthService(
         IUserRepository userRepository,
         IRefreshTokenRepository refreshTokenRepository,
         IChatRoomRepository chatRoomRepository,
         IChatRoomService chatRoomService,
-        JwtService jwtService)
+        JwtService jwtService,
+        UserSecurityService userSecurityService,
+        Uchat.Server.Services.Email.IEmailSender emailSender,
+        IPendingRegistrationRepository pendingRepo)
     {
         _userRepository = userRepository;
         _refreshTokenRepository = refreshTokenRepository;
         _chatRoomRepository = chatRoomRepository;
         _chatRoomService = chatRoomService;
         _jwtService = jwtService;
+        _userSecurityService = userSecurityService;
+        _emailSender = emailSender;
+        _pendingRepo = pendingRepo;
     }
-
-    public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
+    public async Task<RegisterResultDto> RegisterAsync(RegisterDto dto)
     {
         var existingUser = await _userRepository.GetByUsernameAsync(dto.Username);
         if (existingUser != null)
@@ -40,41 +50,117 @@ public class AuthService
             throw new InvalidOperationException("Email already registered");
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        var code = GenerateNumericCode(6);
 
-        var createdUser = await _userRepository.CreateUserAsync(dto.Username, passwordHash, dto.Email);
+        var pending = new PendingRegistration
+        {
+            Username = dto.Username,
+            Email = dto.Email,
+            PasswordHash = passwordHash,
+            Code = code,
+            CodeExpiresAt = DateTime.UtcNow.AddMinutes(15),
+            CreatedAt = DateTime.UtcNow
+        };
 
-        // Создаем личный чат "Заметки" для нового пользователя
-        await CreatePersonalNotesChat(createdUser.Id, createdUser.Username);
+        await _pendingRepo.CreateOrUpdateAsync(pending);
+
+        string htmlBody = await LoadEmailTemplateAsync("ConfirmEmail.html", dto.Username, code);
+        await _emailSender.SendEmailAsync(dto.Email, "Confirm your Uchat account", htmlBody);
+
+        return new RegisterResultDto
+        {
+            RequiresConfirmation = true,
+            Message = "Confirmation code sent to email",
+            PendingId = null // ID больше не нужен клиенту, мы работаем по Email
+        };
+    }
+
+    // Вынес логику HTML в отдельный метод для чистоты
+    private string GenerateEmailBody(string username, string code)
+    {
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email.html");
         
-        // Добавляем пользователя в глобальный публичный чат
+        if (File.Exists(templatePath))
+        {
+            try
+            {
+                var html = File.ReadAllText(templatePath);
+                return html.Replace("{Code}", code) // Используй фигурные скобки в HTML для надежности: {Code}
+                           .Replace("{Username}", username);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AuthService] Failed to read email template: {ex.Message}");
+            }
+        }
+
+        // Fallback, если файла нет
+        return $"<h3>Welcome, {username}!</h3><p>Your confirmation code is: <strong>{code}</strong></p>";
+    }
+
+    public async Task<AuthResponseDto> ConfirmEmailAsync(string email, string code)
+    {
+        // 1. Ищем заявку по Email (безопаснее, чем искать просто по коду)
+        var pending = await _pendingRepo.GetByEmailAsync(email);
+        
+        if (pending == null) 
+            throw new InvalidOperationException("Registration request not found or expired.");
+
+        // 2. Проверяем код
+        if (pending.Code != code) 
+            throw new InvalidOperationException("Invalid confirmation code.");
+
+        // 3. Проверяем срок действия
+        if (!pending.CodeExpiresAt.HasValue || pending.CodeExpiresAt.Value < DateTime.UtcNow)
+            throw new InvalidOperationException("Confirmation code expired.");
+
+        // 4. Финальная проверка перед созданием (Race condition check)
+        if (await _userRepository.UsernameExistsAsync(pending.Username))
+            throw new InvalidOperationException("Username already taken.");
+
+        // 5. Создаем реального пользователя
+        var createdUser = await _userRepository.CreateUserAsync(pending.Username, pending.PasswordHash, pending.Email);
+        
+        // Ставим EmailConfirmed = true
+        await _userRepository.SetEmailConfirmedAsync(createdUser.Id, true);
+
+        // 6. УДАЛЯЕМ заявку из Pending (вместо MarkAsUsed)
+        await _pendingRepo.DeleteAsync(pending.Email);
+
+        // 7. Инициализация чатов
+        await CreatePersonalNotesChat(createdUser.Id, createdUser.Username);
         await AddUserToGlobalPublicChat(createdUser.Id, createdUser.Username);
 
-        var accessToken = _jwtService.GenerateAccessToken(
-            createdUser.Id,
-            createdUser.Username,
-            createdUser.Email
-        );
-
+        // 8. Выдаем токены
+        var accessToken = _jwtService.GenerateAccessToken(createdUser.Id, createdUser.Username, createdUser.Email);
         var (plainTextToken, tokenHash) = _jwtService.GenerateRefreshTokens();
-        
+
         var refreshToken = new RefreshToken
         {
             UserId = createdUser.Id,
-            TokenHash = tokenHash,  
+            TokenHash = tokenHash,
             ExpiresAt = _jwtService.GetRefreshTokenExpiry(),
             CreatedAt = DateTime.UtcNow
         };
-        
+
         await _refreshTokenRepository.CreateAsync(refreshToken);
 
         return new AuthResponseDto
         {
             AccessToken = accessToken,
-            RefreshToken = plainTextToken,  
+            RefreshToken = plainTextToken,
             UserId = createdUser.Id,
             Username = createdUser.Username,
+            Email = createdUser.Email,
             ExpiresAt = DateTime.UtcNow.AddMinutes(30)
         };
+    }
+
+    private static string GenerateNumericCode(int digits = 6)
+    {
+        var bytes = RandomNumberGenerator.GetBytes(4);
+        var value = BitConverter.ToUInt32(bytes, 0) % (uint)Math.Pow(10, digits);
+        return value.ToString(new string('0', digits));
     }
 
     public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
@@ -96,23 +182,22 @@ public class AuthService
             existingUser.Username,
             existingUser.Email
         );
-
         var (plainTextToken, tokenHash) = _jwtService.GenerateRefreshTokens();
 
         var refreshToken = new RefreshToken
         {
             UserId = existingUser.Id,
-            TokenHash = tokenHash,  
+            TokenHash = tokenHash,
             ExpiresAt = _jwtService.GetRefreshTokenExpiry(),
             CreatedAt = DateTime.UtcNow
         };
-        
+
         await _refreshTokenRepository.CreateAsync(refreshToken);
 
         return new AuthResponseDto
         {
             AccessToken = accessToken,
-            RefreshToken = plainTextToken,  
+            RefreshToken = plainTextToken,
             UserId = existingUser.Id,
             Username = existingUser.Username,
             ExpiresAt = DateTime.UtcNow.AddMinutes(30)
@@ -166,9 +251,65 @@ public class AuthService
         await _refreshTokenRepository.RevokeTokenAsync(tokenHash);
     }
 
-    public async Task<int> LogoutAllAsync(int userId)
+    public async Task ForgotPasswordAsync(string email)
     {
-        return await _refreshTokenRepository.RevokeAllUserTokensAsync(userId);
+        var user = await _userRepository.GetByEmailAsync(email);
+        
+        // Если юзера нет, мы делаем вид, что все ок (security best practice),
+        // чтобы хакеры не могли перебирать базу email-ов.
+        if (user == null) return; 
+
+        var code = GenerateNumericCode(6); // Используем твой метод генерации цифр
+        
+        user.PasswordResetCode = code;
+        user.PasswordResetCodeExpiresAt = DateTime.UtcNow.AddMinutes(15);
+        
+        // Используем новый метод UpdateAsync
+        await _userRepository.UpdateAsync(user);
+
+        string htmlBody = await LoadEmailTemplateAsync("ResetPassword.html", user.Username, code);
+        await _emailSender.SendEmailAsync(email, "Reset Password Request", htmlBody);
+    }
+
+    public async Task<bool> VerifyResetCodeAsync(string email, string code)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        
+        if (user == null || 
+            user.PasswordResetCode != code || 
+            !user.PasswordResetCodeExpiresAt.HasValue ||
+            user.PasswordResetCodeExpiresAt < DateTime.UtcNow)
+        {
+            return false;
+        }
+        
+        return true;
+    }
+
+    public async Task ResetPasswordAsync(string email, string code, string newPassword)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+
+        if (user == null) throw new InvalidOperationException("User not found");
+        
+        // Повторная проверка кода (обязательно!)
+        if (user.PasswordResetCode != code || 
+            user.PasswordResetCodeExpiresAt < DateTime.UtcNow)
+        {
+             throw new InvalidOperationException("Invalid or expired code");
+        }
+
+        // Хешируем новый пароль
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        
+        // Очищаем код, чтобы его нельзя было использовать второй раз
+        user.PasswordResetCode = null;
+        user.PasswordResetCodeExpiresAt = null;
+
+        await _userRepository.UpdateAsync(user);
+        
+        // Опционально: можно сбросить все RefreshToken-ы пользователя, чтобы выкинуть его со всех устройств
+        await _refreshTokenRepository.RevokeAllUserTokensAsync(user.Id);
     }
 
     private async Task CreatePersonalNotesChat(int userId, string username)
@@ -214,7 +355,9 @@ public class AuthService
             {
                 ChatRoomId = globalChat.Id,
                 UserId = userId,
-                JoinedAt = DateTime.UtcNow
+                JoinedAt = DateTime.UtcNow,
+                IsPending = false, 
+                InvitedById = null
             });
             
             Console.WriteLine($"[AuthService] User {username} added to Global Chat (ID: {globalChat.Id})");
@@ -223,5 +366,33 @@ public class AuthService
         {
             Console.WriteLine($"[ERROR] Failed to add user {username} to global chat: {ex.Message}");
         }
+    }
+
+    private async Task<string> LoadEmailTemplateAsync(string templateName, string username, string code)
+    {
+        // Ищем в папке EmailTemplates
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "EmailTemplates", templateName);
+        
+        if (File.Exists(templatePath))
+        {
+            try
+            {
+                var html = await File.ReadAllTextAsync(templatePath);
+                return html.Replace("{Code}", code)
+                        .Replace("{Username}", username);
+                        // .Replace("{Greetings}", ...) // Если используешь старый плейсхолдер
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[AuthService] Error reading template {templateName}: {ex.Message}");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"[AuthService] Template not found at: {templatePath}");
+        }
+
+        // Запасной вариант (Fallback), если файл не найден
+        return $"<h3>Hello {username}</h3><p>Your code: <strong>{code}</strong></p>";
     }
 }

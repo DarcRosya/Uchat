@@ -32,10 +32,14 @@ public class CreateChatRequestDto
 
 public class AddMemberRequestDto
 {
-    [Required]
-    public int UserId { get; set; }
+    // Меняем или добавляем поле для имени
+    public string Username { get; set; } = string.Empty;
+}
 
-    public string? Role { get; set; }
+public class UpdateChatRequestDto
+{
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
 }
 
 // ========================================================================
@@ -89,3 +93,6 @@ public class ChatMemberDto
     public string Role { get; set; } = string.Empty;
     public DateTime JoinedAt { get; set; }
 }
+
+
+

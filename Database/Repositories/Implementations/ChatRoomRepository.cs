@@ -44,8 +44,17 @@ public class ChatRoomRepository : IChatRoomRepository
         return await _context.ChatRoomMembers
             .Include(m => m.ChatRoom)
                 .ThenInclude(cr => cr.Members) 
-            .Where(m => m.UserId == userId && !m.IsDeleted) 
+            .Where(m => m.UserId == userId && !m.IsDeleted && !m.IsPending)
             .OrderByDescending(m => m.ChatRoom.LastActivityAt ?? m.ChatRoom.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<List<ChatRoomMember>> GetPendingMembershipsAsync(int userId)
+    {
+        return await _context.ChatRoomMembers
+            .Include(m => m.ChatRoom)   
+            .Include(m => m.InvitedBy)  
+            .Where(m => m.UserId == userId && m.IsPending && !m.IsDeleted)
             .ToListAsync();
     }
 
@@ -57,6 +66,31 @@ public class ChatRoomRepository : IChatRoomRepository
         }
 
         _context.ChatRoomMembers.Add(member);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(ChatRoom chatRoom)
+    {
+        _context.ChatRooms.Update(chatRoom);
+        
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<ChatRoomMember?> GetMemberAsync(int chatRoomId, int userId)
+    {
+        return await _context.ChatRoomMembers
+            .FirstOrDefaultAsync(m => m.ChatRoomId == chatRoomId && m.UserId == userId);
+    }
+
+    public async Task UpdateMemberAsync(ChatRoomMember member)
+    {
+        _context.ChatRoomMembers.Update(member);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task RemoveMemberEntityAsync(ChatRoomMember member)
+    {
+        _context.ChatRoomMembers.Remove(member);
         await _context.SaveChangesAsync();
     }
 
@@ -89,7 +123,8 @@ public class ChatRoomRepository : IChatRoomRepository
                 .ThenInclude(cr => cr.Members)  
             .Where(m => m.UserId == userId     
                         && ids.Contains(m.ChatRoomId)   
-                        && !m.IsDeleted)       
+                        && !m.IsDeleted
+                        && !m.IsPending)       
             .ToListAsync();
     }
 }

@@ -7,6 +7,7 @@ namespace Uchat.Database.Context;
 public class UchatDbContext : DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
+    public DbSet<PendingRegistration> PendingRegistrations { get; set; } = null!;
     public DbSet<ChatRoom> ChatRooms { get; set; } = null!;
     public DbSet<ChatRoomMember> ChatRoomMembers { get; set; } = null!;
     public DbSet<Contact> Contacts { get; set; } = null!;
@@ -44,8 +45,6 @@ public class UchatDbContext : DbContext
                 .IsRequired()  // NOT NULL
                 .HasMaxLength(50);  // VARCHAR(50)
 
-            entity.Property(u => u.DateOfBirth);
-
             entity.Property(u => u.PasswordHash)
                 .IsRequired()
                 .HasMaxLength(256);
@@ -65,11 +64,6 @@ public class UchatDbContext : DbContext
             // SQLite: CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             entity.Property(u => u.CreatedAt)
                 .HasDefaultValueSql("NOW()"); 
-
-            entity.Property(u => u.LanguageCode)
-                .IsRequired()
-                .HasMaxLength(5)  // "en", "uk", "en-US"
-                .HasDefaultValue("en");
 
             // User -> ChatRoomMemberships (One-to-Many)
             entity.HasMany(u => u.ChatRoomMemberships)

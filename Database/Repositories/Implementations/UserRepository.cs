@@ -127,6 +127,12 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    public async Task UpdateAsync(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
     // DELETE
     public async Task<bool> SoftDeleteAsync(int userId)
     {
@@ -166,6 +172,15 @@ public class UserRepository : IUserRepository
     public async Task<long> GetTotalUsersCountAsync()
     {
         return await _context.Users.LongCountAsync();
+    }
+
+    public async Task<bool> SetEmailConfirmedAsync(int userId, bool confirmed)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+        user.EmailConfirmed = confirmed;
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     // Supporting methods

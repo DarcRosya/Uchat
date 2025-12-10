@@ -17,6 +17,7 @@ namespace Uchat
 	{
         public partial class Chat
 		{
+            public static string? requestListener = "";
             public static string? SelectedUserName = "";
             public static string? ReplyToUserName = "";
             public class Message
@@ -109,7 +110,7 @@ namespace Uchat
                         this.ReplyPreviewBorder = replyToMessageBorder;
 
                         replyUserName.Classes.Add("replyUserName");
-                        replyUserName.Text = replyToUserName;
+                        replyUserName.Text = (replyToUserName == Chat.ClientName) ? "Me" : replyToUserName;
                         replyTextBlock.Classes.Add("replyTextBlock");
                         replyTextBlock.Text = replyToContent ?? "(no content)";
 

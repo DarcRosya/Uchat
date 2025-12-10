@@ -29,38 +29,59 @@ public class UserSecurityService
         _emailSettings = emailOptions.Value;
     }
 
-    // Generate a cryptographically secure token string
+    // Generate a cryptographically secure token string (used for password reset links)
     private static string GenerateToken()
     {
         var bytes = RandomNumberGenerator.GetBytes(32);
         return Convert.ToBase64String(bytes).Replace('+', '-').Replace('/', '_').TrimEnd('=');
     }
 
-    public async Task SendEmailConfirmationAsync(int userId, string baseFrontendUrl)
+    // Generate a cryptographically secure numeric code (6 digits)
+    private static string GenerateNumericCode(int digits = 6)
+    {
+        var bytes = RandomNumberGenerator.GetBytes(4);
+        var value = BitConverter.ToUInt32(bytes, 0) % (uint)Math.Pow(10, digits);
+        return value.ToString(new string('0', digits));
+    }
+
+    /// <summary>
+    /// Send an email confirmation code (numeric) that expires in 15 minutes.
+    /// If a frontend URL is provided, include a link as well.
+    /// </summary>
+    public async Task SendEmailConfirmationAsync(int userId, string? baseFrontendUrl = null)
     {
         var user = await _userRepository.GetByIdAsync(userId);
         if (user == null) throw new InvalidOperationException("User not found");
 
-        var token = GenerateToken();
+        var code = GenerateNumericCode(6);
 
         var dbToken = new UserSecurityToken
         {
             UserId = user.Id,
             User = user,
             Type = TokenType.EmailConfirmation,
-            Token = token,
-            ExpiresAt = DateTime.UtcNow.AddHours(24),
+            Token = code,
+            ExpiresAt = DateTime.UtcNow.AddMinutes(15),
             IsUsed = false
         };
 
         await _tokenRepository.CreateAsync(dbToken);
 
-        var url = baseFrontendUrl?.TrimEnd('/') + $"/confirm-email?token={Uri.EscapeDataString(token)}";
-
-        var body = $"<p>Hello {user.DisplayName},</p>" +
-                   $"<p>Please confirm your email by clicking the link below:</p>" +
-                   $"<p><a href=\"{url}\">Confirm Email</a></p>" +
+        string body;
+        if (!string.IsNullOrWhiteSpace(baseFrontendUrl))
+        {
+            var url = baseFrontendUrl.TrimEnd('/') + $"/confirm-email?token={Uri.EscapeDataString(code)}";
+            body = $"<p>Hello {user.DisplayName},</p>" +
+                   $"<p>Your confirmation code is: <strong>{code}</strong> (expires in 15 minutes)</p>" +
+                   $"<p>Or confirm by clicking: <a href=\"{url}\">Confirm Email</a></p>" +
                    $"<p>If you did not sign up, ignore this message.</p>";
+        }
+        else
+        {
+            body = $"<p>Hello {user.DisplayName},</p>" +
+                   $"<p>Your confirmation code is: <strong>{code}</strong> (expires in 15 minutes)</p>" +
+                   $"<p>If you did not sign up, ignore this message.</p>";
+        }
 
         await _emailSender.SendEmailAsync(user.Email, "Confirm your Uchat account", body);
     }

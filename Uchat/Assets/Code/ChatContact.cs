@@ -1,10 +1,8 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using Uchat.Shared;
@@ -18,12 +16,12 @@ namespace Uchat
 		{
 			public static string ClientName = "Uchat Client";
 
-            public static List<Contact> chatsList = new List<Contact>();
-			public static bool GroupsActive = false;
+            public static List<Contact> ChatsList = new List<Contact>();
+            public static bool GroupsActive = false;
 
 			public static void ShowGroups(bool groupsNeeded)
 			{
-                foreach (Contact contact in Chat.chatsList)
+                foreach (Contact contact in Chat.ChatsList)
                 {
                     contact.IsVisible = (contact.IsGroupChat == true) ? groupsNeeded : !groupsNeeded;
                 }
@@ -46,7 +44,6 @@ namespace Uchat
                 private Avalonia.Controls.Image avatarIcon = new Avalonia.Controls.Image();
                 private Avalonia.Controls.Image pinIcon = new Avalonia.Controls.Image();
                 private Border contactStatusBorder = new Border();
-				private Ellipse contactStatusEllipse = new Ellipse();
 
                 private StackPanel contactStackPanel = new StackPanel();
                 private StackPanel contactInfoStackPanel = new StackPanel();
@@ -70,20 +67,15 @@ namespace Uchat
 					contactGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(50)));
 					contactStackPanel.Height = 50;
 
-
                     avatarIconBorder.Classes.Add("avatarIconBorder");
 					avatarIconBorder.Child = avatarIcon;
                     avatarIconBorder.Background= new SolidColorBrush(Colors.Transparent);
 
-                    var imageURL = new Uri("avares://Uchat/Assets/Icons/avatar.png");
-					if(GroupsActive == true) imageURL = new Uri("avares://Uchat/Assets/Icons/group.png");
                     avatarIcon.Classes.Add("avatarIcon");
-					avatarIcon.Source = new Bitmap(AssetLoader.Open(imageURL));
+					var uriString = "avares://Uchat/Assets/Icons/avatar.png";
+                    avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
 
-					contactStatusBorder.Classes.Add("contactStatusBorder");
-					contactStatusBorder.Child = contactStatusEllipse;
-
-					contactStatusEllipse.Classes.Add("contactStatusEllipse");
+                    contactStatusBorder.Classes.Add("contactStatusBorder");
 
                     contactInfoStackPanel.Orientation = Avalonia.Layout.Orientation.Horizontal;
                     var icon = new Uri("avares://Uchat/Assets/Icons/pin.png");
@@ -125,7 +117,7 @@ namespace Uchat
 					ContactContextMenu contextMenu = new ContactContextMenu(this, mainWindow.contactsStackPanel, mainWindow);
 					contactGrid.ContextMenu = contextMenu.Result();
 
-					Chat.chatsList.Add(this);
+					Chat.ChatsList.Add(this);
                 }
 				public void Pin(bool pinNeeded)
 				{
@@ -136,7 +128,7 @@ namespace Uchat
 				public Grid Box { get { return contactGrid; } }
 				public IBrush Background { get { return contactGrid.Background; } set { contactGrid.Background = value; } }
 
-                public IBrush StatusColor { get { return contactStatusEllipse.Fill; } set { contactStatusEllipse.Fill = value; } }
+                public IBrush StatusColor { get { return contactStatusBorder.Background; } set { contactStatusBorder.Background = value; } }
 
                 public IBrush StatusBackground { get { return contactStatusBorder.BorderBrush; } set { contactStatusBorder.BorderBrush = value; } }
 
@@ -157,14 +149,15 @@ namespace Uchat
 						? "avares://Uchat/Assets/Icons/group.png" 
 						: "avares://Uchat/Assets/Icons/avatar.png";
 
-					try
-					{
-						avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
-					}
-					catch
-					{
-						// Игнорируем ошибки загрузки ассетов
-					}
+                    avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
+                    contactStatusBorder.IsVisible = !isGroupChat;
+				}
+
+				public void UpdateName(string newName)
+				{
+					chatName = newName;
+
+					contactNameTextBlock.Text = newName;
 				}
 				
 				/// <summary>
@@ -184,15 +177,14 @@ namespace Uchat
 				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
-					// FIX 3: Only handle left mouse button clicks
 					if (!e.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)
 					{
-						return; // Right click will show context menu automatically
+						return;
 					}
 					
 					string color = (GroupsActive == true) ? "#4a8284" : "#4b678a";
 
-                    foreach (Contact contact in Chat.chatsList)
+                    foreach (Contact contact in Chat.ChatsList)
 					{
 						contact.Background = Brush.Parse("#171a20");
 						contact.LastMessageForeground = Brush.Parse("#999999");
@@ -202,23 +194,21 @@ namespace Uchat
                     this.LastMessageForeground = Brush.Parse("#FFFFFF");
 					this.StatusBackground = Brush.Parse(color);
 
+                    mainWindow.groupTopBar.IsVisible = this.isGroupChat;
+                    mainWindow.friendTopBar.IsVisible = !this.isGroupChat;
+
+                    mainWindow.groupTopBarName.Text = this.ChatName;
+                    mainWindow.friendTopBarName.Text = this.ChatName;
+
+                    mainWindow.PlaceHolder.IsVisible = false;
+                    mainWindow.BottomContainer.IsVisible = true;
+
                     if (chatId > 0)
 					{
 						_ = mainWindow.OpenChatAsync(chatId);
 					}
 				}
             }
-
-            public class Group : Contact
-			{
-				private List<string> membersName;
-				public Group(string groupName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0)
-					: base(groupName, newLastMessage, newUnreadMessages, window, newChatId)
-				{
-
-				}
-
-			}
 
             public class ContactContextMenu
 			{
@@ -277,38 +267,55 @@ namespace Uchat
                 }
 
                 private async void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
-				{
-					if (contact.ChatName == "Notes") return;
+                {
+                    // 1. Защита: нельзя удалить чат "Notes" (Избранное)
+                    if (contact.ChatName == "Notes") return;
 
-					contact.Box.IsEnabled = false;
+                    // Блокируем элемент, чтобы пользователь не нажал дважды
+                    contact.Box.IsEnabled = false;
 
-					try 
-					{
-						var success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
+                    try 
+                    {
+                        bool success = false;
 
-						if (success)
-						{
-							mainWindow.RemoveChatFromUI(contact.ChatId);
-						}
-						else
-						{
-							contact.Box.IsEnabled = true;
-						}
-					}
-					catch (Exception ex)
-					{
-						Logger.Error("Failed to delete chat", ex);
-						contact.Box.IsEnabled = true;
-					}
-				}
+                        // 2. ПРОВЕРКА: Группа это или Личный чат?
+                        if (contact.IsGroupChat)
+                        {
+                            // === ЛОГИКА ДЛЯ ГРУПП ===
+                            // Мы "покидаем" группу на сервере
+                            success = await mainWindow._chatApiService.LeaveChatAsync(contact.ChatId);
+                        }
+                        else
+                        {
+                            // === ЛОГИКА ДЛЯ ЛИЧНЫХ ЧАТОВ ===
+                            // Мы удаляем контакт/историю (как было раньше)
+                            success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
+                        }
+
+                        // 3. Обработка результата
+                        if (success)
+                        {
+                            // Если сервер сказал "ОК" — удаляем чат из интерфейса
+                            mainWindow.RemoveChatFromUI(contact.ChatId);
+                        }
+                        else
+                        {
+                            // Если ошибка — разблокируем обратно
+                            contact.Box.IsEnabled = true;
+                            Logger.Log("Server returned false when deleting/leaving chat");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("Failed to delete/leave chat", ex);
+                        contact.Box.IsEnabled = true;
+                    }
+                }
 			}
         }
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
             NotificationBox.IsVisible = !NotificationBox.IsVisible;
-
-            if (NotificationBox.IsVisible)
-                await LoadPendingFriendRequestsAsync();
         }
     }
 }

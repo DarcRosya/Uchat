@@ -37,6 +37,8 @@ public interface IUserRepository
     
     /// NOTE: Checks the uniqueness of the email address.
     Task<bool> UpdateEmailAsync(int userId, string email);
+
+    Task UpdateAsync(User user);
     
     /// Soft deletion (IsDeleted = true)
     /// WHY: Ability to restore the account (we won't do this feature anyway, I have more important tasks to do)
@@ -52,4 +54,7 @@ public interface IUserRepository
     
     /// Statistics
     Task<long> GetTotalUsersCountAsync();
+    
+    /// Set or unset the EmailConfirmed flag for a user
+    Task<bool> SetEmailConfirmedAsync(int userId, bool confirmed);
 }
