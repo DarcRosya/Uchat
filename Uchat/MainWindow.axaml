@@ -684,11 +684,12 @@
 							<Image Grid.Column="0" Margin="5" HorizontalAlignment="Left" Source="avares://Uchat/Assets/Icons/avatar.png" VerticalAlignment="Center"/>
 							<Border Grid.Column="0" Margin="0,0,1,1" Width="20" Height="20"
 									Background="#4da64d" BorderBrush="#0d0e12" BorderThickness="4" CornerRadius="5"
-									HorizontalAlignment="Right" VerticalAlignment="Bottom">
+									HorizontalAlignment="Right" VerticalAlignment="Bottom"
+									x:Name="userStatusDot">
 							</Border>
 
 							<StackPanel Grid.Column="1" Margin="3,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Stretch">						
-								<TextBlock Foreground="Green" FontSize="12" Margin="0,5,0,0">Online</TextBlock>
+								<TextBlock x:Name="userStatusLabel" Foreground="Green" FontSize="12" Margin="0,5,0,0">Online</TextBlock>
 								<TextBlock Name="userNameTextBlock" FontSize="18" Margin="0,3,0,0">Username</TextBlock>
 							</StackPanel>
 							<Button Name="notificationButton" Grid.Column="2" FontFamily="Segoe MDL2 Assets" FontSize="14"
