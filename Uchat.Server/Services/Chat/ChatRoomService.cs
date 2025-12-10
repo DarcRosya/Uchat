@@ -148,7 +148,12 @@ public sealed class ChatRoomService : IChatRoomService
                 LastMessageContent = lastContent,
                 LastMessageAt = lastDate,
                 CreatedAt = chat.CreatedAt,
-                MemberCount = chat.Members.Count
+                MemberCount = chat.Members.Count,
+                ParticipantIds = chat.Members
+                    .Select(m => m.UserId)
+                    .Where(id => id > 0)
+                    .Distinct()
+                    .ToList()
             };
         }).ToList();
 

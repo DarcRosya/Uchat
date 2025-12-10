@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
@@ -56,6 +57,13 @@ public class ChatHub : Hub
         // Notify all clients if user became online
         if (OnlineUsers[userId].Count == 1)
         {
+            var onlineUsersSnapshot = GetOnlineUsersExcept(userId);
+
+            foreach (var existingUserId in onlineUsersSnapshot)
+            {
+                await Clients.Caller.SendAsync("UserOnline", existingUserId);
+            }
+
             await Clients.All.SendAsync("UserOnline", userId);
             Logger.Write($"[ONLINE] User {username} became ONLINE");
         }
@@ -167,6 +175,16 @@ public class ChatHub : Hub
         }
 
         return _presenceService.RefreshAsync(userId);
+    }
+
+    private List<int> GetOnlineUsersExcept(int excludeUserId)
+    {
+        lock (OnlineUsers)
+        {
+            return OnlineUsers.Keys
+                .Where(id => id != excludeUserId)
+                .ToList();
+        }
     }
     
     // Getters

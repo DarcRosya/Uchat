@@ -39,6 +39,8 @@ namespace Uchat
         public Dictionary<int, MainWindow.Chat.Contact> _chatContacts = new();
         private Dictionary<int, string> _messageDrafts = new();
         private readonly Dictionary<int, DateTime> _lastReadProgressTimestamps = new();
+        private readonly HashSet<int> _onlineUsers = new();
+        private readonly object _onlineUsersLock = new();
 
         private int? _currentChatId = null;
         private string _currentUsername = "Unknown";
@@ -77,6 +79,11 @@ namespace Uchat
             {
                 UpdateConnectionStatus("● No token - Login first!", Brushes.Red);
                 return;
+            }
+
+            lock (_onlineUsersLock)
+            {
+                _onlineUsers.Clear();
             }
 
             if (_hubConnection != null) 
@@ -383,6 +390,36 @@ namespace Uchat
                     }
                 });
             });
+
+            _hubConnection.On<int>("UserOnline", (userId) =>
+            {
+                if (userId <= 0)
+                {
+                    return;
+                }
+
+                lock (_onlineUsersLock)
+                {
+                    _onlineUsers.Add(userId);
+                }
+
+                Dispatcher.UIThread.Post(() => RefreshContactsForUser(userId));
+            });
+
+            _hubConnection.On<int>("UserOffline", (userId) =>
+            {
+                if (userId <= 0)
+                {
+                    return;
+                }
+
+                lock (_onlineUsersLock)
+                {
+                    _onlineUsers.Remove(userId);
+                }
+
+                Dispatcher.UIThread.Post(() => RefreshContactsForUser(userId));
+            });
         }
 
         /// <summary>
@@ -410,6 +447,62 @@ namespace Uchat
             
             // TODO: add a placeholder “Select chat”
             Logger.Log("Chat area cleared");
+        }
+
+        private bool IsUserOnline(int userId)
+        {
+            lock (_onlineUsersLock)
+            {
+                return _onlineUsers.Contains(userId);
+            }
+        }
+
+        private void RefreshContactPresence(MainWindow.Chat.Contact contact)
+        {
+            if (contact == null)
+            {
+                return;
+            }
+
+            if (string.Equals(contact.ChatName, "Notes", StringComparison.OrdinalIgnoreCase))
+            {
+                contact.UpdatePresence(false, false);
+                return;
+            }
+
+            var userId = UserSession.Instance.UserId;
+            var others = contact.ParticipantIds
+                .Where(id => id != userId)
+                .Distinct()
+                .ToList();
+
+            if (!others.Any())
+            {
+                contact.UpdatePresence(false, false);
+                return;
+            }
+
+            var someoneElseOnline = others.Any(IsUserOnline);
+
+            if (contact.IsGroupChat)
+            {
+                contact.UpdatePresence(someoneElseOnline, someoneElseOnline);
+            }
+            else
+            {
+                contact.UpdatePresence(someoneElseOnline, true);
+            }
+        }
+
+        private void RefreshContactsForUser(int userId)
+        {
+            foreach (var contact in _chatContacts.Values)
+            {
+                if (contact.ParticipantIds.Contains(userId))
+                {
+                    RefreshContactPresence(contact);
+                }
+            }
         }
 
         public async Task LoadUserChatsAsync()
@@ -483,7 +576,9 @@ namespace Uchat
                             // existingContact.UpdateUnreadCount(chat.UnreadCount);
                             
                             // Если методов нет, просто пересоздаем (как раньше), но это вызывает мигание.
+                            existingContact.SetParticipants(chat.ParticipantIds);
                             existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
+                            RefreshContactPresence(existingContact);
 
                             // Для сортировки перемещаем элемент на нужную позицию:
                             var currentIdx = contactsStackPanel.Children.IndexOf(existingContact.Box);
@@ -500,11 +595,13 @@ namespace Uchat
                                 previewText,
                                 chat.UnreadCount,
                                 this,
-                                chat.Id
+                                chat.Id,
+                                chat.ParticipantIds
                             );
                             
                             newContact.IsGroupChat = isGroup;
                             newContact.IsVisible = isGroup ? Chat.GroupsActive : !Chat.GroupsActive;
+                            RefreshContactPresence(newContact);
                             
                             // Вставляем в конкретную позицию (i), чтобы соблюсти сортировку
                             if (i < contactsStackPanel.Children.Count)
@@ -792,7 +889,7 @@ namespace Uchat
 
         private void HandleNewFriendChat(object data)
         {
-            Dispatcher.UIThread.Post(async () =>
+            _ = Dispatcher.UIThread.InvokeAsync(async () =>
             {
                 try
                 {
@@ -806,8 +903,7 @@ namespace Uchat
 
                     if (notification != null && notification.chatRoomId > 0)
                     {
-                        _ = _hubConnection.InvokeAsync("JoinChatGroup", notification.chatRoomId)
-                            .ContinueWith(t => Console.WriteLine($"SignalR Join Error: {t.Exception?.InnerException?.Message}"), TaskContinuationOptions.OnlyOnFaulted);
+                        await _hubConnection.InvokeAsync("JoinChatGroup", notification.chatRoomId);
 
                         string initMsg = notification.Type switch
                         {
@@ -818,14 +914,12 @@ namespace Uchat
                         if (!_chatContacts.TryGetValue(notification.chatRoomId, out var contact))
                         {
                             contact = new MainWindow.Chat.Contact(
-                                notification.friendDisplayName, 
-                                initMsg, 
-                                0, 
-                                this, 
+                                notification.friendDisplayName,
+                                initMsg,
+                                0,
+                                this,
                                 notification.chatRoomId
                             );
-                            contact.AddMember(Chat.ClientName);
-                            contact.AddMember(notification.friendDisplayName);
 
                             _chatContacts[notification.chatRoomId] = contact;
                             contactsStackPanel.Children.Insert(0, contact.Box);
@@ -837,6 +931,8 @@ namespace Uchat
                             contactsStackPanel.Children.Remove(contact.Box);
                             contactsStackPanel.Children.Insert(0, contact.Box);
                         }
+
+                        await LoadUserChatsAsync();
                     }
                 }
                 catch (Exception ex)
@@ -1219,7 +1315,7 @@ namespace Uchat
 
         private async void acceptNewNameForGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
-            string newNameForGroup = editTheGroupNameTextBox.Text?.Trim();
+            string? newNameForGroup = editTheGroupNameTextBox.Text?.Trim();
 
             if (string.IsNullOrEmpty(newNameForGroup) || _currentChatId == null)
             {
