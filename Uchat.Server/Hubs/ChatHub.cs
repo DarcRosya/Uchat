@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Chat;
+using Uchat.Server.Services.Messaging;
 using Uchat.Shared;
 using Uchat.Server.Services.Presence;
 
@@ -16,15 +17,21 @@ public class ChatHub : Hub
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly IChatRoomService _chatRoomService;
     private readonly IUserPresenceService _presenceService;
+    private readonly IMessageService _messageService;
 
     // Active online users
     private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
 
-    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService, IUserPresenceService presenceService)
+    public ChatHub(
+        IChatRoomRepository chatRoomRepository,
+        IChatRoomService chatRoomService,
+        IUserPresenceService presenceService,
+        IMessageService messageService)
     {
         _chatRoomRepository = chatRoomRepository;
         _chatRoomService = chatRoomService;
         _presenceService = presenceService;
+        _messageService = messageService;
     }
 
     public override async Task OnConnectedAsync()
@@ -108,6 +115,27 @@ public class ChatHub : Hub
         }
 
         await base.OnDisconnectedAsync(exception);
+    }
+
+    public async Task ReportReadProgress(int chatId, DateTime untilTimestamp)
+    {
+        var userId = GetUserId();
+        if (userId == 0 || chatId <= 0)
+        {
+            return;
+        }
+
+        var normalized = untilTimestamp.ToUniversalTime();
+
+        try
+        {
+            await _messageService.MarkMessagesAsReadUntilAsync(chatId, userId, normalized);
+            Logger.Write($"[ReadProgress] User {GetUsername()} marked chat {chatId} as read until {normalized:O}");
+        }
+        catch (Exception ex)
+        {
+            Logger.Write($"[ReadProgress ERROR] {ex.Message}");
+        }
     }
 
     // Groups

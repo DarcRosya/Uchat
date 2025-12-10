@@ -49605,3 +49605,614 @@
 [12:02:38] [CLIENT] [Chat] Message sent successfully to 1
 [12:03:37] [SERVER] User qqq disconnected
 [12:03:37] [SERVER] [OFFLINE] User qqq became OFFLINE
+[12:22:25] [CLIENT] UserSession initialized with system arguments
+[12:22:25] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:22:41] [CLIENT] Attempting registration for: AlexM
+[12:22:59] [CLIENT] Attempting registration for: AlexM
+[12:23:18] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:23:18] [CLIENT] Tokens saved for user AlexM (expires: 2025-12-10 10:53:18)
+[12:23:18] [CLIENT] Session set for user AlexM (expires: 10:53:18)
+[12:23:18] [CLIENT] Auto-refresh timer started
+[12:23:18] [CLIENT] Initializing API services for user: AlexM
+[12:23:18] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[12:23:18] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[12:23:18] [CLIENT] ContactApiService: Authorization header set
+[12:23:18] [SERVER] User AlexM (ID: 2) connected
+[12:23:18] [SERVER] [ONLINE] User AlexM became ONLINE
+[12:23:18] [SERVER] [Auto-Join] User AlexM added to group chat_2
+[12:23:18] [SERVER] [Auto-Join] User AlexM added to group chat_3
+[12:23:18] [SERVER] [Auto-Join] User AlexM joined 2 chat groups
+[12:23:19] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:23:19] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:23:21] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:22] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:23] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:23] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:24] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:27] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:23:29] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:23:31] [CLIENT] Chat 4 removed from UI and Cache
+[12:23:31] [CLIENT] Chat area cleared
+[12:23:32] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:33] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:23:44] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:23:45] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:23:47] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:23:47] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:25:08] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:25:09] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:25:20] [CLIENT] UserSession initialized with system arguments
+[12:25:21] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:26:05] [CLIENT] Attempting registration for: Malex
+[12:26:21] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:26:21] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 10:56:21)
+[12:26:21] [CLIENT] Session set for user Malex (expires: 10:56:21)
+[12:26:21] [CLIENT] Auto-refresh timer started
+[12:26:21] [CLIENT] Initializing API services for user: Malex
+[12:26:21] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[12:26:21] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[12:26:21] [CLIENT] ContactApiService: Authorization header set
+[12:26:22] [SERVER] User Malex (ID: 3) connected
+[12:26:22] [SERVER] [ONLINE] User Malex became ONLINE
+[12:26:22] [SERVER] [Auto-Join] User Malex added to group chat_6
+[12:26:22] [SERVER] [Auto-Join] User Malex added to group chat_7
+[12:26:22] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[12:26:24] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:26:24] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:26:28] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:26:28] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:26:29] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:26:29] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:26:33] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:26:34] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:26:34] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:26:47] [CLIENT] Sending friend request to: AlexM
+[12:26:47] [CLIENT] Response status: OK
+[12:26:47] [CLIENT] Added friend request from Malex to notification panel
+[12:26:47] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:26:48] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:26:49] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:26:50] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:26:50] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:26:50] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:26:50] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:26:50] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:26:51] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:26:52] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:26:53] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:26:54] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:26:54] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:27:01] [CLIENT] [Chat] Message sent successfully to 7
+[12:27:02] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:27:03] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:27:03] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:27:04] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:27:05] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:27:06] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:27:06] [SERVER] [JoinChatGroup] AlexM joined chat 3 (group: chat_3)
+[12:27:11] [CLIENT] Auto-refresh timer stopped
+[12:27:11] [CLIENT] Tokens cleared
+[12:27:11] [CLIENT] Session cleared
+[12:27:21] [CLIENT] Attempting login for: AlexM
+[12:27:21] [CLIENT] Login successful for AlexM
+[12:27:21] [CLIENT] Tokens saved for user AlexM (expires: 2025-12-10 10:57:21)
+[12:27:21] [CLIENT] Session set for user AlexM (expires: 10:57:21)
+[12:27:21] [CLIENT] Auto-refresh timer started
+[12:27:21] [CLIENT] Session set for user AlexM (expires: 10:57:21)
+[12:27:21] [CLIENT] Auto-refresh timer stopped
+[12:27:21] [CLIENT] Auto-refresh timer started
+[12:27:21] [CLIENT] Initializing API services for user: AlexM
+[12:27:21] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[12:27:21] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[12:27:21] [CLIENT] ContactApiService: Authorization header set
+[12:27:21] [SERVER] User AlexM disconnected
+[12:27:21] [SERVER] [OFFLINE] User AlexM became OFFLINE
+[12:27:22] [SERVER] User AlexM (ID: 2) connected
+[12:27:22] [SERVER] [ONLINE] User AlexM became ONLINE
+[12:27:22] [SERVER] [Auto-Join] User AlexM added to group chat_9
+[12:27:22] [SERVER] [Auto-Join] User AlexM added to group chat_4
+[12:27:22] [SERVER] [Auto-Join] User AlexM added to group chat_2
+[12:27:22] [SERVER] [Auto-Join] User AlexM added to group chat_3
+[12:27:22] [SERVER] [Auto-Join] User AlexM joined 4 chat groups
+[12:27:23] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:27:23] [SERVER] [JoinChatGroup] AlexM joined chat 7 (group: chat_7)
+[12:27:28] [CLIENT] Auto-refresh timer stopped
+[12:27:28] [CLIENT] Tokens cleared
+[12:27:28] [CLIENT] Session cleared
+[12:27:51] [SERVER] User AlexM disconnected
+[12:27:51] [SERVER] [OFFLINE] User AlexM became OFFLINE
+[12:27:52] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:27:52] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:27:53] [SERVER] [JoinChatGroup] Malex joined chat 7 (group: chat_7)
+[12:27:56] [CLIENT] Deleting contact by chatRoomId: 7
+[12:27:56] [CLIENT] Delete contact response: OK
+[12:27:56] [CLIENT] Chat 7 removed from UI and Cache
+[12:27:56] [CLIENT] Chat area cleared
+[12:27:56] [CLIENT] Friend removed, chat ID: 7
+[12:27:57] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:27:57] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:27:59] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:28:00] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:28:00] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:28:01] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:30:58] [CLIENT] UserSession initialized with system arguments
+[12:30:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:31:30] [CLIENT] Attempting registration for: Alexs
+[12:31:42] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:31:42] [CLIENT] Tokens saved for user Alexs (expires: 2025-12-10 11:01:42)
+[12:31:42] [CLIENT] Session set for user Alexs (expires: 11:01:42)
+[12:31:42] [CLIENT] Auto-refresh timer started
+[12:31:42] [CLIENT] Initializing API services for user: Alexs
+[12:31:42] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[12:31:42] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[12:31:42] [CLIENT] ContactApiService: Authorization header set
+[12:31:42] [SERVER] User Alexs (ID: 4) connected
+[12:31:42] [SERVER] [ONLINE] User Alexs became ONLINE
+[12:31:42] [SERVER] [Auto-Join] User Alexs added to group chat_11
+[12:31:42] [SERVER] [Auto-Join] User Alexs added to group chat_12
+[12:31:42] [SERVER] [Auto-Join] User Alexs joined 2 chat groups
+[12:31:44] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:31:44] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:32:10] [CLIENT] Sending friend request to: Malex
+[12:32:10] [CLIENT] Response status: BadRequest
+[12:32:10] [CLIENT] Error body: {"message":"You cannot add yourself"}
+[12:32:10] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:12] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:13] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:13] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:14] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:15] [SERVER] [JoinChatGroup] Malex joined chat 9 (group: chat_9)
+[12:32:16] [SERVER] [JoinChatGroup] Malex joined chat 10 (group: chat_10)
+[12:32:16] [SERVER] [JoinChatGroup] Malex joined chat 11 (group: chat_11)
+[12:32:16] [SERVER] [JoinChatGroup] Malex joined chat 12 (group: chat_12)
+[12:32:16] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:32:16] [SERVER] [JoinChatGroup] Malex joined chat 6 (group: chat_6)
+[12:32:17] [SERVER] [JoinChatGroup] Malex joined chat 9 (group: chat_9)
+[12:32:17] [SERVER] [JoinChatGroup] Malex joined chat 9 (group: chat_9)
+[12:32:18] [CLIENT] Chat 9 removed from UI and Cache
+[12:32:18] [CLIENT] Chat area cleared
+[12:32:20] [CLIENT] Chat 6 removed from UI and Cache
+[12:32:20] [SERVER] [JoinChatGroup] Malex joined chat 10 (group: chat_10)
+[12:32:21] [CLIENT] Chat 10 removed from UI and Cache
+[12:32:21] [CLIENT] Chat area cleared
+[12:32:22] [SERVER] [JoinChatGroup] Malex joined chat 11 (group: chat_11)
+[12:32:23] [CLIENT] Chat 11 removed from UI and Cache
+[12:32:23] [CLIENT] Chat area cleared
+[12:32:23] [SERVER] [JoinChatGroup] Malex joined chat 12 (group: chat_12)
+[12:32:24] [CLIENT] Chat 12 removed from UI and Cache
+[12:32:24] [CLIENT] Chat area cleared
+[12:32:25] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:25] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:34] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:32:34] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:32:40] [CLIENT] Sending friend request to: Alexs
+[12:32:40] [CLIENT] Response status: OK
+[12:32:40] [CLIENT] Added friend request from Malex to notification panel
+[12:32:41] [CLIENT]   - Request: ID=4, Username=Malex, Status=RequestReceived
+[12:32:42] [CLIENT]   - Request: ID=4, Username=Malex, Status=RequestReceived
+[12:32:43] [CLIENT]   - Request: ID=4, Username=Malex, Status=RequestReceived
+[12:32:44] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:32:44] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:32:44] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:32:44] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:32:44] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:32:45] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:32:48] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:32:48] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:32:49] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:32:50] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:50] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:32:55] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:02] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:02] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:33:03] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:33:03] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:33:03] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:33:04] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:33:04] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:33:09] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:33:13] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:16] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:17] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:33:17] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:33:17] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:18] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:20] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:22] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:22] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:26] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:29] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:33:29] [SERVER] [JoinChatGroup] Alexs joined chat 8 (group: chat_8)
+[12:33:33] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:33:33] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[12:33:35] [SERVER] [JoinChatGroup] Malex joined chat 14 (group: chat_14)
+[12:33:35] [SERVER] [JoinChatGroup] Malex joined chat 14 (group: chat_14)
+[12:33:36] [SERVER] [JoinChatGroup] Malex joined chat 14 (group: chat_14)
+[12:33:36] [SERVER] [JoinChatGroup] Malex joined chat 14 (group: chat_14)
+[12:33:36] [SERVER] [JoinChatGroup] Malex joined chat 14 (group: chat_14)
+[12:33:38] [CLIENT] [Chat] Message sent successfully to 14
+[12:33:40] [SERVER] [JoinChatGroup] Alexs joined chat 13 (group: chat_13)
+[12:33:43] [CLIENT] [Chat] Message sent successfully to 13
+[12:33:45] [SERVER] [JoinChatGroup] Malex joined chat 13 (group: chat_13)
+[12:33:45] [CLIENT] Restored draft for chat 13
+[12:33:53] [SERVER] User Alexs disconnected
+[12:33:53] [SERVER] [OFFLINE] User Alexs became OFFLINE
+[12:33:54] [SERVER] User Malex disconnected
+[12:33:54] [SERVER] [OFFLINE] User Malex became OFFLINE
+[12:44:21] [CLIENT] UserSession initialized with system arguments
+[12:44:21] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:44:30] [CLIENT] Attempting login for: Alexs
+[12:44:30] [CLIENT] Login failed: BadRequest
+[12:45:57] [CLIENT] Attempting registration for: Alexs
+[12:46:19] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:46:19] [CLIENT] Tokens saved for user Alexs (expires: 2025-12-10 11:16:19)
+[12:46:19] [CLIENT] Session set for user Alexs (expires: 11:16:19)
+[12:46:19] [CLIENT] Auto-refresh timer started
+[12:46:19] [CLIENT] Initializing API services for user: Alexs
+[12:46:19] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[12:46:19] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[12:46:19] [CLIENT] ContactApiService: Authorization header set
+[12:46:19] [SERVER] User Alexs (ID: 2) connected
+[12:46:19] [SERVER] [ONLINE] User Alexs became ONLINE
+[12:46:19] [SERVER] [Auto-Join] User Alexs added to group chat_2
+[12:46:19] [SERVER] [Auto-Join] User Alexs added to group chat_3
+[12:46:19] [SERVER] [Auto-Join] User Alexs joined 2 chat groups
+[12:46:20] [SERVER] [JoinChatGroup] Alexs joined chat 2 (group: chat_2)
+[12:46:20] [SERVER] [ReadProgress] User Alexs marked chat 2 as read until 2025-12-10T10:46:20.6766943Z
+[12:46:20] [SERVER] [JoinChatGroup] Alexs joined chat 2 (group: chat_2)
+[12:46:20] [SERVER] [ReadProgress] User Alexs marked chat 2 as read until 2025-12-10T10:46:20.8081826Z
+[12:46:26] [CLIENT] [Chat] Message sent successfully to 2
+[12:46:26] [SERVER] [ReadProgress] User Alexs marked chat 2 as read until 2025-12-10T10:46:26.5720000Z
+[12:46:43] [CLIENT] UserSession initialized with system arguments
+[12:46:43] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:47:15] [CLIENT] Attempting registration for: Malex
+[12:47:28] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:47:28] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 11:17:28)
+[12:47:28] [CLIENT] Session set for user Malex (expires: 11:17:28)
+[12:47:28] [CLIENT] Auto-refresh timer started
+[12:47:28] [CLIENT] Initializing API services for user: Malex
+[12:47:28] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[12:47:28] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[12:47:28] [CLIENT] ContactApiService: Authorization header set
+[12:47:28] [SERVER] User Malex (ID: 3) connected
+[12:47:28] [SERVER] [ONLINE] User Malex became ONLINE
+[12:47:28] [SERVER] [Auto-Join] User Malex added to group chat_4
+[12:47:28] [SERVER] [Auto-Join] User Malex added to group chat_5
+[12:47:28] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[12:47:29] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:29] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:29.6832113Z
+[12:47:29] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:29] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:29.8363122Z
+[12:47:38] [CLIENT] Sending friend request to: Malex
+[12:47:38] [CLIENT] Response status: BadRequest
+[12:47:38] [CLIENT] Error body: {"message":"You cannot add yourself"}
+[12:47:46] [CLIENT] Sending friend request to: Alexs
+[12:47:46] [CLIENT] Response status: OK
+[12:47:46] [CLIENT] Added friend request from Malex to notification panel
+[12:47:47] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:47:48] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:47:49] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:47:50] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:47:50] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:47:50] [SERVER] [JoinChatGroup] Alexs joined chat 4 (group: chat_4)
+[12:47:50] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:47:50] [SERVER] [JoinChatGroup] Alexs joined chat 4 (group: chat_4)
+[12:47:50] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:47:50.9480527Z
+[12:47:51] [SERVER] [JoinChatGroup] Alexs joined chat 4 (group: chat_4)
+[12:47:51] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:47:51.7173017Z
+[12:47:51] [SERVER] [JoinChatGroup] Alexs joined chat 4 (group: chat_4)
+[12:47:51] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:47:51.9087002Z
+[12:47:54] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:54] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:54.6306169Z
+[12:47:54] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:54] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:54.8054020Z
+[12:47:56] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:56] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:56.1517393Z
+[12:47:56] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:47:56] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:56.3070642Z
+[12:47:58] [CLIENT] [Chat] Message sent successfully to 3
+[12:47:58] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:47:58.4840000Z
+[12:48:05] [CLIENT] [Chat] Message sent successfully to 4
+[12:48:05] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:48:05.0900000Z
+[12:48:10] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:48:10] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:48:05.0900000Z
+[12:48:12] [SERVER] [JoinChatGroup] Alexs joined chat 2 (group: chat_2)
+[12:48:13] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:48:15] [CLIENT] [Chat] Message sent successfully to 4
+[12:48:15] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:48:15.2580000Z
+[12:48:17] [SERVER] [JoinChatGroup] Alexs joined chat 2 (group: chat_2)
+[12:48:20] [CLIENT] [Chat] Message sent successfully to 4
+[12:48:20] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:48:20.3550000Z
+[12:48:22] [SERVER] [JoinChatGroup] Alexs joined chat 4 (group: chat_4)
+[12:48:22] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:48:20.3550000Z
+[12:48:38] [CLIENT] [Chat] Message sent successfully to 4
+[12:48:38] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:48:38.7570000Z
+[12:48:38] [SERVER] [ReadProgress] User Alexs marked chat 4 as read until 2025-12-10T10:48:38.7570000Z
+[12:48:42] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:51:14] [SERVER] User Alexs disconnected
+[12:51:14] [SERVER] [OFFLINE] User Alexs became OFFLINE
+[12:51:15] [SERVER] User Malex disconnected
+[12:51:15] [SERVER] [OFFLINE] User Malex became OFFLINE
+[12:53:39] [CLIENT] UserSession initialized with system arguments
+[12:53:39] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:54:04] [CLIENT] Attempting registration for: AlexM
+[12:54:15] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:54:15] [CLIENT] Tokens saved for user AlexM (expires: 2025-12-10 11:24:15)
+[12:54:15] [CLIENT] Session set for user AlexM (expires: 11:24:15)
+[12:54:15] [CLIENT] Auto-refresh timer started
+[12:54:15] [CLIENT] Initializing API services for user: AlexM
+[12:54:15] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[12:54:15] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[12:54:15] [CLIENT] ContactApiService: Authorization header set
+[12:54:15] [SERVER] User AlexM (ID: 2) connected
+[12:54:15] [SERVER] [ONLINE] User AlexM became ONLINE
+[12:54:15] [SERVER] [Auto-Join] User AlexM added to group chat_2
+[12:54:15] [SERVER] [Auto-Join] User AlexM added to group chat_3
+[12:54:15] [SERVER] [Auto-Join] User AlexM joined 2 chat groups
+[12:54:16] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:54:16] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T10:54:16.7896843Z
+[12:54:16] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[12:54:16] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T10:54:16.8921426Z
+[12:54:21] [CLIENT] [Chat] Message sent successfully to 2
+[12:54:21] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T10:54:21.3150000Z
+[12:54:36] [CLIENT] UserSession initialized with system arguments
+[12:54:36] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:54:59] [CLIENT] Attempting registration for: Malex
+[12:55:11] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[12:55:11] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 11:25:11)
+[12:55:11] [CLIENT] Session set for user Malex (expires: 11:25:11)
+[12:55:11] [CLIENT] Auto-refresh timer started
+[12:55:11] [CLIENT] Initializing API services for user: Malex
+[12:55:11] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[12:55:11] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[12:55:11] [CLIENT] ContactApiService: Authorization header set
+[12:55:11] [SERVER] User Malex (ID: 3) connected
+[12:55:11] [SERVER] [ONLINE] User Malex became ONLINE
+[12:55:11] [SERVER] [Auto-Join] User Malex added to group chat_4
+[12:55:11] [SERVER] [Auto-Join] User Malex added to group chat_5
+[12:55:11] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[12:55:12] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:55:12] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:55:12.0841965Z
+[12:55:12] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:55:12] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:55:12.2389545Z
+[12:55:16] [CLIENT] Sending friend request to: Alexs
+[12:55:16] [CLIENT] Response status: NotFound
+[12:55:16] [CLIENT] Error body: {"message":"User not found"}
+[12:55:28] [CLIENT] Sending friend request to: AlexM
+[12:55:28] [CLIENT] Response status: OK
+[12:55:28] [CLIENT] Added friend request from Malex to notification panel
+[12:55:29] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:55:30] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:55:31] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:55:32] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[12:55:32] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:55:32] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:55:32] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:55:32] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:55:32] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:32.4609604Z
+[12:55:33] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:55:33] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:33.3075653Z
+[12:55:33] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:55:33] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:33.4823000Z
+[12:55:35] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:55:35] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:55:35.6477169Z
+[12:55:35] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:55:35] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:55:35.8176390Z
+[12:55:37] [CLIENT] [Chat] Message sent successfully to 3
+[12:55:37] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T10:55:37.5070000Z
+[12:55:39] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[12:55:39] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:39.2675233Z
+[12:55:41] [CLIENT] [Chat] Message sent successfully to 4
+[12:55:41] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:41.2680000Z
+[12:55:42] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:55:42] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:55:41.2680000Z
+[12:55:49] [CLIENT] [Chat] Message sent successfully to 4
+[12:55:49] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:55:49.1730000Z
+[12:55:49] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:49.1730000Z
+[12:55:51] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[12:55:53] [CLIENT] [Chat] Message sent successfully to 4
+[12:55:53] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T10:55:53.7240000Z
+[12:55:54] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[12:55:54] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T10:55:53.7240000Z
+[12:57:23] [SERVER] User AlexM disconnected
+[12:57:23] [SERVER] [OFFLINE] User AlexM became OFFLINE
+[12:57:25] [SERVER] User Malex disconnected
+[12:57:25] [SERVER] [OFFLINE] User Malex became OFFLINE
+[13:00:49] [CLIENT] UserSession initialized with system arguments
+[13:00:49] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[13:01:09] [CLIENT] Attempting registration for: AlexM
+[13:02:10] [CLIENT] UserSession initialized with system arguments
+[13:02:10] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[13:02:26] [CLIENT] Attempting registration for: AlexM
+[13:02:38] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[13:02:38] [CLIENT] Tokens saved for user AlexM (expires: 2025-12-10 11:32:38)
+[13:02:38] [CLIENT] Session set for user AlexM (expires: 11:32:38)
+[13:02:38] [CLIENT] Auto-refresh timer started
+[13:02:38] [CLIENT] Initializing API services for user: AlexM
+[13:02:38] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[13:02:38] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[13:02:38] [CLIENT] ContactApiService: Authorization header set
+[13:02:39] [SERVER] User AlexM (ID: 2) connected
+[13:02:39] [SERVER] [ONLINE] User AlexM became ONLINE
+[13:02:39] [SERVER] [Auto-Join] User AlexM added to group chat_2
+[13:02:39] [SERVER] [Auto-Join] User AlexM added to group chat_3
+[13:02:39] [SERVER] [Auto-Join] User AlexM joined 2 chat groups
+[13:02:39] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:02:40] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T11:02:40.0049809Z
+[13:02:40] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:02:40] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T11:02:40.1440914Z
+[13:02:48] [CLIENT] UserSession initialized with system arguments
+[13:02:48] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[13:03:07] [CLIENT] Attempting registration for: Malex
+[13:03:19] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\Uchat\tokens.dat
+[13:03:19] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 11:33:19)
+[13:03:19] [CLIENT] Session set for user Malex (expires: 11:33:19)
+[13:03:19] [CLIENT] Auto-refresh timer started
+[13:03:19] [CLIENT] Initializing API services for user: Malex
+[13:03:19] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[13:03:19] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[13:03:19] [CLIENT] ContactApiService: Authorization header set
+[13:03:19] [SERVER] User Malex (ID: 3) connected
+[13:03:19] [SERVER] [ONLINE] User Malex became ONLINE
+[13:03:19] [SERVER] [Auto-Join] User Malex added to group chat_4
+[13:03:19] [SERVER] [Auto-Join] User Malex added to group chat_5
+[13:03:19] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[13:03:21] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:03:21] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:03:21.1379334Z
+[13:03:21] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:03:21] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:03:21.2464857Z
+[13:03:25] [CLIENT] Sending friend request to: AlexM
+[13:03:25] [CLIENT] Response status: OK
+[13:03:25] [CLIENT] Added friend request from Malex to notification panel
+[13:03:25] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[13:03:25] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:03:25] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:03:25.9692321Z
+[13:03:26] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[13:03:27] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[13:03:28] [CLIENT]   - Request: ID=2, Username=Malex, Status=RequestReceived
+[13:03:29] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:29] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:03:29] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:03:29] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:29] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:29.5415952Z
+[13:03:35] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:03:35] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:35.4991813Z
+[13:03:35] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:03:35] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:35.6532521Z
+[13:03:36] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:36] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:36.9487063Z
+[13:03:37] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:37] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:37.1056639Z
+[13:03:37] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:03:37] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T11:03:37.5530308Z
+[13:03:37] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:03:37] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T11:03:37.6926243Z
+[13:03:40] [CLIENT] [Chat] Message sent successfully to 2
+[13:03:40] [SERVER] [ReadProgress] User AlexM marked chat 2 as read until 2025-12-10T11:03:40.1710000Z
+[13:03:41] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:03:41] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:03:41.8302646Z
+[13:03:42] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:03:42] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:42.2589363Z
+[13:03:43] [CLIENT] [Chat] Message sent successfully to 4
+[13:03:43] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:43.8600000Z
+[13:03:45] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:45] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:43.8600000Z
+[13:03:47] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:50] [CLIENT] [Chat] Message sent successfully to 4
+[13:03:50] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:50.5630000Z
+[13:03:50] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:50.5630000Z
+[13:03:52] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:03:54] [CLIENT] [Chat] Message sent successfully to 4
+[13:03:54] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:54.5150000Z
+[13:03:55] [CLIENT] [Chat] Message sent successfully to 4
+[13:03:55] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:55.7490000Z
+[13:03:57] [CLIENT] [Chat] Message sent successfully to 4
+[13:03:57] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:03:57.2410000Z
+[13:03:58] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:03:58] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:03:57.2410000Z
+[13:04:02] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:02] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:02.2970000Z
+[13:04:02] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:02.2970000Z
+[13:04:03] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:03] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:03.3540000Z
+[13:04:03] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:03.3540000Z
+[13:04:04] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:04] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:04.3130000Z
+[13:04:04] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:04.3130000Z
+[13:04:05] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:05] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:05.1720000Z
+[13:04:05] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:05.1720000Z
+[13:04:06] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:06] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:06.3600000Z
+[13:04:06] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:06.3600000Z
+[13:04:07] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:07] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:07.0960000Z
+[13:04:07] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:07.0960000Z
+[13:04:07] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:07] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:07.6250000Z
+[13:04:07] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:07.6250000Z
+[13:04:08] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:08] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:08.4660000Z
+[13:04:08] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:08.4660000Z
+[13:04:09] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:09] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:09.2110000Z
+[13:04:09] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:09.2110000Z
+[13:04:10] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:10] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:10.0870000Z
+[13:04:10] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:10.0870000Z
+[13:04:11] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:04:14] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:04:14] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:04:17] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:17] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:17.8420000Z
+[13:04:19] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:19] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:19.1540000Z
+[13:04:20] [CLIENT] [Chat] Message sent successfully to 4
+[13:04:20] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:04:20.2190000Z
+[13:04:21] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:04:21] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:04:20.2190000Z
+[13:04:28] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:04:28] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:04:28.5531896Z
+[13:04:29] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:04:29] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:04:29.0437990Z
+[13:04:41] [SERVER] [JoinChatGroup] AlexM joined chat 5 (group: chat_5)
+[13:04:41] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:04:41.2938780Z
+[13:04:42] [SERVER] [JoinChatGroup] AlexM joined chat 5 (group: chat_5)
+[13:04:42] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:04:42.4287924Z
+[13:04:43] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:04:43] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:04:43.8356889Z
+[13:04:44] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:04:47] [CLIENT] [Chat] Message sent successfully to 5
+[13:04:47] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:04:47.4790000Z
+[13:04:50] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:04:50] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:04:47.4790000Z
+[13:04:56] [CLIENT] [Chat] Message sent successfully to 5
+[13:04:56] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:04:56.8700000Z
+[13:04:56] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:04:56.8700000Z
+[13:04:59] [SERVER] [JoinChatGroup] AlexM joined chat 2 (group: chat_2)
+[13:05:00] [CLIENT] [Chat] Message sent successfully to 5
+[13:05:00] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:05:00.9080000Z
+[13:05:02] [CLIENT] [Chat] Message sent successfully to 5
+[13:05:02] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:05:02.1640000Z
+[13:05:04] [CLIENT] [Chat] Message sent successfully to 5
+[13:05:04] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:05:04.0060000Z
+[13:05:05] [CLIENT] [Chat] Message sent successfully to 5
+[13:05:05] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:05:05.5090000Z
+[13:05:07] [SERVER] [JoinChatGroup] AlexM joined chat 5 (group: chat_5)
+[13:05:07] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:05:05.5090000Z
+[13:05:15] [CLIENT] [Chat] Message sent successfully to 5
+[13:05:15] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:05:15.4980000Z
+[13:05:15] [SERVER] [ReadProgress] User AlexM marked chat 5 as read until 2025-12-10T11:05:15.4980000Z
+[13:05:19] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:05:20] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:05:20] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:05:20.6007957Z
+[13:05:20] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:05:24] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:05:27] [CLIENT] [Chat] Message sent successfully to 4
+[13:05:27] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:05:27.0010000Z
+[13:05:27] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:05:27.0010000Z
+[13:05:29] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:05:30] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:05:30.0024563Z
+[13:05:31] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:05:32] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:05:32] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:05:32.3240914Z
+[13:05:37] [CLIENT] [Chat] Message sent successfully to 3
+[13:05:37] [SERVER] [ReadProgress] User Malex marked chat 3 as read until 2025-12-10T11:05:37.9210000Z
+[13:05:40] [SERVER] [JoinChatGroup] AlexM joined chat 5 (group: chat_5)
+[13:05:44] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:05:47] [SERVER] [JoinChatGroup] Malex joined chat 3 (group: chat_3)
+[13:05:47] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[13:05:52] [SERVER] [JoinChatGroup] AlexM joined chat 5 (group: chat_5)
+[13:05:54] [CLIENT] [Chat] Message sent successfully to 4
+[13:05:54] [SERVER] [ReadProgress] User Malex marked chat 4 as read until 2025-12-10T11:05:54.0590000Z
+[13:06:05] [SERVER] [JoinChatGroup] AlexM joined chat 4 (group: chat_4)
+[13:06:05] [SERVER] [ReadProgress] User AlexM marked chat 4 as read until 2025-12-10T11:05:54.0590000Z
+[13:06:22] [SERVER] [JoinChatGroup] Malex joined chat 5 (group: chat_5)
+[13:06:27] [CLIENT] [Chat] Message sent successfully to 5
+[13:06:27] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:06:27.1830000Z
+[13:06:28] [CLIENT] [Chat] Message sent successfully to 5
+[13:06:28] [SERVER] [ReadProgress] User Malex marked chat 5 as read until 2025-12-10T11:06:28.4730000Z
+[13:07:40] [SERVER] User Malex disconnected
+[13:07:40] [SERVER] [OFFLINE] User Malex became OFFLINE
+[13:07:41] [SERVER] User AlexM disconnected
+[13:07:41] [SERVER] [OFFLINE] User AlexM became OFFLINE

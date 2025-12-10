@@ -26,7 +26,7 @@ namespace Uchat
                     contact.IsVisible = (contact.IsGroupChat == true) ? groupsNeeded : !groupsNeeded;
                 }
             }
-			public class Contact
+                public class Contact
 			{
 				private List<string> membersList = new List<string>();
 
@@ -34,7 +34,7 @@ namespace Uchat
 				private bool isPinned = false;
 				private string chatName = "";
 				private string lastMessage = "";
-				private int unreadMessages = 0;
+                private int unreadMessages = 0;
 				private int chatId = 0;
 
 				private MainWindow mainWindow;
@@ -137,7 +137,8 @@ namespace Uchat
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; UpdateIcon(); } }
                 public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
-				public string ChatName { get { return chatName; } }
+                public string ChatName { get { return chatName; } }
+                public int UnreadCount => unreadMessages;
 				public void AddMember(string name)
 				{
 					membersList.Add(name);
@@ -163,17 +164,29 @@ namespace Uchat
 				/// <summary>
 				/// Обновить последнее сообщение и счетчик непрочитанных
 				/// </summary>
-				public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
-				{
-					lastMessage = newLastMessage;
-					lastMessageTextBlock.Text = newLastMessage;
-					
-					if (newUnreadCount.HasValue)
-					{
-						unreadMessages = newUnreadCount.Value;
-						unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
-					}
-				}
+                    public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
+                    {
+                        lastMessage = newLastMessage;
+                        lastMessageTextBlock.Text = newLastMessage;
+						
+                        if (newUnreadCount.HasValue)
+                        {
+                            unreadMessages = newUnreadCount.Value;
+                            unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
+                        }
+                    }
+
+                    public void SetUnreadCount(int value)
+                    {
+                        unreadMessages = Math.Max(0, value);
+                        unreadMessageTextBlock.Text = unreadMessages.ToString();
+                    }
+
+                    public void IncrementUnread(int delta = 1)
+                    {
+                        unreadMessages += delta;
+                        unreadMessageTextBlock.Text = unreadMessages.ToString();
+                    }
 				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{

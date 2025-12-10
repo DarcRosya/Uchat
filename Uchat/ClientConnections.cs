@@ -38,6 +38,7 @@ namespace Uchat
         private Dictionary<string, MainWindow.Chat.Message> _messageCache = new();
         public Dictionary<int, MainWindow.Chat.Contact> _chatContacts = new();
         private Dictionary<int, string> _messageDrafts = new();
+        private readonly Dictionary<int, DateTime> _lastReadProgressTimestamps = new();
 
         private int? _currentChatId = null;
         private string _currentUsername = "Unknown";
@@ -175,11 +176,12 @@ namespace Uchat
                         // Прокручиваем вниз
                         Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
                         ChatScrollViewer.ScrollToEnd();
+                        _ = ReportReadProgressAsync(message.ChatRoomId, message.SentAt);
                     }
                     else
                     {
                         // Если чат не открыт - можно увеличить счетчик непрочитанных (если есть логика)
-                        // chatItem.IncrementUnread(); 
+                        chatItem.IncrementUnread();
                     }
                 });
             });
@@ -481,6 +483,8 @@ namespace Uchat
                             // existingContact.UpdateUnreadCount(chat.UnreadCount);
                             
                             // Если методов нет, просто пересоздаем (как раньше), но это вызывает мигание.
+                            existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
+
                             // Для сортировки перемещаем элемент на нужную позицию:
                             var currentIdx = contactsStackPanel.Children.IndexOf(existingContact.Box);
                             if (currentIdx != i)
@@ -541,6 +545,7 @@ namespace Uchat
                 {
                     chatName = contact.ChatName;
                     isGroup = contact.IsGroupChat;
+                    contact.SetUnreadCount(0);
                 }
                 else 
                 {
@@ -631,6 +636,11 @@ namespace Uchat
                 {
                     return;
                 }
+
+                var historyMessages = result.Messages ?? new List<MessageDto>();
+                var reportTimestamp = historyMessages.Count > 0
+                    ? historyMessages.Max(m => m.SentAt)
+                    : DateTime.UtcNow;
                 //Logger.Log($"[DEBUG] Messages count: {result.Messages?.Count ?? 0}");
                 
                 Dispatcher.UIThread.Post(() =>
@@ -638,7 +648,7 @@ namespace Uchat
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
 
-                    var messages = result.Messages;
+                    var messages = historyMessages.ToList();
                     messages.Reverse();
 
                     // Обновляем состояние пагинации
@@ -657,6 +667,8 @@ namespace Uchat
 
                     ChatScrollViewer.ScrollToEnd();
                 });
+
+                await ReportReadProgressAsync(chatId, reportTimestamp);
             }
             catch (Exception ex)
             {
@@ -976,6 +988,41 @@ namespace Uchat
                 return "Server offline";
 
             return "Connection failed";
+        }
+
+        private async Task ReportReadProgressAsync(int chatId, DateTime untilTimestamp)
+        {
+            if (!_currentChatId.HasValue || _currentChatId.Value != chatId)
+            {
+                return;
+            }
+
+            if (_hubConnection == null || _hubConnection.State != HubConnectionState.Connected)
+            {
+                return;
+            }
+
+            var normalized = untilTimestamp.ToUniversalTime();
+
+            if (_lastReadProgressTimestamps.TryGetValue(chatId, out var last) && normalized <= last)
+            {
+                return;
+            }
+
+            _lastReadProgressTimestamps[chatId] = normalized;
+
+            try
+            {
+                await _hubConnection.InvokeAsync("ReportReadProgress", chatId, normalized);
+                if (_chatContacts.TryGetValue(chatId, out var contact))
+                {
+                    contact.SetUnreadCount(0);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"[ReadProgress] Failed to report chat {chatId}: {ex.Message}");
+            }
         }
 
         private void AddEditedLabel(MainWindow.Chat.Message message)
