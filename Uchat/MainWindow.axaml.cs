@@ -33,9 +33,10 @@ namespace Uchat
         public MainWindow(string[] args)
         {
             InitializeComponent();
-            string[] dev = {"-local", "6000"};
+            string[] dev = { "-local", "6000" };
             systemArgs = dev;
-        
+            //systemArgs = args;
+
             _authService = new AuthApiService(systemArgs);
 
             // Initialize UserSession with system arguments BEFORE Loaded event

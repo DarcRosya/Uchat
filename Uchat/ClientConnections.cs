@@ -207,7 +207,7 @@ namespace Uchat
                         // Прокручиваем вниз
                         Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
                         ChatScrollViewer.ScrollToEnd();
-                        _ = ReportReadProgressAsync(message.ChatRoomId, message.SentAt);
+                        _ = _messageApiService.MarkAsReadUntilAsync(message.ChatRoomId, message.SentAt);
                     }
                     else
                     {
@@ -781,7 +781,7 @@ namespace Uchat
                     ChatScrollViewer.ScrollToEnd();
                 });
 
-                await ReportReadProgressAsync(chatId, reportTimestamp);
+                await _messageApiService.MarkAsReadUntilAsync(chatId, reportTimestamp);
             }
             catch (Exception ex)
             {

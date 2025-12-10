@@ -1,0 +1,319 @@
+[18:49:38] [CLIENT] UserSession initialized with system arguments
+[18:49:39] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:49:50] [CLIENT] Attempting registration for: 123123
+[18:51:36] [CLIENT] UserSession initialized with system arguments
+[18:51:36] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:51:41] [CLIENT] Attempting login for: 123123
+[18:51:44] [CLIENT] Login successful for 123123
+[18:51:44] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[18:51:44] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 17:21:44)
+[18:51:44] [CLIENT] Session set for user 123123 (expires: 17:21:44)
+[18:51:44] [CLIENT] Auto-refresh timer started
+[18:51:44] [CLIENT] Session set for user 123123 (expires: 17:21:44)
+[18:51:44] [CLIENT] Auto-refresh timer stopped
+[18:51:44] [CLIENT] Auto-refresh timer started
+[18:51:44] [CLIENT] Initializing API services for user: 123123
+[18:51:44] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[18:51:44] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[18:51:44] [CLIENT] ContactApiService: Authorization header set
+[18:51:45] [CLIENT] [RECONNECTION] State reset
+[18:51:45] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[18:51:45] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: f18cb857-3257-4315-9538-d8c33151bd49
+[18:51:45] [SERVER] User 123123 (ID: 2) connected
+[18:51:46] [SERVER] [ONLINE] User 123123 became ONLINE
+[18:51:46] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[18:51:46] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[18:51:46] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[18:51:51] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[18:52:15] [CLIENT] [HEARTBEAT] Pong received
+[18:52:45] [CLIENT] [HEARTBEAT] Pong received
+[18:53:04] [CLIENT] UserSession initialized with system arguments
+[18:53:05] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:53:15] [CLIENT] [HEARTBEAT] Pong received
+[18:53:27] [CLIENT] Attempting login for: ivan
+[18:54:27] [CLIENT] UserSession initialized with system arguments
+[18:54:28] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:54:56] [CLIENT] Attempting login for: 123123
+[18:54:58] [CLIENT] Login successful for 123123
+[18:54:58] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[18:54:58] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 17:24:58)
+[18:54:58] [CLIENT] Session set for user 123123 (expires: 17:24:58)
+[18:54:58] [CLIENT] Auto-refresh timer started
+[18:54:58] [CLIENT] Session set for user 123123 (expires: 17:24:58)
+[18:54:58] [CLIENT] Auto-refresh timer stopped
+[18:54:58] [CLIENT] Auto-refresh timer started
+[18:54:58] [CLIENT] Initializing API services for user: 123123
+[18:54:58] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[18:54:58] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[18:54:58] [CLIENT] ContactApiService: Authorization header set
+[18:54:58] [CLIENT] [RECONNECTION] State reset
+[18:54:58] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[18:54:58] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 6e8b14d8-1f84-4b3c-9e06-7fd6466e7af4
+[18:54:58] [SERVER] User 123123 (ID: 2) connected
+[18:54:58] [SERVER] [ONLINE] User 123123 became ONLINE
+[18:54:59] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[18:54:59] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[18:54:59] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[18:55:28] [CLIENT] [HEARTBEAT] Pong received
+[18:55:41] [CLIENT] UserSession initialized with system arguments
+[18:55:41] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:55:58] [CLIENT] [HEARTBEAT] Pong received
+[18:56:00] [CLIENT] Attempting registration for: vadik
+[18:59:36] [CLIENT] UserSession initialized with system arguments
+[18:59:37] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[18:59:40] [CLIENT] Attempting login for: 123123
+[18:59:45] [CLIENT] Login successful for 123123
+[18:59:45] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[18:59:45] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 17:29:45)
+[18:59:45] [CLIENT] Session set for user 123123 (expires: 17:29:45)
+[18:59:45] [CLIENT] Auto-refresh timer started
+[18:59:45] [CLIENT] Session set for user 123123 (expires: 17:29:45)
+[18:59:45] [CLIENT] Auto-refresh timer stopped
+[18:59:45] [CLIENT] Auto-refresh timer started
+[18:59:45] [CLIENT] Initializing API services for user: 123123
+[18:59:45] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[18:59:45] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[18:59:45] [CLIENT] ContactApiService: Authorization header set
+[18:59:45] [CLIENT] [RECONNECTION] State reset
+[18:59:45] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[18:59:52] [CLIENT] UserSession initialized with system arguments
+[18:59:53] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:00:24] [CLIENT] Attempting registration for: vadik
+[18:59:45] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: b20982bc-0af8-4529-acd5-57e9f549dd89
+[19:00:51] [SERVER] User 123123 (ID: 2) connected
+[19:00:51] [SERVER] [ONLINE] User 123123 became ONLINE
+[19:00:51] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[19:00:51] [CLIENT] Tokens saved for user vadik (expires: 2025-12-10 17:30:51)
+[19:00:51] [CLIENT] Session set for user vadik (expires: 17:30:51)
+[19:00:51] [CLIENT] Auto-refresh timer started
+[19:00:51] [CLIENT] Initializing API services for user: vadik
+[19:00:51] [CLIENT] Token length: 536, Token preview: eyJhbGciOi...
+[19:00:51] [CLIENT] ContactApiService: Setting auth token (length: 536)
+[19:00:51] [CLIENT] ContactApiService: Authorization header set
+[19:00:51] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[19:00:51] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[19:00:51] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[19:00:51] [CLIENT] [HEARTBEAT] Pong received
+[19:00:51] [CLIENT] [HEARTBEAT] Pong received
+[19:00:51] [SERVER] [RECONNECTION] User vadik (ID: 3) connected with sessionId: a1c0e527-2b08-4b5a-bc6e-04ea071fc348
+[19:00:51] [CLIENT] [RECONNECTION] State reset
+[19:00:51] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[19:00:51] [SERVER] User vadik (ID: 3) connected
+[19:00:52] [SERVER] [ONLINE] User vadik became ONLINE
+[19:00:52] [SERVER] [Auto-Join] User vadik added to group chat_4
+[19:00:52] [SERVER] [Auto-Join] User vadik added to group chat_5
+[19:00:52] [SERVER] [Auto-Join] User vadik joined 2 chat groups
+[19:00:58] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[19:01:08] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:01:09] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:01:15] [CLIENT] [HEARTBEAT] Pong received
+[19:01:19] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:01:21] [CLIENT] [HEARTBEAT] Pong received
+[19:01:21] [CLIENT] [Chat] Message sent successfully to 4
+[19:01:27] [CLIENT] [Chat] Message sent successfully to 4
+[19:01:34] [CLIENT] [Chat] Message sent successfully to 4
+[19:01:45] [CLIENT] [HEARTBEAT] Pong received
+[19:01:51] [CLIENT] [HEARTBEAT] Pong received
+[19:02:00] [CLIENT] Sending friend request to: vadik
+[19:02:01] [CLIENT] Response status: OK
+[19:02:01] [CLIENT] Added friend request from 123123 to notification panel
+[19:02:01] [CLIENT]   - Request: ID=2, Username=123123, Status=RequestReceived
+[19:02:02] [CLIENT]   - Request: ID=2, Username=123123, Status=RequestReceived
+[19:02:03] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[19:02:03] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[19:02:03] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:02:04] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:02:05] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:02:15] [CLIENT] [HEARTBEAT] Pong received
+[19:02:21] [CLIENT] [HEARTBEAT] Pong received
+[19:02:39] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[19:02:40] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[19:02:45] [CLIENT] [HEARTBEAT] Pong received
+[19:02:51] [CLIENT] [HEARTBEAT] Pong received
+[19:03:15] [CLIENT] [HEARTBEAT] Pong received
+[19:03:19] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:03:21] [CLIENT] [HEARTBEAT] Pong received
+[19:03:23] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:03:45] [CLIENT] [HEARTBEAT] Pong received
+[19:03:51] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[19:03:51] [CLIENT] [HEARTBEAT] Pong received
+[19:03:52] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:04:15] [CLIENT] [HEARTBEAT] Pong received
+[19:04:21] [CLIENT] [HEARTBEAT] Pong received
+[19:04:45] [CLIENT] [HEARTBEAT] Pong received
+[19:04:51] [CLIENT] [HEARTBEAT] Pong received
+[19:04:56] [SERVER] [LeaveChatGroup] vadik left chat 4
+[19:05:05] [CLIENT] Chat 4 removed from UI and Cache
+[19:05:05] [CLIENT] Chat area cleared
+[19:05:05] [CLIENT] Chat area cleared
+[19:05:05] [CLIENT] Successfully left chat 4
+[19:05:09] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:05:15] [CLIENT] [HEARTBEAT] Pong received
+[19:05:21] [CLIENT] [HEARTBEAT] Pong received
+[19:05:45] [CLIENT] [HEARTBEAT] Pong received
+[19:05:51] [CLIENT] [HEARTBEAT] Pong received
+[19:06:06] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[19:06:09] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:06:11] [CLIENT] [Chat] Message sent successfully to 4
+[19:06:12] [CLIENT] [Chat] Message sent successfully to 4
+[19:06:14] [CLIENT] [Chat] Message sent successfully to 4
+[19:06:15] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:06:15] [CLIENT] [HEARTBEAT] Pong received
+[19:06:18] [CLIENT] Auto-refresh timer stopped
+[19:06:18] [CLIENT] Tokens cleared
+[19:06:18] [CLIENT] Session cleared
+[19:06:21] [CLIENT] Attempting login for: 123123
+[19:06:21] [CLIENT] [HEARTBEAT] Pong received
+[19:06:21] [CLIENT] Login successful for 123123
+[19:06:21] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 17:36:21)
+[19:06:21] [CLIENT] Session set for user 123123 (expires: 17:36:21)
+[19:06:21] [CLIENT] Auto-refresh timer started
+[19:06:21] [CLIENT] Session set for user 123123 (expires: 17:36:21)
+[19:06:21] [CLIENT] Auto-refresh timer stopped
+[19:06:21] [CLIENT] Auto-refresh timer started
+[19:06:21] [CLIENT] Initializing API services for user: 123123
+[19:06:21] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[19:06:21] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[19:06:21] [CLIENT] ContactApiService: Authorization header set
+[19:06:21] [SERVER] [DISCONNECT] User 123123 (ID: 2) disconnected
+[19:06:22] [CLIENT] [RECONNECTION] Connection closed by server
+[19:06:21] [SERVER] [OFFLINE] User 123123 became OFFLINE
+[19:06:22] [CLIENT] [RECONNECTION] State reset
+[19:06:22] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[19:06:22] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 528add01-7427-45a5-b8ee-ecc542b68c4d
+[19:06:22] [SERVER] User 123123 (ID: 2) connected
+[19:06:22] [SERVER] [ONLINE] User 123123 became ONLINE
+[19:06:22] [SERVER] [Auto-Join] User 123123 added to group chat_7
+[19:06:22] [SERVER] [Auto-Join] User 123123 added to group chat_9
+[19:06:22] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[19:06:22] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[19:06:22] [SERVER] [Auto-Join] User 123123 joined 4 chat groups
+[19:06:51] [CLIENT] [HEARTBEAT] Pong received
+[19:06:52] [CLIENT] [HEARTBEAT] Pong received
+[19:07:21] [CLIENT] [HEARTBEAT] Pong received
+[19:07:22] [CLIENT] [HEARTBEAT] Pong received
+[19:07:41] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:07:51] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:07:51] [CLIENT] [HEARTBEAT] Pong received
+[19:07:52] [CLIENT] [HEARTBEAT] Pong received
+[19:08:21] [CLIENT] [HEARTBEAT] Pong received
+[19:08:22] [CLIENT] [HEARTBEAT] Pong received
+[19:08:51] [CLIENT] [HEARTBEAT] Pong received
+[19:08:52] [CLIENT] [HEARTBEAT] Pong received
+[19:09:21] [CLIENT] [HEARTBEAT] Pong received
+[19:09:22] [CLIENT] [HEARTBEAT] Pong received
+[19:09:51] [CLIENT] [HEARTBEAT] Pong received
+[19:09:52] [CLIENT] [HEARTBEAT] Pong received
+[19:09:59] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:09:59] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:10:00] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:10:02] [SERVER] [JoinChatGroup] vadik joined chat 6 (group: chat_6)
+[19:10:04] [SERVER] [JoinChatGroup] vadik joined chat 7 (group: chat_7)
+[19:10:04] [SERVER] [JoinChatGroup] vadik joined chat 8 (group: chat_8)
+[19:10:04] [SERVER] [JoinChatGroup] vadik joined chat 9 (group: chat_9)
+[19:10:04] [SERVER] [JoinChatGroup] vadik joined chat 10 (group: chat_10)
+[19:10:04] [SERVER] [JoinChatGroup] vadik joined chat 11 (group: chat_11)
+[19:10:05] [SERVER] [JoinChatGroup] vadik joined chat 12 (group: chat_12)
+[19:10:05] [SERVER] [JoinChatGroup] vadik joined chat 13 (group: chat_13)
+[19:10:05] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:10:21] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:10:21] [CLIENT] [HEARTBEAT] Pong received
+[19:10:22] [CLIENT] [HEARTBEAT] Pong received
+[19:10:24] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:10:25] [CLIENT] [Chat] Message sent successfully to 4
+[19:10:27] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:10:27] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:10:28] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:10:29] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:10:40] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:10:48] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[19:10:49] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:10:51] [CLIENT] [Chat] Message sent successfully to 4
+[19:10:51] [CLIENT] [HEARTBEAT] Pong received
+[19:10:52] [CLIENT] [HEARTBEAT] Pong received
+[19:10:52] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:11:21] [CLIENT] [HEARTBEAT] Pong received
+[19:11:22] [SERVER] [RECONNECTION] Cleared reconnection state for user 123123
+[19:11:22] [CLIENT] [HEARTBEAT] Pong received
+[19:11:51] [CLIENT] [HEARTBEAT] Pong received
+[19:11:52] [CLIENT] [HEARTBEAT] Pong received
+[19:12:21] [CLIENT] [HEARTBEAT] Pong received
+[19:12:22] [CLIENT] [HEARTBEAT] Pong received
+[19:12:51] [CLIENT] [HEARTBEAT] Pong received
+[19:12:52] [CLIENT] [HEARTBEAT] Pong received
+[19:12:58] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:13:03] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:13:21] [CLIENT] [HEARTBEAT] Pong received
+[19:13:22] [CLIENT] [HEARTBEAT] Pong received
+[19:13:24] [SERVER] [JoinChatGroup] vadik joined chat 4 (group: chat_4)
+[19:13:51] [CLIENT] [HEARTBEAT] Pong received
+[19:13:52] [CLIENT] [HEARTBEAT] Pong received
+[19:14:21] [CLIENT] [HEARTBEAT] Pong received
+[19:14:22] [CLIENT] [HEARTBEAT] Pong received
+[19:14:51] [CLIENT] [HEARTBEAT] Pong received
+[19:14:52] [CLIENT] [HEARTBEAT] Pong received
+[19:15:21] [CLIENT] [HEARTBEAT] Pong received
+[19:15:22] [CLIENT] [HEARTBEAT] Pong received
+[19:15:51] [CLIENT] [HEARTBEAT] Pong received
+[19:15:52] [CLIENT] [HEARTBEAT] Pong received
+[19:16:21] [CLIENT] [HEARTBEAT] Pong received
+[19:16:22] [CLIENT] [HEARTBEAT] Pong received
+[19:16:51] [CLIENT] [HEARTBEAT] Pong received
+[19:16:52] [CLIENT] [HEARTBEAT] Pong received
+[19:17:08] [CLIENT] Chat 7 removed from UI and Cache
+[19:17:09] [CLIENT] Chat 8 removed from UI and Cache
+[19:17:10] [CLIENT] Chat 6 removed from UI and Cache
+[19:17:12] [CLIENT] Chat 4 removed from UI and Cache
+[19:17:12] [CLIENT] Chat area cleared
+[19:17:21] [SERVER] [JoinChatGroup] vadik joined chat 9 (group: chat_9)
+[19:17:21] [CLIENT] [HEARTBEAT] Pong received
+[19:17:22] [CLIENT] [HEARTBEAT] Pong received
+[19:17:23] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:17:24] [SERVER] [JoinChatGroup] vadik joined chat 13 (group: chat_13)
+[19:17:24] [SERVER] [JoinChatGroup] vadik joined chat 12 (group: chat_12)
+[19:17:24] [SERVER] [JoinChatGroup] vadik joined chat 11 (group: chat_11)
+[19:17:24] [SERVER] [JoinChatGroup] vadik joined chat 10 (group: chat_10)
+[19:17:25] [SERVER] [JoinChatGroup] vadik joined chat 9 (group: chat_9)
+[19:17:51] [CLIENT] [HEARTBEAT] Pong received
+[19:17:52] [CLIENT] [HEARTBEAT] Pong received
+[19:18:03] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[19:18:04] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[19:18:08] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[19:18:14] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:18:14] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[19:18:15] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[19:18:20] [CLIENT] [Chat] Message sent successfully to 5
+[19:18:21] [CLIENT] [HEARTBEAT] Pong received
+[19:18:22] [CLIENT] [HEARTBEAT] Pong received
+[19:18:25] [CLIENT] [Chat] Message sent successfully to 5
+[19:18:31] [CLIENT] [Chat] Message sent successfully to 5
+[19:18:34] [CLIENT] [Chat] Message sent successfully to 5
+[19:18:51] [CLIENT] [HEARTBEAT] Pong received
+[19:18:52] [CLIENT] [HEARTBEAT] Pong received
+[19:19:21] [CLIENT] [HEARTBEAT] Pong received
+[19:19:22] [CLIENT] [HEARTBEAT] Pong received
+[19:19:51] [CLIENT] [HEARTBEAT] Pong received
+[19:19:52] [CLIENT] [HEARTBEAT] Pong received
+[19:20:21] [CLIENT] [HEARTBEAT] Pong received
+[19:20:22] [CLIENT] [HEARTBEAT] Pong received
+[19:33:45] [CLIENT] UserSession initialized with system arguments
+[19:33:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:36:20] [CLIENT] UserSession initialized with system arguments
+[19:36:20] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:45:55] [CLIENT] UserSession initialized with system arguments
+[19:45:56] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[19:46:02] [CLIENT] Attempting login for: 123123
+[19:46:06] [CLIENT] Login successful for 123123
+[19:46:06] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[19:46:06] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 18:16:06)
+[19:46:06] [CLIENT] Session set for user 123123 (expires: 18:16:06)
+[19:46:06] [CLIENT] Auto-refresh timer started
+[19:46:06] [CLIENT] Session set for user 123123 (expires: 18:16:06)
+[19:46:06] [CLIENT] Auto-refresh timer stopped
+[19:46:06] [CLIENT] Auto-refresh timer started
+[19:46:06] [CLIENT] Initializing API services for user: 123123
+[19:46:06] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[19:46:06] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[19:46:06] [CLIENT] ContactApiService: Authorization header set
+[19:46:07] [CLIENT] [RECONNECTION] State reset
+[19:46:07] [CLIENT] [HEARTBEAT] Service started (interval: 30s)

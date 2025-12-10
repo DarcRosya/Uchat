@@ -1,4 +1,5 @@
 ﻿using System;
+using Uchat.Shared;
 using Avalonia;
 
 namespace Uchat
@@ -10,13 +11,13 @@ namespace Uchat
         // yet and stuff might break.
         [STAThread]
         public static void Main(string[] args)
-        {   
+        {
             //if (!ConnectionConfig.ValidArgs(args))
             //{
             //    Console.WriteLine("Usage:\nUchat.exe -local port (four digits)\nor\nUchat.exe -ngrok");
             //    Environment.Exit(0);
             //}
-            BuildAvaloniaApp()
+            //BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
         }
 

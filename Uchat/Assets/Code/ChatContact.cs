@@ -43,19 +43,13 @@ namespace Uchat
                 private string lastMessage = "";
                 private int unreadMessages = 0;
                 private int chatId = 0;
-				private bool isGroupChat = false;
-				private bool isPinned = false;
                 public DateTime PinnedAt { get; set; } = DateTime.MinValue;
-				private string chatName = "";
-				private string lastMessage = "";
                 public DateTime LastMessageAt { get; set; } = DateTime.MinValue;
-				private int unreadMessages = 0;
-				private int chatId = 0;
 
-				private MainWindow mainWindow;
+                private MainWindow mainWindow;
                 private Grid contactGrid = new Grid();
 
-				private Border avatarIconBorder = new Border();
+                private Border avatarIconBorder = new Border();
                 private Avalonia.Controls.Image avatarIcon = new Avalonia.Controls.Image();
                 private Avalonia.Controls.Image pinIcon = new Avalonia.Controls.Image();
                 private Border contactStatusBorder = new Border();
@@ -67,7 +61,8 @@ namespace Uchat
 
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
-                public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0, IEnumerable<int>? participants = null)
+                
+				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0, IEnumerable<int>? participants = null)
 				{
 					this.mainWindow = window;
                     chatName = newChatName;
@@ -147,23 +142,17 @@ namespace Uchat
 
                 public async Task TogglePinAsync()
                 {
-                    bool newState = !isPinned; // Инвертируем текущее состояние
+                    bool newState = !isPinned;
 
-                    // 1. Блокируем UI, чтобы не тыкали 10 раз
                     contactGrid.IsEnabled = false;
 
                     try
                     {
-                        // 2. Отправляем запрос на сервер
-                        // Для групп используем ChatId. Для личных чатов логика на сервере должна быть такой же (по ChatId)
                         bool success = await mainWindow._chatApiService.PinChatAsync(this.chatId, newState);
 
                         if (success)
                         {
-                            // 3. Если сервер сказал ОК — меняем иконку
                             SetPinVisual(newState);
-
-                            // 4. !!! САМОЕ ВАЖНОЕ: Сортируем список чатов заново !!!
                             mainWindow.SortChatsInUI();
                         }
                     }
@@ -246,36 +235,32 @@ namespace Uchat
 				public void UpdateName(string newName)
 				{
 					chatName = newName;
-
 					contactNameTextBlock.Text = newName;
 				}
 				
-				/// <summary>
-				/// Обновить последнее сообщение и счетчик непрочитанных
-				/// </summary>
-                    public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
+				public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
+                {
+                    lastMessage = newLastMessage;
+                    lastMessageTextBlock.Text = newLastMessage;
+					
+                    if (newUnreadCount.HasValue)
                     {
-                        lastMessage = newLastMessage;
-                        lastMessageTextBlock.Text = newLastMessage;
-						
-                        if (newUnreadCount.HasValue)
-                        {
-                            unreadMessages = newUnreadCount.Value;
-                            unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
-                        }
+                        unreadMessages = newUnreadCount.Value;
+                        unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
                     }
+                }
 
-                    public void SetUnreadCount(int value)
-                    {
-                        unreadMessages = Math.Max(0, value);
-                        unreadMessageTextBlock.Text = unreadMessages.ToString();
-                    }
+                public void SetUnreadCount(int value)
+                {
+                    unreadMessages = Math.Max(0, value);
+                    unreadMessageTextBlock.Text = unreadMessages.ToString();
+                }
 
-                    public void IncrementUnread(int delta = 1)
-                    {
-                        unreadMessages += delta;
-                        unreadMessageTextBlock.Text = unreadMessages.ToString();
-                    }
+                public void IncrementUnread(int delta = 1)
+                {
+                    unreadMessages += delta;
+                    unreadMessageTextBlock.Text = unreadMessages.ToString();
+                }
 				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
@@ -365,11 +350,10 @@ namespace Uchat
                 {
                     if (sender is MenuItem item)
                     {
-                        item.IsEnabled = false; // Блокируем кнопку
+                        item.IsEnabled = false;
 
                         await contact.TogglePinAsync();
                         
-                        // Возвращаем как было (или меняем на противоположное)
                         item.IsEnabled = true;
                         item.Header = contact.IsPinned ? "Unpin" : "Pin";
                     }
@@ -385,29 +369,21 @@ namespace Uchat
                     {
                         bool success = false;
 
-                        // 2. ПРОВЕРКА: Группа это или Личный чат?
                         if (contact.IsGroupChat)
                         {
-                            // === ЛОГИКА ДЛЯ ГРУПП ===
-                            // Мы "покидаем" группу на сервере
                             success = await mainWindow._chatApiService.LeaveChatAsync(contact.ChatId);
                         }
                         else
                         {
-                            // === ЛОГИКА ДЛЯ ЛИЧНЫХ ЧАТОВ ===
-                            // Мы удаляем контакт/историю (как было раньше)
                             success = await mainWindow._contactApiService.DeleteContactByChatRoomAsync(contact.ChatId);
                         }
 
-                        // 3. Обработка результата
                         if (success)
                         {
-                            // Если сервер сказал "ОК" — удаляем чат из интерфейса
                             mainWindow.RemoveChatFromUI(contact.ChatId);
                         }
                         else
                         {
-                            // Если ошибка — разблокируем обратно
                             contact.Box.IsEnabled = true;
                             Logger.Log("Server returned false when deleting/leaving chat");
                         }
@@ -420,6 +396,7 @@ namespace Uchat
                 }
 			}
         }
+        
         private async void NotificationButton_Click(object sender, RoutedEventArgs e)
         {
             NotificationBox.IsVisible = !NotificationBox.IsVisible;
