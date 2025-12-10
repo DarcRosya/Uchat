@@ -16,7 +16,7 @@ namespace Uchat.Server
             {
                 FileName = fileName,
                 Arguments = port,
-                UseShellExecute = true,
+                UseShellExecute = false,
                 CreateNoWindow = true
             };
 

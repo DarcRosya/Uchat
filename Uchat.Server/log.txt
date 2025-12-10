@@ -49605,3 +49605,88 @@
 [12:02:38] [CLIENT] [Chat] Message sent successfully to 1
 [12:03:37] [SERVER] User qqq disconnected
 [12:03:37] [SERVER] [OFFLINE] User qqq became OFFLINE
+[13:05:59] [CLIENT] UserSession initialized with system arguments
+[13:05:59] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[13:29:10] [CLIENT] UserSession initialized with system arguments
+[13:29:11] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[13:29:44] [CLIENT] Attempting registration for: 123123
+[13:30:00] [CLIENT] Attempting registration for: 123123
+[13:30:25] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\Uchat\tokens.dat
+[13:30:25] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 12:00:25)
+[13:30:25] [CLIENT] Session set for user 123123 (expires: 12:00:25)
+[13:30:25] [CLIENT] Auto-refresh timer started
+[13:30:25] [CLIENT] Initializing API services for user: 123123
+[13:30:25] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[13:30:25] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[13:30:25] [CLIENT] ContactApiService: Authorization header set
+[13:30:26] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 679bace0-7b9a-4247-977c-0073ece3bbfa
+[13:30:26] [SERVER] User 123123 (ID: 2) connected
+[13:30:26] [CLIENT] [RECONNECTION] State reset
+[13:30:26] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[13:30:26] [SERVER] [ONLINE] User 123123 became ONLINE
+[13:30:26] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[13:30:26] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[13:30:26] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[13:30:35] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[13:30:38] [CLIENT] [Chat] Message sent successfully to 2
+[13:30:53] [CLIENT] [Chat] Message sent successfully to 2
+[13:30:55] [CLIENT] [Chat] Message sent successfully to 2
+[13:30:56] [CLIENT] [HEARTBEAT] Pong received
+[13:30:57] [CLIENT] [Chat] Message sent successfully to 2
+[13:30:58] [CLIENT] [Chat] Message sent successfully to 2
+[13:31:29] [CLIENT] [HEARTBEAT] Ping failed: Server timeout (30000,00ms) elapsed without receiving a message from the server.
+[13:31:29] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[13:31:29] [CLIENT] [RECONNECTION] Disconnect reason: Server timeout (30000,00ms) elapsed without receiving a message from the server.
+[13:34:22] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: 2afN52oPpe2jcTPSZau3JA
+[13:34:22] [CLIENT] [RECONNECTION] Reconnection time: 173,23s
+[13:34:22] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 359afead-a83d-4bfb-9a60-88daa9db1b23
+[13:34:22] [SERVER] User 123123 (ID: 2) connected
+[13:34:22] [SERVER] [ONLINE] User 123123 became ONLINE
+[13:34:22] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[13:34:22] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[13:34:22] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[13:34:23] [CLIENT] Restored draft for chat 2
+[13:34:23] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[13:34:23] [CLIENT] [Chat] Message sent successfully to 2
+[13:34:26] [CLIENT] [HEARTBEAT] Pong received
+[13:34:28] [CLIENT] [Chat] Message sent successfully to 2
+[13:34:39] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[13:34:39] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[13:34:59] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: v6f7Kxcbn-pa-TDN-3fLDQ
+[13:34:59] [CLIENT] [RECONNECTION] Reconnection time: 20,16s
+[13:34:59] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 812b7480-566a-4f12-b7b6-89cdcc1d7ccc
+[13:34:59] [SERVER] User 123123 (ID: 2) connected
+[13:34:59] [SERVER] [ONLINE] User 123123 became ONLINE
+[13:35:00] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[13:35:00] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[13:35:00] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[13:35:09] [CLIENT] [Chat] Message sent successfully to 2
+[13:35:26] [CLIENT] [HEARTBEAT] Pong received
+[13:35:56] [CLIENT] [HEARTBEAT] Pong received
+[13:36:26] [CLIENT] [HEARTBEAT] Pong received
+[13:36:56] [CLIENT] [HEARTBEAT] Pong received
+[13:37:26] [CLIENT] [HEARTBEAT] Pong received
+[13:37:56] [CLIENT] [HEARTBEAT] Pong received
+[13:38:26] [CLIENT] [HEARTBEAT] Pong received
+[13:38:33] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[13:38:33] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[13:38:45] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: Ea7FH0M97TISbuPX-_2p7Q
+[13:38:45] [CLIENT] [RECONNECTION] Reconnection time: 12,47s
+[13:38:45] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 5498e381-91f1-4c80-93c0-e0e4e2152d47
+[13:38:45] [SERVER] User 123123 (ID: 2) connected
+[13:38:45] [SERVER] [ONLINE] User 123123 became ONLINE
+[13:38:45] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[13:38:45] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[13:38:45] [SERVER] [Auto-Join] User 123123 joined 2 chat groups
+[13:38:46] [CLIENT] [Chat] Message sent successfully to 2
+[13:38:56] [CLIENT] [HEARTBEAT] Pong received
+[13:39:26] [CLIENT] [HEARTBEAT] Pong received
+[13:39:56] [CLIENT] [HEARTBEAT] Pong received
+[13:40:26] [CLIENT] [HEARTBEAT] Pong received
+[13:40:56] [CLIENT] [HEARTBEAT] Pong received
+[13:41:26] [CLIENT] [HEARTBEAT] Pong received
+[13:41:56] [CLIENT] [HEARTBEAT] Pong received
+[13:42:26] [CLIENT] [HEARTBEAT] Pong received
+[13:42:56] [CLIENT] [HEARTBEAT] Pong received
+[13:43:12] [SERVER] [DISCONNECT] User 123123 (ID: 2) disconnected
+[13:43:12] [SERVER] [OFFLINE] User 123123 became OFFLINE

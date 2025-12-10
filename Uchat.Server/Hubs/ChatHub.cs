@@ -7,6 +7,7 @@ using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Chat;
 using Uchat.Shared;
 using Uchat.Server.Services.Presence;
+using Uchat.Server.Services.Reconnection;
 
 namespace Uchat.Server.Hubs;
 
@@ -16,15 +17,21 @@ public class ChatHub : Hub
     private readonly IChatRoomRepository _chatRoomRepository;
     private readonly IChatRoomService _chatRoomService;
     private readonly IUserPresenceService _presenceService;
+    private readonly IReconnectionService _reconnectionService;
 
-    // Active online users
+    // Active online users: userId -> connectionIds
     private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
 
-    public ChatHub(IChatRoomRepository chatRoomRepository, IChatRoomService chatRoomService, IUserPresenceService presenceService)
+    public ChatHub(
+        IChatRoomRepository chatRoomRepository, 
+        IChatRoomService chatRoomService, 
+        IUserPresenceService presenceService,
+        IReconnectionService reconnectionService)
     {
         _chatRoomRepository = chatRoomRepository;
         _chatRoomService = chatRoomService;
         _presenceService = presenceService;
+        _reconnectionService = reconnectionService;
     }
 
     public override async Task OnConnectedAsync()
@@ -33,24 +40,49 @@ public class ChatHub : Hub
         var username = GetUsername();
         var connectionId = Context.ConnectionId;
 
+        // Track connection for reconnection purposes
+        var sessionId = await _reconnectionService.TrackConnectionAsync(userId, connectionId, username);
+        Context.Items["SessionId"] = sessionId;
+
+        Logger.Write($"[RECONNECTION] User {username} (ID: {userId}) connected with sessionId: {sessionId}");
         Logger.Write($"User {username} (ID: {userId}) connected");
 
+        // Determine if this is a reconnection (user had previous connection within time window)
+        bool isReconnection = false;
+        var previousConnectionId = await _reconnectionService.GetPreviousConnectionIdAsync(userId);
+        
+        if (!string.IsNullOrEmpty(previousConnectionId) && previousConnectionId != connectionId)
+        {
+            isReconnection = true;
+            Logger.Write($"[RECONNECTION] User {username} is reconnecting (previous: {previousConnectionId}, new: {connectionId})");
+        }
+
         // Online logic
+        bool wasOffline = false;
         lock (OnlineUsers)
         {
             if (!OnlineUsers.ContainsKey(userId))
+            {
                 OnlineUsers[userId] = new HashSet<string>();
+                wasOffline = true;
+            }
 
             OnlineUsers[userId].Add(connectionId);
         }
 
         await _presenceService.MarkOnlineAsync(userId);
 
-        // Notify all clients if user became online
-        if (OnlineUsers[userId].Count == 1)
+        // Notify clients about reconnection or online status
+        if (wasOffline)
         {
             await Clients.All.SendAsync("UserOnline", userId);
             Logger.Write($"[ONLINE] User {username} became ONLINE");
+        }
+        else if (isReconnection)
+        {
+            // User is reconnecting (was briefly offline)
+            await Clients.All.SendAsync("UserReconnected", userId);
+            Logger.Write($"[RECONNECTION] User {username} successfully reconnected");
         }
 
         // Auto join to chatGroups
@@ -72,6 +104,12 @@ public class ChatHub : Hub
             Logger.Write($"[Auto-Join ERROR] {ex.Message}");
         }
 
+        // Mark as reconnected in tracking service
+        if (isReconnection)
+        {
+            await _reconnectionService.MarkReconnectedAsync(userId, connectionId);
+        }
+
         await base.OnConnectedAsync();
     }
 
@@ -81,7 +119,12 @@ public class ChatHub : Hub
         var username = GetUsername();
         var connectionId = Context.ConnectionId;
 
-        Logger.Write($"User {username} disconnected");
+        Logger.Write($"[DISCONNECT] User {username} (ID: {userId}) disconnected");
+        
+        if (exception != null)
+        {
+            Logger.Write($"[DISCONNECT] Disconnect reason: {exception.Message}");
+        }
 
         // Online logic
         bool becameOffline = false;
@@ -105,6 +148,14 @@ public class ChatHub : Hub
             await Clients.All.SendAsync("UserOffline", userId);
             Logger.Write($"[OFFLINE] User {username} became OFFLINE");
             await _presenceService.MarkOfflineAsync(userId);
+
+            // Clear reconnection state only after user fully goes offline
+            // (we keep it for a grace period in case they reconnect quickly)
+            _ = Task.Delay(TimeSpan.FromMinutes(5)).ContinueWith(async _ =>
+            {
+                await _reconnectionService.ClearReconnectionStateAsync(userId);
+                Logger.Write($"[RECONNECTION] Cleared reconnection state for user {username}");
+            });
         }
 
         await base.OnDisconnectedAsync(exception);
@@ -130,6 +181,13 @@ public class ChatHub : Hub
         Logger.Write($"[LeaveGroup] {GetUsername()} left {groupName}");
     }
 
+    public async Task LeaveChatGroup(int chatId)
+    {
+        string groupName = $"chat_{chatId}";
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupName);
+        Logger.Write($"[LeaveChatGroup] {GetUsername()} left chat {chatId}");
+    }
+
     public Task Heartbeat()
     {
         var userId = GetUserId();
@@ -140,7 +198,23 @@ public class ChatHub : Hub
 
         return _presenceService.RefreshAsync(userId);
     }
-    
+
+    /// Ping-Pong heartbeat - client sends ping, server responds with pong
+    /// Helps detect dead connections faster than default timeouts
+    public Task Ping()
+    {
+        var userId = GetUserId();
+        if (userId == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        // Refresh presence on every ping
+        _ = _presenceService.RefreshAsync(userId);
+
+        return Clients.Caller.SendAsync("Pong");
+    }
+
     // Getters
     private int GetUserId()
     {

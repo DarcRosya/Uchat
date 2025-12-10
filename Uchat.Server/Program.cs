@@ -23,6 +23,7 @@ using Uchat.Server.Services.Contact;
 using Uchat.Server.Data;
 using Uchat.Server.Services.Presence;
 using Uchat.Server.Services.Redis;
+using Uchat.Server.Services.Reconnection;
 using Uchat.Server.Services.Unread;
 
 public class Program
@@ -30,29 +31,20 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
         try
         {
-            //Поддержка аргументов демонизации
-            //if (args.Contains("-kill") && args.Contains("-start"))
-            //{
-            //    Console.WriteLine("Usage: Uchat.Server.exe (--daemon / --kill) port (four digits)");
-            //    return;
-            //}
             //if (!ConnectionConfig.ValidServerArgs(args))
             //{
-            //    Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill");
-            //    Environment.Exit(0);
+            //    throw new Exception("Invalid arguments");
             //}
-
+            //if (args.Contains("-start"))
+            //{
+            //    SelfDaemon.RunDetached(args);
+            //    return;
+            //}
             //if (args.Contains("-kill"))
             //{
             //    SelfDaemon.KillExisting();
-            //    return;
-            //}
-            //else if (args.Contains("-start"))
-            //{
-            //    SelfDaemon.RunDetached(args);
             //    return;
             //}
 
@@ -62,12 +54,18 @@ public class Program
             {
                 options.ListenLocalhost(port);
             });
-        }catch (Exception) { Console.WriteLine("Usage:\nUchat.Server.exe -start port (four digits)\nor\nUchat.Server.exe -kill"); return;}
-        
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Usage:\nUchat.Server.exe -start [port] (four digits)\nor\nUchat.Server.exe -kill");
+            Environment.Exit(1);
+        }
+
+
         builder.Services.AddDbContext<UchatDbContext>(options =>
         {
             options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSQL"));
-            Console.WriteLine("Using PostgreSQL (Docker shared database)");
+            //Console.WriteLine("Using PostgreSQL (Docker shared database)");
         });
 
         builder.Services.Configure<MongoDbSettings>(
@@ -103,18 +101,17 @@ public class Program
 
         // Services
         builder.Services.AddScoped<JwtService>();
-        // Email settings & sender
         builder.Services.Configure<Uchat.Server.Services.Email.EmailSettings>(builder.Configuration.GetSection("Email"));
         builder.Services.AddScoped<Uchat.Server.Services.Email.IEmailSender, Uchat.Server.Services.Email.SmtpEmailSender>();
 
         builder.Services.AddScoped<UserSecurityService>();
-
         builder.Services.AddScoped<AuthService>();
         builder.Services.AddScoped<IChatRoomService, ChatRoomService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
         builder.Services.AddScoped<IContactService, ContactService>();
         builder.Services.AddScoped<IUnreadCounterService, UnreadCounterService>();
         builder.Services.AddSingleton<IUserPresenceService, UserPresenceService>();
+        builder.Services.AddScoped<IReconnectionService, ReconnectionService>();
         builder.Services.AddHostedService<Uchat.Server.Services.Background.PendingCleanupService>();
 
         var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -156,7 +153,6 @@ public class Program
         });
 
         builder.Services.AddAuthorization();
-        // Allow controller to handle modelstate errors and return custom error format
         builder.Services.Configure<Microsoft.AspNetCore.Mvc.ApiBehaviorOptions>(options =>
         {
             options.SuppressModelStateInvalidFilter = true;
@@ -175,8 +171,8 @@ public class Program
             });
         });
 
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         // Rate Limiting
         builder.Services.AddRateLimiter(options =>
@@ -223,12 +219,10 @@ public class Program
                     
                     logger.LogInformation("PostgreSQL migrations applied successfully.");
 
-                    // 2. Seeding
                     logger.LogInformation("Initializing system data (seeding)...");
                     await DbInitializer.InitializeAsync(dbContext);
                     logger.LogInformation("System data initialized successfully");
 
-                    // 3. Mongo
                     logger.LogInformation("Initializing MongoDB...");
                     var mongoDbContext = services.GetRequiredService<MongoDbContext>();
                     var messageCount = mongoDbContext.Messages.CountDocuments(Builders<MongoMessage>.Filter.Empty);

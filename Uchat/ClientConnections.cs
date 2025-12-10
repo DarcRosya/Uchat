@@ -46,6 +46,9 @@ namespace Uchat
         private bool _hasMoreMessages = true;
         private bool _isLoadingHistory = false;
 
+        private SignalRReconnectionHandler? _reconnectionHandler;
+        private HeartbeatService? _heartbeatService;
+
         private void InitializeChatComponents()
         {
             _currentUsername = UserSession.Instance.Username ?? "Unknown";
@@ -68,6 +71,7 @@ namespace Uchat
 
             ConnectToSignalR();
         }
+
         private async void ConnectToSignalR()
         {
             var token = UserSession.Instance.AccessToken;
@@ -98,8 +102,12 @@ namespace Uchat
                         return message;
                     };
                 })
-            .WithAutomaticReconnect()
-            .Build();
+                .WithAutomaticReconnect()
+                .Build();
+
+            // Setup reconnection handlers
+            _reconnectionHandler = new SignalRReconnectionHandler(_hubConnection, UpdateConnectionStatus);
+            _reconnectionHandler.SetupReconnectionHandlers();
 
             RegisterSignalRHandlers();
 
@@ -110,6 +118,11 @@ namespace Uchat
                 await _hubConnection.StartAsync();
 
                 UpdateConnectionStatus("● Connected", Brushes.Green);
+                _reconnectionHandler.ResetReconnectionState();
+
+                // Start heartbeat service
+                _heartbeatService = new HeartbeatService(_hubConnection);
+                _heartbeatService.StartHeartbeat();
 
                 await LoadUserChatsAsync();
             }
@@ -117,11 +130,27 @@ namespace Uchat
             {
                 var status = GetConnectionErrorMessage(ex);
                 UpdateConnectionStatus($"● {status}", Brushes.Red);
+                _heartbeatService?.StopHeartbeat();
             }
         }
 
         private void RegisterSignalRHandlers()
         {
+            // Register reconnection events
+            _hubConnection.On("UserReconnected", () =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    Logger.Log("[RECONNECTION] Server confirmed reconnection");
+                });
+            });
+
+            _hubConnection.On("Pong", () =>
+            {
+                // Heartbeat response - connection is alive
+                Logger.Log("[HEARTBEAT] Pong received");
+            });
+
             _hubConnection.On<MessageDto>("ReceiveMessage", async (message) =>
             {
                 // Используем Dispatcher, так как работаем с UI
@@ -358,7 +387,7 @@ namespace Uchat
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    // Обновляем UI только если открыта инфа об ЭТОЙ группе
+                    // Обновляем UI только если открыта инфо об ЭТОЙ группе
                     if (_currentChatId == chatId && groupInfoBox.IsVisible)
                     {
                         RemoveMemberFromUiList(username);
@@ -406,7 +435,7 @@ namespace Uchat
                 backgroundForGroupInfo.IsVisible = false;
             }
             
-            // TODO: add a placeholder “Select chat”
+            // TODO: add a placeholder "Select chat"
             Logger.Log("Chat area cleared");
         }
 
@@ -423,7 +452,7 @@ namespace Uchat
                     .OrderByDescending(c => c.LastMessageAt ?? DateTime.MinValue)
                     .ToList();
 
-                await Dispatcher.UIThread.InvokeAsync(() => 
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     // 1. Создаем список ID для проверки удаленных чатов
                     var currentChatIds = sortedChats.Select(c => c.Id).ToHashSet();
@@ -453,7 +482,6 @@ namespace Uchat
                         {
                             previewText = chat.LastMessageContent;
                         }
-
                         else
                         {
                             if (chat.Name == "Notes")
@@ -473,14 +501,6 @@ namespace Uchat
                         if (_chatContacts.TryGetValue(chat.Id, out var existingContact))
                         {
                             // --- ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕГО ---
-                            // У контакта должны быть публичные методы или свойства для обновления
-                            // Если их нет - придется пересоздать, но лучше добавить методы UpdateData
-                            
-                            // Пример (предполагая, что у Contact есть методы):
-                            // existingContact.UpdatePreview(previewText);
-                            // existingContact.UpdateUnreadCount(chat.UnreadCount);
-                            
-                            // Если методов нет, просто пересоздаем (как раньше), но это вызывает мигание.
                             // Для сортировки перемещаем элемент на нужную позицию:
                             var currentIdx = contactsStackPanel.Children.IndexOf(existingContact.Box);
                             if (currentIdx != i)
@@ -554,12 +574,6 @@ namespace Uchat
                     _messageCache.Clear();
                     PlaceHolder.IsVisible = false;
 
-                    //if (groupTopBar != null)
-                    //{
-                    //    groupTopBar.IsVisible = true; 
-                    //    groupTopBarName.Text = chatName; 
-                    //}
-
                     if (_messageDrafts.TryGetValue(chatId, out var draft))
                     {
                         chatTextBox.Text = draft;
@@ -569,11 +583,6 @@ namespace Uchat
                     {
                         chatTextBox.Text = string.Empty;
                     }
-
-                    //BottomContainer.IsVisible = true;
-                    //chatTextBox.IsVisible = true;
-                    //chatTextBox.IsEnabled = true;
-                    //replyTheMessageBox.IsVisible = false;
 
                     if (AddPersonToGroup != null) AddPersonToGroup.IsVisible = false;
                     if (LeaveGroupAndConfirm != null) LeaveGroupAndConfirm.IsVisible = false;
@@ -624,14 +633,12 @@ namespace Uchat
         {
             try
             {
-                //Logger.Log($"[DEBUG] Loading history for chat {chatId}...");
                 var result = await _messageApiService.GetMessagesAsync(chatId, limit);
 
                 if (result == null)
                 {
                     return;
                 }
-                //Logger.Log($"[DEBUG] Messages count: {result.Messages?.Count ?? 0}");
                 
                 Dispatcher.UIThread.Post(() =>
                 {
@@ -650,7 +657,6 @@ namespace Uchat
 
                     foreach (var msg in messages)
                     {
-                        //Logger.Log($"[DEBUG] Rendering msg {msg.Id}, ChatId in Msg: {msg.ChatRoomId}");
                         msg.ChatRoomId = chatId;
                         DisplayMessage(msg);
                     }
@@ -660,7 +666,7 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                Logger.Log($"[ERROR] LoadChatHistoryAsync failed: {ex}");;
+                Logger.Log($"[ERROR] LoadChatHistoryAsync failed: {ex}");
             }
         }
 
@@ -729,7 +735,6 @@ namespace Uchat
 
                         var messageContextMenu = new MainWindow.Chat.MessageContextMenu(this, chatMessage, grid);
                         chatMessage.Bubble.ContextMenu = messageContextMenu.Result();
-                        // -------------------------------------
 
                         newControls.Add(grid);
                     }
@@ -1056,27 +1061,19 @@ namespace Uchat
 
         private void RemoveMemberFromUiList(string username)
         {
-            // Пробегаемся по всем детям в списке участников
-            // Используем .ToList(), чтобы создать копию коллекции и можно было безопасно удалять элементы во время перебора
             foreach (var control in groupInfoMembersStackPanel.Children.ToList())
             {
                 if (control is DockPanel panel)
                 {
-                    // Внутри DockPanel ищем TextBlock с именем
                     var textBlock = panel.Children.OfType<TextBlock>().FirstOrDefault();
                     
-                    // Проверяем, совпадает ли имя (убираем приписку " (Owner)" если есть)
                     if (textBlock != null)
                     {
-                        // Очищаем имя от " (Owner)", чтобы сравнить чисто никнейм
                         string displayedName = textBlock.Text?.Replace(" (Owner)", "") ?? "";
                         
                         if (displayedName == username)
                         {
-                            // Нашли! Удаляем панель
                             groupInfoMembersStackPanel.Children.Remove(panel);
-                            
-                            // Обновляем счетчик участников
                             UpdateMemberCountText();
                             return; 
                         }
@@ -1154,7 +1151,6 @@ namespace Uchat
         private void CancelLeaveGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             LeaveGroupAndConfirm.IsVisible = false;
-
         }
 
         private void CancelAddingGroup_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -1198,10 +1194,7 @@ namespace Uchat
                     // 3. Обновляем имя в боковой панели (список чатов)
                     if (_chatContacts.TryGetValue(_currentChatId.Value, out var contact))
                     {
-                            // Придется добавить публичный метод SetChatName в класс Contact или пересоздать контрол
-                            // contact.contactNameTextBlock.Text = newNameForGroup; // Если доступно
-                            // Или (если нет доступа к полям):
-                            contact.UpdateName(newNameForGroup); // Нужно добавить этот метод в chatcontact.cs
+                        contact.UpdateName(newNameForGroup);
                     }
                 }
             }

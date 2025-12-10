@@ -14,7 +14,7 @@ namespace Uchat.Shared
 
         public static bool ValidServerArgs(string[] args)
         {
-            if (args.Length < 1)
+            if (args.Length < 1 || args.Length > 2)
             {
                 return false;
             }
