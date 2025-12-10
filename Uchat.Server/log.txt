@@ -552,3 +552,241 @@
 [20:26:37] [SERVER] [OFFLINE] User eee became OFFLINE
 [20:26:46] [SERVER] [DISCONNECT] User qqq (ID: 2) disconnected
 [20:26:46] [SERVER] [OFFLINE] User qqq became OFFLINE
+[20:34:50] [CLIENT] [HEARTBEAT] Pong received
+[20:35:20] [CLIENT] [HEARTBEAT] Pong received
+[20:35:50] [CLIENT] [HEARTBEAT] Pong received
+[20:36:20] [CLIENT] [HEARTBEAT] Pong received
+[20:36:50] [CLIENT] [HEARTBEAT] Pong received
+[20:37:20] [CLIENT] [HEARTBEAT] Pong received
+[20:37:59] [SERVER] [DISCONNECT] User 123123 (ID: 2) disconnected
+[20:37:59] [SERVER] [OFFLINE] User 123123 became OFFLINE
+[20:38:09] [CLIENT] API Error: ServiceUnavailable - Service Unavailable
+[20:38:09] [CLIENT] API Error Body: ngrok gateway error
+The server returned an invalid or incomplete HTTP response.
+
+ERR_NGROK_3004
+
+[20:38:09] [CLIENT] [HEARTBEAT] Ping failed: The remote party closed the WebSocket connection without completing the close handshake.
+[20:38:09] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:38:09] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:38:23] [CLIENT] API Error: NotFound - Not Found
+[20:38:23] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:23] [CLIENT] API Error: NotFound - Not Found
+[20:38:23] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:23] [CLIENT] API Error: NotFound - Not Found
+[20:38:23] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:23] [CLIENT] API Error: NotFound - Not Found
+[20:38:23] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:24] [CLIENT] API Error: NotFound - Not Found
+[20:38:24] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:48] [CLIENT] API Error: ServiceUnavailable - Service Unavailable
+[20:38:48] [CLIENT] API Error Body: ngrok gateway error
+The server returned an invalid or incomplete HTTP response.
+
+ERR_NGROK_3004
+
+[20:38:48] [CLIENT] API Error: ServiceUnavailable - Service Unavailable
+[20:38:48] [CLIENT] API Error Body: ngrok gateway error
+The server returned an invalid or incomplete HTTP response.
+
+ERR_NGROK_3004
+
+[20:38:48] [CLIENT] API Error: ServiceUnavailable - Service Unavailable
+[20:38:48] [CLIENT] API Error Body: ngrok gateway error
+The server returned an invalid or incomplete HTTP response.
+
+ERR_NGROK_3004
+
+[20:38:48] [CLIENT] API Error: NotFound - Not Found
+[20:38:48] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:49] [CLIENT] API Error: NotFound - Not Found
+[20:38:49] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:50] [CLIENT] API Error: NotFound - Not Found
+[20:38:50] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:51] [CLIENT] API Error: NotFound - Not Found
+[20:38:51] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:52] [CLIENT] API Error: NotFound - Not Found
+[20:38:52] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:53] [CLIENT] API Error: NotFound - Not Found
+[20:38:53] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:54] [CLIENT] API Error: NotFound - Not Found
+[20:38:54] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:38:55] [CLIENT] API Error: NotFound - Not Found
+[20:38:55] [CLIENT] API Error Body: The endpoint unghostly-bunglingly-elli.ngrok-free.dev is offline.
+
+ERR_NGROK_3200
+
+[20:39:07] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 03e25612-a654-4b21-b891-ba31cde73ae0
+[20:39:07] [SERVER] User 123123 (ID: 2) connected
+[20:39:07] [SERVER] [ONLINE] User 123123 became ONLINE
+[20:39:07] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[20:39:07] [SERVER] [Auto-Join] User 123123 added to group chat_21
+[20:39:07] [SERVER] [Auto-Join] User 123123 added to group chat_7
+[20:39:07] [SERVER] [Auto-Join] User 123123 added to group chat_9
+[20:39:07] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[20:39:07] [SERVER] [Auto-Join] User 123123 joined 5 chat groups
+[20:39:07] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: b9p5UZrFFRYRREdG8NeQ_w
+[20:39:07] [CLIENT] [RECONNECTION] Reconnection time: 58,03s
+[20:39:20] [CLIENT] [HEARTBEAT] Pong received
+[20:39:37] [SERVER] [DISCONNECT] User 123123 (ID: 2) disconnected
+[20:39:37] [SERVER] [OFFLINE] User 123123 became OFFLINE
+[20:39:37] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:39:37] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:39:38] [CLIENT] API Error: BadRequest - Bad Request
+[20:39:38] [CLIENT] API Error Body: <!DOCTYPE html>
+<html class="h-full" lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Regular-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-RegularItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Medium-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-MediumItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-Text.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-TextItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBold.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBoldItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <meta name="author" content="ngrok">
+    <meta name="description" content="ngrok is the fastest way to put anything on the internet with a single command.">
+    <link href="https://ngrok.com/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <meta name="robots" content="noindex, nofollow">
+    <link id="style" rel="stylesheet" href="https://cdn.ngrok.com/static/css/error.css">
+    <noscript>Traffic was successfully tunneled to the ngrok agent, but the agent failed to establish a connection to the upstream web service at localhost:6000. (ERR_NGROK_8012)</noscript>
+    <script id="script" src="https://cdn.ngrok.com/static/js/error.js" type="text/javascript"></script>
+  </head>
+  <body class="h-full" id="ngrok">
+    <div id="root" data-payload="eyJhZGRyIjoibG9jYWxob3N0OjYwMDAiLCJjZG5CYXNlIjoiaHR0cHM6Ly9jZG4ubmdyb2suY29tLyIsImNvZGUiOiI4MDEyIiwiZXJyb3JUZXh0IjoiZGlhbCB0Y3AgWzo6MV06NjAwMDogY29ubmVjdGV4OiBObyBjb25uZWN0aW9uIGNvdWxkIGJlIG1hZGUgYmVjYXVzZSB0aGUgdGFyZ2V0IG1hY2hpbmUgYWN0aXZlbHkgcmVmdXNlZCBpdC4iLCJtZXNzYWdlIjoiVHJhZmZpYyB3YXMgc3VjY2Vzc2Z1bGx5IHR1bm5lbGVkIHRvIHRoZSBuZ3JvayBhZ2VudCwgYnV0IHRoZSBhZ2VudCBmYWlsZWQgdG8gZXN0YWJsaXNoIGEgY29ubmVjdGlvbiB0byB0aGUgdXBzdHJlYW0gd2ViIHNlcnZpY2UgYXQgbG9jYWxob3N0OjYwMDAuIiwic2NoZW1lIjoiaHR0cCIsInRpdGxlIjoiQmFkIFJlcXVlc3QifQ=="></div>
+  </body>
+</html>
+
+[20:39:39] [CLIENT] API Error: BadRequest - Bad Request
+[20:39:39] [CLIENT] API Error Body: <!DOCTYPE html>
+<html class="h-full" lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Regular-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-RegularItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Medium-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-MediumItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-Text.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-TextItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBold.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBoldItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <meta name="author" content="ngrok">
+    <meta name="description" content="ngrok is the fastest way to put anything on the internet with a single command.">
+    <link href="https://ngrok.com/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <meta name="robots" content="noindex, nofollow">
+    <link id="style" rel="stylesheet" href="https://cdn.ngrok.com/static/css/error.css">
+    <noscript>Traffic was successfully tunneled to the ngrok agent, but the agent failed to establish a connection to the upstream web service at localhost:6000. (ERR_NGROK_8012)</noscript>
+    <script id="script" src="https://cdn.ngrok.com/static/js/error.js" type="text/javascript"></script>
+  </head>
+  <body class="h-full" id="ngrok">
+    <div id="root" data-payload="eyJhZGRyIjoibG9jYWxob3N0OjYwMDAiLCJjZG5CYXNlIjoiaHR0cHM6Ly9jZG4ubmdyb2suY29tLyIsImNvZGUiOiI4MDEyIiwiZXJyb3JUZXh0IjoiZGlhbCB0Y3AgWzo6MV06NjAwMDogY29ubmVjdGV4OiBObyBjb25uZWN0aW9uIGNvdWxkIGJlIG1hZGUgYmVjYXVzZSB0aGUgdGFyZ2V0IG1hY2hpbmUgYWN0aXZlbHkgcmVmdXNlZCBpdC4iLCJtZXNzYWdlIjoiVHJhZmZpYyB3YXMgc3VjY2Vzc2Z1bGx5IHR1bm5lbGVkIHRvIHRoZSBuZ3JvayBhZ2VudCwgYnV0IHRoZSBhZ2VudCBmYWlsZWQgdG8gZXN0YWJsaXNoIGEgY29ubmVjdGlvbiB0byB0aGUgdXBzdHJlYW0gd2ViIHNlcnZpY2UgYXQgbG9jYWxob3N0OjYwMDAuIiwic2NoZW1lIjoiaHR0cCIsInRpdGxlIjoiQmFkIFJlcXVlc3QifQ=="></div>
+  </body>
+</html>
+
+[20:39:41] [CLIENT] API Error: BadRequest - Bad Request
+[20:39:41] [CLIENT] API Error Body: <!DOCTYPE html>
+<html class="h-full" lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Regular-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-RegularItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-Medium-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/euclid-square/EuclidSquare-MediumItalic-WebS.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-Text.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-TextItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBold.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <link rel="preload" href="https://assets.ngrok.com/fonts/ibm-plex-mono/IBMPlexMono-SemiBoldItalic.woff" as="font" type="font/woff" crossorigin="anonymous" />
+    <meta name="author" content="ngrok">
+    <meta name="description" content="ngrok is the fastest way to put anything on the internet with a single command.">
+    <link href="https://ngrok.com/assets/favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <meta name="robots" content="noindex, nofollow">
+    <link id="style" rel="stylesheet" href="https://cdn.ngrok.com/static/css/error.css">
+    <noscript>Traffic was successfully tunneled to the ngrok agent, but the agent failed to establish a connection to the upstream web service at localhost:6000. (ERR_NGROK_8012)</noscript>
+    <script id="script" src="https://cdn.ngrok.com/static/js/error.js" type="text/javascript"></script>
+  </head>
+  <body class="h-full" id="ngrok">
+    <div id="root" data-payload="eyJhZGRyIjoibG9jYWxob3N0OjYwMDAiLCJjZG5CYXNlIjoiaHR0cHM6Ly9jZG4ubmdyb2suY29tLyIsImNvZGUiOiI4MDEyIiwiZXJyb3JUZXh0IjoiZGlhbCB0Y3AgWzo6MV06NjAwMDogY29ubmVjdGV4OiBObyBjb25uZWN0aW9uIGNvdWxkIGJlIG1hZGUgYmVjYXVzZSB0aGUgdGFyZ2V0IG1hY2hpbmUgYWN0aXZlbHkgcmVmdXNlZCBpdC4iLCJtZXNzYWdlIjoiVHJhZmZpYyB3YXMgc3VjY2Vzc2Z1bGx5IHR1bm5lbGVkIHRvIHRoZSBuZ3JvayBhZ2VudCwgYnV0IHRoZSBhZ2VudCBmYWlsZWQgdG8gZXN0YWJsaXNoIGEgY29ubmVjdGlvbiB0byB0aGUgdXBzdHJlYW0gd2ViIHNlcnZpY2UgYXQgbG9jYWxob3N0OjYwMDAuIiwic2NoZW1lIjoiaHR0cCIsInRpdGxlIjoiQmFkIFJlcXVlc3QifQ=="></div>
+  </body>
+</html>
+
+[20:42:17] [CLIENT] UserSession initialized with system arguments
+[20:42:18] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:42:22] [CLIENT] Attempting login for: 123123
+[20:42:25] [CLIENT] Login successful for 123123
+[20:42:25] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:42:25] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-10 19:12:24)
+[20:42:25] [CLIENT] Session set for user 123123 (expires: 19:12:25)
+[20:42:25] [CLIENT] Auto-refresh timer started
+[20:42:25] [CLIENT] Session set for user 123123 (expires: 19:12:25)
+[20:42:25] [CLIENT] Auto-refresh timer stopped
+[20:42:25] [CLIENT] Auto-refresh timer started
+[20:42:25] [CLIENT] Initializing API services for user: 123123
+[20:42:25] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[20:42:25] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[20:42:25] [CLIENT] ContactApiService: Authorization header set
+[20:42:25] [CLIENT] [RECONNECTION] State reset
+[20:42:25] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:42:25] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: 0fe5056c-157d-49b4-a081-e5149a9aa131
+[20:42:25] [SERVER] User 123123 (ID: 2) connected
+[20:42:25] [SERVER] [ONLINE] User 123123 became ONLINE
+[20:42:25] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[20:42:25] [SERVER] [Auto-Join] User 123123 added to group chat_21
+[20:42:25] [SERVER] [Auto-Join] User 123123 added to group chat_7
+[20:42:26] [SERVER] [Auto-Join] User 123123 added to group chat_9
+[20:42:26] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[20:42:26] [SERVER] [Auto-Join] User 123123 joined 5 chat groups
+[20:42:29] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[20:42:29] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:30] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[20:42:30] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:30] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[20:42:34] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[20:42:35] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:35] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[20:42:35] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:36] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[20:42:38] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:38] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[20:42:39] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[20:42:49] [SERVER] [DISCONNECT] User 123123 (ID: 2) disconnected
+[20:42:49] [SERVER] [OFFLINE] User 123123 became OFFLINE
