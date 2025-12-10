@@ -15,14 +15,11 @@ public class User
     public required string DisplayName { get; set; } = string.Empty;
     public required string PasswordHash { get; set; } = string.Empty;
 
-    public string? AvatarUrl { get; set; }
-
     public DateTime CreatedAt { get; set; }
     public string? PasswordResetCode { get; set; }
     public DateTime? PasswordResetCodeExpiresAt { get; set; }
 
     public bool EmailConfirmed { get; set; } = false; 
-    public bool IsDeleted { get; set; } = false; // (soft delete)
     
     public ICollection<ChatRoomMember> ChatRoomMemberships { get; set; } = new List<ChatRoomMember>();
     public ICollection<Contact> Contacts { get; set; } = new List<Contact>();

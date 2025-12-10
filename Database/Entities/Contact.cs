@@ -18,9 +18,6 @@ public class Contact
     public int? SavedChatRoomId { get; set; }
 
     public string? Nickname { get; set; }
-    public bool NotificationsEnabled { get; set; } = true;
-    public bool IsFavorite { get; set; }
-    public bool IsBlocked { get; set; }
 
     public DateTime AddedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastMessageAt { get; set; }
@@ -36,6 +33,5 @@ public enum ContactStatus
     None = 0,             
     Friend = 1,           
     RequestSent = 2,      
-    RequestReceived = 3,  
-    Blocked = 4           
+    RequestReceived = 3     
 }

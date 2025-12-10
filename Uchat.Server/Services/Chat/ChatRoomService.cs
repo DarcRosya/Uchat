@@ -148,11 +148,17 @@ public sealed class ChatRoomService : IChatRoomService
                 LastMessageContent = lastContent,
                 LastMessageAt = lastDate,
                 CreatedAt = chat.CreatedAt,
-                MemberCount = chat.Members.Count
+                MemberCount = chat.Members.Count,
+                IsPinned = m.IsPinned,
+                PinnedAt = m.PinnedAt
             };
         }).ToList();
 
-        return result;
+        return result
+            .OrderByDescending(x => x.IsPinned)        
+            .ThenByDescending(x => x.PinnedAt)            
+            .ThenByDescending(x => x.LastMessageAt ?? DateTime.MinValue) 
+            .ToList();
     }
 
     public async Task<ChatResult> GetChatDetailsAsync(int chatId, int userId)
@@ -180,7 +186,6 @@ public sealed class ChatRoomService : IChatRoomService
         int creatorId, 
         string name, 
         ChatRoomType type, 
-        string? description, 
         IEnumerable<int>? initialMemberIds)
     {
         // Валидация
@@ -197,9 +202,7 @@ public sealed class ChatRoomService : IChatRoomService
             CreatorId = creatorId,
             Name = name,
             Type = type,
-            Description = description,
             CreatedAt = DateTime.UtcNow,
-            TotalMessagesCount = 0
         };
 
         try
@@ -305,33 +308,6 @@ public sealed class ChatRoomService : IChatRoomService
         return ChatResult.Success(null);
     }
 
-    public async Task<ChatResult> UpdateChatAsync(int chatId, int userId, string newName, string? newDescription)
-    {
-        var chat = await _chatRoomRepository.GetByIdAsync(chatId);
-        if (chat == null) return ChatResult.NotFound();
-
-        // Разрешаем менять название только участникам (или можно сделать проверку на CreatorId)
-        bool isMember = chat.Members.Any(m => m.UserId == userId && !m.IsDeleted);
-        if (!isMember) return ChatResult.Forbidden();
-
-        try 
-        {
-            // Здесь предполагается, что в репозитории есть метод UpdateAsync
-            // Если нет, нужно реализовать обновление полей в БД
-            chat.Name = newName;
-            chat.Description = newDescription ?? chat.Description;
-            
-            await _chatRoomRepository.UpdateAsync(chat); 
-            
-            return ChatResult.Success(chat);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Failed to update chat");
-            return ChatResult.Failure(ex.Message);
-        }
-    }
-
     public async Task<ChatResult> JoinPublicChatByNameAsync(string chatName, int userId)
     {
         // 1. Ищем чат по имени (Точное совпадение, без учета регистра)
@@ -396,6 +372,35 @@ public sealed class ChatRoomService : IChatRoomService
         {
             _logger.LogError(ex, "Failed to join public chat");
             return ChatResult.Failure("Database error while joining chat.");
+        }
+    }
+
+    public async Task<ChatResult> SetGroupPinAsync(int userId, int chatRoomId, bool isPinned)
+    {
+        try
+        {
+            var member = await _chatRoomRepository.GetMemberAsync(chatRoomId, userId);
+
+            if (member == null || member.IsDeleted || member.IsPending)
+            {
+                return ChatResult.Failure("User is not an active member of this chat.");
+            }
+
+            member.IsPinned = isPinned;
+            member.PinnedAt = isPinned ? DateTime.UtcNow : null;
+
+            await _chatRoomRepository.UpdateMemberAsync(member);
+
+            var chatRoom = await _chatRoomRepository.GetByIdAsync(chatRoomId);
+            
+            if (chatRoom == null) return ChatResult.NotFound();
+
+            return ChatResult.Success(chatRoom);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error setting pin status");
+            return ChatResult.Failure($"Failed to update pin status: {ex.Message}");
         }
     }
 

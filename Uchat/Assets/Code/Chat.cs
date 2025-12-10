@@ -165,54 +165,44 @@ namespace Uchat
 		private async void CreateGroupButton_Click(object sender, RoutedEventArgs e)
 		{
 			string username = _currentUsername;
-
-			// 2. Логика формирования названия (Possessive Case)
 			string groupName;
 			
-			// Проверка без учета регистра (S и s)
 			if (username.EndsWith("s", StringComparison.OrdinalIgnoreCase))
-			{
-				// Если заканчивается на "s" (например, Penis -> Penis' Group)
-				groupName = $"{username}' Group";
-			}
-			else
-			{
-				// Если не заканчивается на "s" (например, Sasha -> Sasha's Group)
-				groupName = $"{username}'s Group";
-			}
+                groupName = $"{username}' Group";
+            else
+                groupName = $"{username}'s Group";
 
 			try 
-			{
-				// 3. Формируем запрос с автоматическим именем
-				var request = new Shared.DTOs.CreateChatRequestDto
-				{
-					Name = groupName,
-					Type = "Public", 
-					Description = $"Group created by {username}" // Можно добавить дефолтное описание
-				};
+            {
+                var request = new Shared.DTOs.CreateChatRequestDto
+                {
+                    Name = groupName,
+                    Type = "Public", 
+                    Description = $"Group created by {username}" 
+                };
 
-				// 4. Отправляем запрос на сервер
-				var newChat = await _chatApiService.CreateChatAsync(request);
+                var newChat = await _chatApiService.CreateChatAsync(request);
 
-				if (newChat != null)
-				{
-					// 5. Обновляем список чатов
-					await LoadUserChatsAsync();
+                if (newChat != null)
+                {
+                    if (!Chat.GroupsActive)
+                    {
+                        SwitchToGroups_Click(null, null);
+                    }
 
-					// 6. Сразу открываем созданный чат
-					await OpenChatAsync(newChat.Id);
-					
-					// Если у вас было открыто поле поиска/ввода, очищаем его
-					if (searchTextBox != null) 
-						searchTextBox.Text = string.Empty;
-				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Error("Failed to create group", ex);
-				// Здесь можно добавить вывод ошибки в UI
-			}
-		}
+                    await LoadUserChatsAsync();
+
+                    await OpenChatAsync(newChat.Id);
+                    
+                    if (searchTextBox != null) 
+                        searchTextBox.Text = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Failed to create group", ex);
+            }
+        }
 
         private async void InvitePersonToChat_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
 		{

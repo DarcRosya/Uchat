@@ -5,10 +5,11 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Uchat.Shared;
 
 
-namespace Uchat
+namespace Uchat 
 {
 	public partial class MainWindow : Window
 	{
@@ -32,8 +33,10 @@ namespace Uchat
 
 				private bool isGroupChat = false;
 				private bool isPinned = false;
+                public DateTime PinnedAt { get; set; } = DateTime.MinValue;
 				private string chatName = "";
 				private string lastMessage = "";
+                public DateTime LastMessageAt { get; set; } = DateTime.MinValue;
 				private int unreadMessages = 0;
 				private int chatId = 0;
 
@@ -119,10 +122,42 @@ namespace Uchat
 
 					Chat.ChatsList.Add(this);
                 }
-				public void Pin(bool pinNeeded)
+				public void SetPinVisual(bool pinNeeded)
 				{
 					isPinned = pinNeeded;
 					pinIcon.IsVisible = pinNeeded;
+                }
+
+                public async Task TogglePinAsync()
+                {
+                    bool newState = !isPinned; // Инвертируем текущее состояние
+
+                    // 1. Блокируем UI, чтобы не тыкали 10 раз
+                    contactGrid.IsEnabled = false;
+
+                    try
+                    {
+                        // 2. Отправляем запрос на сервер
+                        // Для групп используем ChatId. Для личных чатов логика на сервере должна быть такой же (по ChatId)
+                        bool success = await mainWindow._chatApiService.PinChatAsync(this.chatId, newState);
+
+                        if (success)
+                        {
+                            // 3. Если сервер сказал ОК — меняем иконку
+                            SetPinVisual(newState);
+
+                            // 4. !!! САМОЕ ВАЖНОЕ: Сортируем список чатов заново !!!
+                            mainWindow.SortChatsInUI();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ошибка пина: {ex.Message}");
+                    }
+                    finally
+                    {
+                        contactGrid.IsEnabled = true;
+                    }
                 }
 
 				public Grid Box { get { return contactGrid; } }
@@ -135,7 +170,18 @@ namespace Uchat
                 public IBrush LastMessageForeground { get { return lastMessageTextBlock.Foreground; } set { lastMessageTextBlock.Foreground = value; } }
                 public bool IsVisible { get { return contactGrid.IsVisible; } set { contactGrid.IsVisible = value; } }
                 public bool IsGroupChat { get { return isGroupChat; } set { isGroupChat = value; UpdateIcon(); } }
-                public bool IsPinned { get { return isPinned; } set { isPinned = value; } }
+                public bool IsPinned 
+                { 
+                    get { return isPinned; } 
+                    set 
+                    { 
+                        isPinned = value; 
+                        if (pinIcon != null)
+                        {
+                            pinIcon.IsVisible = value;
+                        }
+                    } 
+                }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
 				public string ChatName { get { return chatName; } }
 				public void AddMember(string name)
@@ -259,19 +305,24 @@ namespace Uchat
                     return contextMenu;
                 }
 
-                private void menuItemPinContact_Click(object? sender, RoutedEventArgs e)
+                private async void menuItemPinContact_Click(object? sender, RoutedEventArgs e)
                 {
-					bool currentState = contact.IsPinned;
+                    if (sender is MenuItem item)
+                    {
+                        item.IsEnabled = false; // Блокируем кнопку
 
-                    contact.Pin(!currentState);
+                        await contact.TogglePinAsync();
+                        
+                        // Возвращаем как было (или меняем на противоположное)
+                        item.IsEnabled = true;
+                        item.Header = contact.IsPinned ? "Unpin" : "Pin";
+                    }
                 }
 
                 private async void menuItemDeleteContact_Click(object? sender, RoutedEventArgs e)
                 {
-                    // 1. Защита: нельзя удалить чат "Notes" (Избранное)
                     if (contact.ChatName == "Notes") return;
 
-                    // Блокируем элемент, чтобы пользователь не нажал дважды
                     contact.Box.IsEnabled = false;
 
                     try 

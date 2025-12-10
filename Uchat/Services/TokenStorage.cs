@@ -5,9 +5,6 @@ using Uchat.Shared;
 
 namespace Uchat.Services
 {
-    /// <summary>
-    /// Безопасное хранилище токенов на диске
-    /// </summary>
     public static class TokenStorage
     {
         private static readonly string _tokensFilePath;
@@ -16,7 +13,7 @@ namespace Uchat.Services
         static TokenStorage()
         {
             var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var appFolder = Path.Combine(appDataPath, "Uchat");
+            var appFolder = Path.Combine(appDataPath, "VadimDataMiner(tokenStorage)");
             
             if (!Directory.Exists(appFolder))
             {
@@ -78,10 +75,9 @@ namespace Uchat.Services
 
                     Logger.Log($"Tokens loaded for user {data.Username} (expires: {data.ExpiresAt:yyyy-MM-dd HH:mm:ss})");
                     
-                    // Проверяем не истек ли refresh token (обычно живет 30 дней)
-                    if (data.SavedAt.AddDays(30) < DateTime.UtcNow)
+                    if (data.SavedAt.AddDays(7) < DateTime.UtcNow)
                     {
-                        Logger.Log("Refresh token expired (older than 30 days)");
+                        Logger.Log("Refresh token expired (older than 7 days)");
                         ClearTokens();
                         return null;
                     }

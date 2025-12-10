@@ -6,9 +6,6 @@ using Uchat.Shared;
 
 namespace Uchat.Services;
 
-/// <summary>
-/// Handles automatic reconnection logic for SignalR hub connection
-/// </summary>
 public class SignalRReconnectionHandler
 {
     private readonly HubConnection _hubConnection;
@@ -24,9 +21,7 @@ public class SignalRReconnectionHandler
         _reconnectAttempts = 0;
     }
 
-    /// <summary>
-    /// Setup reconnection event handlers
-    /// </summary>
+    // Setup reconnection event handlers
     public void SetupReconnectionHandlers()
     {
         _hubConnection.Reconnecting += OnReconnecting;
@@ -94,9 +89,7 @@ public class SignalRReconnectionHandler
         _statusCallback?.Invoke(text, color);
     }
 
-    /// <summary>
-    /// Reset reconnection state (call after successful login)
-    /// </summary>
+    // Reset reconnection state (call after successful login)
     public void ResetReconnectionState()
     {
         _reconnectAttempts = 0;

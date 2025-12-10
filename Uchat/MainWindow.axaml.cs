@@ -187,14 +187,11 @@ namespace Uchat
 
         private async void ChangePasswordButton_Click(object? sender, RoutedEventArgs e)
         {
-            // Берем данные
             string newPass = newPasswordTextBox.Text ?? string.Empty;
             string confirmPass = confirmPasswordTextBox.Text ?? string.Empty;
             
-            // Код берем из предыдущего TextBox (он еще хранит значение)
             string code = codeVerificationTextBox.Text ?? string.Empty; 
 
-            // === ВАЖНО: Проверка двух полей на клиенте ===
             
             if (string.IsNullOrWhiteSpace(newPass))
             {
@@ -212,27 +209,23 @@ namespace Uchat
 
             if (newPass != confirmPass)
             {
-                invalidDataInResetPassword.Text = "Passwords do not match"; // Ошибка, если не совпали
+                invalidDataInResetPassword.Text = "Passwords do not match"; 
                 invalidDataInResetPassword.IsVisible = true;
                 return;
             }
 
             try
             {
-                // Отправляем на сервер только ОДИН (новый) пароль
                 await _authService.ResetPasswordAsync(_pendingResetEmail!, code, newPass);
 
-                // Успех
                 invalidDataInResetPassword.IsVisible = false;
                 ResetPasswordForm.IsVisible = false;
                 
-                // Возвращаем на логин
                 loginForm.IsVisible = true;
-                
-                // Чистим переменную
+
                 _pendingResetEmail = null;
                 
-                // Можно показать сообщение "Password changed! Please login."
+                // Maybe display the message “Password changed! Please log in.” ???
             }
             catch (Exception ex)
             {
@@ -245,7 +238,7 @@ namespace Uchat
         {
             string email = emailInRecoveryEmailTextBox.Text ?? string.Empty;
 
-            if (string.IsNullOrEmpty(email) || !email.EndsWith("@gmail.com")) // Твоя валидация
+            if (string.IsNullOrEmpty(email) || !email.EndsWith("@gmail.com"))
             {
                 invalidDataInRecoveryEmail.IsVisible = true;
                 invalidDataInRecoveryEmail.Text = "Invalid email format";
@@ -254,10 +247,8 @@ namespace Uchat
 
             try
             {
-                // 1. Отправляем запрос
                 await _authService.ForgotPasswordAsync(email);
 
-                // 2. Запоминаем почту и переключаем UI
                 _pendingResetEmail = email;
                 
                 invalidDataInRecoveryEmail.IsVisible = false;
@@ -266,7 +257,7 @@ namespace Uchat
                 CodeVerification.IsVisible = true;
                 string emailDisplay = email.Replace("@gmail.com", "");
                 codeVerificationTextBox.Watermark = $"Check email [{emailDisplay}]";
-                // Очищаем поле кода
+
                 codeVerificationTextBox.Text = string.Empty;
                 invalidDataInCodeVerification.IsVisible = false;
             }
@@ -447,10 +438,9 @@ namespace Uchat
                 
                 if (regResult != null && regResult.RequiresConfirmation)
                 {
-                    // Успех! Запоминаем ТЕКУЩИЕ данные (включая новый пароль)
                     _pendingEmail = email;
                     _pendingUsername = username;
-                    _pendingPassword = password; // <--- Запоминаем новый пароль
+                    _pendingPassword = password; 
                     
                     invalidDataInCreateAccount.IsVisible = false;
                     SwitchToVerificationUI(email);

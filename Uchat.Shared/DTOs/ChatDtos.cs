@@ -42,33 +42,23 @@ public class UpdateChatRequestDto
     public string? Description { get; set; }
 }
 
-// ========================================================================
-// RESPONSE DTOs (Сервер → Клиент)
-// ========================================================================
-
-/// <summary>
-/// Краткая информация о чате для списка чатов
-/// </summary>
 public class ChatRoomDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public string? IconUrl { get; set; }
+
     public string Type { get; set; } = string.Empty;
     public int CreatorId { get; set; }
     public DateTime CreatedAt { get; set; }
     public int MemberCount { get; set; }
     
-    // Для списка чатов
     public string? LastMessageContent { get; set; }
     public DateTime? LastMessageAt { get; set; }
+    public bool IsPinned { get; set; }
+    public DateTime? PinnedAt { get; set; }
     public int UnreadCount { get; set; }
 }
 
-/// <summary>
-/// Детальная информация о чате (включая список участников)
-/// </summary>
 public class ChatRoomDetailDto
 {
     public int Id { get; set; }
@@ -83,9 +73,6 @@ public class ChatRoomDetailDto
     public List<ChatMemberDto> Members { get; set; } = new();
 }
 
-/// <summary>
-/// Информация об участнике чата
-/// </summary>
 public class ChatMemberDto
 {
     public int UserId { get; set; }

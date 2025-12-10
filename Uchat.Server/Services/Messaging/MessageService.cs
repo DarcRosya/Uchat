@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Uchat.Database.Context;
 using Uchat.Database.Entities;
-using Uchat.Database.Extensions;
 using Uchat.Database.MongoDB;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Redis;
@@ -149,15 +148,14 @@ public sealed class MessageService : IMessageService
             messageId = mongoMessage.Id;
 
             chatRoom.LastActivityAt = mongoMessage.SentAt;
-            chatRoom.TotalMessagesCount++;
 
-            var previewContent = dto.Type == "image" ? "📷 Image" : dto.Content;
+            var previewContent = dto.Content;
             if (previewContent != null && previewContent.Length > 100) 
             {
                 previewContent = previewContent.Substring(0, 30) + "...";
             }
 
-            chatRoom.LastMessageContent = previewContent; // <--- Сохраняем текст в Postgres
+            chatRoom.LastMessageContent = previewContent; 
             chatRoom.LastMessageAt = mongoMessage.SentAt;
 
             await UpdateContactStatsAsync(chatRoom.Members.Select(m => m.UserId), dto.SenderId, mongoMessage.SentAt, cancellationToken);
@@ -228,11 +226,6 @@ public sealed class MessageService : IMessageService
             Content = mongoMessage.Content,
             Type = mongoMessage.Type,
             ReplyToMessageId = mongoMessage.ReplyToMessageId,
-            ReactionsCount = mongoMessage.Reactions.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.Count
-            ),
-            MyReactions = new List<string>(),
             SentAt = mongoMessage.SentAt,
             EditedAt = mongoMessage.EditedAt,
             IsDeleted = mongoMessage.IsDeleted,
@@ -279,12 +272,6 @@ public sealed class MessageService : IMessageService
         }
 
         return result;
-    }
-
-    public async Task<bool> MessageExistsAsync(string messageId, int chatId)
-    {
-        var message = await _messageRepository.GetMessageByIdAsync(messageId);
-        return message != null && message.ChatId == chatId && !message.IsDeleted;
     }
 
     public async Task<PaginatedMessagesDto> GetMessagesAsync(int chatId, int userId, int limit = 50, DateTime? before = null)
@@ -345,11 +332,6 @@ public sealed class MessageService : IMessageService
             Content = m.Content,
             Type = m.Type,
             ReplyToMessageId = m.ReplyToMessageId,
-            ReactionsCount = m.Reactions.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value.Count
-            ),
-            MyReactions = new List<string>(),
             SentAt = m.SentAt,
             EditedAt = m.EditedAt,
             IsDeleted = m.IsDeleted,
@@ -504,9 +486,7 @@ public sealed class MessageService : IMessageService
                 EditedAt = msg.EditedAt,
                 IsDeleted = msg.IsDeleted,
                 ReplyToMessageId = msg.ReplyToMessageId,
-                Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
-                ReactionsCount = new Dictionary<string, int>(),
-                MyReactions = new List<string>()
+                Sender = new MessageSenderDto { UserId = msg.Sender.UserId }
             };
 
             dict[item.ChatId] = dto;
@@ -540,9 +520,7 @@ public sealed class MessageService : IMessageService
                     UserId = cached.SenderId,
                     Username = cached.SenderUsername,
                     AvatarUrl = cached.SenderAvatarUrl
-                },
-                ReactionsCount = new Dictionary<string, int>(),
-                MyReactions = new List<string>()
+                }
             };
         }
         catch (JsonException)
@@ -609,7 +587,6 @@ public sealed class MessageService : IMessageService
                 UserId = sender.Id,
                 Username = sender.Username,
                 DisplayName = sender.DisplayName,
-                AvatarUrl = sender.AvatarUrl
             },
             Content = dto.Content ?? string.Empty,
             Type = string.IsNullOrWhiteSpace(dto.Type) ? "text" : dto.Type,
@@ -644,7 +621,6 @@ public sealed class MessageService : IMessageService
         }
 
         contact.LastMessageAt = sentAt;
-        contact.MessageCount++;
     }
 
     private async Task TryDeleteMessageAsync(string id)
@@ -731,8 +707,6 @@ public sealed class MessageService : IMessageService
             var chatRoom = await _context.ChatRooms.FindAsync(new object[] { message.ChatId }, cancellationToken: cancellationToken);
             if (chatRoom != null)
             {
-                // Уменьшаем счётчик сообщений в чате
-                chatRoom.TotalMessagesCount = Math.Max(0, chatRoom.TotalMessagesCount - 1);
                 await _context.SaveChangesAsync(cancellationToken);
                 await RefreshChatLastMessageCacheAsync(message.ChatId);
             }
@@ -894,8 +868,6 @@ public sealed class MessageService : IMessageService
                 IsDeleted = msg.IsDeleted,
                 ReplyToMessageId = msg.ReplyToMessageId,
                 Sender = new MessageSenderDto { UserId = msg.Sender.UserId },
-                ReactionsCount = new Dictionary<string, int>(),
-                MyReactions = new List<string>()
             };
 
             dict[item.ChatId] = dto;

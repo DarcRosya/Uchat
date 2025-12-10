@@ -2,9 +2,6 @@ using System;
 
 namespace Uchat.Server.Services.Messaging;
 
-/// <summary>
-/// Represents the outcome of a coordinated messaging operation.
-/// </summary>
 public sealed class MessagingResult
 {
     public bool Success { get; }

@@ -130,8 +130,6 @@ namespace Uchat
 								{
 									mainWindow.SwitchToGroups_Click(null, null);
 								}
-
-								await mainWindow.OpenChatAsync(contactId);
 							}
 							else
 							{
@@ -142,11 +140,6 @@ namespace Uchat
 
 								var newChat = mainWindow._chatContacts.Values
 									.FirstOrDefault(c => c.ChatName == username);
-
-								if (newChat != null)
-								{
-									await mainWindow.OpenChatAsync(newChat.ChatId);
-								}
 							}
 						}
 						else

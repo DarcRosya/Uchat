@@ -28,10 +28,7 @@ public interface IUserRepository
     
     /// WHY: Mass data upload (chat participants)
     Task<IEnumerable<User>> GetUsersByIdsAsync(IEnumerable<int> userIds);
-    
-    /// Do I really need to explain everything?
-    Task<bool> UpdateProfileAsync(int userId, string? displayName = null, string? avatarUrl = null);
-    
+
     /// IMPORTANT: Accepts ALREADY hashed new password
     Task<bool> ChangePasswordAsync(int userId, string newPasswordHash);
     
@@ -39,13 +36,6 @@ public interface IUserRepository
     Task<bool> UpdateEmailAsync(int userId, string email);
 
     Task UpdateAsync(User user);
-    
-    /// Soft deletion (IsDeleted = true)
-    /// WHY: Ability to restore the account (we won't do this feature anyway, I have more important tasks to do)
-    Task<bool> SoftDeleteAsync(int userId);
-    
-    /// Restore deleted user
-    Task<bool> RestoreAsync(int userId);
     
     /// WHY: Validation during registration
     Task<bool> UsernameExistsAsync(string username);

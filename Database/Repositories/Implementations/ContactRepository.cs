@@ -31,8 +31,6 @@ public class ContactRepository : IContactRepository
             ContactUserId = contactUserId,
             Status = ContactStatus.None,
             AddedAt = DateTime.UtcNow,
-            IsBlocked = false,
-            IsFavorite = false
         };
 
         _context.Contacts.Add(contact);
@@ -65,8 +63,7 @@ public class ContactRepository : IContactRepository
             .Include(c => c.ContactUser)
             .Include(c => c.SavedChatRoom)
             .Where(c => c.OwnerId == userId)
-            .OrderByDescending(c => c.IsFavorite)
-            .ThenByDescending(c => c.LastMessageAt)
+            .OrderByDescending(c => c.LastMessageAt)
             .ThenBy(c => c.ContactUser.Username)  
             .ToListAsync();
     }
@@ -86,17 +83,7 @@ public class ContactRepository : IContactRepository
         return await _context.Contacts
             .Include(c => c.ContactUser)
             .Include(c => c.SavedChatRoom)
-            .Where(c => c.IsFavorite && c.OwnerId == userId)
-            .OrderBy(c => c.ContactUser.Username)
-            .ToListAsync();
-    }
-    
-    public async Task<IEnumerable<Contact>> GetBlockedContactsAsync(int userId)
-    {
-        return await _context.Contacts
-            .Include(c => c.ContactUser)
-            .Include(c => c.SavedChatRoom)
-            .Where(c => c.IsBlocked && c.OwnerId == userId)
+            .Where(c => c.OwnerId == userId)
             .OrderBy(c => c.ContactUser.Username)
             .ToListAsync();
     }
@@ -112,9 +99,7 @@ public class ContactRepository : IContactRepository
                 (
                     c.ContactUser.Username.ToLower().Contains(searchTerm) ||
                     (c.ContactUser.DisplayName != null && 
-                     c.ContactUser.DisplayName.ToLower().Contains(searchTerm)) ||
-                    (c.Nickname != null && 
-                     c.Nickname.ToLower().Contains(searchTerm))
+                    c.ContactUser.DisplayName.ToLower().Contains(searchTerm))
                 )
             )
             .OrderBy(c => c.ContactUser.Username)
@@ -136,50 +121,6 @@ public class ContactRepository : IContactRepository
         return true;
     }
 
-    public async Task<bool> SetFavoriteAsync(int contactId, bool isFavorite)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
-            return false;
-
-        contact.IsFavorite = isFavorite;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-    
-    public async Task<bool> SetBlockedAsync(int contactId, bool isBlocked)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
-            return false;
-
-        contact.IsBlocked = isBlocked;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> SetNicknameAsync(int contactId, string? nickname)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null) 
-            return false;
-
-        contact.Nickname = nickname;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> SetNotificationsEnabledAsync(int contactId, bool enabled)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null) 
-            return false;
-        
-        contact.NotificationsEnabled = enabled;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<bool> UpdateLastMessageAsync(int contactId, DateTime? lastMessageAt)
     {
         var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
@@ -189,17 +130,6 @@ public class ContactRepository : IContactRepository
         contact.LastMessageAt = lastMessageAt;
         await _context.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<long> IncrementMessageCountAsync(int contactId, int increment = 1)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null) 
-            return 0;
-
-        contact.MessageCount += increment;
-        await _context.SaveChangesAsync();
-        return contact.MessageCount;
     }
 
     public async Task<bool> SetSavedChatRoomAsync(int contactId, int? chatRoomId)
@@ -256,27 +186,4 @@ public class ContactRepository : IContactRepository
                 c.ContactUserId == contactUserId
             );
     }
-    
-    public async Task<bool> IsBlockedAsync(int ownerId, int contactUserId)
-    {
-        var contact = await _context.Contacts
-            .FirstOrDefaultAsync(c => 
-                c.OwnerId == ownerId && 
-                c.ContactUserId == contactUserId
-            );
-        
-        return contact?.IsBlocked ?? false;
-    }
-    
-    public async Task<bool> BlockContactAsync(int contactId, bool isBlocked)
-    {
-        var contact = await _context.Contacts.FirstOrDefaultAsync(c => c.Id == contactId);
-        if (contact == null)
-            return false;
-
-        contact.IsBlocked = isBlocked;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-    
 }

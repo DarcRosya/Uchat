@@ -22,10 +22,10 @@ namespace Uchat.Shared
                 var currentPath = AppDomain.CurrentDomain.BaseDirectory;
                 var dirInfo = new DirectoryInfo(currentPath);
 
-                // --- ЛОГІКА ПОШУКУ ШЛЯХУ ---
+                // --- LOGIC OF THE SEARCH FOR THE PATH ---
                 string? targetDir = null;
 
-                // 1. Спроба знайти папку Uchat.Server, піднімаючись вгору (для режиму розробки)
+                // 1. Attempt to find the Uchat.Server folder by moving up (for development mode)
                 if (currentPath.Contains("bin"))
                 {
                     var parent = dirInfo.Parent;
@@ -41,7 +41,7 @@ namespace Uchat.Shared
                     }
                 }
 
-                // 2. Якщо не знайшли (або це Release), використовуємо поточну папку
+                // 2. If not found (or if it is Release), use the current folder
                 if (string.IsNullOrEmpty(targetDir))
                 {
                     targetDir = currentPath;
@@ -50,14 +50,14 @@ namespace Uchat.Shared
                 _logDirectory = targetDir;
                 _mainLogFile = Path.Combine(_logDirectory, "log.txt");
 
-                // Створюємо файл, якщо немає (перевірка прав доступу)
+                // Create a file if it does not exist (check access rights)
                 if (!File.Exists(_mainLogFile))
                 {
                     try
                     {
                         File.WriteAllText(_mainLogFile, $"=== SHARED LOG STARTED AT {DateTime.Now} ===\n");
                     }
-                    catch { /* Ігноруємо, якщо файл зайнятий */ }
+                    catch { /* Ignore if file is busy */ }
                 }
 
                 System.Diagnostics.Debug.WriteLine($"[Logger] Path set to: {_mainLogFile}");
@@ -71,7 +71,7 @@ namespace Uchat.Shared
             }
         }
 
-        // Внутрішній метод, який виконує "брудну роботу" із запису у файл
+        // Internal method that performs the “dirty work” of writing to a file
         private static void WriteInternal(string message)
         {
             // Визначаємо джерело (Client або Server) за назвою процесу
@@ -79,34 +79,30 @@ namespace Uchat.Shared
 
             var logEntry = $"[{DateTime.Now:HH:mm:ss}] [{source}] {message}\n";
 
-            // Дублюємо в Output вікно студії
+            // Duplicate in the Output window of the studio
             System.Diagnostics.Debug.Write(logEntry);
             Console.WriteLine(logEntry.TrimEnd());
 
-            // Retry logic (5 спроб записати файл, якщо він зайнятий іншим процесом)
+            // Retry logic (5 attempts to save the file if it is busy with another process)
             for (int i = 0; i < 5; i++)
             {
                 try
                 {
                     File.AppendAllText(_mainLogFile, logEntry);
-                    return; // Успіх
+                    return; // Success
                 }
                 catch (IOException)
                 {
-                    Thread.Sleep(20); // Чекаємо і пробуємо знову
+                    Thread.Sleep(20); 
                 }
                 catch
                 {
-                    return; // Інша помилка - виходимо
+                    return; 
                 }
             }
         }
 
-        // ==========================================
-        // ПУБЛІЧНІ МЕТОДИ
-        // ==========================================
-
-        // Метод 1: Write (окремий метод)
+        // Method 1: Write (separate method)
         public static void Write(string message)
         {
             lock (_lock)
@@ -115,13 +111,11 @@ namespace Uchat.Shared
             }
         }
 
-        // Метод 2: Log (тепер це окремий метод, не дзеркало)
+        // Method 2: Log (now this is a separate method, not a mirror)
         public static void Log(string message)
         {
             lock (_lock)
             {
-                // Викликаємо ту саму внутрішню логіку запису, але метод незалежний.
-                // Сюди можна додати, наприклад, префікс [INFO], якщо захочете в майбутньому.
                 WriteInternal(message);
             }
         }

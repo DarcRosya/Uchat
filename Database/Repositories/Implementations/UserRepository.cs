@@ -83,23 +83,6 @@ public class UserRepository : IUserRepository
             .ToListAsync();
     }
 
-    // UPDATE
-    public async Task<bool> UpdateProfileAsync(int userId, string? displayName = null, string? avatarUrl = null)
-    {
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null)
-            return false;
-
-        if (displayName != null)
-            user.DisplayName = displayName;
-        
-        if (avatarUrl != null)
-            user.AvatarUrl = avatarUrl;
-
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
     public async Task<bool> ChangePasswordAsync(int userId, string newPasswordHash)
     {
         var user = await _context.Users.FindAsync(userId);
@@ -133,28 +116,6 @@ public class UserRepository : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    // DELETE
-    public async Task<bool> SoftDeleteAsync(int userId)
-    {
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null)
-            return false;
-
-        user.IsDeleted = true;
-        await _context.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> RestoreAsync(int userId)
-    {
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null)
-            return false;
-
-        user.IsDeleted = false;
-        await _context.SaveChangesAsync();
-        return true;
-    }
 
     // UTILITY
     public async Task<bool> UsernameExistsAsync(string username)
@@ -181,12 +142,6 @@ public class UserRepository : IUserRepository
         user.EmailConfirmed = confirmed;
         await _context.SaveChangesAsync();
         return true;
-    }
-
-    // Supporting methods
-    private string GenerateSalt()
-    {
-        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 }
 

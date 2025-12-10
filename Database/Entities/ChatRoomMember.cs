@@ -10,6 +10,9 @@ public class ChatRoomMember
     public DateTime JoinedAt { get; set; }
     public DateTime? ClearedHistoryAt { get; set; }
 
+    public bool IsPinned { get; set; } = false;
+    public DateTime? PinnedAt { get; set; }
+
     public bool IsPending { get; set; } = false;
     public bool IsDeleted { get; set; } = false;
     public int? InvitedById { get; set; }

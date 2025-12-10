@@ -210,7 +210,7 @@ public class AuthApiService
     public async Task ForgotPasswordAsync(string email)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/auth/forgot-password", new { email });
-        // Тут можно не проверять success, так как сервер всегда отвечает OK в целях безопасности
+        // There is no need to check success here, as the server always responds with OK for security reasons.
     }
 
     public async Task VerifyResetCodeAsync(string email, string code)

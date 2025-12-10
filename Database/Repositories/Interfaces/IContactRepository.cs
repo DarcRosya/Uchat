@@ -26,12 +26,6 @@ public interface IContactRepository
     /// Update contact status
     Task<bool> UpdateStatusAsync(int contactId, ContactStatus status);
     
-    /// Get only selected contacts
-    Task<IEnumerable<Contact>> GetFavoriteContactsAsync(int userId);
-    
-    /// Get blocked contacts
-    Task<IEnumerable<Contact>> GetBlockedContactsAsync(int userId);
-    
     /// Search for contacts by name/nickname
     /// SEARCH BY:
     /// - User's username
@@ -39,15 +33,7 @@ public interface IContactRepository
     /// - Nickname (if set in the contact)
     /// - PrivateNotes (personal notes)
     Task<IEnumerable<Contact>> SearchContactsAsync(int userId, string query);
-
-    /// Block or unblock a contact
-    Task<bool> BlockContactAsync(int contactId, bool isBlocked);
-
-    /// Add/remove from favorites
-    Task<bool> SetFavoriteAsync(int contactId, bool isFavorite);
     
-    /// Set the IsBlocked flag
-    Task<bool> SetBlockedAsync(int contactId, bool isBlocked);
 
     /// Update the time of the last message
     /// WHY: Sort contacts by activity (recently communicated with - at the top)
@@ -57,23 +43,6 @@ public interface IContactRepository
     /// - Not called directly via API (internal logic)
     Task<bool> UpdateLastMessageAsync(int contactId, DateTime? lastMessageAt);
 
-    /// Increase the message counter with the contact
-    /// 
-    /// WHY: Statistics - how many messages have been sent with this contact
-    /// WHEN NEEDED:
-    /// - Automatically when sending/receiving a message
-    /// - Called from MessageRepository
-    /// - Display statistics in profile (“Total messages: 1523”)
-    /// 
-    /// IMPORTANT: Usually called together with UpdateLastMessageAsync
-    Task<long> IncrementMessageCountAsync(int contactId, int increment = 1);
-    
-    /// Set nickname for contact
-    Task<bool> SetNicknameAsync(int contactId, string? nickname);
-    
-    /// Turn notifications from a contact on/off
-    Task<bool> SetNotificationsEnabledAsync(int contactId, bool enabled);
-    
     /// Set SavedChatRoomId for quick access to chat
     Task<bool> SetSavedChatRoomAsync(int contactId, int? chatRoomId);
     
@@ -85,7 +54,4 @@ public interface IContactRepository
     
     /// Check if the contact exists
     Task<bool> ExistsAsync(int ownerId, int contactUserId);
-    
-    /// Check if the user is blocked
-    Task<bool> IsBlockedAsync(int ownerId, int contactUserId);
 }

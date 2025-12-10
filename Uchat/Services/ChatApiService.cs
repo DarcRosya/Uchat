@@ -121,6 +121,20 @@ public class ChatApiService
         }
     }
 
+    public async Task<bool> PinChatAsync(int chatId, bool isPinned)
+    {
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/chats/{chatId}/pin", new { IsPinned = isPinned });
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error pinning chat: {ex.Message}");
+            return false;
+        }
+    }
+
     public async Task<bool> AddMemberAsync(int chatId, string username)
     {
         try
@@ -189,13 +203,13 @@ public class ChatApiService
     {
         try
         {
-            // Отправляем POST запрос. Имя группы кодируем, чтобы спецсимволы не сломали URL
+            // Send a POST request. Encode the group name so that special characters do not break the URL.
             var encodedName = Uri.EscapeDataString(groupName);
             var response = await _httpClient.PostAsync($"/api/chats/join/{encodedName}", null);
 
             if (!response.IsSuccessStatusCode)
             {
-                return null; // Группа не найдена или ошибка
+                return null; 
             }
 
             return await response.Content.ReadFromJsonAsync<ChatRoomDto>();
@@ -210,7 +224,6 @@ public class ChatApiService
     {
         try
         {
-            // updateDto должен содержать Name и Description
             var response = await _httpClient.PutAsJsonAsync($"/api/chats/{chatId}", updateDto);
             
             return response.IsSuccessStatusCode;

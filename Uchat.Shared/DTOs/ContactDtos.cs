@@ -20,8 +20,7 @@ public enum ContactStatusDto
     None = 0,
     Friend = 1,
     RequestSent = 2,
-    RequestReceived = 3,
-    Blocked = 4
+    RequestReceived = 3
 }
 
 public class SendFriendRequestDto

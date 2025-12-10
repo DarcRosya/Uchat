@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 namespace Uchat.Shared.DTOs;
 
-// ========================================================================
-// REQUEST DTOs
-// ========================================================================
-
-/// <summary>
-/// DTO для создания нового сообщения
-/// </summary>
 public sealed class MessageCreateDto
 {
     public int ChatRoomId { get; set; }
@@ -19,13 +12,6 @@ public sealed class MessageCreateDto
     public string? ReplyToMessageId { get; set; }
 }
 
-// ========================================================================
-// RESPONSE DTOs
-// ========================================================================
-
-/// <summary>
-/// DTO для сообщения чата
-/// </summary>
 public sealed class MessageDto
 {
     public string Id { get; set; } = string.Empty;
@@ -34,15 +20,10 @@ public sealed class MessageDto
     public string Content { get; set; } = string.Empty;
     public string Type { get; set; } = "text";
     public string? ReplyToMessageId { get; set; }
-    public Dictionary<string, int> ReactionsCount { get; set; } = new();
-    public List<string> MyReactions { get; set; } = new();
     public DateTime SentAt { get; set; }
     public DateTime? EditedAt { get; set; }
     public bool IsDeleted { get; set; }
     
-    /// <summary>
-    /// Информация о сообщении, на которое отвечают (если это ответ)
-    /// </summary>
     public MessageReplyDto? ReplyTo { get; set; }
 }
 
@@ -61,31 +42,14 @@ public class MessageReplyDto
     public string SenderName { get; set; } = string.Empty;
 }
 
-/// <summary>
-/// Метаданные пагинации для cursor-based навигации
-/// </summary>
+
 public class PaginationInfo
 {
-    /// <summary>
-    /// Cursor для загрузки следующей порции (старых сообщений)
-    /// Это timestamp последнего сообщения в текущем списке
-    /// </summary>
     public DateTime? NextCursor { get; set; }
-    
-    /// <summary>
-    /// Есть ли ещё сообщения для загрузки
-    /// </summary>
     public bool HasMore { get; set; }
-    
-    /// <summary>
-    /// Количество сообщений в текущем ответе
-    /// </summary>
     public int Count { get; set; }
 }
 
-/// <summary>
-/// Ответ API со списком сообщений и информацией о пагинации
-/// </summary>
 public class PaginatedMessagesDto
 {
     public List<MessageDto> Messages { get; set; } = new();

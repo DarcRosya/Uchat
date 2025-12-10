@@ -320,7 +320,6 @@ public class AuthService
                 creatorId: userId,
                 name: "Notes",
                 type: ChatRoomType.DirectMessage,
-                description: "Personal notes and reminders",
                 initialMemberIds: null // Создатель добавляется автоматически
             );
 

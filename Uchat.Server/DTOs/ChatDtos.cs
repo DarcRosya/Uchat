@@ -12,8 +12,6 @@ public static class ChatRoomMappingExtensions
         {
             Id = chatRoom.Id,
             Name = chatRoom.Name,
-            Description = chatRoom.Description,
-            IconUrl = chatRoom.IconUrl,
             Type = chatRoom.Type.ToString(),
             CreatorId = chatRoom.CreatorId,
             CreatedAt = chatRoom.CreatedAt,
@@ -26,13 +24,10 @@ public static class ChatRoomMappingExtensions
         {
             Id = chatRoom.Id,
             Name = chatRoom.Name,
-            Description = chatRoom.Description,
-            IconUrl = chatRoom.IconUrl,
             Type = chatRoom.Type.ToString(),
             CreatorId = chatRoom.CreatorId,
             CreatedAt = chatRoom.CreatedAt,
             ParentChatRoomId = null,
-            MaxMembers = chatRoom.MaxMembers,
             Members = chatRoom.Members?.Select(m => new ChatMemberDto
             {
                 UserId = m.UserId,

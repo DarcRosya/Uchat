@@ -28,7 +28,6 @@ namespace Uchat.Services
             _authToken = token;
             Logger.Log($"ContactApiService: Setting auth token (length: {token?.Length ?? 0})");
             
-            // Сначала очищаем чтобы не было дублей
             _httpClient.DefaultRequestHeaders.Authorization = null;
             
             if (!string.IsNullOrEmpty(token))
@@ -67,7 +66,6 @@ namespace Uchat.Services
                     return (true, null);
                 }
                 
-                // Читаем тело ошибки
                 var errorBody = await response.Content.ReadAsStringAsync();
                 Logger.Log($"Error body: {errorBody}");
                 
@@ -90,9 +88,6 @@ namespace Uchat.Services
             }
         }
 
-        /// <summary>
-        /// Принять запрос в друзья
-        /// </summary>
         public async Task<bool> AcceptFriendRequestAsync(int contactId)
         {
             try
@@ -129,7 +124,6 @@ namespace Uchat.Services
         
                 if (!response.IsSuccessStatusCode)
                 {
-                    // ЧИТАЕМ ОШИБКУ СЕРВЕРА
                     var errorContent = await response.Content.ReadAsStringAsync();
                     Console.WriteLine($"[API ERROR] Reject failed: {response.StatusCode} - {errorContent}");
                     return false;
@@ -154,7 +148,6 @@ namespace Uchat.Services
                 // Создаем запрос вручную чтобы контролировать заголовки
                 var request = new HttpRequestMessage(HttpMethod.Get, "/api/contacts/pending");
 
-                // Явно прибиваем токен к запросу
                 //if (!string.IsNullOrEmpty(_authToken))
                 //{
                 //    request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _authToken);
@@ -170,7 +163,6 @@ namespace Uchat.Services
                 
                 //Logger.Log($"API Response: {response.StatusCode}");
 
-                // Читаем ответ
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorBody = await response.Content.ReadAsStringAsync();
@@ -179,7 +171,6 @@ namespace Uchat.Services
                     return new List<ContactDto>();
                 }
 
-                // ВАЖНО: PropertyNameCaseInsensitive для десериализации camelCase с сервера
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -205,9 +196,6 @@ namespace Uchat.Services
             }
         }
 
-        /// <summary>
-        /// Получить список всех контактов (друзей)
-        /// </summary>
         public async Task<List<ContactDto>> GetContactsAsync()
         {
             try
@@ -235,10 +223,7 @@ namespace Uchat.Services
                 return new List<ContactDto>();
             }
         }
-        
-        /// <summary>
-        /// Удалить контакт (друга) по ChatRoomId
-        /// </summary>
+
         public async Task<bool> DeleteContactByChatRoomAsync(int chatRoomId)
         {
             try
@@ -263,10 +248,7 @@ namespace Uchat.Services
                 return false;
             }
         }
-        
-        /// <summary>
-        /// Удалить контакт (друга)
-        /// </summary>
+
         public async Task<bool> DeleteContactAsync(int contactId)
         {
             try

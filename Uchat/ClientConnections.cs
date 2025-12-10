@@ -19,7 +19,7 @@ namespace Uchat
     {
         public int contactId { get; set; }
         public int chatRoomId { get; set; }
-        public string Type { get; set; } // "DirectMessage" или "GroupInvite"
+        public string Type { get; set; } // "DirectMessage" or "GroupInvite"
         public string friendUsername { get; set; } = string.Empty;
         public string friendDisplayName { get; set; } = string.Empty;
 
@@ -182,12 +182,7 @@ namespace Uchat
                     string preview = message.Content.Length > 30 ? message.Content.Substring(0, 30) + "..." : message.Content;
                     chatItem.UpdateLastMessage(preview);
 
-                    // Перемещаем чат в начало списка (визуально)
-                    if (contactsStackPanel.Children.Contains(chatItem.Box))
-                    {
-                        contactsStackPanel.Children.Remove(chatItem.Box);
-                    }
-                    contactsStackPanel.Children.Insert(0, chatItem.Box);
+                    UpdateChatListPosition(chatItem);
 
                     // 6. Если этот чат открыт прямо сейчас - показываем сообщение внутри
                     if (isCurrentChat)
@@ -447,15 +442,11 @@ namespace Uchat
             try
             {
                 var chats = await _chatApiService.GetUserChatsAsync();
-                
-                var sortedChats = chats
-                    .OrderByDescending(c => c.LastMessageAt ?? DateTime.MinValue)
-                    .ToList();
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     // 1. Создаем список ID для проверки удаленных чатов
-                    var currentChatIds = sortedChats.Select(c => c.Id).ToHashSet();
+                    var currentChatIds = chats.Select(c => c.Id).ToHashSet();
 
                     // 2. Удаляем из UI чаты, которых больше нет в списке (если вдруг удалили чат)
                     var toRemove = _chatContacts.Keys.Where(k => !currentChatIds.Contains(k)).ToList();
@@ -470,9 +461,9 @@ namespace Uchat
 
                     // 3. Обновляем или добавляем чаты
                     // Используем индекс i, чтобы ставить чат в правильную позицию в UI (для сортировки)
-                    for (int i = 0; i < sortedChats.Count; i++)
+                    for (int i = 0; i < chats.Count; i++)
                     {
-                        var chat = sortedChats[i];
+                        var chat = chats[i];
                         bool isGroup = chat.Type != "DirectMessage";
                         
                         // Текст превью
@@ -500,8 +491,8 @@ namespace Uchat
 
                         if (_chatContacts.TryGetValue(chat.Id, out var existingContact))
                         {
-                            // --- ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕГО ---
-                            // Для сортировки перемещаем элемент на нужную позицию:
+                            existingContact.IsGroupChat = isGroup;  
+
                             var currentIdx = contactsStackPanel.Children.IndexOf(existingContact.Box);
                             if (currentIdx != i)
                             {
@@ -518,23 +509,23 @@ namespace Uchat
                                 this,
                                 chat.Id
                             );
-                            
+
                             newContact.IsGroupChat = isGroup;
-                            newContact.IsVisible = isGroup ? Chat.GroupsActive : !Chat.GroupsActive;
-                            
-                            // Вставляем в конкретную позицию (i), чтобы соблюсти сортировку
+                            newContact.IsPinned = chat.IsPinned;
+                            newContact.PinnedAt = chat.PinnedAt ?? DateTime.MinValue; 
+                            newContact.LastMessageAt = chat.LastMessageAt ?? DateTime.MinValue;
+
+                            newContact.IsVisible = (isGroup == Chat.GroupsActive);
+
                             if (i < contactsStackPanel.Children.Count)
-                            {
                                 contactsStackPanel.Children.Insert(i, newContact.Box);
-                            }
                             else
-                            {
                                 contactsStackPanel.Children.Add(newContact.Box);
-                            }
                             
                             _chatContacts[chat.Id] = newContact;
                         }
                     }
+                    SearchTextBox_TextChanged(null, null);
                 });
             }
             finally
@@ -573,6 +564,15 @@ namespace Uchat
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
                     PlaceHolder.IsVisible = false;
+
+                    chatTextBox.IsVisible = true;   
+                    chatTextBox.IsEnabled = true;
+
+                    if (sendButton != null) 
+                        sendButton.IsEnabled = true;  
+            
+                    if (BottomContainer != null)
+                        BottomContainer.IsVisible = true;
 
                     if (_messageDrafts.TryGetValue(chatId, out var draft))
                     {
@@ -808,6 +808,8 @@ namespace Uchat
                             _ => "New Group!"
                         };
 
+                        bool isGroup = (notification.Type != "DirectMessage");
+
                         if (!_chatContacts.TryGetValue(notification.chatRoomId, out var contact))
                         {
                             contact = new MainWindow.Chat.Contact(
@@ -820,12 +822,19 @@ namespace Uchat
                             contact.AddMember(Chat.ClientName);
                             contact.AddMember(notification.friendDisplayName);
 
+                            contact.IsGroupChat = isGroup;
+
+                            contact.IsVisible = (Chat.GroupsActive == isGroup);
+
                             _chatContacts[notification.chatRoomId] = contact;
                             contactsStackPanel.Children.Insert(0, contact.Box);
                         }
                         else
                         {
                             contact.UpdateLastMessage(initMsg);
+                            contact.IsGroupChat = isGroup;
+
+                            contact.IsVisible = (Chat.GroupsActive == isGroup);
 
                             contactsStackPanel.Children.Remove(contact.Box);
                             contactsStackPanel.Children.Insert(0, contact.Box);
@@ -897,8 +906,7 @@ namespace Uchat
             {
                 contact.UpdateLastMessage(messageText);
 
-                contactsStackPanel.Children.Remove(contact.Box);
-                contactsStackPanel.Children.Insert(0, contact.Box);
+                UpdateChatListPosition(contact);
             }
             
             try
@@ -981,6 +989,69 @@ namespace Uchat
                 return "Server offline";
 
             return "Connection failed";
+        }
+
+        public void SortChatsInUI()
+        {
+            Chat.ChatsList.Sort((a, b) =>
+            {
+                // 1. Сначала по статусу закрепа (Pinned = true выше)
+                int pinComparison = b.IsPinned.CompareTo(a.IsPinned);
+                if (pinComparison != 0) return pinComparison;
+
+                // 2. Если оба закреплены -> Кто позже закреплен, тот выше
+                if (a.IsPinned)
+                {
+                    return b.PinnedAt.CompareTo(a.PinnedAt);
+                }
+
+                // 3. Если оба НЕ закреплены -> Кто написал последним, тот выше
+                return b.LastMessageAt.CompareTo(a.LastMessageAt);
+            });
+
+            // Перерисовка
+            contactsStackPanel.Children.Clear();
+            foreach (var contact in Chat.ChatsList)
+            {
+                contact.IsVisible = contact.IsGroupChat ? Chat.GroupsActive : !Chat.GroupsActive;
+                contactsStackPanel.Children.Add(contact.Box);
+            }
+        }
+
+        private void UpdateChatListPosition(MainWindow.Chat.Contact contact)
+        {
+            if (contact.IsPinned)
+            {
+                return; 
+            }
+
+            if (contactsStackPanel.Children.Contains(contact.Box))
+            {
+                contactsStackPanel.Children.Remove(contact.Box);
+            }
+
+            int pinnedCount = 0;
+            foreach (var child in contactsStackPanel.Children)
+            {
+                // Проверяем, является ли элемент закрепленным контактом
+                if (child is Grid grid && grid.DataContext is MainWindow.Chat.Contact c && c.IsPinned)
+                {
+                    pinnedCount++;
+                }
+                // Если мы наткнулись на первый НЕ закрепленный, можно останавливать счет, 
+                // но надежнее пройтись по списку ChatsList
+            }
+            
+            // Более надежный способ подсчета индекса для вставки:
+            // Считаем все закрепленные, которые сейчас должны быть видны
+            int insertIndex = Chat.ChatsList.Count(c => c.IsPinned && c.IsVisible);
+
+            // Защита: индекс не может быть больше реального кол-ва детей
+            if (insertIndex > contactsStackPanel.Children.Count) 
+                insertIndex = contactsStackPanel.Children.Count;
+
+            // 3. Вставляем сразу под закрепленными
+            contactsStackPanel.Children.Insert(insertIndex, contact.Box);
         }
 
         private void AddEditedLabel(MainWindow.Chat.Message message)

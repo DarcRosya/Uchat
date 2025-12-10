@@ -81,10 +81,6 @@ public class ContactService : IContactService
             existingSender.FriendRequestRejectedAt = null; 
         }
 
-        // If the receiver has blocked the sender
-        if (existingReceiver?.IsBlocked == true)
-            return ServiceResult.Failure("Cannot send request to this user");
-
         // Use transaction for atomicity
         using var transaction = await _context.Database.BeginTransactionAsync();
         try
@@ -384,95 +380,10 @@ public class ContactService : IContactService
         }
     }
 
-    public async Task<ServiceResult> BlockUserAsync(int userId, int blockedUserId)
+    public async Task<ServiceResult<IEnumerable<Database.Entities.Contact>>> GetPendingRequestsAsync(int userId)
     {
-        if (userId == blockedUserId)
-            return ServiceResult.Failure("You cannot block yourself");
-
-        var userContact = await _contactRepository.FindContactAsync(userId, blockedUserId);
-        
-        if (userContact == null)
-        {
-            // Create record if it doesn't exist
-            await _contactRepository.AddContactAsync(userId, blockedUserId);
-            userContact = await _contactRepository.FindContactAsync(userId, blockedUserId);
-        }
-
-        if (userContact!.IsBlocked)
-            return ServiceResult.Failure("User is already blocked");
-
-        // Use transaction for atomicity
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            // 1. Current user: Status Blocked + IsBlocked flag
-            await _contactRepository.UpdateStatusAsync(userContact.Id, ContactStatus.Blocked);
-            await _contactRepository.SetBlockedAsync(userContact.Id, true);
-
-            // 2. Blocked user: sever friendship (if friends)
-            var blockedUserContact = await _contactRepository.FindContactAsync(blockedUserId, userId);
-            if (blockedUserContact != null && blockedUserContact.Status == ContactStatus.Friend)
-            {
-                // Reset status to None (do not delete to preserve history)
-                await _contactRepository.UpdateStatusAsync(blockedUserContact.Id, ContactStatus.None);
-            }
-
-            await transaction.CommitAsync();
-            return ServiceResult.SuccessResult();
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            return ServiceResult.Failure("Database error occurred while blocking user");
-        }
-    }
-
-    public async Task<ServiceResult> UnblockUserAsync(int userId, int blockedUserId)
-    {
-        var userContact = await _contactRepository.FindContactAsync(userId, blockedUserId);
-
-        if (userContact == null)
-            return ServiceResult.Failure("Contact not found");
-
-        if (userContact.Status != ContactStatus.Blocked)
-            return ServiceResult.Failure("User is not blocked");
-
-        // Use transaction for consistency
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            // Revert to None
-            await _contactRepository.UpdateStatusAsync(userContact.Id, ContactStatus.None);
-            await _contactRepository.SetBlockedAsync(userContact.Id, false);
-
-            await transaction.CommitAsync();
-            return ServiceResult.SuccessResult();
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            return ServiceResult.Failure("Database error occurred while unblocking user");
-        }
-    }
-
-    public async Task<IEnumerable<Database.Entities.Contact>> GetFriendsAsync(int userId)
-    {
-        return await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.Friend);
-    }
-
-    public async Task<IEnumerable<Database.Entities.Contact>> GetIncomingRequestsAsync(int userId)
-    {
-        return await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.RequestReceived);
-    }
-
-    public async Task<IEnumerable<Database.Entities.Contact>> GetOutgoingRequestsAsync(int userId)
-    {
-        return await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.RequestSent);
-    }
-
-    public async Task<IEnumerable<Database.Entities.Contact>> GetBlockedUsersAsync(int userId)
-    {
-        return await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.Blocked);
+        var requests = await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.RequestReceived);
+        return ServiceResult<IEnumerable<Database.Entities.Contact>>.SuccessResult(requests);
     }
 
     public async Task<ServiceResult<Database.Entities.Contact>> GetContactByIdAsync(int contactId)
@@ -489,23 +400,6 @@ public class ContactService : IContactService
     {
         var contacts = await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.Friend);
         return ServiceResult<IEnumerable<Database.Entities.Contact>>.SuccessResult(contacts);
-    }
-
-    public async Task<ServiceResult<IEnumerable<Database.Entities.Contact>>> GetPendingRequestsAsync(int userId)
-    {
-        var requests = await _contactRepository.GetContactsByStatusAsync(userId, ContactStatus.RequestReceived);
-        return ServiceResult<IEnumerable<Database.Entities.Contact>>.SuccessResult(requests);
-    }
-
-    public async Task<ServiceResult> SetFavoriteAsync(int userId, int contactUserId, bool isFavorite)
-    {
-        var contact = await _contactRepository.FindContactAsync(userId, contactUserId);
-        
-        if (contact == null)
-            return ServiceResult.Failure("Contact not found");
-
-        await _contactRepository.SetFavoriteAsync(contact.Id, isFavorite);
-        return ServiceResult.SuccessResult();
     }
 
     private async Task TrackChatSortedSetForUsersAsync(int chatId, IEnumerable<int> userIds, DateTime lastActivity)
@@ -554,36 +448,5 @@ public class ContactService : IContactService
             _redisService.RemoveSortedSetMemberAsync(RedisCacheKeys.GetUserChatSortedSetKey(userId), chatId.ToString())));
 
         await Task.WhenAll(tasks);
-    }
-
-    public async Task<ServiceResult> SetNicknameAsync(int userId, int contactUserId, string? nickname)
-    {
-        var contact = await _contactRepository.FindContactAsync(userId, contactUserId);
-        
-        if (contact == null)
-            return ServiceResult.Failure("Contact not found");
-
-        await _contactRepository.SetNicknameAsync(contact.Id, nickname);
-        return ServiceResult.SuccessResult();
-    }
-
-    private async Task TrackChatSortedSetForUsersAsync(int chatId, int[] userIds, DateTime activityDate)
-    {
-        // Если Redis выключен или недоступен — выходим
-        if (!_redisService.IsAvailable) return;
-
-        // Превращаем дату в число (Score для сортировки)
-        double score = new DateTimeOffset(activityDate).ToUnixTimeSeconds();
-
-        // Пробегаемся по всем участникам (ты и твой новый друг)
-        foreach (var userId in userIds)
-        {
-            // Получаем ключ Redis для списка чатов конкретного юзера
-            var key = RedisCacheKeys.GetUserChatSortedSetKey(userId);
-            
-            // Добавляем ID чата в этот список
-            // TimeSpan.FromHours(24) — это TTL (время жизни кэша)
-            await _redisService.UpdateSortedSetAsync(key, chatId.ToString(), score, TimeSpan.FromHours(24));
-        }
     }
 }

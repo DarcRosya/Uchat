@@ -97,7 +97,6 @@ public class ChatsController : ControllerBase
             userId, 
             request.Name, 
             type, 
-            request.Description, 
             request.InitialMemberIds
         );
 
@@ -143,12 +142,24 @@ public class ChatsController : ControllerBase
         return Ok(new { message = "Member added successfully" });
     }
 
+    [HttpPut("{chatId}/pin")]
+    public async Task<IActionResult> SetChatPin(int chatId, [FromBody] PinRequestDto dto)
+    {
+        var userId = GetCurrentUserId();
+
+        var result = await _chatRoomService.SetGroupPinAsync(userId, chatId, dto.IsPinned);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.ErrorMessage);
+
+        return Ok(new { message = dto.IsPinned ? "Pinned" : "Unpinned" });
+    }
+
     [HttpPost("{chatId}/leave")]
     public async Task<IActionResult> LeaveChat(int chatId)
     {
         var userId = GetCurrentUserId();
-        
-        // Используем RemoveMemberAsync, где actorId и memberId совпадают
+
         var result = await _chatRoomService.RemoveMemberAsync(chatId, userId, userId);
 
         if (!result.IsSuccess)
@@ -159,16 +170,16 @@ public class ChatsController : ControllerBase
         return Ok(new { message = "You left the chat" });
     }
 
-    [HttpPut("{chatId}")]
-    public async Task<IActionResult> UpdateChat(int chatId, [FromBody] UpdateChatRequestDto request)
-    {
-        var userId = GetCurrentUserId();
-        var result = await _chatRoomService.UpdateChatAsync(chatId, userId, request.Name, request.Description);
+    // [HttpPut("{chatId}")]
+    // public async Task<IActionResult> UpdateChat(int chatId, [FromBody] UpdateChatRequestDto request)
+    // {
+    //     var userId = GetCurrentUserId();
+    //     var result = await _chatRoomService.UpdateChatAsync(chatId, userId, request.Name);
 
-        if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
+    //     if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
 
-        return Ok(new { message = "Chat updated" });
-    }
+    //     return Ok(new { message = "Chat updated" });
+    // }
 
     [HttpPost("{chatId}/accept")]
     public async Task<IActionResult> AcceptInvite(int chatId)

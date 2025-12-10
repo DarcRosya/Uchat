@@ -57,9 +57,6 @@ public class UchatDbContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
 
-            entity.Property(u => u.AvatarUrl)
-                .HasMaxLength(500);
-
             // PostgreSQL: CreatedAt TIMESTAMP NOT NULL DEFAULT NOW()
             // SQLite: CreatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
             entity.Property(u => u.CreatedAt)
@@ -106,12 +103,6 @@ public class UchatDbContext : DbContext
             entity.Property(cr => cr.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-
-            entity.Property(cr => cr.Description)
-                .HasMaxLength(300);
-
-            entity.Property(cr => cr.IconUrl)
-                .HasMaxLength(500);
 
             entity.Property(cr => cr.CreatedAt)
                 .HasDefaultValueSql("NOW()");
@@ -173,20 +164,8 @@ public class UchatDbContext : DbContext
             entity.HasIndex(c => c.ContactUserId)
                 .HasDatabaseName("IX_Contacts_ContactUserId");
 
-            entity.Property(c => c.Nickname)
-                .HasMaxLength(100);
-
             entity.Property(c => c.AddedAt)
                 .HasDefaultValueSql("NOW()");
-            
-            entity.Property(c => c.NotificationsEnabled)
-                .HasDefaultValue(true);
-
-            entity.Property(c => c.IsFavorite)
-                .HasDefaultValue(false);
-
-            entity.Property(c => c.IsBlocked)
-                .HasDefaultValue(false);
 
             entity.Property(c => c.Status)
                 .HasDefaultValue(ContactStatus.None);   

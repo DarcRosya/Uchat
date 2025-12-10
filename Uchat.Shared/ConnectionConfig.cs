@@ -3,10 +3,8 @@ using System.Linq;
 
 namespace Uchat.Shared
 {
-    /// <summary>
-    /// Централизованная конфигурация URL сервера
-    /// Измените NgrokUrl после запуска ngrok
-    /// </summary>
+    // Centralized server URL configuration
+    // Change NgrokUrl after starting ngrok
     public static class ConnectionConfig
     {
         private const string ngrokUrl = "https://unghostly-bunglingly-elli.ngrok-free.dev";
