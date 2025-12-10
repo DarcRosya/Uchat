@@ -18,7 +18,7 @@ namespace Uchat
             //    Environment.Exit(0);
             //}
             BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            .StartWithClassicDesktopLifetime(args);
         }
 
         // Avalonia configuration, don't remove; also used by visual designer.
