@@ -411,7 +411,7 @@ namespace Uchat
             }
         }
 
-		private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs e)
+        private void SearchTextBox_TextChanged(object? sender, TextChangedEventArgs? e)
         {
             var query = searchTextBox.Text?.Trim().ToLower() ?? string.Empty;
 

@@ -35,6 +35,8 @@ namespace Uchat
         private MessageApiService _messageApiService = null!;
         public ContactApiService _contactApiService = null!;
         private TextBlock _connectionStatusIndicator = null!;
+        private TextBlock _userStatusLabel = null!;
+        private Border _userStatusDot = null!;
         private Dictionary<string, MainWindow.Chat.Message> _messageCache = new();
         public Dictionary<int, MainWindow.Chat.Contact> _chatContacts = new();
         private Dictionary<int, string> _messageDrafts = new();
@@ -57,6 +59,8 @@ namespace Uchat
             _currentUsername = UserSession.Instance.Username ?? "Unknown";
 
             _connectionStatusIndicator = this.FindControl<TextBlock>("ConnectionStatusText") ?? new TextBlock();
+            _userStatusLabel = this.FindControl<TextBlock>("userStatusLabel") ?? new TextBlock();
+            _userStatusDot = this.FindControl<Border>("userStatusDot") ?? new Border();
 
             var token = UserSession.Instance.AccessToken ?? string.Empty;
 
@@ -356,6 +360,11 @@ namespace Uchat
                         var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                         var notif = System.Text.Json.JsonSerializer.Deserialize<FriendNotification>(json, options);
 
+                        if (notif == null)
+                        {
+                            return;
+                        }
+
                         // Маппинг полей, если с сервера пришли GroupName/InviterUsername
                         if (notif.Type == "GroupInvite")
                         {
@@ -616,10 +625,8 @@ namespace Uchat
                             // Если методов нет, просто пересоздаем (как раньше), но это вызывает мигание.
                             existingContact.SetParticipants(chat.ParticipantIds);
                             existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
+                            existingContact.IsGroupChat = isGroup;
                             RefreshContactPresence(existingContact);
-
-                            // Для сортировки перемещаем элемент на нужную позицию:
-                            existingContact.IsGroupChat = isGroup;  
 
                             var currentIdx = contactsStackPanel.Children.IndexOf(existingContact.Box);
                             if (currentIdx != i)
@@ -645,6 +652,7 @@ namespace Uchat
                             newContact.LastMessageAt = chat.LastMessageAt ?? DateTime.MinValue;
 
                             newContact.IsVisible = (isGroup == Chat.GroupsActive);
+                            RefreshContactPresence(newContact);
 
                             if (i < contactsStackPanel.Children.Count)
                                 contactsStackPanel.Children.Insert(i, newContact.Box);
@@ -961,6 +969,8 @@ namespace Uchat
 
                             contact.IsVisible = (Chat.GroupsActive == isGroup);
 
+                            contact.UpdatePresence(true, true);
+
                             _chatContacts[notification.chatRoomId] = contact;
                             contactsStackPanel.Children.Insert(0, contact.Box);
                         }
@@ -1113,7 +1123,25 @@ namespace Uchat
                     _connectionStatusIndicator.Text = text;
                     _connectionStatusIndicator.Foreground = color;
                 }
+                SetProfileOnlineState(_hubConnection != null && _hubConnection.State == HubConnectionState.Connected);
             });
+        }
+
+        private void SetProfileOnlineState(bool isOnline)
+        {
+            var activeBrush = isOnline ? Brushes.Green : Brushes.Gray;
+
+            if (_userStatusLabel != null)
+            {
+                _userStatusLabel.Text = isOnline ? "Online" : "Offline";
+                _userStatusLabel.Foreground = activeBrush;
+            }
+
+            if (_userStatusDot != null)
+            {
+                _userStatusDot.Background = activeBrush;
+                _userStatusDot.BorderBrush = activeBrush;
+            }
         }
 
         private string GetConnectionErrorMessage(Exception ex)
