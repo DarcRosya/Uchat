@@ -355,7 +355,9 @@ public class AuthService
             {
                 ChatRoomId = globalChat.Id,
                 UserId = userId,
-                JoinedAt = DateTime.UtcNow
+                JoinedAt = DateTime.UtcNow,
+                IsPending = false, 
+                InvitedById = null
             });
             
             Console.WriteLine($"[AuthService] User {username} added to Global Chat (ID: {globalChat.Id})");

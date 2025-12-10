@@ -500,39 +500,58 @@ namespace Uchat
         }
 
         private async void SendButton_Click(object? sender, RoutedEventArgs e)
-		{
-			string text;
+        {
+            if (!sendButton.IsEnabled) return; 
+            sendButton.IsEnabled = false;
 
-            if (isReplied)
-			{
-                text = chatTextBoxForReply.Text?.Trim() ?? "";
-			}
-			else
-			{
-                text = chatTextBox.Text?.Trim() ?? "";
-			}
+            try
+            {
+                string text;
 
-			if (string.IsNullOrEmpty(text)) { return; }
-			replyTheMessageBox.IsVisible = false;
+                if (isReplied)
+                {
+                    text = chatTextBoxForReply.Text?.Trim() ?? "";
+                }
+                else
+                {
+                    text = chatTextBox.Text?.Trim() ?? "";
+                }
 
-			// Отправляем сообщение на сервер через SignalR
-			try
-			{
-				await SendMessageToServerAsync(text);
-			
-				// Очищаем поля после успешной отправки
-				chatTextBox.Text = "";
-				chatTextBoxForReply.Text = "";
-				chatTextBox.IsVisible = true;
-				chatTextBoxForReply.IsVisible = false;
-				isReplied = false;
-				replyToMessageId = "";
-			}
-			catch (Exception)
-			{
-				// Если не удалось отправить, оставляем текст в поле
-			}
-		}		
+                if (string.IsNullOrEmpty(text)) 
+                { 
+                    return; 
+                }
+
+                replyTheMessageBox.IsVisible = false;
+
+                // Отправляем сообщение на сервер через SignalR
+                // Пока мы тут ждем (await), кнопка выключена, нажать второй раз нельзя
+                await SendMessageToServerAsync(text);
+                
+                // Очищаем поля ТОЛЬКО после успешной отправки
+                chatTextBox.Text = "";
+                chatTextBoxForReply.Text = "";
+                chatTextBox.IsVisible = true;
+                chatTextBoxForReply.IsVisible = false;
+                isReplied = false;
+                replyToMessageId = "";
+            }
+            catch (Exception)
+            {
+                // Если не удалось отправить, оставляем текст в поле
+                // Пользователь сможет нажать кнопку еще раз, так как мы разблокируем её в finally
+            }
+            finally
+            {
+                sendButton.IsEnabled = true;
+                
+                // Полезно вернуть фокус в поле ввода, чтобы можно было сразу писать дальше
+                if (chatTextBox.IsVisible)
+                {
+                    chatTextBox.Focus();
+                }
+            }
+        }
 		private void DontReplyTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			replyTheMessageBox.IsVisible = false;

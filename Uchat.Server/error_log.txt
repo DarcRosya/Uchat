@@ -444,3 +444,14 @@ Failed to invoke 'LeaveChatGroup' due to an error on the server. HubException: M
    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsyncCore(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
    at Microsoft.AspNetCore.SignalR.Client.HubConnection.InvokeCoreAsync(String methodName, Type returnType, Object[] args, CancellationToken cancellationToken)
    at Uchat.MainWindow.ConfirmLeaveGroup_Click(Object sender, RoutedEventArgs e) in E:\Uchat\Uchat\ClientConnections.cs:line 1113
+[ERROR] [CLIENT] [10.12.2025 11:56:54] Network error during login
+No connection could be made because the target machine actively refused it. (localhost:6000)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at Uchat.Services.AuthApiService.LoginAsync(String identifier, String password) in C:\Users\Zero\Documents\Uchat\Uchat\Services\AuthApiService.cs:line 128

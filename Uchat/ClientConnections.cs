@@ -78,6 +78,11 @@ namespace Uchat
                 return;
             }
 
+            if (_hubConnection != null) 
+            {
+                await _hubConnection.DisposeAsync();
+            }
+
             _hubConnection = new HubConnectionBuilder()
                 .WithUrl($"{ConnectionConfig.GetServerUrl(systemArgs)}/chatHub?access_token={token}", options =>
                 {
@@ -93,8 +98,8 @@ namespace Uchat
                         return message;
                     };
                 })
-                .WithAutomaticReconnect()
-                .Build();
+            .WithAutomaticReconnect()
+            .Build();
 
             RegisterSignalRHandlers();
 
@@ -834,6 +839,11 @@ namespace Uchat
             if (_currentChatId == null || message.ChatRoomId != _currentChatId.Value)
             {
                 return;
+            }
+
+            if (_messageCache.ContainsKey(message.Id)) 
+            {
+                return; 
             }
 
             var timestamp = message.SentAt.ToLocalTime().ToString("HH:mm");
