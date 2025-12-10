@@ -34,7 +34,8 @@ namespace Uchat
                 private List<string> membersList = new List<string>();
 
                 private static readonly IBrush OnlineBrush = Brush.Parse("#4cd964");
-                private static readonly IBrush OfflineBrush = Brush.Parse("#5c5c70");
+                // private static readonly IBrush OfflineBrush = Brush.Parse("#5c5c70");
+				private static readonly IBrush OfflineBrush = Brush.Parse("#171a20");
                 private readonly List<int> participantIds = new();
                 private bool allowPresence = true;
 
@@ -221,7 +222,7 @@ namespace Uchat
                     contactStatusBorder.IsVisible = true;
                     var brush = isOnline ? OnlineBrush : OfflineBrush;
                     contactStatusBorder.Background = brush;
-                    contactStatusBorder.BorderBrush = brush;
+                    //contactStatusBorder.BorderBrush = brush;
                 }
 
                 private void UpdateIcon()

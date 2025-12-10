@@ -552,3 +552,505 @@
 [20:26:37] [SERVER] [OFFLINE] User eee became OFFLINE
 [20:26:46] [SERVER] [DISCONNECT] User qqq (ID: 2) disconnected
 [20:26:46] [SERVER] [OFFLINE] User qqq became OFFLINE
+[23:42:26] [CLIENT] [HEARTBEAT] Pong received
+[23:42:46] [CLIENT] [HEARTBEAT] Pong received
+[23:42:56] [CLIENT] [HEARTBEAT] Pong received
+[23:43:16] [CLIENT] [HEARTBEAT] Pong received
+[23:43:26] [CLIENT] [HEARTBEAT] Pong received
+[23:43:29] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:29] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:32] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:32] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:33] [CLIENT] API Error: BadRequest - Bad Request
+[23:43:33] [CLIENT] API Error Body: {"error":"An exception has been raised that is likely due to a transient failure.","statusCode":400}
+[23:43:33] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:33] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:34] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:34] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:34] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:34] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:35] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:35] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:35] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:35] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:36] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[23:43:36] [SERVER] [OFFLINE] User Malex became OFFLINE
+[23:43:36] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:36] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:37] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:37] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:38] [CLIENT] API Error: InternalServerError - Internal Server Error
+[23:43:38] [CLIENT] API Error Body: {"error":"Internal server error","statusCode":500}
+[23:43:39] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[23:43:39] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[23:43:51] [CLIENT] UserSession initialized with system arguments
+[23:43:51] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[23:44:10] [CLIENT] Attempting registration for: Malex
+[23:44:20] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[23:44:20] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 22:14:20)
+[23:44:20] [CLIENT] Session set for user Malex (expires: 22:14:20)
+[23:44:20] [CLIENT] Auto-refresh timer started
+[23:44:20] [CLIENT] Initializing API services for user: Malex
+[23:44:20] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[23:44:20] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[23:44:20] [CLIENT] ContactApiService: Authorization header set
+[23:44:20] [CLIENT] [RECONNECTION] State reset
+[23:44:20] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[23:44:20] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: 4a9ae152-42ed-4a76-97f8-be8b8c1d4756
+[23:44:20] [SERVER] User Malex (ID: 2) connected
+[23:44:20] [SERVER] [ONLINE] User Malex became ONLINE
+[23:44:20] [SERVER] [Auto-Join] User Malex added to group chat_2
+[23:44:20] [SERVER] [Auto-Join] User Malex added to group chat_3
+[23:44:20] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[23:44:22] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:44:30] [CLIENT] UserSession initialized with system arguments
+[23:44:30] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[23:44:46] [CLIENT] Attempting registration for: Alexm
+[23:44:50] [CLIENT] [HEARTBEAT] Pong received
+[23:44:54] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[23:44:54] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 22:14:54)
+[23:44:54] [CLIENT] Session set for user Alexm (expires: 22:14:54)
+[23:44:54] [CLIENT] Auto-refresh timer started
+[23:44:54] [CLIENT] Initializing API services for user: Alexm
+[23:44:54] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[23:44:54] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[23:44:54] [CLIENT] ContactApiService: Authorization header set
+[23:44:54] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 82b6d57e-79ae-4d42-864f-1143a69a61eb
+[23:44:54] [SERVER] User Alexm (ID: 3) connected
+[23:44:54] [CLIENT] [RECONNECTION] State reset
+[23:44:54] [SERVER] [ONLINE] User Alexm became ONLINE
+[23:44:54] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[23:44:54] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[23:44:54] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[23:44:54] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[23:44:58] [CLIENT] Sending friend request to: Malex
+[23:44:58] [CLIENT] Response status: OK
+[23:44:58] [CLIENT] Added friend request from Alexm to notification panel
+[23:44:59] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[23:45:00] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[23:45:01] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[23:45:02] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[23:45:03] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[23:45:03] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:03] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[23:45:03] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[23:45:04] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:05] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:06] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:07] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:07] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:09] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:09] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:09] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:10] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:10] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:10] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:10] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:10] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:11] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:11] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:11] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:11] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:11] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:12] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:12] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:12] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:12] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:12] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:14] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[23:45:15] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[23:45:20] [CLIENT] [HEARTBEAT] Pong received
+[23:45:24] [CLIENT] [HEARTBEAT] Pong received
+[23:45:50] [CLIENT] [HEARTBEAT] Pong received
+[23:45:54] [CLIENT] [HEARTBEAT] Pong received
+[23:46:20] [CLIENT] [HEARTBEAT] Pong received
+[23:46:24] [CLIENT] [HEARTBEAT] Pong received
+[23:46:28] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[23:46:28] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[23:46:29] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[23:46:29] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:01:04] [CLIENT] UserSession initialized with system arguments
+[00:01:04] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:01:20] [CLIENT] Attempting registration for: Malex
+[00:01:20] [CLIENT] Registration failed: BadRequest
+[00:01:47] [CLIENT] UserSession initialized with system arguments
+[00:01:47] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:02:11] [CLIENT] Attempting registration for: Malex
+[00:02:21] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:02:21] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 22:32:21)
+[00:02:21] [CLIENT] Session set for user Malex (expires: 22:32:21)
+[00:02:21] [CLIENT] Auto-refresh timer started
+[00:02:21] [CLIENT] Initializing API services for user: Malex
+[00:02:21] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:02:21] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:02:21] [CLIENT] ContactApiService: Authorization header set
+[00:02:21] [CLIENT] [RECONNECTION] State reset
+[00:02:21] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:02:21] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: e6e5692b-5d32-4363-9ed3-1269bf771b8a
+[00:02:21] [SERVER] User Malex (ID: 2) connected
+[00:02:21] [SERVER] [ONLINE] User Malex became ONLINE
+[00:02:21] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:02:21] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:02:21] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:02:22] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:02:30] [CLIENT] UserSession initialized with system arguments
+[00:02:30] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:02:44] [CLIENT] Attempting registration for: Alexm
+[00:02:51] [CLIENT] [HEARTBEAT] Pong received
+[00:02:55] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:02:55] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 22:32:55)
+[00:02:55] [CLIENT] Session set for user Alexm (expires: 22:32:55)
+[00:02:55] [CLIENT] Auto-refresh timer started
+[00:02:55] [CLIENT] Initializing API services for user: Alexm
+[00:02:55] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:02:55] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:02:55] [CLIENT] ContactApiService: Authorization header set
+[00:02:55] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: bb0e1926-7929-4540-9a35-d83431aceefa
+[00:02:55] [SERVER] User Alexm (ID: 3) connected
+[00:02:55] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:02:55] [CLIENT] [RECONNECTION] State reset
+[00:02:55] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:02:55] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:02:55] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:02:55] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:03:03] [CLIENT] Sending friend request to: Malex
+[00:03:03] [CLIENT] Response status: OK
+[00:03:03] [CLIENT] Added friend request from Alexm to notification panel
+[00:03:04] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:03:05] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:03:06] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:03:07] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:03:07] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:03:07] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:03:07] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:03:10] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:03:12] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:03:21] [CLIENT] [HEARTBEAT] Pong received
+[00:03:25] [CLIENT] [HEARTBEAT] Pong received
+[00:03:27] [SERVER] [JoinChatGroup] Alexm joined chat 3 (group: chat_3)
+[00:03:30] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:03:31] [SERVER] [JoinChatGroup] Alexm joined chat 3 (group: chat_3)
+[00:03:34] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:03:35] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:03:38] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:03:46] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:03:51] [CLIENT] [HEARTBEAT] Pong received
+[00:03:52] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[00:03:52] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[00:03:54] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[00:03:54] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:04:44] [CLIENT] UserSession initialized with system arguments
+[00:04:44] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:05:00] [CLIENT] Attempting registration for: Malex
+[00:05:11] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:05:11] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 22:35:11)
+[00:05:11] [CLIENT] Session set for user Malex (expires: 22:35:11)
+[00:05:11] [CLIENT] Auto-refresh timer started
+[00:05:11] [CLIENT] Initializing API services for user: Malex
+[00:05:11] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:05:11] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:05:11] [CLIENT] ContactApiService: Authorization header set
+[00:05:11] [CLIENT] [RECONNECTION] State reset
+[00:05:11] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:05:11] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: 1a017847-a5fe-49df-a254-3cac6abe8322
+[00:05:11] [SERVER] User Malex (ID: 2) connected
+[00:05:11] [SERVER] [ONLINE] User Malex became ONLINE
+[00:05:11] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:05:11] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:05:11] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:05:12] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:05:17] [CLIENT] UserSession initialized with system arguments
+[00:05:17] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:05:41] [CLIENT] [HEARTBEAT] Pong received
+[00:05:53] [CLIENT] Attempting registration for: Alexm
+[00:06:11] [CLIENT] [HEARTBEAT] Pong received
+[00:06:13] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:06:13] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 22:36:13)
+[00:06:13] [CLIENT] Session set for user Alexm (expires: 22:36:13)
+[00:06:13] [CLIENT] Auto-refresh timer started
+[00:06:13] [CLIENT] Initializing API services for user: Alexm
+[00:06:13] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:06:13] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:06:13] [CLIENT] ContactApiService: Authorization header set
+[00:06:13] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 1b55d9f3-7d73-4d01-aa3a-dbe77c986499
+[00:06:13] [SERVER] User Alexm (ID: 3) connected
+[00:06:13] [CLIENT] [RECONNECTION] State reset
+[00:06:13] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:06:13] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:06:13] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:06:13] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:06:13] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:06:17] [CLIENT] Sending friend request to: Malex
+[00:06:17] [CLIENT] Response status: OK
+[00:06:17] [CLIENT] Added friend request from Alexm to notification panel
+[00:06:17] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:18] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:19] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:20] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:22] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:23] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:06:23] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:06:23] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:06:23] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:06:26] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:06:26] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:06:29] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:06:41] [CLIENT] [HEARTBEAT] Pong received
+[00:06:43] [CLIENT] [HEARTBEAT] Pong received
+[00:07:07] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[00:07:07] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[00:07:09] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[00:07:09] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:09:33] [CLIENT] UserSession initialized with system arguments
+[00:09:33] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:09:51] [CLIENT] Attempting registration for: Malex
+[00:10:01] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:10:01] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 22:40:01)
+[00:10:01] [CLIENT] Session set for user Malex (expires: 22:40:01)
+[00:10:01] [CLIENT] Auto-refresh timer started
+[00:10:01] [CLIENT] Initializing API services for user: Malex
+[00:10:01] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:10:01] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:10:01] [CLIENT] ContactApiService: Authorization header set
+[00:10:01] [CLIENT] [RECONNECTION] State reset
+[00:10:01] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:10:01] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: 91b60c70-fdc9-4ad6-9149-5eed28bed99a
+[00:10:01] [SERVER] User Malex (ID: 2) connected
+[00:10:01] [SERVER] [ONLINE] User Malex became ONLINE
+[00:10:01] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:10:01] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:10:01] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:10:08] [CLIENT] UserSession initialized with system arguments
+[00:10:09] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:10:30] [CLIENT] Attempting registration for: Alexm
+[00:10:31] [CLIENT] [HEARTBEAT] Pong received
+[00:10:44] [CLIENT] Attempting registration for: Alexm
+[00:10:58] [CLIENT] Registration failed: InternalServerError
+[00:11:01] [CLIENT] [HEARTBEAT] Pong received
+[00:11:08] [CLIENT] Registration failed: InternalServerError
+[00:11:15] [CLIENT] Attempting registration for: Alexm
+[00:11:29] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:11:29] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 22:41:29)
+[00:11:29] [CLIENT] Session set for user Alexm (expires: 22:41:29)
+[00:11:29] [CLIENT] Auto-refresh timer started
+[00:11:29] [CLIENT] Initializing API services for user: Alexm
+[00:11:29] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:11:29] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:11:29] [CLIENT] ContactApiService: Authorization header set
+[00:11:29] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 009c897b-80db-457e-93ba-3375c3da7349
+[00:11:29] [SERVER] User Alexm (ID: 3) connected
+[00:11:29] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:11:29] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:11:29] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:11:29] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:11:29] [CLIENT] [RECONNECTION] State reset
+[00:11:29] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:11:31] [CLIENT] [HEARTBEAT] Pong received
+[00:11:33] [CLIENT] Sending friend request to: Malex
+[00:11:33] [CLIENT] Response status: OK
+[00:11:33] [CLIENT] Added friend request from Alexm to notification panel
+[00:11:34] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:11:35] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:11:36] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:11:37] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:11:38] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:11:38] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:11:38] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:11:39] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:11:40] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:11:40] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:11:46] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[00:11:46] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[00:11:48] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[00:11:48] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:35:15] [CLIENT] UserSession initialized with system arguments
+[00:35:15] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:35:30] [CLIENT] Attempting registration for: Malex
+[00:35:48] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:35:48] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 23:05:48)
+[00:35:48] [CLIENT] Session set for user Malex (expires: 23:05:48)
+[00:35:48] [CLIENT] Auto-refresh timer started
+[00:35:48] [CLIENT] Initializing API services for user: Malex
+[00:35:48] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:35:48] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:35:48] [CLIENT] ContactApiService: Authorization header set
+[00:35:48] [CLIENT] [RECONNECTION] State reset
+[00:35:48] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:35:48] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: a0035740-6f83-4da1-a6af-4515d804493c
+[00:35:48] [SERVER] User Malex (ID: 2) connected
+[00:35:48] [SERVER] [ONLINE] User Malex became ONLINE
+[00:35:48] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:35:48] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:35:48] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:35:58] [CLIENT] UserSession initialized with system arguments
+[00:35:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:36:16] [CLIENT] Attempting registration for: Alexm
+[00:36:18] [CLIENT] [HEARTBEAT] Pong received
+[00:36:26] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:36:26] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 23:06:26)
+[00:36:26] [CLIENT] Session set for user Alexm (expires: 23:06:26)
+[00:36:26] [CLIENT] Auto-refresh timer started
+[00:36:26] [CLIENT] Initializing API services for user: Alexm
+[00:36:26] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:36:26] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:36:26] [CLIENT] ContactApiService: Authorization header set
+[00:36:26] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 5d15b3cc-5a0f-4c9c-81fb-c31eaa90aa5e
+[00:36:26] [SERVER] User Alexm (ID: 3) connected
+[00:36:26] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:36:26] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:36:26] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:36:26] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:36:26] [CLIENT] [RECONNECTION] State reset
+[00:36:26] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:36:31] [CLIENT] Sending friend request to: Malex
+[00:36:31] [CLIENT] Response status: OK
+[00:36:31] [CLIENT] Added friend request from Alexm to notification panel
+[00:36:32] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:33] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:34] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:35] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:36] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:37] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:36:38] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:36:38] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:36:38] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:36:39] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:36:40] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:36:48] [CLIENT] [HEARTBEAT] Pong received
+[00:36:56] [CLIENT] [HEARTBEAT] Pong received
+[00:37:18] [CLIENT] [HEARTBEAT] Pong received
+[00:37:26] [CLIENT] [HEARTBEAT] Pong received
+[00:37:48] [CLIENT] [HEARTBEAT] Pong received
+[00:37:56] [CLIENT] [HEARTBEAT] Pong received
+[00:37:57] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[00:37:57] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[00:37:59] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[00:37:59] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:38:20] [CLIENT] UserSession initialized with system arguments
+[00:38:21] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:38:34] [CLIENT] Attempting registration for: Malex
+[00:38:44] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:38:44] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 23:08:44)
+[00:38:44] [CLIENT] Session set for user Malex (expires: 23:08:44)
+[00:38:44] [CLIENT] Auto-refresh timer started
+[00:38:44] [CLIENT] Initializing API services for user: Malex
+[00:38:44] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:38:44] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:38:44] [CLIENT] ContactApiService: Authorization header set
+[00:38:44] [CLIENT] [RECONNECTION] State reset
+[00:38:44] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:38:44] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: 09464de4-64f4-4c02-b8fa-0b43d16c2b05
+[00:38:44] [SERVER] User Malex (ID: 2) connected
+[00:38:44] [SERVER] [ONLINE] User Malex became ONLINE
+[00:38:44] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:38:44] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:38:44] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:38:51] [CLIENT] UserSession initialized with system arguments
+[00:38:52] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:39:06] [CLIENT] Attempting registration for: Alexm
+[00:39:14] [CLIENT] [HEARTBEAT] Pong received
+[00:39:16] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:39:16] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 23:09:16)
+[00:39:16] [CLIENT] Session set for user Alexm (expires: 23:09:16)
+[00:39:16] [CLIENT] Auto-refresh timer started
+[00:39:16] [CLIENT] Initializing API services for user: Alexm
+[00:39:16] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:39:16] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:39:16] [CLIENT] ContactApiService: Authorization header set
+[00:39:16] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 865b964e-4adb-4883-a3aa-e39ecf4c7005
+[00:39:16] [SERVER] User Alexm (ID: 3) connected
+[00:39:16] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:39:16] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:39:16] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:39:16] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:39:16] [CLIENT] [RECONNECTION] State reset
+[00:39:16] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:39:20] [CLIENT] Sending friend request to: Malex
+[00:39:20] [CLIENT] Response status: OK
+[00:39:20] [CLIENT] Added friend request from Alexm to notification panel
+[00:39:21] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:39:22] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:39:23] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:39:24] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:39:24] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:39:24] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:39:24] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:39:27] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:39:28] [SERVER] [JoinChatGroup] Malex joined chat 2 (group: chat_2)
+[00:39:29] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:39:44] [CLIENT] [HEARTBEAT] Pong received
+[00:39:46] [CLIENT] [HEARTBEAT] Pong received
+[00:40:14] [CLIENT] [HEARTBEAT] Pong received
+[00:40:16] [CLIENT] [HEARTBEAT] Pong received
+[00:40:44] [CLIENT] [HEARTBEAT] Pong received
+[00:40:46] [CLIENT] [HEARTBEAT] Pong received
+[00:41:14] [CLIENT] [HEARTBEAT] Pong received
+[00:41:16] [CLIENT] [HEARTBEAT] Pong received
+[00:41:21] [SERVER] [DISCONNECT] User Alexm (ID: 3) disconnected
+[00:41:21] [SERVER] [OFFLINE] User Alexm became OFFLINE
+[00:41:23] [SERVER] [DISCONNECT] User Malex (ID: 2) disconnected
+[00:41:23] [SERVER] [OFFLINE] User Malex became OFFLINE
+[00:41:46] [CLIENT] UserSession initialized with system arguments
+[00:41:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:42:01] [CLIENT] Attempting registration for: Malex
+[00:42:10] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:42:10] [CLIENT] Tokens saved for user Malex (expires: 2025-12-10 23:12:10)
+[00:42:10] [CLIENT] Session set for user Malex (expires: 23:12:10)
+[00:42:10] [CLIENT] Auto-refresh timer started
+[00:42:10] [CLIENT] Initializing API services for user: Malex
+[00:42:10] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[00:42:10] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[00:42:10] [CLIENT] ContactApiService: Authorization header set
+[00:42:11] [CLIENT] [RECONNECTION] State reset
+[00:42:11] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:42:11] [SERVER] [RECONNECTION] User Malex (ID: 2) connected with sessionId: 71326464-b784-4920-be0e-8c1fa63488f4
+[00:42:11] [SERVER] User Malex (ID: 2) connected
+[00:42:11] [SERVER] [ONLINE] User Malex became ONLINE
+[00:42:11] [SERVER] [Auto-Join] User Malex added to group chat_2
+[00:42:11] [SERVER] [Auto-Join] User Malex added to group chat_3
+[00:42:11] [SERVER] [Auto-Join] User Malex joined 2 chat groups
+[00:42:20] [CLIENT] UserSession initialized with system arguments
+[00:42:21] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[00:42:37] [CLIENT] Attempting registration for: Alexm
+[00:42:41] [CLIENT] [HEARTBEAT] Pong received
+[00:42:48] [CLIENT] TokenStorage initialized at: C:\Users\AlexS\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[00:42:48] [CLIENT] Tokens saved for user Alexm (expires: 2025-12-10 23:12:48)
+[00:42:48] [CLIENT] Session set for user Alexm (expires: 23:12:48)
+[00:42:48] [CLIENT] Auto-refresh timer started
+[00:42:48] [CLIENT] Initializing API services for user: Alexm
+[00:42:48] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[00:42:48] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[00:42:48] [CLIENT] ContactApiService: Authorization header set
+[00:42:48] [SERVER] [RECONNECTION] User Alexm (ID: 3) connected with sessionId: 4e10556e-19bc-4a1d-abb5-f7bc27c99bdc
+[00:42:48] [SERVER] User Alexm (ID: 3) connected
+[00:42:48] [CLIENT] [RECONNECTION] State reset
+[00:42:48] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[00:42:48] [SERVER] [ONLINE] User Alexm became ONLINE
+[00:42:48] [SERVER] [Auto-Join] User Alexm added to group chat_4
+[00:42:48] [SERVER] [Auto-Join] User Alexm added to group chat_5
+[00:42:48] [SERVER] [Auto-Join] User Alexm joined 2 chat groups
+[00:42:52] [CLIENT] Sending friend request to: Malex
+[00:42:52] [CLIENT] Response status: OK
+[00:42:52] [CLIENT] Added friend request from Alexm to notification panel
+[00:42:52] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:42:53] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:42:54] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:42:55] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:42:56] [CLIENT]   - Request: ID=2, Username=Alexm, Status=RequestReceived
+[00:42:57] [SERVER] [JoinChatGroup] Malex joined chat 4 (group: chat_4)
+[00:42:57] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:42:57] [SERVER] [JoinChatGroup] Alexm joined chat 4 (group: chat_4)
+[00:43:11] [CLIENT] [HEARTBEAT] Pong received
+[00:43:18] [CLIENT] [HEARTBEAT] Pong received
