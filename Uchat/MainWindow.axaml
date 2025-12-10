@@ -82,6 +82,7 @@
 					Background="Transparent"
 					CornerRadius="4 0 0 4"
 					Margin="0 0 35 0"
+					Cursor="Hand"
 					Click="MinimizeButton_Click"
 					>
 						<Image Width="20" Height="20"
@@ -97,6 +98,7 @@
 					HorizontalAlignment="Right"
 					Background="Transparent"
 					CornerRadius="0 15 0 0"
+					Cursor="Hand"
 					x:Name="CloseLoginFormButton"
 					Classes="closeLoginForm"
 					Click="CloseLoginFormButton_Click"
@@ -159,7 +161,7 @@
 								HorizontalAlignment="Right"
 								x:Name="RevealePasswordInLogIn"
 								IsVisible="True"
-								Margin="33 0 8 8" PointerPressed="RevealePasswordInLogIn_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="RevealePasswordInLogIn_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/closeEye.png">
 							</Image>
 
@@ -168,7 +170,7 @@
 								HorizontalAlignment="Right"
 								x:Name="HidePasswordInLogIn"
 								IsVisible="False"
-								Margin="33 0 8 8" PointerPressed="HidePasswordInLogIn_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="HidePasswordInLogIn_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/openEye.png">
 							</Image>
 						</DockPanel>
@@ -230,30 +232,6 @@
 
 						</DockPanel>
 
-						<!-- НА СЛУЧАЙ ЕСЛИ Я ГДЕ-ТО НАПОРТАЧИЛ!
-						
-						<DockPanel Margin="0 0 0 25">
-							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
-								   Source="avares://Uchat/Assets/Icons/lock.png">
-							</Image>
-
-							<Border BorderThickness="0 0 0 4"
-								BorderBrush="Gray" 
-								CornerRadius="5"
-								Width="320"
-								Background="#404853">
-								<TextBox
-								x:Name="createPasswordTextBox"
-								Classes="DataBox"
-								Watermark="Password"
-								PasswordChar="*"
-								/>
-							</Border>
-
-						</DockPanel>
-						-->
-
-
 						<DockPanel Margin="0 0 0 25">
 							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
 								   Source="avares://Uchat/Assets/Icons/lock.png">
@@ -278,7 +256,7 @@
 								HorizontalAlignment="Right"
 								x:Name="RevealePasswordInSingUp"
 								IsVisible="True"
-								Margin="33 0 8 8" PointerPressed="RevealePasswordInSingUp_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="RevealePasswordInSingUp_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/closeEye.png">
 							</Image>
 
@@ -287,7 +265,7 @@
 								HorizontalAlignment="Right"
 								x:Name="HidePasswordInSingUp"
 								IsVisible="False"
-								Margin="33 0 8 8" PointerPressed="HidePasswordInSingUp_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="HidePasswordInSingUp_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/openEye.png">
 							</Image>
 						</DockPanel>
@@ -523,7 +501,7 @@
 								HorizontalAlignment="Right"
 								x:Name="RevealePasswordInNewPassword"
 								IsVisible="True"
-								Margin="33 0 8 8" PointerPressed="RevealePasswordInNewPassword_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="RevealePasswordInNewPassword_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/closeEye.png">
 							</Image>
 
@@ -532,7 +510,7 @@
 								HorizontalAlignment="Right"
 								x:Name="HidePasswordInNewPassword"
 								IsVisible="False"
-								Margin="33 0 8 8" PointerPressed="HidePasswordInNewPassword_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="HidePasswordInNewPassword_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/openEye.png">
 							</Image>
 						</DockPanel>
@@ -562,7 +540,7 @@
 								HorizontalAlignment="Right"
 								x:Name="RevealePasswordInConfirmPassword"
 								IsVisible="True"
-								Margin="33 0 8 8" PointerPressed="RevealePasswordInConfirmPassword_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="RevealePasswordInConfirmPassword_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/closeEye.png">
 							</Image>
 
@@ -571,52 +549,10 @@
 								HorizontalAlignment="Right"
 								x:Name="HidePasswordInConfirmPassword"
 								IsVisible="False"
-								Margin="33 0 8 8" PointerPressed="HidePasswordInConfirmPassword_PointerPressed"
+								Margin="33 0 8 8" Cursor="Hand" PointerPressed="HidePasswordInConfirmPassword_PointerPressed"
 								Source="avares://Uchat/Assets/Icons/openEye.png">
 							</Image>
 						</DockPanel>
-
-						<!-- ЕСЛИ НАПОРТАЧУ
-						<DockPanel Margin="0 0 0 25">
-							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
-								   Source="avares://Uchat/Assets/Icons/lock.png">
-							</Image>
-
-							<Border BorderThickness="0 0 0 4"
-								BorderBrush="Gray" 
-								CornerRadius="5"
-								Width="320"
-								Background="#404853">
-								<TextBox
-								x:Name="newPasswordTextBox"
-								Classes="DataBox"
-								Watermark="New password"
-								PasswordChar="*"
-								/>
-							</Border>
-
-						</DockPanel>
-
-												<DockPanel Margin="0 0 0 40">
-							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 8"
-								   Source="avares://Uchat/Assets/Icons/lock.png">
-							</Image>
-
-							<Border BorderThickness="0 0 0 4"
-								BorderBrush="Gray"
-								CornerRadius="5"
-								Width="320"
-								Background="#404853">
-								<TextBox
-								x:Name="confirmPasswordTextBox"
-								Classes="DataBox"
-								Watermark="Confirm password"
-								PasswordChar="*"
-								/>
-							</Border>
-
-						</DockPanel>
-						-->
 						
 						<TextBlock
 						x:Name="invalidDataInResetPassword"
@@ -643,15 +579,15 @@
 
 			<!-- Title Bar -->
 			<Grid Grid.Row="0" Background="#0e1013" ColumnDefinitions="*,50,50,50">
-				<Border Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
+				<Border Cursor="Hand" Name="emptyBar" Grid.Column="0" Background="Transparent" PointerPressed="EmptyBar_PointerPressed"/>
 						
-				<Button Grid.Column="1" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+				<Button Grid.Column="1" Cursor="Hand" Name="minimizeButton" Content="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MinimizeButton_Click"/>
-				<Button Grid.Column="2" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
+				<Button Grid.Column="2" Cursor="Hand" Name="maximizeButton" Content="&#xE922;" FontFamily="Segoe MDL2 Assets" FontSize="10"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="MaximizeButton_Click"/>
-				<Button Grid.Column="3" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+				<Button Grid.Column="3" Cursor="Hand" Classes="closeLoginForm" Name="closeButton" Content="&#xE10A;" FontFamily="Segoe MDL2 Assets" FontSize="14"
 						Background="Transparent" Foreground="White" BorderThickness="0"
 						HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="CloseButton_Click"/>
 			</Grid>
@@ -687,7 +623,7 @@
 						<Image Source="avares://Uchat/Assets/Icons/search.png"/>
 					</Button>
 
-					<Button Name="createGroupButton" Grid.Column="2" Background="Transparent" Foreground="White"
+					<Button Name="createGroupButton" Cursor="Hand" Grid.Column="2" Background="Transparent" Foreground="White"
 							CornerRadius="5" Click="CreateGroupButton_Click">
 						<Image Source="avares://Uchat/Assets/Icons/create_group.png" 
 							   VerticalAlignment="Center"/>
@@ -726,11 +662,13 @@
 				<!-- Contacts Left Menu -->
 				<Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" RowDefinitions="40 * 50" Background="#20242d">
 					<Grid Background="#3e4042" ColumnDefinitions="* *">
-						<Button Name="ContactsButton" Content="Contacts" CornerRadius="0" Background="#5e81ac" Foreground="White"
-							    VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+						<Button Name="ContactsButton" Cursor="Hand" Content="Contacts" CornerRadius="0" Background="#5e81ac" Foreground="White"
+							    VerticalAlignment="Stretch"
+								Classes="contactSwitch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 								Click="SwitchToContacts_Click"/>
 						<Button Name="GroupsButton" Grid.Column="1" Content="Groups" CornerRadius="0" Background="#3e4042" Foreground="White"
-									 VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+									 Classes="groupSwitch"
+									 VerticalAlignment="Stretch" Cursor="Hand" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
 									 Click="SwitchToGroups_Click"/>
 					</Grid>
 
@@ -755,6 +693,7 @@
 							</StackPanel>
 							<Button Name="notificationButton" Grid.Column="2" FontFamily="Segoe MDL2 Assets" FontSize="14"
 									Background="Transparent" Foreground="White" BorderThickness="0" Margin="0,3,0,3" Width="50"
+									Cursor="Hand"
 									HorizontalAlignment="Right" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
 									Click="NotificationButton_Click"
 									ToolTip.Tip="Friend Requests">
@@ -762,6 +701,8 @@
 							</Button>
 							<Button Grid.Column="3" Background="Transparent" Padding="10"
 									VerticalContentAlignment="Center" VerticalAlignment="Center"
+									Classes="closeLoginForm"
+									Cursor="Hand"
 									Click="LogOutButton_Click" ToolTip.Tip="Log out">
 								<Image Source="avares://Uchat/Assets/Icons/logout.png"></Image>
 							</Button>
@@ -827,6 +768,7 @@
 					HorizontalAlignment="Right"
 					Width="45"
 					Height="45"
+					Cursor="Hand"
 					HorizontalContentAlignment="Center"
 					VerticalContentAlignment="Center"
                     Content="&#xE10A;" 
@@ -874,6 +816,7 @@
 					HorizontalAlignment="Right"
 					Width="45"
 					Height="45"
+					Cursor="Hand"
 					HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Content="&#xE10A;" 
@@ -904,6 +847,7 @@
                     <Button Name="sendButton" 
                             Background="Transparent" 
                             Foreground="White" 
+							Cursor="Hand"
                             BorderThickness="0" 
                             VerticalAlignment="Stretch" 
                             HorizontalAlignment="Stretch" 
@@ -924,6 +868,7 @@
 								<Button Name="EditMessageButton"
 										Background="Transparent"
 										Foreground="White"
+										Cursor="Hand"
 										BorderThickness="0"
 										VerticalAlignment="Stretch"
 										HorizontalAlignment="Stretch"
@@ -995,18 +940,18 @@
 							<TextBlock x:Name="groupInfoName"
 							FontWeight="Bold" Foreground="White" FontSize="16" MaxWidth="210" TextTrimming = "CharacterEllipsis"/>
 								
-							<Button Classes="iconButton" Background="Transparent"
+							<Button Classes="iconButton" Cursor="Hand" Background="Transparent"
 									BorderThickness="0" Margin="5 -1 0 0" x:Name="editTheGroupNameButton" Click="editTheGroupNameButton_Click">
 								<Image Width="15" Height="15" Source="avares://Uchat/Assets/Icons/edit.png"/>
 							</Button>
 						</DockPanel>
 
 						<DockPanel x:Name="PanelForGroupNameEdit" IsVisible="False">
-							<Border BorderThickness="4 0 0 0" BorderBrush="Gray" CornerRadius="5">
+							<Border BorderThickness="4 0 0 0" Cursor="Hand" BorderBrush="Gray" CornerRadius="5">
 								<TextBox Classes="editGroupName" x:Name="editTheGroupNameTextBox" MaxWidth="205" FontWeight="Bold" FontSize="16"
 									Watermark="Group name"/>
 							</Border>
-							<Button Classes="iconButton" Background="Transparent"
+							<Button Classes="iconButton" Cursor="Hand" Background="Transparent"
 									BorderThickness="0" Margin="5 5 0 0" x:Name="acceptNewNameForGroup" Click="acceptNewNameForGroup_Click">
 								<Image Width="15" Height="15" Source="avares://Uchat/Assets/Icons/accept.png"/>
 							</Button>
@@ -1015,7 +960,7 @@
 						<TextBlock x:Name="groupInfoNumberOfMembers" Text="6 members" Foreground="#AAAAAA" FontSize="12"/>
 					</StackPanel>
 					<Button Grid.Column="1" x:Name="ExitInfoAboutGroup" Margin="0 -5 0 0"
-							Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"
+							Background="Transparent" BorderThickness="0" Cursor="Hand" Classes="closeLoginForm" HorizontalAlignment="Right"
 							Click="ExitInfoAboutGroup_Click">
 						<Image Width="20" Height="20" Source="avares://Uchat/Assets/Icons/exit.png"/>
 					</Button>
@@ -1027,11 +972,11 @@
 					<StackPanel>
 
 						<DockPanel x:Name="groupInfoLeaveAndAddButton" HorizontalAlignment="Center" Margin="0 0 5 0">
-							<Button x:Name="groupInfoLeaveButton" Grid.Column="0" Classes="iconButton" Background="Transparent"
+							<Button x:Name="groupInfoLeaveButton" Grid.Column="0" Classes="iconButton" Cursor="Hand" Background="Transparent"
 									BorderThickness="0" Margin="0 0 50 0" Click="groupInfoLeaveButton_Click">
 								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/groupLeave.png"/>
 							</Button>
-							<Button x:Name="groupInfoAddMemberButton" Grid.Column="1" Classes="iconButton" Background="Transparent"
+							<Button x:Name="groupInfoAddMemberButton" Grid.Column="1" Classes="iconButton" Cursor="Hand" Background="Transparent"
 									BorderThickness="0" Margin="50 0 0 0" Click="groupInfoAddMemberButton_Click">
 								<Image Width="25" Height="25" Source="avares://Uchat/Assets/Icons/add_friend.png"/>
 							</Button>
@@ -1100,15 +1045,15 @@
     
 				<Border CornerRadius="5" Background="#333A44"
 						Width="300" MinHeight="150" HorizontalAlignment="Center" VerticalAlignment="Center" 
-						Padding="15">
+						>
         
-					<StackPanel Spacing="15">
+					<StackPanel Margin="10 15 10 15">
             
 						<TextBlock Text="Send Invite" 
 								   Foreground="White" FontWeight="Bold" FontSize="18" 
 								   HorizontalAlignment="Center"/>
                 
-						<DockPanel Margin="0 5 0 0">
+						<DockPanel Margin="0 15 0 0">
 							<Image Width="20" Height="20" VerticalAlignment="Bottom" Margin="0 0 8 7"
 								   Source="avares://Uchat/Assets/Icons/person.png">
 							</Image>
@@ -1129,17 +1074,17 @@
 
 						<TextBlock
 							IsVisible="False"
+							Margin="74 5 0 0"
 							x:Name="invalidDataInAddingPersontoGroup"
-							TextWrapping="Wrap"
-							Margin="74 -10 0 0"
 							Classes="invalidData"
 						/>
 
-						<DockPanel HorizontalAlignment="Center">
+						<DockPanel HorizontalAlignment="Center" Margin="0 15 0 0">
                 
 							<Button
 									x:Name="CancelAddingGroup"
-									Content="Cancel" 
+									FontSize="13"
+									Content="Cancel"
 									Width="63"
 									Cursor="Hand"
 									Background="#555555" Foreground="White" CornerRadius="5"
@@ -1153,6 +1098,7 @@
 									HorizontalAlignment="Center"
 									HorizontalContentAlignment="Center"
 									x:Name="InvitePersonToChat"
+									Classes="invitePerson"
 									Foreground="White" CornerRadius="5"
 									Margin="20 0 -30 0" FontWeight="Bold"
 									Click="InvitePersonToChat_Click"/>
