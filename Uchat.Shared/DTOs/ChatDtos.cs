@@ -51,6 +51,7 @@ public class ChatRoomDto
     public int CreatorId { get; set; }
     public DateTime CreatedAt { get; set; }
     public int MemberCount { get; set; }
+    public List<int> ParticipantIds { get; set; } = new();
     
     public string? LastMessageContent { get; set; }
     public DateTime? LastMessageAt { get; set; }

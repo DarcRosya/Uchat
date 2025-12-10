@@ -149,8 +149,16 @@ public sealed class ChatRoomService : IChatRoomService
                 LastMessageAt = lastDate,
                 CreatedAt = chat.CreatedAt,
                 MemberCount = chat.Members.Count,
+                ParticipantIds = chat.Members
+                    .Select(m => m.UserId)
+                    .Where(id => id > 0)
+                    .Distinct()
+                    .ToList()
+                /*
+                MemberCount = chat.Members.Count,
                 IsPinned = m.IsPinned,
                 PinnedAt = m.PinnedAt
+                */
             };
         }).ToList();
 

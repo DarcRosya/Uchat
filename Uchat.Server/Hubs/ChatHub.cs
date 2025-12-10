@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using Uchat.Database.Entities;
 using Uchat.Database.Repositories.Interfaces;
 using Uchat.Server.Services.Chat;
+using Uchat.Server.Services.Messaging;
 using Uchat.Shared;
 using Uchat.Server.Services.Presence;
 using Uchat.Server.Services.Reconnection;
@@ -18,6 +20,7 @@ public class ChatHub : Hub
     private readonly IChatRoomService _chatRoomService;
     private readonly IUserPresenceService _presenceService;
     private readonly IReconnectionService _reconnectionService;
+    private readonly IMessageService _messageService;
 
     // Active online users: userId -> connectionIds
     private static readonly Dictionary<int, HashSet<string>> OnlineUsers = new();
@@ -26,11 +29,13 @@ public class ChatHub : Hub
         IChatRoomRepository chatRoomRepository, 
         IChatRoomService chatRoomService, 
         IUserPresenceService presenceService,
+        IMessageService messageService,
         IReconnectionService reconnectionService)
     {
         _chatRoomRepository = chatRoomRepository;
         _chatRoomService = chatRoomService;
         _presenceService = presenceService;
+        _messageService = messageService;
         _reconnectionService = reconnectionService;
     }
 
@@ -75,6 +80,13 @@ public class ChatHub : Hub
         // Notify clients about reconnection or online status
         if (wasOffline)
         {
+            var onlineUsersSnapshot = GetOnlineUsersExcept(userId);
+
+            foreach (var existingUserId in onlineUsersSnapshot)
+            {
+                await Clients.Caller.SendAsync("UserOnline", existingUserId);
+            }
+
             await Clients.All.SendAsync("UserOnline", userId);
             Logger.Write($"[ONLINE] User {username} became ONLINE");
         }
@@ -161,6 +173,27 @@ public class ChatHub : Hub
         await base.OnDisconnectedAsync(exception);
     }
 
+    public async Task ReportReadProgress(int chatId, DateTime untilTimestamp)
+    {
+        var userId = GetUserId();
+        if (userId == 0 || chatId <= 0)
+        {
+            return;
+        }
+
+        var normalized = untilTimestamp.ToUniversalTime();
+
+        try
+        {
+            await _messageService.MarkMessagesAsReadUntilAsync(chatId, userId, normalized);
+            Logger.Write($"[ReadProgress] User {GetUsername()} marked chat {chatId} as read until {normalized:O}");
+        }
+        catch (Exception ex)
+        {
+            Logger.Write($"[ReadProgress ERROR] {ex.Message}");
+        }
+    }
+
     // Groups
     public async Task JoinGroup(string groupName)
     {
@@ -215,6 +248,17 @@ public class ChatHub : Hub
         return Clients.Caller.SendAsync("Pong");
     }
 
+
+    private List<int> GetOnlineUsersExcept(int excludeUserId)
+    {
+        lock (OnlineUsers)
+        {
+            return OnlineUsers.Keys
+                .Where(id => id != excludeUserId)
+                .ToList();
+        }
+    }
+    
     // Getters
     private int GetUserId()
     {

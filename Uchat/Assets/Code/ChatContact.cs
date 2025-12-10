@@ -6,6 +6,7 @@ using Avalonia.Platform;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Uchat.Shared;
 
 
@@ -27,10 +28,21 @@ namespace Uchat
                     contact.IsVisible = (contact.IsGroupChat == true) ? groupsNeeded : !groupsNeeded;
                 }
             }
-			public class Contact
+                public class Contact
 			{
-				private List<string> membersList = new List<string>();
+                private List<string> membersList = new List<string>();
 
+                private static readonly IBrush OnlineBrush = Brush.Parse("#4cd964");
+                private static readonly IBrush OfflineBrush = Brush.Parse("#5c5c70");
+                private readonly List<int> participantIds = new();
+                private bool allowPresence = true;
+
+                private bool isGroupChat = false;
+                private bool isPinned = false;
+                private string chatName = "";
+                private string lastMessage = "";
+                private int unreadMessages = 0;
+                private int chatId = 0;
 				private bool isGroupChat = false;
 				private bool isPinned = false;
                 public DateTime PinnedAt { get; set; } = DateTime.MinValue;
@@ -55,13 +67,18 @@ namespace Uchat
 
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
-				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0)
+                public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0, IEnumerable<int>? participants = null)
 				{
 					this.mainWindow = window;
                     chatName = newChatName;
 					lastMessage = newLastMessage;
 					unreadMessages = newUnreadMessages;
-					chatId = newChatId;
+                    chatId = newChatId;
+                    allowPresence = !string.Equals(chatName, "Notes", StringComparison.OrdinalIgnoreCase);
+                    contactStatusBorder.Background = OfflineBrush;
+                    contactStatusBorder.BorderBrush = OfflineBrush;
+                    contactStatusBorder.IsVisible = false;
+                    SetParticipants(participants);
 
 					contactGrid.Classes.Add("contactGrid");
 					contactGrid.PointerPressed += ContactGridClicked;
@@ -183,21 +200,48 @@ namespace Uchat
                     } 
                 }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
-				public string ChatName { get { return chatName; } }
+                public string ChatName { get { return chatName; } }
+                public int UnreadCount => unreadMessages;
+                public IReadOnlyList<int> ParticipantIds => participantIds;
 				public void AddMember(string name)
 				{
 					membersList.Add(name);
 				}
 
-				private void UpdateIcon()
-				{
-					var uriString = isGroupChat 
-						? "avares://Uchat/Assets/Icons/group.png" 
-						: "avares://Uchat/Assets/Icons/avatar.png";
+                public void SetParticipants(IEnumerable<int>? ids)
+                {
+                    participantIds.Clear();
+
+                    if (ids == null)
+                    {
+                        return;
+                    }
+
+                    participantIds.AddRange(ids.Where(id => id > 0));
+                }
+
+                public void UpdatePresence(bool isOnline, bool showIndicator)
+                {
+                    if (!allowPresence || !showIndicator)
+                    {
+                        contactStatusBorder.IsVisible = false;
+                        return;
+                    }
+
+                    contactStatusBorder.IsVisible = true;
+                    var brush = isOnline ? OnlineBrush : OfflineBrush;
+                    contactStatusBorder.Background = brush;
+                    contactStatusBorder.BorderBrush = brush;
+                }
+
+                private void UpdateIcon()
+                {
+                    var uriString = isGroupChat 
+                        ? "avares://Uchat/Assets/Icons/group.png" 
+                        : "avares://Uchat/Assets/Icons/avatar.png";
 
                     avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
-                    contactStatusBorder.IsVisible = !isGroupChat;
-				}
+                }
 
 				public void UpdateName(string newName)
 				{
@@ -209,17 +253,29 @@ namespace Uchat
 				/// <summary>
 				/// Обновить последнее сообщение и счетчик непрочитанных
 				/// </summary>
-				public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
-				{
-					lastMessage = newLastMessage;
-					lastMessageTextBlock.Text = newLastMessage;
-					
-					if (newUnreadCount.HasValue)
-					{
-						unreadMessages = newUnreadCount.Value;
-						unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
-					}
-				}
+                    public void UpdateLastMessage(string newLastMessage, int? newUnreadCount = null)
+                    {
+                        lastMessage = newLastMessage;
+                        lastMessageTextBlock.Text = newLastMessage;
+						
+                        if (newUnreadCount.HasValue)
+                        {
+                            unreadMessages = newUnreadCount.Value;
+                            unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
+                        }
+                    }
+
+                    public void SetUnreadCount(int value)
+                    {
+                        unreadMessages = Math.Max(0, value);
+                        unreadMessageTextBlock.Text = unreadMessages.ToString();
+                    }
+
+                    public void IncrementUnread(int delta = 1)
+                    {
+                        unreadMessages += delta;
+                        unreadMessageTextBlock.Text = unreadMessages.ToString();
+                    }
 				
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{

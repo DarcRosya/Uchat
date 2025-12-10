@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Uchat.Shared.DTOs;
+using Uchat.Shared;
 
 namespace Uchat.Services;
 
