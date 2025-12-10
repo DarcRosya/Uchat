@@ -18,6 +18,7 @@ public interface IChatRoomService
     Task<ChatResult> JoinPublicChatByNameAsync(string chatName, int userId);
     Task<ChatResult> AddMemberAsync(int chatId, int actorUserId, int memberUserId);
     Task<ChatResult> SetGroupPinAsync(int userId, int chatRoomId, bool isPinned);
+    Task<ChatResult> UpdateChatNameAsync(int chatId, int userId, string newName);
     
     Task<ChatResult> RemoveMemberAsync(int chatId, int actorUserId, int memberUserId);
 

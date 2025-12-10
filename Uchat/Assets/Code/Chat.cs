@@ -39,8 +39,7 @@ namespace Uchat
 				var request = new Shared.DTOs.CreateChatRequestDto
 				{
 					Name = input,
-					Type = "Public",
-					Description = null
+					Type = "Public"
 				};
 				var newChat = await _chatApiService.CreateChatAsync(request);
 
@@ -165,20 +164,62 @@ namespace Uchat
 		private async void CreateGroupButton_Click(object sender, RoutedEventArgs e)
 		{
 			string username = _currentUsername;
-			string groupName;
+			string baseName;
 			
 			if (username.EndsWith("s", StringComparison.OrdinalIgnoreCase))
-                groupName = $"{username}' Group";
+                baseName = $"{username}' Group";
             else
-                groupName = $"{username}'s Group";
+                baseName = $"{username}'s Group";
+
+            var takenNumbers = new HashSet<int>();
+
+            var existingGroupNames = _chatContacts.Values
+                .Where(c => c.IsGroupChat)
+                .Select(c => c.ChatName)
+                .ToList();
+
+            foreach (var name in existingGroupNames)
+            {
+                if (name.Equals(baseName, StringComparison.OrdinalIgnoreCase))
+                {
+                    takenNumbers.Add(0);
+                    continue;
+                }
+
+                string prefixWithSpace = baseName + " ";
+                if (name.StartsWith(prefixWithSpace, StringComparison.OrdinalIgnoreCase))
+                {
+                    string numberPart = name.Substring(prefixWithSpace.Length);
+
+                    if (int.TryParse(numberPart, out int number))
+                    {
+                        takenNumbers.Add(number);
+                    }
+                }
+            }
+
+            int newSuffix = 0;
+            while (takenNumbers.Contains(newSuffix))
+            {
+                newSuffix++;
+            }
+
+            string finalName;
+            if (newSuffix == 0)
+            {
+                finalName = baseName; 
+            }
+            else
+            {
+                finalName = $"{baseName} {newSuffix}";
+            }
 
 			try 
             {
                 var request = new Shared.DTOs.CreateChatRequestDto
                 {
-                    Name = groupName,
-                    Type = "Public", 
-                    Description = $"Group created by {username}" 
+                    Name = finalName,
+                    Type = "Public"
                 };
 
                 var newChat = await _chatApiService.CreateChatAsync(request);
@@ -341,6 +382,15 @@ namespace Uchat
                 {
                     // Обновляем имя (вдруг изменилось)
                     groupInfoName.Text = details.Name;
+                    if (_currentChatId == chatId)
+                    {
+                        groupTopBarName.Text = details.Name;
+                    }
+
+                    if (_chatContacts.TryGetValue(chatId, out var contactItem))
+                    {
+                        contactItem.UpdateName(details.Name); 
+                    }
                     
                     // Обновляем счетчик
                     string suffix = details.Members.Count == 1 ? "member" : "members";

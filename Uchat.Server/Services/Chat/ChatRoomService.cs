@@ -412,6 +412,74 @@ public sealed class ChatRoomService : IChatRoomService
         }
     }
 
+    public async Task<ChatResult> UpdateChatNameAsync(int chatId, int userId, string newName)
+    {
+        if (string.IsNullOrWhiteSpace(newName))
+        {
+            return ChatResult.Failure("Chat name cannot be empty.");
+        }
+
+        var chat = await _chatRoomRepository.GetByIdAsync(chatId);
+        
+        if (chat == null) 
+            return ChatResult.NotFound();
+
+        if (chat.Type == ChatRoomType.DirectMessage)
+        {
+            return ChatResult.Failure("Cannot rename a direct message chat.");
+        }
+
+        var member = chat.Members.FirstOrDefault(m => m.UserId == userId && !m.IsDeleted && !m.IsPending);
+        if (member == null)
+        {
+            return ChatResult.Forbidden();
+        }
+
+        try 
+        {
+            chat.Name = newName.Trim();
+            await _chatRoomRepository.UpdateAsync(chat);
+
+            if (_redisService.IsAvailable)
+            {
+                try 
+                {
+                    var score = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
+
+                    var redisTasks = chat.Members
+                        .Where(m => !m.IsDeleted && !m.IsPending)
+                        .Select(m => 
+                        {
+                            var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(m.UserId);
+                            
+                            return _redisService.UpdateSortedSetAsync(
+                                sortedKey, 
+                                chat.Id.ToString(), 
+                                score, 
+                                TimeSpan.FromHours(24) // TTL
+                            );
+                        });
+
+                    await Task.WhenAll(redisTasks);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Redis update failed during chat rename");
+                }
+            }
+
+            await _hubContext.Clients.Group(chatId.ToString())
+                .SendAsync("ChatNameUpdated", chatId, chat.Name);
+
+            return ChatResult.Success(chat);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to rename chat in Database");
+            return ChatResult.Failure("Database error while renaming chat.");
+        }
+    }
+
     public async Task<ChatResult> AddMemberAsync(int chatId, int actorUserId, int memberUserId)
     {
         var chat = await _chatRoomRepository.GetByIdAsync(chatId);

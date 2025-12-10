@@ -387,6 +387,25 @@ namespace Uchat
                 });
             });
 
+            _hubConnection.On<int, string>("ChatNameUpdated", (chatId, newName) =>
+            {
+                Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    var chatToUpdate = Chat.ChatsList.FirstOrDefault(c => c.ChatId == chatId);
+                    
+                    if (chatToUpdate != null)
+                    {
+                        chatToUpdate.UpdateName(newName);
+                    }
+
+                    if (_currentChatId == chatId)
+                    {
+                        groupTopBarName.Text = newName;
+                        groupInfoName.Text = newName;
+                    }
+                });
+            });
+
             _hubConnection.On<int, string>("MemberLeft", (chatId, username) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -1367,20 +1386,18 @@ namespace Uchat
                 return;
             }
 
+            PanelForGroupNameEdit.IsEnabled = false;
+
             try
             {
-                // 1. Отправляем изменения на сервер
-                // DTO может отличаться в зависимости от вашего API
                 var updateDto = new { Name = newNameForGroup }; 
                 bool success = await _chatApiService.UpdateChatAsync(_currentChatId.Value, updateDto);
 
                 if (success)
                 {
-                    // 2. Обновляем верхнюю панель
                     groupInfoName.Text = newNameForGroup;
                     groupTopBarName.Text = newNameForGroup;
 
-                    // 3. Обновляем имя в боковой панели (список чатов)
                     if (_chatContacts.TryGetValue(_currentChatId.Value, out var contact))
                     {
                         contact.UpdateName(newNameForGroup);
@@ -1393,6 +1410,8 @@ namespace Uchat
             }
             finally 
             {
+                PanelForGroupNameEdit.IsEnabled = true;
+
                 // Возвращаем UI в режим просмотра
                 PanelForGroupNameEdit.IsVisible = false;
                 PanelForGroupName.IsVisible = true;
