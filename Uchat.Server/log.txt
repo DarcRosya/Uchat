@@ -5653,3 +5653,126 @@
 [15:58:17] [SERVER] [JoinChatGroup] eee joined chat 32 (group: chat_32)
 [15:58:18] [SERVER] [DISCONNECT] User eee (ID: 3) disconnected
 [15:58:18] [SERVER] [OFFLINE] User eee became OFFLINE
+[16:59:11] [CLIENT] UserSession initialized with system arguments
+[16:59:12] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[16:59:30] [CLIENT] Attempting login for: 123123
+[16:59:32] [CLIENT] Login successful for 123123
+[16:59:32] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[16:59:32] [CLIENT] Tokens saved for user 123123 (expires: 2025-12-11 15:29:31)
+[16:59:32] [CLIENT] Session set for user 123123 (expires: 15:29:32)
+[16:59:32] [CLIENT] Auto-refresh timer started
+[16:59:32] [CLIENT] Session set for user 123123 (expires: 15:29:32)
+[16:59:32] [CLIENT] Auto-refresh timer stopped
+[16:59:32] [CLIENT] Auto-refresh timer started
+[16:59:32] [CLIENT] Initializing API services for user: 123123
+[16:59:32] [CLIENT] Token length: 533, Token preview: eyJhbGciOi...
+[16:59:32] [CLIENT] ContactApiService: Setting auth token (length: 533)
+[16:59:32] [CLIENT] ContactApiService: Authorization header set
+[16:59:32] [CLIENT] [RECONNECTION] State reset
+[16:59:32] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[16:59:32] [SERVER] [RECONNECTION] User 123123 (ID: 2) connected with sessionId: c13c0750-6644-488a-a411-8766acd97ec2
+[16:59:32] [SERVER] User 123123 (ID: 2) connected
+[16:59:32] [SERVER] [ONLINE] User 123123 became ONLINE
+[16:59:32] [SERVER] [Auto-Join] User 123123 added to group chat_9
+[16:59:32] [SERVER] [Auto-Join] User 123123 added to group chat_21
+[16:59:32] [SERVER] [Auto-Join] User 123123 added to group chat_2
+[16:59:32] [SERVER] [Auto-Join] User 123123 added to group chat_7
+[16:59:32] [SERVER] [Auto-Join] User 123123 added to group chat_3
+[16:59:32] [SERVER] [Auto-Join] User 123123 joined 5 chat groups
+[16:59:32] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[16:59:32] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[16:59:32] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[16:59:32] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[16:59:36] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[16:59:37] [SERVER] [ReadProgress] User 123123 marked chat 5 as read until 2025-12-11T14:47:47.8940000Z
+[16:59:37] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[16:59:37] [SERVER] [ReadProgress] User 123123 marked chat 16 as read until 2025-12-11T14:44:26.2890000Z
+[16:59:37] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[16:59:37] [SERVER] [ReadProgress] User 123123 marked chat 2 as read until 2025-12-10T18:10:49.9110000Z
+[16:59:37] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[16:59:38] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[16:59:52] [SERVER] [ReadProgress] User 123123 marked chat 5 as read until 2025-12-11T14:59:51.9750000Z
+[16:59:52] [CLIENT] [Chat] Message sent successfully to 5
+[16:59:54] [SERVER] [JoinChatGroup] 123123 joined chat 4 (group: chat_4)
+[16:59:54] [SERVER] [ReadProgress] User 123123 marked chat 4 as read until 2025-12-10T18:04:01.0300000Z
+[16:59:56] [CLIENT] [Chat] Message sent successfully to 4
+[16:59:56] [SERVER] [ReadProgress] User 123123 marked chat 4 as read until 2025-12-11T14:59:56.4940000Z
+[16:59:58] [CLIENT] Chat 4 removed from UI and Cache
+[16:59:58] [CLIENT] Chat area cleared
+[17:00:00] [SERVER] [JoinChatGroup] 123123 joined chat 18 (group: chat_18)
+[17:00:00] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:00:00] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:00:00] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[17:00:00] [SERVER] [JoinChatGroup] 123123 joined chat 18 (group: chat_18)
+[17:00:01] [SERVER] [JoinChatGroup] 123123 joined chat 18 (group: chat_18)
+[17:00:02] [CLIENT] [HEARTBEAT] Pong received
+[17:00:03] [CLIENT] [Chat] Message sent successfully to 18
+[17:00:03] [SERVER] [ReadProgress] User 123123 marked chat 18 as read until 2025-12-11T15:00:03.1630000Z
+[17:00:32] [CLIENT] [HEARTBEAT] Pong received
+[17:01:02] [CLIENT] [HEARTBEAT] Pong received
+[17:01:32] [CLIENT] [HEARTBEAT] Pong received
+[17:01:43] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:01:45] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:01:45] [SERVER] [JoinChatGroup] 123123 joined chat 2 (group: chat_2)
+[17:01:46] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:01:46] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:29] [CLIENT] UserSession initialized with system arguments
+[17:02:30] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[17:02:39] [CLIENT] Attempting login for: vadik
+[17:02:40] [CLIENT] Login successful for vadik
+[17:02:40] [CLIENT] TokenStorage initialized at: C:\Users\Vadim\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[17:02:40] [CLIENT] Tokens saved for user vadik (expires: 2025-12-11 15:32:40)
+[17:02:40] [CLIENT] Session set for user vadik (expires: 15:32:40)
+[17:02:40] [CLIENT] Auto-refresh timer started
+[17:02:40] [CLIENT] Session set for user vadik (expires: 15:32:40)
+[17:02:40] [CLIENT] Auto-refresh timer stopped
+[17:02:40] [CLIENT] Auto-refresh timer started
+[17:02:40] [CLIENT] Initializing API services for user: vadik
+[17:02:40] [CLIENT] Token length: 536, Token preview: eyJhbGciOi...
+[17:02:40] [CLIENT] ContactApiService: Setting auth token (length: 536)
+[17:02:40] [CLIENT] ContactApiService: Authorization header set
+[17:02:40] [SERVER] [RECONNECTION] User vadik (ID: 3) connected with sessionId: c8c9b00c-c13b-41b5-ab33-78a26e727f3f
+[17:02:40] [SERVER] User vadik (ID: 3) connected
+[17:02:40] [SERVER] [ONLINE] User vadik became ONLINE
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_8
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_18
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_17
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_16
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_15
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_14
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_13
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_4
+[17:02:40] [SERVER] [Auto-Join] User vadik added to group chat_5
+[17:02:40] [SERVER] [Auto-Join] User vadik joined 9 chat groups
+[17:02:40] [CLIENT] [RECONNECTION] State reset
+[17:02:40] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[17:02:40] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[17:02:40] [SERVER] [JoinChatGroup] vadik joined chat 14 (group: chat_14)
+[17:02:40] [SERVER] [JoinChatGroup] vadik joined chat 13 (group: chat_13)
+[17:02:41] [SERVER] [JoinChatGroup] vadik joined chat 12 (group: chat_12)
+[17:02:41] [SERVER] [JoinChatGroup] vadik joined chat 11 (group: chat_11)
+[17:02:41] [SERVER] [JoinChatGroup] vadik joined chat 10 (group: chat_10)
+[17:02:41] [SERVER] [JoinChatGroup] vadik joined chat 9 (group: chat_9)
+[17:02:41] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[17:02:50] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:53] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:02:53] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:54] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:02:55] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:55] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:02:56] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:57] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[17:02:57] [SERVER] [ReadProgress] User vadik marked chat 5 as read until 2025-12-11T14:59:51.9750000Z
+[17:02:58] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:58] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:02:59] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:02:59] [SERVER] [JoinChatGroup] 123123 joined chat 16 (group: chat_16)
+[17:03:03] [SERVER] [JoinChatGroup] 123123 joined chat 5 (group: chat_5)
+[17:03:10] [CLIENT] [HEARTBEAT] Pong received
+[17:03:14] [SERVER] [ReadProgress] User vadik marked chat 5 as read until 2025-12-11T15:03:14.3990000Z
+[17:03:15] [SERVER] [JoinChatGroup] vadik joined chat 3 (group: chat_3)
+[17:03:15] [SERVER] [JoinChatGroup] vadik joined chat 5 (group: chat_5)
+[17:03:17] [CLIENT] [Chat] Message sent successfully to 5
+[17:03:17] [SERVER] [ReadProgress] User vadik marked chat 5 as read until 2025-12-11T15:03:17.6610000Z
+[17:06:55] [SERVER] [DISCONNECT] User vadik (ID: 3) disconnected
+[17:06:55] [SERVER] [OFFLINE] User vadik became OFFLINE

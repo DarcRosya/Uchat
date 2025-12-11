@@ -33,9 +33,9 @@ namespace Uchat
         public MainWindow(string[] args)
         {
             InitializeComponent();
-            string[] dev = { "-local", "6000" };
-            systemArgs = dev;
-            //systemArgs = args;
+            //string[] dev = { "-local", "6000" };
+            //systemArgs = dev;
+            systemArgs = args;
 
             _authService = new AuthApiService(systemArgs);
 

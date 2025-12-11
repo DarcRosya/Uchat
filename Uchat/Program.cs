@@ -12,11 +12,11 @@ namespace Uchat
         [STAThread]
         public static void Main(string[] args)
         {
-            //if (!ConnectionConfig.ValidArgs(args))
-            //{
-            //    Console.WriteLine("Usage:\nUchat.exe -local port (four digits)\nor\nUchat.exe -ngrok");
-            //    Environment.Exit(0);
-            //}
+            if (!ConnectionConfig.ValidArgs(args))
+            {
+                Console.WriteLine("Usage:\nUchat.exe -local port (four digits)\nor\nUchat.exe -ngrok");
+                Environment.Exit(0);
+            }
             BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
         }

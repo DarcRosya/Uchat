@@ -33,23 +33,23 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         try
         {
-            //if (!ConnectionConfig.ValidServerArgs(args))
-            //{
-            //    throw new Exception("Invalid arguments");
-            //}
-            //if (args.Contains("-start"))
-            //{
-            //    SelfDaemon.RunDetached(args);
-            //    return;
-            //}
-            //if (args.Contains("-kill"))
-            //{
-            //    SelfDaemon.KillExisting();
-            //    return;
-            //}
+            if (!ConnectionConfig.ValidServerArgs(args))
+            {
+                throw new Exception("Invalid arguments");
+            }
+            if (args.Contains("-start"))
+            {
+                SelfDaemon.RunDetached(args);
+                return;
+            }
+            if (args.Contains("-kill"))
+            {
+                SelfDaemon.KillExisting();
+                return;
+            }
 
-            //int port = int.Parse(args[^1]);
-            int port = 6000;
+            int port = int.Parse(args[^1]);
+            //int port = 6000;
             builder.WebHost.UseKestrel(options =>
             {
                 options.ListenLocalhost(port);
