@@ -16,8 +16,7 @@ namespace Uchat
 		{
 			LogoutAsync();
 			NotificationBox.IsVisible = false;
-            string currentExe = Environment.ProcessPath!;
-            Process.Start(currentExe);
+            Process.Start(Assembly.GetEntryAssembly()!.Location);
             Environment.Exit(0);
 
         }

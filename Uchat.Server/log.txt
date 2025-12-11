@@ -6003,3 +6003,745 @@
 [19:24:15] [SERVER] [OFFLINE] User eee became OFFLINE
 [19:24:16] [SERVER] [DISCONNECT] User qqq (ID: 2) disconnected
 [19:24:16] [SERVER] [OFFLINE] User qqq became OFFLINE
+[20:05:40] [CLIENT] UserSession initialized with system arguments
+[20:05:41] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:05:47] [CLIENT] Attempting login for: vetall
+[20:10:01] [CLIENT] UserSession initialized with system arguments
+[20:10:02] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:10:08] [CLIENT] Attempting login for: vetall
+[20:11:22] [CLIENT] Attempting login for: vetall
+[20:12:53] [CLIENT] UserSession initialized with system arguments
+[20:12:54] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:13:01] [CLIENT] Attempting login for: vetall
+[20:13:04] [CLIENT] Login successful for vetall
+[20:13:04] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:13:04] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 18:43:04)
+[20:13:04] [CLIENT] Session set for user vetall (expires: 18:43:04)
+[20:13:04] [CLIENT] Auto-refresh timer started
+[20:13:04] [CLIENT] Session set for user vetall (expires: 18:43:04)
+[20:13:04] [CLIENT] Auto-refresh timer stopped
+[20:13:04] [CLIENT] Auto-refresh timer started
+[20:13:04] [CLIENT] Initializing API services for user: vetall
+[20:13:04] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:13:04] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:13:04] [CLIENT] ContactApiService: Authorization header set
+[20:13:06] [CLIENT] [RECONNECTION] State reset
+[20:13:06] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:13:06] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 8da76b97-9e7e-46d3-9f43-5ca2db181486
+[20:13:06] [SERVER] User vetall (ID: 2) connected
+[20:13:06] [SERVER] [ONLINE] User vetall became ONLINE
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:13:06] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:13:06] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:13:07] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:13:07] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:13:07] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:13:07] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:13:07] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:13:11] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:13:11] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:13:12] [SERVER] [ReadProgress] User vetall marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:13:12] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:13:13] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:13:26] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:13:27] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:13:27] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:13:36] [CLIENT] [HEARTBEAT] Pong received
+[20:13:54] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:14:06] [CLIENT] [HEARTBEAT] Pong received
+[20:14:36] [CLIENT] [HEARTBEAT] Pong received
+[20:14:57] [CLIENT] UserSession initialized with system arguments
+[20:14:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:15:03] [CLIENT] Attempting login for: hlebas
+[20:15:03] [CLIENT] Login successful for hlebas
+[20:15:03] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:15:04] [CLIENT] Tokens saved for user hlebas (expires: 2025-12-11 18:45:03)
+[20:15:04] [CLIENT] Session set for user hlebas (expires: 18:45:04)
+[20:15:04] [CLIENT] Auto-refresh timer started
+[20:15:04] [CLIENT] Session set for user hlebas (expires: 18:45:04)
+[20:15:04] [CLIENT] Auto-refresh timer stopped
+[20:15:04] [CLIENT] Auto-refresh timer started
+[20:15:04] [CLIENT] Initializing API services for user: hlebas
+[20:15:04] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[20:15:04] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[20:15:04] [CLIENT] ContactApiService: Authorization header set
+[20:15:04] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 25f94755-b657-44f1-af6a-6810c1fb5d83
+[20:15:04] [SERVER] User hlebas (ID: 3) connected
+[20:15:04] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:15:04] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:15:04] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:15:04] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:15:04] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:15:04] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:15:04] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:15:04] [CLIENT] [RECONNECTION] State reset
+[20:15:04] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:15:04] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:15:04] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:15:04] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:15:04] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:15:06] [CLIENT] [HEARTBEAT] Pong received
+[20:15:12] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:15:13] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:15:13] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:15:13] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:15:34] [CLIENT] [HEARTBEAT] Pong received
+[20:15:36] [CLIENT] [HEARTBEAT] Pong received
+[20:16:04] [CLIENT] [HEARTBEAT] Pong received
+[20:16:21] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:16:21] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:16:21] [SERVER] [DISCONNECT] User hlebas (ID: 3) disconnected
+[20:16:21] [SERVER] [OFFLINE] User hlebas became OFFLINE
+[20:21:17] [CLIENT] UserSession initialized with system arguments
+[20:21:18] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:21:24] [CLIENT] Attempting login for: vetall
+[20:21:41] [CLIENT] Attempting login for: vetall
+[20:21:42] [CLIENT] Login successful for vetall
+[20:21:42] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:21:42] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 18:51:42)
+[20:21:42] [CLIENT] Session set for user vetall (expires: 18:51:42)
+[20:21:42] [CLIENT] Auto-refresh timer started
+[20:21:42] [CLIENT] Session set for user vetall (expires: 18:51:42)
+[20:21:42] [CLIENT] Auto-refresh timer stopped
+[20:21:42] [CLIENT] Auto-refresh timer started
+[20:21:42] [CLIENT] Initializing API services for user: vetall
+[20:21:42] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:21:42] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:21:42] [CLIENT] ContactApiService: Authorization header set
+[20:21:42] [CLIENT] [RECONNECTION] State reset
+[20:21:42] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:21:42] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: f5e9d808-574c-4efb-9a99-616b75ada1c7
+[20:21:42] [SERVER] User vetall (ID: 2) connected
+[20:21:42] [SERVER] [ONLINE] User vetall became ONLINE
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:21:43] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:21:43] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:21:43] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:21:43] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:21:43] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:21:43] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:21:43] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:22:12] [CLIENT] [HEARTBEAT] Pong received
+[20:22:42] [CLIENT] [HEARTBEAT] Pong received
+[20:23:12] [CLIENT] [HEARTBEAT] Pong received
+[20:23:42] [CLIENT] [HEARTBEAT] Pong received
+[20:24:12] [CLIENT] [HEARTBEAT] Pong received
+[20:24:42] [CLIENT] [HEARTBEAT] Pong received
+[20:25:12] [CLIENT] [HEARTBEAT] Pong received
+[20:25:42] [CLIENT] [HEARTBEAT] Pong received
+[20:26:12] [CLIENT] [HEARTBEAT] Pong received
+[20:26:42] [CLIENT] [HEARTBEAT] Pong received
+[20:27:12] [CLIENT] [HEARTBEAT] Pong received
+[20:27:42] [CLIENT] [HEARTBEAT] Pong received
+[20:28:12] [CLIENT] [HEARTBEAT] Pong received
+[20:28:42] [CLIENT] [HEARTBEAT] Pong received
+[20:29:12] [CLIENT] [HEARTBEAT] Pong received
+[20:29:37] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:29:37] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:30:38] [CLIENT] UserSession initialized with system arguments
+[20:30:38] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:30:42] [CLIENT] Attempting login for: vetall
+[20:30:42] [CLIENT] Login successful for vetall
+[20:30:42] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:30:42] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:00:42)
+[20:30:42] [CLIENT] Session set for user vetall (expires: 19:00:42)
+[20:30:42] [CLIENT] Auto-refresh timer started
+[20:30:42] [CLIENT] Session set for user vetall (expires: 19:00:42)
+[20:30:42] [CLIENT] Auto-refresh timer stopped
+[20:30:42] [CLIENT] Auto-refresh timer started
+[20:30:42] [CLIENT] Initializing API services for user: vetall
+[20:30:42] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:30:42] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:30:42] [CLIENT] ContactApiService: Authorization header set
+[20:30:43] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: cd49a17f-8b09-4632-833c-d8e913bd0ffe
+[20:30:43] [SERVER] User vetall (ID: 2) connected
+[20:30:43] [SERVER] [ONLINE] User vetall became ONLINE
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:30:43] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:30:43] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:30:43] [CLIENT] [RECONNECTION] State reset
+[20:30:43] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:30:43] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:30:43] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:30:43] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:30:43] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:30:43] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:30:52] [CLIENT] UserSession initialized with system arguments
+[20:30:53] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:31:03] [CLIENT] Attempting login for: hlebas
+[20:31:03] [CLIENT] Login successful for hlebas
+[20:31:03] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:31:03] [CLIENT] Tokens saved for user hlebas (expires: 2025-12-11 19:01:03)
+[20:31:03] [CLIENT] Session set for user hlebas (expires: 19:01:03)
+[20:31:03] [CLIENT] Auto-refresh timer started
+[20:31:03] [CLIENT] Session set for user hlebas (expires: 19:01:03)
+[20:31:03] [CLIENT] Auto-refresh timer stopped
+[20:31:03] [CLIENT] Auto-refresh timer started
+[20:31:03] [CLIENT] Initializing API services for user: hlebas
+[20:31:03] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[20:31:03] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[20:31:03] [CLIENT] ContactApiService: Authorization header set
+[20:31:03] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 65f6f26c-1d5d-4b2c-bb9d-a91f690958ff
+[20:31:03] [SERVER] User hlebas (ID: 3) connected
+[20:31:03] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:31:03] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:31:03] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:31:03] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:31:03] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:31:03] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:31:03] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:31:03] [CLIENT] [RECONNECTION] State reset
+[20:31:03] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:31:03] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:31:03] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:31:03] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:31:03] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:31:13] [CLIENT] [HEARTBEAT] Pong received
+[20:31:33] [CLIENT] [HEARTBEAT] Pong received
+[20:31:42] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:31:42] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:31:42] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:31:42] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:31:58] [CLIENT] WARNING: Failed to join chat group 7: The 'InvokeCoreAsync' method cannot be called if the connection is not active
+[20:32:02] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:32:02] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:32:02] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: IcYlfFHDjfmKuMZhuQOI_A
+[20:32:02] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: jQ1mgJFAcG3isRqMVwZZ0A
+[20:32:02] [CLIENT] [RECONNECTION] Reconnection time: 20,20s
+[20:32:02] [CLIENT] [RECONNECTION] Reconnection time: 20,20s
+[20:32:02] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 66413b86-73dc-485e-94c0-e14ad8777f49
+[20:32:02] [SERVER] User hlebas (ID: 3) connected
+[20:32:02] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 20ff9fb3-c4fe-4098-893a-77189ccba85f
+[20:32:02] [SERVER] User vetall (ID: 2) connected
+[20:32:02] [SERVER] [ONLINE] User vetall became ONLINE
+[20:32:02] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:32:02] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:32:02] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:32:02] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:32:02] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:32:02] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:32:02] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:32:02] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:32:02] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:32:03] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:32:03] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:32:03] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:32:03] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:32:03] [CLIENT] [SIGNALR] Refreshing active chat 7
+[20:32:03] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:32:03] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:32:03] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:32:03] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:32:03] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:32:03] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:32:03] [CLIENT] [HEARTBEAT] Pong received
+[20:32:13] [CLIENT] [HEARTBEAT] Pong received
+[20:32:33] [CLIENT] [HEARTBEAT] Pong received
+[20:32:43] [CLIENT] [HEARTBEAT] Pong received
+[20:33:03] [CLIENT] [HEARTBEAT] Pong received
+[20:33:13] [CLIENT] [HEARTBEAT] Pong received
+[20:33:33] [CLIENT] [HEARTBEAT] Pong received
+[20:33:43] [CLIENT] [HEARTBEAT] Pong received
+[20:34:03] [CLIENT] [HEARTBEAT] Pong received
+[20:34:07] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:34:07] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:34:08] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:34:08] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:34:09] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:34:09] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:34:13] [CLIENT] [HEARTBEAT] Pong received
+[20:34:33] [CLIENT] [HEARTBEAT] Pong received
+[20:34:43] [CLIENT] [HEARTBEAT] Pong received
+[20:34:58] [SERVER] [DISCONNECT] User hlebas (ID: 3) disconnected
+[20:34:58] [SERVER] [OFFLINE] User hlebas became OFFLINE
+[20:35:06] [CLIENT] UserSession initialized with system arguments
+[20:35:07] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:35:13] [CLIENT] [HEARTBEAT] Pong received
+[20:35:22] [CLIENT] Attempting login for: hlebas
+[20:35:23] [CLIENT] Login successful for hlebas
+[20:35:23] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:35:23] [CLIENT] Tokens saved for user hlebas (expires: 2025-12-11 19:05:23)
+[20:35:23] [CLIENT] Session set for user hlebas (expires: 19:05:23)
+[20:35:23] [CLIENT] Auto-refresh timer started
+[20:35:23] [CLIENT] Session set for user hlebas (expires: 19:05:23)
+[20:35:23] [CLIENT] Auto-refresh timer stopped
+[20:35:23] [CLIENT] Auto-refresh timer started
+[20:35:23] [CLIENT] Initializing API services for user: hlebas
+[20:35:23] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[20:35:23] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[20:35:23] [CLIENT] ContactApiService: Authorization header set
+[20:35:23] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 6ef0bbb1-709a-4af3-a08f-29c61aca8bd8
+[20:35:23] [SERVER] User hlebas (ID: 3) connected
+[20:35:23] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:35:23] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:35:23] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:35:23] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:35:23] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:35:23] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:35:23] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:35:23] [CLIENT] [RECONNECTION] State reset
+[20:35:23] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:35:23] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:35:23] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:35:23] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:35:23] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:35:26] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:35:27] [SERVER] [ReadProgress] User vetall marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:35:27] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:35:28] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:35:43] [CLIENT] [HEARTBEAT] Pong received
+[20:35:49] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:35:49] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:35:49] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:35:49] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:36:09] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: K1RPhyIaSQnszDT3Gzn5vg
+[20:36:09] [CLIENT] [RECONNECTION] Reconnection time: 20,28s
+[20:36:09] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:36:09] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:36:09] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: ui1ZI5WBEe8Q3-2nYs93LQ
+[20:36:09] [CLIENT] [RECONNECTION] Reconnection time: 20,28s
+[20:36:09] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: cafb1bdd-a6ec-4e76-bf6e-6d8953c98292
+[20:36:09] [SERVER] User hlebas (ID: 3) connected
+[20:36:09] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: b01049bb-d5c4-4cc4-b2fd-c81aa2ee24a2
+[20:36:09] [SERVER] User vetall (ID: 2) connected
+[20:36:09] [SERVER] [ONLINE] User vetall became ONLINE
+[20:36:09] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:36:09] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:36:09] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:36:09] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:36:09] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:36:09] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:36:09] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:36:09] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:36:09] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:36:09] [CLIENT] [SIGNALR] Refreshing active chat 7
+[20:36:09] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:36:09] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:36:09] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:36:09] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:36:09] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:36:09] [CLIENT] [SIGNALR] Refreshing active chat 7
+[20:36:09] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:36:13] [CLIENT] [HEARTBEAT] Pong received
+[20:36:23] [CLIENT] [HEARTBEAT] Pong received
+[20:36:43] [CLIENT] [HEARTBEAT] Pong received
+[20:36:53] [CLIENT] [HEARTBEAT] Pong received
+[20:37:13] [CLIENT] [HEARTBEAT] Pong received
+[20:37:23] [CLIENT] [HEARTBEAT] Pong received
+[20:37:24] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:37:24] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:37:24] [SERVER] [DISCONNECT] User hlebas (ID: 3) disconnected
+[20:37:24] [SERVER] [OFFLINE] User hlebas became OFFLINE
+[20:37:29] [CLIENT] UserSession initialized with system arguments
+[20:37:30] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:37:32] [CLIENT] UserSession initialized with system arguments
+[20:37:32] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:37:36] [CLIENT] Attempting login for: vetall
+[20:37:37] [CLIENT] Login successful for vetall
+[20:37:37] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:37:37] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:07:37)
+[20:37:37] [CLIENT] Session set for user vetall (expires: 19:07:37)
+[20:37:37] [CLIENT] Auto-refresh timer started
+[20:37:37] [CLIENT] Session set for user vetall (expires: 19:07:37)
+[20:37:37] [CLIENT] Auto-refresh timer stopped
+[20:37:37] [CLIENT] Auto-refresh timer started
+[20:37:37] [CLIENT] Initializing API services for user: vetall
+[20:37:37] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:37:37] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:37:37] [CLIENT] ContactApiService: Authorization header set
+[20:37:37] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 426fefa8-e539-4671-a637-d7ad842a4807
+[20:37:37] [SERVER] User vetall (ID: 2) connected
+[20:37:37] [CLIENT] [RECONNECTION] State reset
+[20:37:37] [SERVER] [ONLINE] User vetall became ONLINE
+[20:37:37] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:37:37] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:37:37] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:37:37] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:37:37] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:37:37] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:37:37] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:37:37] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:38:07] [CLIENT] [HEARTBEAT] Pong received
+[20:38:37] [CLIENT] [HEARTBEAT] Pong received
+[20:39:07] [CLIENT] [HEARTBEAT] Pong received
+[20:39:37] [CLIENT] [HEARTBEAT] Pong received
+[20:40:07] [CLIENT] [HEARTBEAT] Pong received
+[20:40:37] [CLIENT] [HEARTBEAT] Pong received
+[20:41:07] [CLIENT] [HEARTBEAT] Pong received
+[20:41:09] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:41:09] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:41:13] [CLIENT] UserSession initialized with system arguments
+[20:41:14] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:41:20] [CLIENT] UserSession initialized with system arguments
+[20:41:21] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:41:25] [CLIENT] Attempting login for: vetall
+[20:41:25] [CLIENT] Login successful for vetall
+[20:41:25] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:41:25] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:11:25)
+[20:41:25] [CLIENT] Session set for user vetall (expires: 19:11:25)
+[20:41:25] [CLIENT] Auto-refresh timer started
+[20:41:25] [CLIENT] Session set for user vetall (expires: 19:11:25)
+[20:41:25] [CLIENT] Auto-refresh timer stopped
+[20:41:25] [CLIENT] Auto-refresh timer started
+[20:41:25] [CLIENT] Initializing API services for user: vetall
+[20:41:25] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:41:25] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:41:25] [CLIENT] ContactApiService: Authorization header set
+[20:41:25] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 72bc49f4-2a57-4d36-ac44-3a4ff804f631
+[20:41:25] [SERVER] User vetall (ID: 2) connected
+[20:41:25] [SERVER] [ONLINE] User vetall became ONLINE
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:41:25] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:41:25] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:41:25] [CLIENT] [RECONNECTION] State reset
+[20:41:25] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:41:26] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:41:26] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:41:26] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:41:26] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:41:26] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:41:55] [CLIENT] [HEARTBEAT] Pong received
+[20:41:57] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:41:58] [SERVER] [ReadProgress] User vetall marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:41:58] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:41:58] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:41:59] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:42:00] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:42:00] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:42:01] [SERVER] [ReadProgress] User vetall marked chat 18 as read until 2025-12-11T01:12:54.9810000Z
+[20:42:01] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:42:01] [SERVER] [ReadProgress] User vetall marked chat 8 as read until 2025-12-10T23:29:38.5350000Z
+[20:42:24] [SERVER] [RECONNECTION] Cleared reconnection state for user vetall
+[20:42:24] [SERVER] [RECONNECTION] Cleared reconnection state for user hlebas
+[20:42:25] [CLIENT] [HEARTBEAT] Pong received
+[20:42:55] [CLIENT] [HEARTBEAT] Pong received
+[20:43:13] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:43:13] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:43:21] [CLIENT] UserSession initialized with system arguments
+[20:43:22] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:43:25] [CLIENT] Attempting login for: vetall
+[20:43:26] [CLIENT] Login successful for vetall
+[20:43:26] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:43:26] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:13:26)
+[20:43:26] [CLIENT] Session set for user vetall (expires: 19:13:26)
+[20:43:26] [CLIENT] Auto-refresh timer started
+[20:43:26] [CLIENT] Session set for user vetall (expires: 19:13:26)
+[20:43:26] [CLIENT] Auto-refresh timer stopped
+[20:43:26] [CLIENT] Auto-refresh timer started
+[20:43:26] [CLIENT] Initializing API services for user: vetall
+[20:43:26] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:43:26] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:43:26] [CLIENT] ContactApiService: Authorization header set
+[20:43:26] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 91aff766-1397-42e3-9348-173e2524e23e
+[20:43:26] [SERVER] User vetall (ID: 2) connected
+[20:43:26] [SERVER] [ONLINE] User vetall became ONLINE
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:43:26] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:43:26] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:43:26] [CLIENT] [RECONNECTION] State reset
+[20:43:26] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:43:26] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:43:26] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:43:26] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:43:26] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:43:26] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:43:36] [CLIENT] UserSession initialized with system arguments
+[20:43:37] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:43:43] [CLIENT] Attempting login for: hlebas
+[20:43:43] [CLIENT] Login successful for hlebas
+[20:43:43] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:43:43] [CLIENT] Tokens saved for user hlebas (expires: 2025-12-11 19:13:43)
+[20:43:43] [CLIENT] Session set for user hlebas (expires: 19:13:43)
+[20:43:43] [CLIENT] Auto-refresh timer started
+[20:43:43] [CLIENT] Session set for user hlebas (expires: 19:13:43)
+[20:43:43] [CLIENT] Auto-refresh timer stopped
+[20:43:43] [CLIENT] Auto-refresh timer started
+[20:43:43] [CLIENT] Initializing API services for user: hlebas
+[20:43:43] [CLIENT] Token length: 537, Token preview: eyJhbGciOi...
+[20:43:43] [CLIENT] ContactApiService: Setting auth token (length: 537)
+[20:43:43] [CLIENT] ContactApiService: Authorization header set
+[20:43:44] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: c9b8afd8-6ee1-46cd-ae49-111c7ddae08c
+[20:43:44] [SERVER] User hlebas (ID: 3) connected
+[20:43:44] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:43:44] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:43:44] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:43:44] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:43:44] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:43:44] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:43:44] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:43:44] [CLIENT] [RECONNECTION] State reset
+[20:43:44] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:43:44] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:43:44] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:43:44] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:43:44] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:43:56] [CLIENT] [HEARTBEAT] Pong received
+[20:44:01] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:44:01] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:44:01] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:44:01] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:44:16] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:44:16] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:44:16] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: DYRSmEbA8CK1TDpBXzpCeQ
+[20:44:16] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: SIaX3u9XLSMH30T4160bsg
+[20:44:16] [CLIENT] [RECONNECTION] Reconnection time: 14,89s
+[20:44:16] [CLIENT] [RECONNECTION] Reconnection time: 14,89s
+[20:44:16] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 81532289-f7e5-47aa-ba49-8aaec8cc8d09
+[20:44:16] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: a44d17cf-398f-4eda-80ee-b7a557ec64e4
+[20:44:16] [SERVER] User vetall (ID: 2) connected
+[20:44:16] [SERVER] User hlebas (ID: 3) connected
+[20:44:16] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:44:16] [SERVER] [ONLINE] User vetall became ONLINE
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:44:16] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:44:16] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:44:16] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:44:16] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:44:16] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:44:16] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:44:16] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:44:16] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:44:16] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:44:16] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:44:16] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:44:16] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:44:16] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:44:16] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:44:16] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:44:16] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:44:16] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:44:21] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:44:22] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:44:22] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T10:20:11.1560000Z
+[20:44:26] [CLIENT] [Chat] Message sent successfully to 7
+[20:44:26] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T18:44:26.2610000Z
+[20:44:26] [CLIENT] [HEARTBEAT] Pong received
+[20:44:31] [CLIENT] [Chat] Message sent successfully to 7
+[20:44:31] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T18:44:31.3320000Z
+[20:44:34] [CLIENT] [Chat] Message sent successfully to 7
+[20:44:34] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T18:44:34.1170000Z
+[20:44:40] [CLIENT] [Chat] Message sent successfully to 7
+[20:44:40] [SERVER] [ReadProgress] User hlebas marked chat 7 as read until 2025-12-11T18:44:40.8130000Z
+[20:44:44] [CLIENT] [HEARTBEAT] Pong received
+[20:44:46] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:44:46] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:44:46] [CLIENT] [RECONNECTION] Reconnecting... (attempt 1/10)
+[20:44:46] [CLIENT] [RECONNECTION] Disconnect reason: The remote party closed the WebSocket connection without completing the close handshake.
+[20:45:06] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: 6xi-Yu7_mgodd5b0i6PIGQ
+[20:45:06] [CLIENT] [RECONNECTION] Successfully reconnected with connectionId: CuwMzIPkV1sv3LDKPqLM4w
+[20:45:06] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:45:06] [CLIENT] [SIGNALR] Connection restored. Refreshing state...
+[20:45:06] [CLIENT] [RECONNECTION] Reconnection time: 20,22s
+[20:45:06] [CLIENT] [RECONNECTION] Reconnection time: 20,23s
+[20:45:06] [SERVER] [RECONNECTION] User hlebas (ID: 3) connected with sessionId: 4029c29c-e5fb-4d09-aac2-a9a7da18d832
+[20:45:06] [SERVER] User hlebas (ID: 3) connected
+[20:45:06] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 5ed4d0dd-b41c-4440-8b13-ceb3c3f8dd9d
+[20:45:06] [SERVER] User vetall (ID: 2) connected
+[20:45:06] [SERVER] [ONLINE] User hlebas became ONLINE
+[20:45:06] [SERVER] [ONLINE] User vetall became ONLINE
+[20:45:06] [SERVER] [Auto-Join] User hlebas added to group chat_9
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:45:06] [SERVER] [Auto-Join] User hlebas added to group chat_24
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:45:06] [SERVER] [Auto-Join] User hlebas added to group chat_11
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:45:06] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:45:06] [SERVER] [Auto-Join] User hlebas added to group chat_7
+[20:45:06] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:45:06] [SERVER] [Auto-Join] User hlebas added to group chat_8
+[20:45:06] [SERVER] [Auto-Join] User hlebas joined 5 chat groups
+[20:45:06] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:45:06] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:45:06] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:45:06] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:45:06] [CLIENT] [SIGNALR] Refreshing active chat 7
+[20:45:06] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:45:06] [CLIENT] [SIGNALR] Refreshing active chat 2
+[20:45:06] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:45:13] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:45:13] [SERVER] [ReadProgress] User vetall marked chat 7 as read until 2025-12-11T18:44:40.8130000Z
+[20:45:14] [CLIENT] [HEARTBEAT] Pong received
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 24 (group: chat_24)
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 7 (group: chat_7)
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 18 (group: chat_18)
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 8 (group: chat_8)
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 6 (group: chat_6)
+[20:45:19] [SERVER] [JoinChatGroup] hlebas joined chat 24 (group: chat_24)
+[20:45:26] [CLIENT] [HEARTBEAT] Pong received
+[20:45:44] [CLIENT] [HEARTBEAT] Pong received
+[20:45:56] [CLIENT] [HEARTBEAT] Pong received
+[20:46:14] [CLIENT] [HEARTBEAT] Pong received
+[20:46:25] [SERVER] [DISCONNECT] User hlebas (ID: 3) disconnected
+[20:46:25] [SERVER] [OFFLINE] User hlebas became OFFLINE
+[20:46:25] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:46:25] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:46:51] [CLIENT] UserSession initialized with system arguments
+[20:46:51] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:46:57] [CLIENT] Attempting login for: vetall
+[20:46:58] [CLIENT] Login successful for vetall
+[20:46:58] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:46:58] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:16:58)
+[20:46:58] [CLIENT] Session set for user vetall (expires: 19:16:58)
+[20:46:58] [CLIENT] Auto-refresh timer started
+[20:46:58] [CLIENT] Session set for user vetall (expires: 19:16:58)
+[20:46:58] [CLIENT] Auto-refresh timer stopped
+[20:46:58] [CLIENT] Auto-refresh timer started
+[20:46:58] [CLIENT] Initializing API services for user: vetall
+[20:46:58] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:46:58] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:46:58] [CLIENT] ContactApiService: Authorization header set
+[20:46:58] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 8d663d99-1f73-4e80-996e-b1a672dbf984
+[20:46:58] [SERVER] User vetall (ID: 2) connected
+[20:46:58] [SERVER] [ONLINE] User vetall became ONLINE
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:46:58] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:46:58] [SERVER] [Auto-Join] User vetall joined 6 chat groups
+[20:46:58] [CLIENT] [RECONNECTION] State reset
+[20:46:58] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:46:58] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:46:58] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:46:58] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:46:58] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:46:58] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 25 (group: chat_25)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:47:10] [SERVER] [JoinChatGroup] vetall joined chat 25 (group: chat_25)
+[20:47:28] [CLIENT] [HEARTBEAT] Pong received
+[20:47:33] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:47:33] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:47:41] [CLIENT] UserSession initialized with system arguments
+[20:47:41] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:47:45] [CLIENT] Attempting login for: vetall
+[20:47:46] [CLIENT] Login successful for vetall
+[20:47:46] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:47:46] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:17:46)
+[20:47:46] [CLIENT] Session set for user vetall (expires: 19:17:46)
+[20:47:46] [CLIENT] Auto-refresh timer started
+[20:47:46] [CLIENT] Session set for user vetall (expires: 19:17:46)
+[20:47:46] [CLIENT] Auto-refresh timer stopped
+[20:47:46] [CLIENT] Auto-refresh timer started
+[20:47:46] [CLIENT] Initializing API services for user: vetall
+[20:47:46] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:47:46] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:47:46] [CLIENT] ContactApiService: Authorization header set
+[20:47:46] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: 0242cd8f-31b3-4d12-955d-55c69f041d17
+[20:47:46] [SERVER] User vetall (ID: 2) connected
+[20:47:46] [SERVER] [ONLINE] User vetall became ONLINE
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_35
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:47:46] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:47:46] [SERVER] [Auto-Join] User vetall joined 7 chat groups
+[20:47:46] [CLIENT] [RECONNECTION] State reset
+[20:47:46] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 25 (group: chat_25)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:47:46] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:47:49] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:47:49] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:47:50] [SERVER] [ReadProgress] User vetall marked chat 7 as read until 2025-12-11T18:44:40.8130000Z
+[20:47:50] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:47:50] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:47:59] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:47:59] [SERVER] [OFFLINE] User vetall became OFFLINE
+[20:49:45] [CLIENT] UserSession initialized with system arguments
+[20:49:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[20:49:49] [CLIENT] Attempting login for: vetall
+[20:49:50] [CLIENT] Login successful for vetall
+[20:49:50] [CLIENT] TokenStorage initialized at: C:\Users\Vetal\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[20:49:50] [CLIENT] Tokens saved for user vetall (expires: 2025-12-11 19:19:50)
+[20:49:50] [CLIENT] Session set for user vetall (expires: 19:19:50)
+[20:49:50] [CLIENT] Auto-refresh timer started
+[20:49:50] [CLIENT] Session set for user vetall (expires: 19:19:50)
+[20:49:50] [CLIENT] Auto-refresh timer stopped
+[20:49:50] [CLIENT] Auto-refresh timer started
+[20:49:50] [CLIENT] Initializing API services for user: vetall
+[20:49:50] [CLIENT] Token length: 532, Token preview: eyJhbGciOi...
+[20:49:50] [CLIENT] ContactApiService: Setting auth token (length: 532)
+[20:49:50] [CLIENT] ContactApiService: Authorization header set
+[20:49:50] [SERVER] [RECONNECTION] User vetall (ID: 2) connected with sessionId: d63d9794-2fad-4314-a76f-40b3153cb611
+[20:49:50] [SERVER] User vetall (ID: 2) connected
+[20:49:50] [SERVER] [ONLINE] User vetall became ONLINE
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_35
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_10
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_32
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_23
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_12
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_2
+[20:49:50] [SERVER] [Auto-Join] User vetall added to group chat_3
+[20:49:50] [SERVER] [Auto-Join] User vetall joined 7 chat groups
+[20:49:50] [CLIENT] [RECONNECTION] State reset
+[20:49:50] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 25 (group: chat_25)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 7 (group: chat_7)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 23 (group: chat_23)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 18 (group: chat_18)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 8 (group: chat_8)
+[20:49:50] [SERVER] [JoinChatGroup] vetall joined chat 2 (group: chat_2)
+[20:49:52] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
+[20:49:52] [SERVER] [OFFLINE] User vetall became OFFLINE

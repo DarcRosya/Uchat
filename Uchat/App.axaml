@@ -121,7 +121,6 @@
           <Setter Property="Width" Value="20"/>
           <Setter Property="Height" Value="20"/>
           <Setter Property="Margin" Value="0,0,1,1"/>
-          <Setter Property="BorderBrush" Value="#171a20"/>
           <Setter Property="Background" Value="#4da64d"/>
           <Setter Property="BorderThickness" Value="4"/>
           <Setter Property="CornerRadius" Value="5"/>

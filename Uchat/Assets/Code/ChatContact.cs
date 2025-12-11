@@ -76,9 +76,10 @@
                         unreadMessages = newUnreadMessages;
                         chatId = newChatId;
                         allowPresence = !string.Equals(chatName, "Notes", StringComparison.OrdinalIgnoreCase);
-                        //contactStatusBorder.Background = OfflineBrush;
-                        //contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
-                        contactStatusBorder.IsVisible = false;
+                        
+                        contactStatusBorder.Background = Brush.Parse("#4da64d");
+                        contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
+                        contactStatusBorder.BorderThickness = new Thickness(4);
                         SetParticipants(participants);
 
                         contactGrid.Classes.Add("contactGrid");
@@ -236,7 +237,15 @@
                         contactStatusBorder.IsVisible = !isGroupChat;
                         var brush = isOnline ? OnlineBrush : OfflineBrush;
                         contactStatusBorder.Background = brush;
-                        contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
+                        if(IsSelected == true)
+                        {
+                            contactStatusBorder.BorderBrush = Brush.Parse("#4b678a");
+                        }
+                        else
+                        {
+                            contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
+                        }
+
                     }
 
                     private void UpdateIcon()
@@ -244,8 +253,7 @@
                         var uriString = isGroupChat 
                             ? "avares://Uchat/Assets/Icons/group.png" 
                             : "avares://Uchat/Assets/Icons/avatar.png";
-                        string loweredName = chatName.ToLower();
-                        if (loweredName.Contains("notes"))
+                        if (chatName =="Notes")
                         {
                             uriString = "avares://Uchat/Assets/Icons/notes.png";
                         }
