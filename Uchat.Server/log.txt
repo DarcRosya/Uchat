@@ -4222,3 +4222,1825 @@
 [03:57:00] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
 [03:57:08] [SERVER] [DISCONNECT] User vetall (ID: 2) disconnected
 [03:57:08] [SERVER] [OFFLINE] User vetall became OFFLINE
+[10:30:35] [CLIENT] UserSession initialized with system arguments
+[10:30:36] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:30:41] [CLIENT] Attempting login for: ivan
+[10:30:42] [CLIENT] Login successful for ivan
+[10:30:42] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[10:30:42] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:00:42)
+[10:30:42] [CLIENT] Session set for user ivan (expires: 09:00:42)
+[10:30:42] [CLIENT] Auto-refresh timer started
+[10:30:42] [CLIENT] Session set for user ivan (expires: 09:00:42)
+[10:30:42] [CLIENT] Auto-refresh timer stopped
+[10:30:42] [CLIENT] Auto-refresh timer started
+[10:30:42] [CLIENT] Initializing API services for user: ivan
+[10:30:42] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[10:30:42] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[10:30:42] [CLIENT] ContactApiService: Authorization header set
+[10:30:42] [CLIENT] [RECONNECTION] State reset
+[10:30:42] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[10:30:42] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 4f65052c-bfae-4454-8f9e-0587128711d2
+[10:30:42] [SERVER] User ivan (ID: 2) connected
+[10:30:42] [SERVER] [ONLINE] User ivan became ONLINE
+[10:30:42] [SERVER] [Auto-Join] User ivan added to group chat_6
+[10:30:42] [SERVER] [Auto-Join] User ivan added to group chat_2
+[10:30:42] [SERVER] [Auto-Join] User ivan added to group chat_3
+[10:30:42] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[10:30:50] [SERVER] [JoinChatGroup] ivan joined chat 2 (group: chat_2)
+[10:30:51] [SERVER] [JoinChatGroup] ivan joined chat 6 (group: chat_6)
+[10:30:52] [SERVER] [JoinChatGroup] ivan joined chat 7 (group: chat_7)
+[10:30:52] [SERVER] [JoinChatGroup] ivan joined chat 8 (group: chat_8)
+[10:30:53] [SERVER] [JoinChatGroup] ivan joined chat 9 (group: chat_9)
+[10:30:53] [SERVER] [JoinChatGroup] ivan joined chat 10 (group: chat_10)
+[10:30:54] [SERVER] [JoinChatGroup] ivan joined chat 11 (group: chat_11)
+[10:30:54] [SERVER] [JoinChatGroup] ivan joined chat 12 (group: chat_12)
+[10:30:54] [SERVER] [JoinChatGroup] ivan joined chat 13 (group: chat_13)
+[10:30:54] [SERVER] [JoinChatGroup] ivan joined chat 14 (group: chat_14)
+[10:30:55] [SERVER] [JoinChatGroup] ivan joined chat 15 (group: chat_15)
+[10:30:55] [SERVER] [JoinChatGroup] ivan joined chat 16 (group: chat_16)
+[10:30:55] [SERVER] [JoinChatGroup] ivan joined chat 17 (group: chat_17)
+[10:30:55] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:30:56] [SERVER] [JoinChatGroup] ivan joined chat 19 (group: chat_19)
+[10:30:56] [SERVER] [JoinChatGroup] ivan joined chat 20 (group: chat_20)
+[10:31:02] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:07] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:08] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:12] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:12] [CLIENT] [HEARTBEAT] Pong received
+[10:31:12] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:13] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:14] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:17] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:18] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:18] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:19] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:20] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:20] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:21] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:22] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:22] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:23] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:24] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:24] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:25] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:25] [CLIENT] [Chat] Message sent successfully to 20
+[10:31:42] [CLIENT] [HEARTBEAT] Pong received
+[10:32:12] [CLIENT] [HEARTBEAT] Pong received
+[10:32:22] [SERVER] [JoinChatGroup] ivan joined chat 20 (group: chat_20)
+[10:32:23] [SERVER] [JoinChatGroup] ivan joined chat 19 (group: chat_19)
+[10:32:23] [SERVER] [JoinChatGroup] ivan joined chat 17 (group: chat_17)
+[10:32:23] [SERVER] [JoinChatGroup] ivan joined chat 19 (group: chat_19)
+[10:32:24] [SERVER] [JoinChatGroup] ivan joined chat 20 (group: chat_20)
+[10:32:26] [SERVER] [JoinChatGroup] ivan joined chat 5 (group: chat_5)
+[10:32:27] [SERVER] [JoinChatGroup] ivan joined chat 6 (group: chat_6)
+[10:32:27] [SERVER] [JoinChatGroup] ivan joined chat 7 (group: chat_7)
+[10:32:27] [SERVER] [JoinChatGroup] ivan joined chat 8 (group: chat_8)
+[10:32:28] [SERVER] [JoinChatGroup] ivan joined chat 9 (group: chat_9)
+[10:32:28] [SERVER] [JoinChatGroup] ivan joined chat 10 (group: chat_10)
+[10:32:28] [SERVER] [JoinChatGroup] ivan joined chat 11 (group: chat_11)
+[10:32:28] [SERVER] [JoinChatGroup] ivan joined chat 12 (group: chat_12)
+[10:32:29] [SERVER] [JoinChatGroup] ivan joined chat 13 (group: chat_13)
+[10:32:29] [SERVER] [JoinChatGroup] ivan joined chat 15 (group: chat_15)
+[10:32:30] [SERVER] [JoinChatGroup] ivan joined chat 20 (group: chat_20)
+[10:32:31] [SERVER] [JoinChatGroup] ivan joined chat 19 (group: chat_19)
+[10:32:32] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:32:33] [SERVER] [JoinChatGroup] ivan joined chat 20 (group: chat_20)
+[10:32:35] [CLIENT] Chat 20 removed from UI and Cache
+[10:32:35] [CLIENT] Chat area cleared
+[10:32:36] [CLIENT] Chat 19 removed from UI and Cache
+[10:32:37] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:32:37] [SERVER] [JoinChatGroup] ivan joined chat 17 (group: chat_17)
+[10:32:37] [SERVER] [JoinChatGroup] ivan joined chat 16 (group: chat_16)
+[10:32:38] [SERVER] [JoinChatGroup] ivan joined chat 16 (group: chat_16)
+[10:32:38] [SERVER] [JoinChatGroup] ivan joined chat 15 (group: chat_15)
+[10:32:38] [SERVER] [JoinChatGroup] ivan joined chat 14 (group: chat_14)
+[10:32:38] [SERVER] [JoinChatGroup] ivan joined chat 13 (group: chat_13)
+[10:32:39] [SERVER] [JoinChatGroup] ivan joined chat 12 (group: chat_12)
+[10:32:39] [SERVER] [JoinChatGroup] ivan joined chat 12 (group: chat_12)
+[10:32:39] [SERVER] [JoinChatGroup] ivan joined chat 11 (group: chat_11)
+[10:32:40] [SERVER] [JoinChatGroup] ivan joined chat 5 (group: chat_5)
+[10:32:40] [SERVER] [JoinChatGroup] ivan joined chat 6 (group: chat_6)
+[10:32:41] [SERVER] [JoinChatGroup] ivan joined chat 7 (group: chat_7)
+[10:32:41] [SERVER] [JoinChatGroup] ivan joined chat 8 (group: chat_8)
+[10:32:41] [SERVER] [JoinChatGroup] ivan joined chat 9 (group: chat_9)
+[10:32:41] [SERVER] [JoinChatGroup] ivan joined chat 10 (group: chat_10)
+[10:32:42] [SERVER] [JoinChatGroup] ivan joined chat 11 (group: chat_11)
+[10:32:42] [SERVER] [JoinChatGroup] ivan joined chat 12 (group: chat_12)
+[10:32:42] [CLIENT] [HEARTBEAT] Pong received
+[10:32:45] [SERVER] [JoinChatGroup] ivan joined chat 2 (group: chat_2)
+[10:32:51] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:33:12] [CLIENT] [HEARTBEAT] Pong received
+[10:33:20] [SERVER] [JoinChatGroup] ivan joined chat 17 (group: chat_17)
+[10:33:21] [CLIENT] Chat 17 removed from UI and Cache
+[10:33:21] [CLIENT] Chat area cleared
+[10:33:22] [CLIENT] Chat 16 removed from UI and Cache
+[10:33:23] [CLIENT] Chat 15 removed from UI and Cache
+[10:33:24] [CLIENT] Chat 14 removed from UI and Cache
+[10:33:25] [CLIENT] Chat 13 removed from UI and Cache
+[10:33:26] [CLIENT] Chat 12 removed from UI and Cache
+[10:33:27] [CLIENT] Chat 11 removed from UI and Cache
+[10:33:27] [CLIENT] Chat 10 removed from UI and Cache
+[10:33:28] [SERVER] [JoinChatGroup] ivan joined chat 9 (group: chat_9)
+[10:33:29] [CLIENT] Chat 9 removed from UI and Cache
+[10:33:29] [CLIENT] Chat area cleared
+[10:33:30] [CLIENT] Chat 8 removed from UI and Cache
+[10:33:30] [CLIENT] Chat 7 removed from UI and Cache
+[10:33:31] [CLIENT] Chat 6 removed from UI and Cache
+[10:33:32] [CLIENT] Chat 5 removed from UI and Cache
+[10:33:34] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[10:33:34] [SERVER] [OFFLINE] User ivan became OFFLINE
+[10:36:50] [CLIENT] UserSession initialized with system arguments
+[10:36:50] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:36:54] [CLIENT] Attempting login for: ivan
+[10:36:55] [CLIENT] Login successful for ivan
+[10:36:55] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[10:36:55] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:06:55)
+[10:36:55] [CLIENT] Session set for user ivan (expires: 09:06:55)
+[10:36:55] [CLIENT] Auto-refresh timer started
+[10:36:55] [CLIENT] Session set for user ivan (expires: 09:06:55)
+[10:36:55] [CLIENT] Auto-refresh timer stopped
+[10:36:55] [CLIENT] Auto-refresh timer started
+[10:36:55] [CLIENT] Initializing API services for user: ivan
+[10:36:55] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[10:36:55] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[10:36:55] [CLIENT] ContactApiService: Authorization header set
+[10:36:55] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 80cc0d87-7320-4459-a59d-b9009271edac
+[10:36:55] [SERVER] User ivan (ID: 2) connected
+[10:36:55] [SERVER] [ONLINE] User ivan became ONLINE
+[10:36:55] [SERVER] [Auto-Join] User ivan added to group chat_19
+[10:36:55] [SERVER] [Auto-Join] User ivan added to group chat_2
+[10:36:55] [SERVER] [Auto-Join] User ivan added to group chat_3
+[10:36:55] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[10:36:55] [CLIENT] [RECONNECTION] State reset
+[10:36:55] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[10:36:56] [SERVER] [JoinChatGroup] ivan joined chat 2 (group: chat_2)
+[10:36:56] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:36:58] [SERVER] [JoinChatGroup] ivan joined chat 2 (group: chat_2)
+[10:37:03] [CLIENT] [Chat] Message sent successfully to 2
+[10:37:25] [CLIENT] [HEARTBEAT] Pong received
+[10:37:34] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[10:37:34] [SERVER] [OFFLINE] User ivan became OFFLINE
+[10:38:34] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[10:40:10] [CLIENT] UserSession initialized with system arguments
+[10:40:10] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:40:15] [CLIENT] Attempting login for: ivan
+[10:40:15] [CLIENT] Login successful for ivan
+[10:40:15] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[10:40:15] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:10:15)
+[10:40:15] [CLIENT] Session set for user ivan (expires: 09:10:15)
+[10:40:15] [CLIENT] Auto-refresh timer started
+[10:40:15] [CLIENT] Session set for user ivan (expires: 09:10:15)
+[10:40:15] [CLIENT] Auto-refresh timer stopped
+[10:40:15] [CLIENT] Auto-refresh timer started
+[10:40:15] [CLIENT] Initializing API services for user: ivan
+[10:40:15] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[10:40:15] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[10:40:15] [CLIENT] ContactApiService: Authorization header set
+[10:40:15] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 81be273f-6a8a-491b-bd04-c1723492b782
+[10:40:15] [SERVER] User ivan (ID: 2) connected
+[10:40:15] [SERVER] [ONLINE] User ivan became ONLINE
+[10:40:15] [SERVER] [Auto-Join] User ivan added to group chat_2
+[10:40:15] [SERVER] [Auto-Join] User ivan added to group chat_19
+[10:40:15] [SERVER] [Auto-Join] User ivan added to group chat_3
+[10:40:15] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[10:40:15] [CLIENT] [RECONNECTION] State reset
+[10:40:15] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[10:40:16] [SERVER] [JoinChatGroup] ivan joined chat 2 (group: chat_2)
+[10:40:25] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[10:40:25] [SERVER] [OFFLINE] User ivan became OFFLINE
+[10:40:44] [CLIENT] UserSession initialized with system arguments
+[10:40:44] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:40:49] [CLIENT] Attempting login for: ivan
+[10:40:50] [CLIENT] Login successful for ivan
+[10:40:50] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[10:40:50] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:10:50)
+[10:40:50] [CLIENT] Session set for user ivan (expires: 09:10:50)
+[10:40:50] [CLIENT] Auto-refresh timer started
+[10:40:50] [CLIENT] Session set for user ivan (expires: 09:10:50)
+[10:40:50] [CLIENT] Auto-refresh timer stopped
+[10:40:50] [CLIENT] Auto-refresh timer started
+[10:40:50] [CLIENT] Initializing API services for user: ivan
+[10:40:50] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[10:40:50] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[10:40:50] [CLIENT] ContactApiService: Authorization header set
+[10:40:50] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: c8521311-5c39-4fe7-aab1-a6cb9737f0b9
+[10:40:50] [SERVER] User ivan (ID: 2) connected
+[10:40:50] [SERVER] [ONLINE] User ivan became ONLINE
+[10:40:50] [SERVER] [Auto-Join] User ivan added to group chat_2
+[10:40:50] [SERVER] [Auto-Join] User ivan added to group chat_19
+[10:40:50] [SERVER] [Auto-Join] User ivan added to group chat_3
+[10:40:50] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[10:40:50] [CLIENT] [RECONNECTION] State reset
+[10:40:50] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[10:40:53] [SERVER] [JoinChatGroup] ivan joined chat 18 (group: chat_18)
+[10:41:05] [CLIENT] [Chat] Message sent successfully to 18
+[10:41:11] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[10:41:11] [SERVER] [OFFLINE] User ivan became OFFLINE
+[10:41:14] [CLIENT] UserSession initialized with system arguments
+[10:41:15] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:41:18] [CLIENT] Attempting login for: ivan
+[10:41:19] [CLIENT] Login failed: BadRequest
+[10:41:23] [CLIENT] Attempting login for: ivan
+[10:41:23] [CLIENT] Login successful for ivan
+[10:41:23] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[10:41:23] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:11:23)
+[10:41:23] [CLIENT] Session set for user ivan (expires: 09:11:23)
+[10:41:23] [CLIENT] Auto-refresh timer started
+[10:41:23] [CLIENT] Session set for user ivan (expires: 09:11:23)
+[10:41:23] [CLIENT] Auto-refresh timer stopped
+[10:41:23] [CLIENT] Auto-refresh timer started
+[10:41:23] [CLIENT] Initializing API services for user: ivan
+[10:41:23] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[10:41:23] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[10:41:23] [CLIENT] ContactApiService: Authorization header set
+[10:41:23] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 72fbc861-4f77-4fa6-b47f-934572854680
+[10:41:23] [SERVER] User ivan (ID: 2) connected
+[10:41:23] [SERVER] [ONLINE] User ivan became ONLINE
+[10:41:23] [SERVER] [Auto-Join] User ivan added to group chat_19
+[10:41:23] [SERVER] [Auto-Join] User ivan added to group chat_2
+[10:41:23] [SERVER] [Auto-Join] User ivan added to group chat_3
+[10:41:23] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[10:41:23] [CLIENT] [RECONNECTION] State reset
+[10:41:23] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[10:41:53] [CLIENT] [HEARTBEAT] Pong received
+[10:42:23] [CLIENT] [HEARTBEAT] Pong received
+[10:42:34] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[10:42:53] [CLIENT] [HEARTBEAT] Pong received
+[10:43:21] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[10:43:21] [SERVER] [OFFLINE] User ivan became OFFLINE
+[10:43:22] [CLIENT] UserSession initialized with system arguments
+[10:43:22] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:43:30] [CLIENT] Attempting login for: ivan123123
+[10:43:30] [CLIENT] Login failed: BadRequest
+[10:43:33] [CLIENT] Attempting login for: ivan123123
+[10:43:33] [CLIENT] Login failed: BadRequest
+[10:43:36] [CLIENT] Attempting login for: ivan123123
+[10:43:36] [CLIENT] Login failed: BadRequest
+[10:43:37] [CLIENT] Attempting login for: ivan123123
+[10:43:37] [CLIENT] Login failed: BadRequest
+[10:43:37] [CLIENT] Attempting login for: ivan123123
+[10:43:37] [CLIENT] Login failed: BadRequest
+[10:43:37] [CLIENT] Attempting login for: ivan123123
+[10:43:37] [CLIENT] Login failed: BadRequest
+[10:43:38] [CLIENT] Attempting login for: ivan123123
+[10:43:38] [CLIENT] Login failed: BadRequest
+[10:43:38] [CLIENT] Attempting login for: ivan123123
+[10:43:38] [CLIENT] Login failed: BadRequest
+[10:43:38] [CLIENT] Attempting login for: ivan123123
+[10:43:38] [CLIENT] Login failed: BadRequest
+[10:43:39] [CLIENT] Attempting login for: ivan123123
+[10:43:39] [CLIENT] Login failed: TooManyRequests
+[10:43:39] [CLIENT] Attempting login for: ivan123123
+[10:43:39] [CLIENT] Login failed: TooManyRequests
+[10:43:39] [CLIENT] Attempting login for: ivan123123
+[10:43:39] [CLIENT] Login failed: TooManyRequests
+[10:43:47] [CLIENT] Attempting login for: ivan
+[10:43:47] [CLIENT] Login failed: TooManyRequests
+[10:43:52] [CLIENT] Attempting login for: ivan
+[10:43:52] [CLIENT] Login failed: TooManyRequests
+[10:43:52] [CLIENT] Attempting login for: ivan
+[10:43:52] [CLIENT] Login failed: TooManyRequests
+[10:43:52] [CLIENT] Attempting login for: ivan
+[10:43:52] [CLIENT] Login failed: TooManyRequests
+[10:43:53] [CLIENT] Attempting login for: ivan
+[10:43:53] [CLIENT] Login failed: TooManyRequests
+[10:43:53] [CLIENT] Attempting login for: ivan
+[10:43:53] [CLIENT] Login failed: TooManyRequests
+[10:43:53] [CLIENT] Attempting login for: ivan
+[10:43:53] [CLIENT] Login failed: TooManyRequests
+[10:43:53] [CLIENT] Attempting login for: ivan
+[10:43:53] [CLIENT] Login failed: TooManyRequests
+[10:43:59] [CLIENT] UserSession initialized with system arguments
+[10:43:59] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:44:03] [CLIENT] Attempting login for: ivan
+[10:44:03] [CLIENT] Login failed: TooManyRequests
+[10:44:25] [CLIENT] UserSession initialized with system arguments
+[10:44:26] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[10:45:25] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[10:46:11] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[10:48:21] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:04:45] [CLIENT] UserSession initialized with system arguments
+[11:04:45] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:04:49] [CLIENT] Attempting login for: ivan
+[11:04:49] [CLIENT] Login successful for ivan
+[11:04:49] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:04:49] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:34:49)
+[11:04:49] [CLIENT] Session set for user ivan (expires: 09:34:49)
+[11:04:49] [CLIENT] Auto-refresh timer started
+[11:04:49] [CLIENT] Session set for user ivan (expires: 09:34:49)
+[11:04:49] [CLIENT] Auto-refresh timer stopped
+[11:04:49] [CLIENT] Auto-refresh timer started
+[11:04:49] [CLIENT] Initializing API services for user: ivan
+[11:04:49] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:04:49] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:04:49] [CLIENT] ContactApiService: Authorization header set
+[11:04:49] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: a3e8301d-0a72-4ce2-a7e9-6fe9e86cbe88
+[11:04:49] [SERVER] User ivan (ID: 2) connected
+[11:04:49] [SERVER] [ONLINE] User ivan became ONLINE
+[11:04:49] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:04:49] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:04:49] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:04:49] [SERVER] [Auto-Join] User ivan joined 3 chat groups
+[11:04:49] [CLIENT] [RECONNECTION] State reset
+[11:04:49] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:04:51] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:04:52] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:04:56] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:00] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:01] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:02] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:02] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:03] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:04] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:04] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:05] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:06] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:06] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:07] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:08] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:08] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:09] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:09] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:11] [CLIENT] [Chat] Message sent successfully to 21
+[11:05:19] [CLIENT] [HEARTBEAT] Pong received
+[11:05:34] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:05:34] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:09:02] [CLIENT] UserSession initialized with system arguments
+[11:09:02] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:09:05] [CLIENT] Attempting login for: ivan
+[11:09:06] [CLIENT] Login successful for ivan
+[11:09:06] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:09:06] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:39:06)
+[11:09:06] [CLIENT] Session set for user ivan (expires: 09:39:06)
+[11:09:06] [CLIENT] Auto-refresh timer started
+[11:09:06] [CLIENT] Session set for user ivan (expires: 09:39:06)
+[11:09:06] [CLIENT] Auto-refresh timer stopped
+[11:09:06] [CLIENT] Auto-refresh timer started
+[11:09:06] [CLIENT] Initializing API services for user: ivan
+[11:09:06] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:09:06] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:09:06] [CLIENT] ContactApiService: Authorization header set
+[11:09:06] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: fb07737e-902e-4380-89fe-3c53cf327832
+[11:09:06] [SERVER] User ivan (ID: 2) connected
+[11:09:06] [SERVER] [ONLINE] User ivan became ONLINE
+[11:09:06] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:09:06] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:09:06] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:09:06] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:09:06] [SERVER] [Auto-Join] User ivan joined 4 chat groups
+[11:09:06] [CLIENT] [RECONNECTION] State reset
+[11:09:06] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:09:07] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:09:15] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:20] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:20] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:21] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:21] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:22] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:22] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:22] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:23] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:23] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:23] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:23] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:23] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:24] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:25] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:25] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:25] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:26] [CLIENT] [Chat] Message sent successfully to 21
+[11:09:36] [CLIENT] [HEARTBEAT] Pong received
+[11:10:06] [CLIENT] [HEARTBEAT] Pong received
+[11:10:34] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:10:36] [CLIENT] [HEARTBEAT] Pong received
+[11:11:06] [CLIENT] [HEARTBEAT] Pong received
+[11:11:18] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:11:18] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:11:22] [CLIENT] UserSession initialized with system arguments
+[11:11:22] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:11:26] [CLIENT] Attempting login for: ivan
+[11:11:26] [CLIENT] Login successful for ivan
+[11:11:26] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:11:26] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:41:26)
+[11:11:26] [CLIENT] Session set for user ivan (expires: 09:41:26)
+[11:11:26] [CLIENT] Auto-refresh timer started
+[11:11:26] [CLIENT] Session set for user ivan (expires: 09:41:26)
+[11:11:26] [CLIENT] Auto-refresh timer stopped
+[11:11:26] [CLIENT] Auto-refresh timer started
+[11:11:26] [CLIENT] Initializing API services for user: ivan
+[11:11:26] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:11:26] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:11:26] [CLIENT] ContactApiService: Authorization header set
+[11:11:26] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 143954e7-4934-4211-9f9a-a27ca614d57f
+[11:11:26] [SERVER] User ivan (ID: 2) connected
+[11:11:26] [SERVER] [ONLINE] User ivan became ONLINE
+[11:11:26] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:11:26] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:11:26] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:11:26] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:11:26] [SERVER] [Auto-Join] User ivan joined 4 chat groups
+[11:11:26] [CLIENT] [RECONNECTION] State reset
+[11:11:26] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:11:29] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:11:51] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:11:51] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:12:13] [CLIENT] UserSession initialized with system arguments
+[11:12:13] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:12:17] [CLIENT] Attempting login for: ivan
+[11:12:17] [CLIENT] Login successful for ivan
+[11:12:17] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:12:17] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:42:17)
+[11:12:17] [CLIENT] Session set for user ivan (expires: 09:42:17)
+[11:12:17] [CLIENT] Auto-refresh timer started
+[11:12:17] [CLIENT] Session set for user ivan (expires: 09:42:17)
+[11:12:17] [CLIENT] Auto-refresh timer stopped
+[11:12:17] [CLIENT] Auto-refresh timer started
+[11:12:17] [CLIENT] Initializing API services for user: ivan
+[11:12:17] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:12:17] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:12:17] [CLIENT] ContactApiService: Authorization header set
+[11:12:17] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 2021e0ad-73a4-40fd-bac4-79749e9a22fd
+[11:12:17] [SERVER] User ivan (ID: 2) connected
+[11:12:17] [SERVER] [ONLINE] User ivan became ONLINE
+[11:12:17] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:12:17] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:12:17] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:12:17] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:12:17] [SERVER] [Auto-Join] User ivan joined 4 chat groups
+[11:12:17] [CLIENT] [RECONNECTION] State reset
+[11:12:17] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:12:19] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:12:23] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:12:23] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:12:37] [CLIENT] UserSession initialized with system arguments
+[11:12:37] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:12:40] [CLIENT] Attempting login for: ivan
+[11:12:40] [CLIENT] Login successful for ivan
+[11:12:40] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:12:40] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:42:40)
+[11:12:40] [CLIENT] Session set for user ivan (expires: 09:42:40)
+[11:12:40] [CLIENT] Auto-refresh timer started
+[11:12:40] [CLIENT] Session set for user ivan (expires: 09:42:40)
+[11:12:40] [CLIENT] Auto-refresh timer stopped
+[11:12:40] [CLIENT] Auto-refresh timer started
+[11:12:40] [CLIENT] Initializing API services for user: ivan
+[11:12:40] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:12:40] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:12:40] [CLIENT] ContactApiService: Authorization header set
+[11:12:41] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 3665286b-4678-42ad-b67a-121c70173989
+[11:12:41] [SERVER] User ivan (ID: 2) connected
+[11:12:41] [SERVER] [ONLINE] User ivan became ONLINE
+[11:12:41] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:12:41] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:12:41] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:12:41] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:12:41] [SERVER] [Auto-Join] User ivan joined 4 chat groups
+[11:12:41] [CLIENT] [RECONNECTION] State reset
+[11:12:41] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:12:43] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:13:11] [CLIENT] [HEARTBEAT] Pong received
+[11:13:41] [CLIENT] [HEARTBEAT] Pong received
+[11:14:11] [CLIENT] [HEARTBEAT] Pong received
+[11:14:41] [CLIENT] [HEARTBEAT] Pong received
+[11:15:11] [CLIENT] [HEARTBEAT] Pong received
+[11:15:41] [CLIENT] [HEARTBEAT] Pong received
+[11:16:11] [CLIENT] [HEARTBEAT] Pong received
+[11:16:18] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:16:41] [CLIENT] [HEARTBEAT] Pong received
+[11:16:51] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:17:11] [CLIENT] [HEARTBEAT] Pong received
+[11:17:23] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:17:41] [CLIENT] [HEARTBEAT] Pong received
+[11:17:49] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:17:49] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:17:53] [CLIENT] UserSession initialized with system arguments
+[11:17:54] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:17:57] [CLIENT] Attempting login for: ivan
+[11:17:57] [CLIENT] Login successful for ivan
+[11:17:57] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:17:57] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:47:57)
+[11:17:57] [CLIENT] Session set for user ivan (expires: 09:47:57)
+[11:17:57] [CLIENT] Auto-refresh timer started
+[11:17:57] [CLIENT] Session set for user ivan (expires: 09:47:57)
+[11:17:57] [CLIENT] Auto-refresh timer stopped
+[11:17:57] [CLIENT] Auto-refresh timer started
+[11:17:57] [CLIENT] Initializing API services for user: ivan
+[11:17:57] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:17:57] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:17:57] [CLIENT] ContactApiService: Authorization header set
+[11:17:57] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 282fe8d6-95c2-4457-b75c-6e41d3a42c82
+[11:17:57] [SERVER] User ivan (ID: 2) connected
+[11:17:57] [SERVER] [ONLINE] User ivan became ONLINE
+[11:17:57] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:17:57] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:17:57] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:17:57] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:17:57] [SERVER] [Auto-Join] User ivan joined 4 chat groups
+[11:17:57] [CLIENT] [RECONNECTION] State reset
+[11:17:57] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:17:59] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:18:07] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:18:08] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:18:10] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:18:10] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:18:10] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:18:11] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:18:28] [CLIENT] [HEARTBEAT] Pong received
+[11:18:28] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:18:28] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:19:29] [CLIENT] UserSession initialized with system arguments
+[11:19:29] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:19:33] [CLIENT] Attempting login for: ivan
+[11:19:33] [CLIENT] Login successful for ivan
+[11:19:33] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:19:33] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:49:33)
+[11:19:33] [CLIENT] Session set for user ivan (expires: 09:49:33)
+[11:19:33] [CLIENT] Auto-refresh timer started
+[11:19:33] [CLIENT] Session set for user ivan (expires: 09:49:33)
+[11:19:33] [CLIENT] Auto-refresh timer stopped
+[11:19:33] [CLIENT] Auto-refresh timer started
+[11:19:33] [CLIENT] Initializing API services for user: ivan
+[11:19:33] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:19:33] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:19:33] [CLIENT] ContactApiService: Authorization header set
+[11:19:33] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 43e43d02-281d-44e2-94ad-df7c5a942f59
+[11:19:33] [SERVER] User ivan (ID: 2) connected
+[11:19:33] [SERVER] [ONLINE] User ivan became ONLINE
+[11:19:33] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:19:33] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:19:33] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:19:33] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:19:33] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:19:33] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:19:33] [CLIENT] [RECONNECTION] State reset
+[11:19:33] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:19:35] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:19:38] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:19:58] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:19:58] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:20:09] [CLIENT] UserSession initialized with system arguments
+[11:20:09] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:20:12] [CLIENT] Attempting login for: ivan
+[11:20:12] [CLIENT] Login successful for ivan
+[11:20:12] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:20:12] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:50:12)
+[11:20:12] [CLIENT] Session set for user ivan (expires: 09:50:12)
+[11:20:12] [CLIENT] Auto-refresh timer started
+[11:20:12] [CLIENT] Session set for user ivan (expires: 09:50:12)
+[11:20:12] [CLIENT] Auto-refresh timer stopped
+[11:20:12] [CLIENT] Auto-refresh timer started
+[11:20:12] [CLIENT] Initializing API services for user: ivan
+[11:20:12] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:20:12] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:20:12] [CLIENT] ContactApiService: Authorization header set
+[11:20:13] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: ef3e292b-f0ff-4127-bfab-462658a08891
+[11:20:13] [SERVER] User ivan (ID: 2) connected
+[11:20:13] [SERVER] [ONLINE] User ivan became ONLINE
+[11:20:13] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:20:13] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:20:13] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:20:13] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:20:13] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:20:13] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:20:13] [CLIENT] [RECONNECTION] State reset
+[11:20:13] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:20:14] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:20:22] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:25] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:29] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:30] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:30] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:31] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:32] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:32] [CLIENT] [Chat] Message sent successfully to 21
+[11:20:43] [CLIENT] [HEARTBEAT] Pong received
+[11:21:04] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:21:04] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:21:07] [CLIENT] UserSession initialized with system arguments
+[11:21:08] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:21:11] [CLIENT] Attempting login for: ivan
+[11:21:11] [CLIENT] Login successful for ivan
+[11:21:11] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:21:11] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:51:11)
+[11:21:11] [CLIENT] Session set for user ivan (expires: 09:51:11)
+[11:21:11] [CLIENT] Auto-refresh timer started
+[11:21:11] [CLIENT] Session set for user ivan (expires: 09:51:11)
+[11:21:11] [CLIENT] Auto-refresh timer stopped
+[11:21:11] [CLIENT] Auto-refresh timer started
+[11:21:11] [CLIENT] Initializing API services for user: ivan
+[11:21:11] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:21:11] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:21:11] [CLIENT] ContactApiService: Authorization header set
+[11:21:11] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 17456cfb-a275-479b-8ce8-7da69156fdba
+[11:21:11] [SERVER] User ivan (ID: 2) connected
+[11:21:11] [SERVER] [ONLINE] User ivan became ONLINE
+[11:21:11] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:21:11] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:21:11] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:21:11] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:21:11] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:21:11] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:21:11] [CLIENT] [RECONNECTION] State reset
+[11:21:11] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:21:12] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:21:13] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:21:23] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:21:23] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:21:45] [CLIENT] UserSession initialized with system arguments
+[11:21:45] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:21:51] [CLIENT] Attempting login for: ivan
+[11:21:51] [CLIENT] Login successful for ivan
+[11:21:51] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:21:51] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:51:51)
+[11:21:51] [CLIENT] Session set for user ivan (expires: 09:51:51)
+[11:21:51] [CLIENT] Auto-refresh timer started
+[11:21:51] [CLIENT] Session set for user ivan (expires: 09:51:51)
+[11:21:51] [CLIENT] Auto-refresh timer stopped
+[11:21:51] [CLIENT] Auto-refresh timer started
+[11:21:51] [CLIENT] Initializing API services for user: ivan
+[11:21:51] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:21:51] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:21:51] [CLIENT] ContactApiService: Authorization header set
+[11:21:52] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 68221a2e-6a5f-47eb-83f7-4ef19d6c3c53
+[11:21:52] [SERVER] User ivan (ID: 2) connected
+[11:21:52] [SERVER] [ONLINE] User ivan became ONLINE
+[11:21:52] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:21:52] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:21:52] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:21:52] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:21:52] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:21:52] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:21:52] [CLIENT] [RECONNECTION] State reset
+[11:21:52] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:21:52] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:22:22] [CLIENT] [HEARTBEAT] Pong received
+[11:22:49] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:22:52] [CLIENT] [HEARTBEAT] Pong received
+[11:23:00] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:23:00] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:23:27] [CLIENT] UserSession initialized with system arguments
+[11:23:27] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:23:28] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:23:34] [CLIENT] Attempting login for: ivan
+[11:23:34] [CLIENT] Login successful for ivan
+[11:23:34] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:23:34] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:53:34)
+[11:23:34] [CLIENT] Session set for user ivan (expires: 09:53:34)
+[11:23:34] [CLIENT] Auto-refresh timer started
+[11:23:34] [CLIENT] Session set for user ivan (expires: 09:53:34)
+[11:23:34] [CLIENT] Auto-refresh timer stopped
+[11:23:34] [CLIENT] Auto-refresh timer started
+[11:23:34] [CLIENT] Initializing API services for user: ivan
+[11:23:34] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:23:34] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:23:34] [CLIENT] ContactApiService: Authorization header set
+[11:23:34] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: b6f26cd2-4331-4214-8fea-a7b1d29f8f97
+[11:23:34] [SERVER] User ivan (ID: 2) connected
+[11:23:34] [SERVER] [ONLINE] User ivan became ONLINE
+[11:23:34] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:23:34] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:23:34] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:23:34] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:23:34] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:23:34] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:23:34] [CLIENT] [RECONNECTION] State reset
+[11:23:34] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:23:35] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:24:04] [CLIENT] [HEARTBEAT] Pong received
+[11:24:19] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:24:19] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:24:23] [CLIENT] UserSession initialized with system arguments
+[11:24:23] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:24:29] [CLIENT] Attempting login for: ivan
+[11:24:29] [CLIENT] Login successful for ivan
+[11:24:29] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:24:29] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:54:29)
+[11:24:29] [CLIENT] Session set for user ivan (expires: 09:54:29)
+[11:24:29] [CLIENT] Auto-refresh timer started
+[11:24:29] [CLIENT] Session set for user ivan (expires: 09:54:29)
+[11:24:29] [CLIENT] Auto-refresh timer stopped
+[11:24:29] [CLIENT] Auto-refresh timer started
+[11:24:29] [CLIENT] Initializing API services for user: ivan
+[11:24:29] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:24:29] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:24:29] [CLIENT] ContactApiService: Authorization header set
+[11:24:29] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: a55f10e0-1490-4d3b-bf5c-3ec73b9d7223
+[11:24:29] [SERVER] User ivan (ID: 2) connected
+[11:24:29] [SERVER] [ONLINE] User ivan became ONLINE
+[11:24:29] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:24:29] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:24:29] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:24:29] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:24:29] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:24:29] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:24:29] [CLIENT] [RECONNECTION] State reset
+[11:24:29] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:24:30] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:24:31] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:24:43] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:24:43] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:24:58] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:25:00] [CLIENT] UserSession initialized with system arguments
+[11:25:01] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:25:04] [CLIENT] Attempting login for: ivan
+[11:25:04] [CLIENT] Login successful for ivan
+[11:25:04] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:25:04] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:55:04)
+[11:25:04] [CLIENT] Session set for user ivan (expires: 09:55:04)
+[11:25:04] [CLIENT] Auto-refresh timer started
+[11:25:04] [CLIENT] Session set for user ivan (expires: 09:55:04)
+[11:25:04] [CLIENT] Auto-refresh timer stopped
+[11:25:04] [CLIENT] Auto-refresh timer started
+[11:25:04] [CLIENT] Initializing API services for user: ivan
+[11:25:04] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:25:04] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:25:04] [CLIENT] ContactApiService: Authorization header set
+[11:25:04] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 42ec1234-ef1e-4c92-afc4-da23a5e53ef6
+[11:25:04] [SERVER] User ivan (ID: 2) connected
+[11:25:04] [SERVER] [ONLINE] User ivan became ONLINE
+[11:25:04] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:25:04] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:25:04] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:25:04] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:25:04] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:25:04] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:25:04] [CLIENT] [RECONNECTION] State reset
+[11:25:04] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:25:05] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:25:16] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:25:16] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:25:29] [CLIENT] UserSession initialized with system arguments
+[11:25:29] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:25:32] [CLIENT] Attempting login for: ivan
+[11:25:32] [CLIENT] Login successful for ivan
+[11:25:32] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:25:32] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:55:32)
+[11:25:32] [CLIENT] Session set for user ivan (expires: 09:55:32)
+[11:25:32] [CLIENT] Auto-refresh timer started
+[11:25:32] [CLIENT] Session set for user ivan (expires: 09:55:32)
+[11:25:32] [CLIENT] Auto-refresh timer stopped
+[11:25:32] [CLIENT] Auto-refresh timer started
+[11:25:32] [CLIENT] Initializing API services for user: ivan
+[11:25:32] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:25:32] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:25:32] [CLIENT] ContactApiService: Authorization header set
+[11:25:33] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 2f46fb3f-816d-4ba6-b7cc-fd7263b2e155
+[11:25:33] [SERVER] User ivan (ID: 2) connected
+[11:25:33] [SERVER] [ONLINE] User ivan became ONLINE
+[11:25:33] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:25:33] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:25:33] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:25:33] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:25:33] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:25:33] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:25:33] [CLIENT] [RECONNECTION] State reset
+[11:25:33] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:25:33] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:26:03] [CLIENT] [HEARTBEAT] Pong received
+[11:26:04] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:26:23] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:26:33] [CLIENT] [HEARTBEAT] Pong received
+[11:26:50] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:26:50] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:26:57] [CLIENT] UserSession initialized with system arguments
+[11:26:57] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:27:01] [CLIENT] Attempting login for: ivan
+[11:27:01] [CLIENT] Login successful for ivan
+[11:27:01] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:27:01] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:57:01)
+[11:27:01] [CLIENT] Session set for user ivan (expires: 09:57:01)
+[11:27:01] [CLIENT] Auto-refresh timer started
+[11:27:01] [CLIENT] Session set for user ivan (expires: 09:57:01)
+[11:27:01] [CLIENT] Auto-refresh timer stopped
+[11:27:01] [CLIENT] Auto-refresh timer started
+[11:27:01] [CLIENT] Initializing API services for user: ivan
+[11:27:01] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:27:01] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:27:01] [CLIENT] ContactApiService: Authorization header set
+[11:27:02] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 7035ada1-c4ab-4a33-b738-bde8b0fd73e0
+[11:27:02] [SERVER] User ivan (ID: 2) connected
+[11:27:02] [SERVER] [ONLINE] User ivan became ONLINE
+[11:27:02] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:27:02] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:27:02] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:27:02] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:27:02] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:27:02] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:27:02] [CLIENT] [RECONNECTION] State reset
+[11:27:02] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:27:03] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:27:32] [CLIENT] [HEARTBEAT] Pong received
+[11:28:00] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:28:02] [CLIENT] [HEARTBEAT] Pong received
+[11:28:09] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:28:09] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:28:13] [CLIENT] UserSession initialized with system arguments
+[11:28:14] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:28:16] [CLIENT] Attempting login for: ivan
+[11:28:17] [CLIENT] Login successful for ivan
+[11:28:17] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:28:17] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:58:17)
+[11:28:17] [CLIENT] Session set for user ivan (expires: 09:58:17)
+[11:28:17] [CLIENT] Auto-refresh timer started
+[11:28:17] [CLIENT] Session set for user ivan (expires: 09:58:17)
+[11:28:17] [CLIENT] Auto-refresh timer stopped
+[11:28:17] [CLIENT] Auto-refresh timer started
+[11:28:17] [CLIENT] Initializing API services for user: ivan
+[11:28:17] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:28:17] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:28:17] [CLIENT] ContactApiService: Authorization header set
+[11:28:17] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 9c4644a3-9757-4912-8175-f9344087fca8
+[11:28:17] [SERVER] User ivan (ID: 2) connected
+[11:28:17] [SERVER] [ONLINE] User ivan became ONLINE
+[11:28:17] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:28:17] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:28:17] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:28:17] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:28:17] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:28:17] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:28:17] [CLIENT] [RECONNECTION] State reset
+[11:28:17] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:28:18] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:28:26] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:28:26] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:28:40] [CLIENT] UserSession initialized with system arguments
+[11:28:40] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:28:43] [CLIENT] Attempting login for: ivan
+[11:28:43] [CLIENT] Login successful for ivan
+[11:28:43] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:28:43] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:58:43)
+[11:28:43] [CLIENT] Session set for user ivan (expires: 09:58:43)
+[11:28:43] [CLIENT] Auto-refresh timer started
+[11:28:43] [CLIENT] Session set for user ivan (expires: 09:58:43)
+[11:28:43] [CLIENT] Auto-refresh timer stopped
+[11:28:43] [CLIENT] Auto-refresh timer started
+[11:28:43] [CLIENT] Initializing API services for user: ivan
+[11:28:43] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:28:43] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:28:43] [CLIENT] ContactApiService: Authorization header set
+[11:28:43] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: b4bcf437-84c2-469d-8821-04a75df290d8
+[11:28:43] [SERVER] User ivan (ID: 2) connected
+[11:28:43] [SERVER] [ONLINE] User ivan became ONLINE
+[11:28:43] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:28:43] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:28:43] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:28:43] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:28:43] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:28:43] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:28:43] [CLIENT] [RECONNECTION] State reset
+[11:28:43] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:28:44] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:28:50] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:28:50] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:28:58] [CLIENT] UserSession initialized with system arguments
+[11:28:58] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:29:01] [CLIENT] Attempting login for: ivan
+[11:29:02] [CLIENT] Login successful for ivan
+[11:29:02] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:29:02] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 09:59:02)
+[11:29:02] [CLIENT] Session set for user ivan (expires: 09:59:02)
+[11:29:02] [CLIENT] Auto-refresh timer started
+[11:29:02] [CLIENT] Session set for user ivan (expires: 09:59:02)
+[11:29:02] [CLIENT] Auto-refresh timer stopped
+[11:29:02] [CLIENT] Auto-refresh timer started
+[11:29:02] [CLIENT] Initializing API services for user: ivan
+[11:29:02] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:29:02] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:29:02] [CLIENT] ContactApiService: Authorization header set
+[11:29:02] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 8efc5e56-28e0-4c42-9a6a-9359ba58944d
+[11:29:02] [SERVER] User ivan (ID: 2) connected
+[11:29:02] [SERVER] [ONLINE] User ivan became ONLINE
+[11:29:02] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:29:02] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:29:02] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:29:02] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:29:02] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:29:02] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:29:02] [CLIENT] [RECONNECTION] State reset
+[11:29:02] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:29:03] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:29:07] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:29:07] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:29:19] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:29:43] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:30:00] [CLIENT] UserSession initialized with system arguments
+[11:30:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:30:04] [CLIENT] Attempting login for: ivan
+[11:30:04] [CLIENT] Login successful for ivan
+[11:30:04] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:30:04] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:00:04)
+[11:30:04] [CLIENT] Session set for user ivan (expires: 10:00:04)
+[11:30:04] [CLIENT] Auto-refresh timer started
+[11:30:04] [CLIENT] Session set for user ivan (expires: 10:00:04)
+[11:30:04] [CLIENT] Auto-refresh timer stopped
+[11:30:04] [CLIENT] Auto-refresh timer started
+[11:30:04] [CLIENT] Initializing API services for user: ivan
+[11:30:04] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:30:04] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:30:04] [CLIENT] ContactApiService: Authorization header set
+[11:30:04] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 80c2efdc-b6a5-479c-9e19-0efaf468bba3
+[11:30:04] [SERVER] User ivan (ID: 2) connected
+[11:30:04] [SERVER] [ONLINE] User ivan became ONLINE
+[11:30:04] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:30:04] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:30:04] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:30:04] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:30:04] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:30:04] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:30:04] [CLIENT] [RECONNECTION] State reset
+[11:30:04] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:30:05] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:30:08] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:30:08] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:30:16] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:30:18] [CLIENT] UserSession initialized with system arguments
+[11:30:19] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:30:22] [CLIENT] Attempting login for: ivan
+[11:30:22] [CLIENT] Login successful for ivan
+[11:30:22] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:30:22] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:00:22)
+[11:30:22] [CLIENT] Session set for user ivan (expires: 10:00:22)
+[11:30:22] [CLIENT] Auto-refresh timer started
+[11:30:22] [CLIENT] Session set for user ivan (expires: 10:00:22)
+[11:30:22] [CLIENT] Auto-refresh timer stopped
+[11:30:22] [CLIENT] Auto-refresh timer started
+[11:30:22] [CLIENT] Initializing API services for user: ivan
+[11:30:22] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:30:22] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:30:22] [CLIENT] ContactApiService: Authorization header set
+[11:30:22] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 4704eb13-0a87-4e87-a3cb-c2238d0a4467
+[11:30:22] [SERVER] User ivan (ID: 2) connected
+[11:30:22] [SERVER] [ONLINE] User ivan became ONLINE
+[11:30:22] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:30:22] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:30:22] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:30:22] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:30:22] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:30:22] [SERVER] [Auto-Join] User ivan joined 5 chat groups
+[11:30:22] [CLIENT] [RECONNECTION] State reset
+[11:30:22] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:30:23] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:30:52] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:30:52] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:30:52] [CLIENT] [HEARTBEAT] Pong received
+[11:30:56] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:30:57] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:30:58] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:30:58] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:30:58] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:31:00] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:31:00] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:31:00] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:31:01] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:31:01] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:31:04] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:31:04] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:31:50] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:31:51] [CLIENT] UserSession initialized with system arguments
+[11:31:51] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:31:55] [CLIENT] Attempting login for: ivan
+[11:31:56] [CLIENT] Login successful for ivan
+[11:31:56] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:31:56] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:01:56)
+[11:31:56] [CLIENT] Session set for user ivan (expires: 10:01:56)
+[11:31:56] [CLIENT] Auto-refresh timer started
+[11:31:56] [CLIENT] Session set for user ivan (expires: 10:01:56)
+[11:31:56] [CLIENT] Auto-refresh timer stopped
+[11:31:56] [CLIENT] Auto-refresh timer started
+[11:31:56] [CLIENT] Initializing API services for user: ivan
+[11:31:56] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:31:56] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:31:56] [CLIENT] ContactApiService: Authorization header set
+[11:31:56] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 3f177953-ac5f-4692-bcab-9df52b920b86
+[11:31:56] [SERVER] User ivan (ID: 2) connected
+[11:31:56] [SERVER] [ONLINE] User ivan became ONLINE
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:31:56] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:31:56] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:31:56] [CLIENT] [RECONNECTION] State reset
+[11:31:56] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:31:57] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:31:57] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:32:01] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:32:01] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:32:14] [CLIENT] UserSession initialized with system arguments
+[11:32:14] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:32:17] [CLIENT] Attempting login for: ivan
+[11:32:17] [CLIENT] Login successful for ivan
+[11:32:17] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:32:17] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:02:17)
+[11:32:17] [CLIENT] Session set for user ivan (expires: 10:02:17)
+[11:32:17] [CLIENT] Auto-refresh timer started
+[11:32:17] [CLIENT] Session set for user ivan (expires: 10:02:17)
+[11:32:17] [CLIENT] Auto-refresh timer stopped
+[11:32:17] [CLIENT] Auto-refresh timer started
+[11:32:17] [CLIENT] Initializing API services for user: ivan
+[11:32:17] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:32:17] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:32:17] [CLIENT] ContactApiService: Authorization header set
+[11:32:17] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 96bb75d7-5adf-4060-8691-4cd855994b14
+[11:32:17] [SERVER] User ivan (ID: 2) connected
+[11:32:17] [SERVER] [ONLINE] User ivan became ONLINE
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:32:17] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:32:17] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:32:17] [CLIENT] [RECONNECTION] State reset
+[11:32:17] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:32:18] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:32:39] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:32:39] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:33:04] [CLIENT] UserSession initialized with system arguments
+[11:33:04] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:33:07] [CLIENT] Attempting login for: ivan
+[11:33:07] [CLIENT] Login successful for ivan
+[11:33:07] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:33:07] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:03:07)
+[11:33:07] [CLIENT] Session set for user ivan (expires: 10:03:07)
+[11:33:07] [CLIENT] Auto-refresh timer started
+[11:33:07] [CLIENT] Session set for user ivan (expires: 10:03:07)
+[11:33:07] [CLIENT] Auto-refresh timer stopped
+[11:33:07] [CLIENT] Auto-refresh timer started
+[11:33:07] [CLIENT] Initializing API services for user: ivan
+[11:33:07] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:33:07] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:33:07] [CLIENT] ContactApiService: Authorization header set
+[11:33:07] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: ff128aa1-703e-4f3a-b7d2-be39fee89dda
+[11:33:07] [SERVER] User ivan (ID: 2) connected
+[11:33:07] [SERVER] [ONLINE] User ivan became ONLINE
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:33:07] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:33:07] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:33:07] [CLIENT] [RECONNECTION] State reset
+[11:33:07] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:33:08] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:33:08] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:33:09] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:33:13] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:33:13] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:33:27] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:33:50] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:34:07] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:34:26] [CLIENT] UserSession initialized with system arguments
+[11:34:26] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:34:29] [CLIENT] Attempting login for: ivan
+[11:34:29] [CLIENT] Login successful for ivan
+[11:34:29] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:34:29] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:04:29)
+[11:34:29] [CLIENT] Session set for user ivan (expires: 10:04:29)
+[11:34:29] [CLIENT] Auto-refresh timer started
+[11:34:29] [CLIENT] Session set for user ivan (expires: 10:04:29)
+[11:34:29] [CLIENT] Auto-refresh timer stopped
+[11:34:29] [CLIENT] Auto-refresh timer started
+[11:34:29] [CLIENT] Initializing API services for user: ivan
+[11:34:29] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:34:29] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:34:29] [CLIENT] ContactApiService: Authorization header set
+[11:34:30] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 57499582-1807-4f66-b19a-1aa1ffb751d4
+[11:34:30] [SERVER] User ivan (ID: 2) connected
+[11:34:30] [SERVER] [ONLINE] User ivan became ONLINE
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:34:30] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:34:30] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:34:30] [CLIENT] [RECONNECTION] State reset
+[11:34:30] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:34:31] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:35:00] [CLIENT] [HEARTBEAT] Pong received
+[11:35:08] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:35:30] [CLIENT] [HEARTBEAT] Pong received
+[11:36:00] [CLIENT] [HEARTBEAT] Pong received
+[11:36:04] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:36:30] [CLIENT] [HEARTBEAT] Pong received
+[11:37:00] [CLIENT] [HEARTBEAT] Pong received
+[11:37:01] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:37:30] [CLIENT] [HEARTBEAT] Pong received
+[11:37:39] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:38:00] [CLIENT] [HEARTBEAT] Pong received
+[11:38:13] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:38:30] [CLIENT] [HEARTBEAT] Pong received
+[11:39:00] [CLIENT] [HEARTBEAT] Pong received
+[11:39:30] [CLIENT] [HEARTBEAT] Pong received
+[11:39:57] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:39:57] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:40:01] [CLIENT] UserSession initialized with system arguments
+[11:40:02] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:40:07] [CLIENT] Attempting login for: ivan
+[11:40:07] [CLIENT] Login successful for ivan
+[11:40:07] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:40:07] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:10:07)
+[11:40:07] [CLIENT] Session set for user ivan (expires: 10:10:07)
+[11:40:07] [CLIENT] Auto-refresh timer started
+[11:40:07] [CLIENT] Session set for user ivan (expires: 10:10:07)
+[11:40:07] [CLIENT] Auto-refresh timer stopped
+[11:40:07] [CLIENT] Auto-refresh timer started
+[11:40:07] [CLIENT] Initializing API services for user: ivan
+[11:40:07] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:40:07] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:40:07] [CLIENT] ContactApiService: Authorization header set
+[11:40:07] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 5aa86a3a-cff1-4dfb-9a29-88d51777f938
+[11:40:07] [SERVER] User ivan (ID: 2) connected
+[11:40:07] [SERVER] [ONLINE] User ivan became ONLINE
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:40:07] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:40:07] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:40:07] [CLIENT] [RECONNECTION] State reset
+[11:40:07] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:40:08] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:40:13] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:40:13] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:40:39] [CLIENT] UserSession initialized with system arguments
+[11:40:39] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:40:42] [CLIENT] Attempting login for: ivan
+[11:40:43] [CLIENT] Login successful for ivan
+[11:40:43] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:40:43] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:10:43)
+[11:40:43] [CLIENT] Session set for user ivan (expires: 10:10:43)
+[11:40:43] [CLIENT] Auto-refresh timer started
+[11:40:43] [CLIENT] Session set for user ivan (expires: 10:10:43)
+[11:40:43] [CLIENT] Auto-refresh timer stopped
+[11:40:43] [CLIENT] Auto-refresh timer started
+[11:40:43] [CLIENT] Initializing API services for user: ivan
+[11:40:43] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:40:43] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:40:43] [CLIENT] ContactApiService: Authorization header set
+[11:40:43] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 4aba7c00-8be9-497f-aea9-8490c27a073a
+[11:40:43] [SERVER] User ivan (ID: 2) connected
+[11:40:43] [SERVER] [ONLINE] User ivan became ONLINE
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:40:43] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:40:43] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:40:43] [CLIENT] [RECONNECTION] State reset
+[11:40:43] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:40:44] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:40:57] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:40:57] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:41:17] [CLIENT] UserSession initialized with system arguments
+[11:41:17] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:41:20] [CLIENT] Attempting login for: ivan
+[11:41:20] [CLIENT] Login successful for ivan
+[11:41:20] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:41:20] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:11:20)
+[11:41:20] [CLIENT] Session set for user ivan (expires: 10:11:20)
+[11:41:20] [CLIENT] Auto-refresh timer started
+[11:41:20] [CLIENT] Session set for user ivan (expires: 10:11:20)
+[11:41:20] [CLIENT] Auto-refresh timer stopped
+[11:41:20] [CLIENT] Auto-refresh timer started
+[11:41:20] [CLIENT] Initializing API services for user: ivan
+[11:41:20] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:41:20] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:41:20] [CLIENT] ContactApiService: Authorization header set
+[11:41:21] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 31cdccd8-40b9-4e9e-b237-74b508b1c010
+[11:41:21] [SERVER] User ivan (ID: 2) connected
+[11:41:21] [SERVER] [ONLINE] User ivan became ONLINE
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:41:21] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:41:21] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:41:21] [CLIENT] [RECONNECTION] State reset
+[11:41:21] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:41:21] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:41:36] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:41:36] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:42:10] [CLIENT] UserSession initialized with system arguments
+[11:42:10] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:42:13] [CLIENT] Attempting login for: ivan
+[11:42:13] [CLIENT] Login successful for ivan
+[11:42:13] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:42:13] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:12:13)
+[11:42:13] [CLIENT] Session set for user ivan (expires: 10:12:13)
+[11:42:13] [CLIENT] Auto-refresh timer started
+[11:42:13] [CLIENT] Session set for user ivan (expires: 10:12:13)
+[11:42:13] [CLIENT] Auto-refresh timer stopped
+[11:42:13] [CLIENT] Auto-refresh timer started
+[11:42:13] [CLIENT] Initializing API services for user: ivan
+[11:42:13] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:42:13] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:42:13] [CLIENT] ContactApiService: Authorization header set
+[11:42:13] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 3e623a3c-49ad-4d3b-8cac-cb7745abce91
+[11:42:13] [SERVER] User ivan (ID: 2) connected
+[11:42:13] [SERVER] [ONLINE] User ivan became ONLINE
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:42:13] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:42:13] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:42:13] [CLIENT] [RECONNECTION] State reset
+[11:42:13] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:42:14] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:42:23] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:42:23] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:44:57] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:45:13] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:45:30] [CLIENT] UserSession initialized with system arguments
+[11:45:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:45:34] [CLIENT] Attempting login for: ivan
+[11:45:34] [CLIENT] Login successful for ivan
+[11:45:34] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:45:34] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:15:34)
+[11:45:34] [CLIENT] Session set for user ivan (expires: 10:15:34)
+[11:45:34] [CLIENT] Auto-refresh timer started
+[11:45:34] [CLIENT] Session set for user ivan (expires: 10:15:34)
+[11:45:34] [CLIENT] Auto-refresh timer stopped
+[11:45:34] [CLIENT] Auto-refresh timer started
+[11:45:34] [CLIENT] Initializing API services for user: ivan
+[11:45:34] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:45:34] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:45:34] [CLIENT] ContactApiService: Authorization header set
+[11:45:35] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 3acb3185-1435-444f-ad6b-1d27560b94b9
+[11:45:35] [SERVER] User ivan (ID: 2) connected
+[11:45:35] [SERVER] [ONLINE] User ivan became ONLINE
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:45:35] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:45:35] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:45:35] [CLIENT] [RECONNECTION] State reset
+[11:45:35] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:45:35] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:45:38] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:45:38] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:45:45] [CLIENT] UserSession initialized with system arguments
+[11:45:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:45:48] [CLIENT] Attempting login for: ivan
+[11:45:49] [CLIENT] Login successful for ivan
+[11:45:49] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:45:49] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:15:49)
+[11:45:49] [CLIENT] Session set for user ivan (expires: 10:15:49)
+[11:45:49] [CLIENT] Auto-refresh timer started
+[11:45:49] [CLIENT] Session set for user ivan (expires: 10:15:49)
+[11:45:49] [CLIENT] Auto-refresh timer stopped
+[11:45:49] [CLIENT] Auto-refresh timer started
+[11:45:49] [CLIENT] Initializing API services for user: ivan
+[11:45:49] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:45:49] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:45:49] [CLIENT] ContactApiService: Authorization header set
+[11:45:49] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: fa0208dc-1392-43aa-b256-068a88af790c
+[11:45:49] [SERVER] User ivan (ID: 2) connected
+[11:45:49] [SERVER] [ONLINE] User ivan became ONLINE
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:45:49] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:45:49] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:45:49] [CLIENT] [RECONNECTION] State reset
+[11:45:49] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:45:50] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:45:55] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:45:55] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:45:57] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:46:17] [CLIENT] UserSession initialized with system arguments
+[11:46:17] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:46:20] [CLIENT] Attempting login for: ivan
+[11:46:20] [CLIENT] Login successful for ivan
+[11:46:20] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:46:21] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:16:20)
+[11:46:21] [CLIENT] Session set for user ivan (expires: 10:16:21)
+[11:46:21] [CLIENT] Auto-refresh timer started
+[11:46:21] [CLIENT] Session set for user ivan (expires: 10:16:21)
+[11:46:21] [CLIENT] Auto-refresh timer stopped
+[11:46:21] [CLIENT] Auto-refresh timer started
+[11:46:21] [CLIENT] Initializing API services for user: ivan
+[11:46:21] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:46:21] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:46:21] [CLIENT] ContactApiService: Authorization header set
+[11:46:21] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 7da3dc24-fbbf-4110-a271-73ffbcac588f
+[11:46:21] [SERVER] User ivan (ID: 2) connected
+[11:46:21] [SERVER] [ONLINE] User ivan became ONLINE
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:46:21] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:46:21] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:46:21] [CLIENT] [RECONNECTION] State reset
+[11:46:21] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:46:21] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:46:25] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:46:25] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:46:35] [CLIENT] UserSession initialized with system arguments
+[11:46:35] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:46:36] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:46:38] [CLIENT] Attempting login for: ivan
+[11:46:38] [CLIENT] Login successful for ivan
+[11:46:38] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:46:38] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:16:38)
+[11:46:38] [CLIENT] Session set for user ivan (expires: 10:16:38)
+[11:46:38] [CLIENT] Auto-refresh timer started
+[11:46:38] [CLIENT] Session set for user ivan (expires: 10:16:38)
+[11:46:38] [CLIENT] Auto-refresh timer stopped
+[11:46:38] [CLIENT] Auto-refresh timer started
+[11:46:38] [CLIENT] Initializing API services for user: ivan
+[11:46:38] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:46:38] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:46:38] [CLIENT] ContactApiService: Authorization header set
+[11:46:38] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: a2efe093-e386-4bb1-a7e4-4b9a2953a277
+[11:46:38] [SERVER] User ivan (ID: 2) connected
+[11:46:38] [SERVER] [ONLINE] User ivan became ONLINE
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:46:38] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:46:38] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:46:38] [CLIENT] [RECONNECTION] State reset
+[11:46:38] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:46:39] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:46:43] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:46:43] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:47:00] [CLIENT] UserSession initialized with system arguments
+[11:47:00] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:47:03] [CLIENT] Attempting login for: ivan
+[11:47:03] [CLIENT] Login successful for ivan
+[11:47:03] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:47:03] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:17:03)
+[11:47:03] [CLIENT] Session set for user ivan (expires: 10:17:03)
+[11:47:03] [CLIENT] Auto-refresh timer started
+[11:47:03] [CLIENT] Session set for user ivan (expires: 10:17:03)
+[11:47:03] [CLIENT] Auto-refresh timer stopped
+[11:47:03] [CLIENT] Auto-refresh timer started
+[11:47:03] [CLIENT] Initializing API services for user: ivan
+[11:47:03] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:47:03] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:47:03] [CLIENT] ContactApiService: Authorization header set
+[11:47:04] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: fad8b065-7225-407b-80ba-883640fb13bc
+[11:47:04] [SERVER] User ivan (ID: 2) connected
+[11:47:04] [SERVER] [ONLINE] User ivan became ONLINE
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:47:04] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:47:04] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:47:04] [CLIENT] [RECONNECTION] State reset
+[11:47:04] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:47:05] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:47:08] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:47:08] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:47:17] [CLIENT] UserSession initialized with system arguments
+[11:47:17] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:47:20] [CLIENT] Attempting login for: ivan
+[11:47:20] [CLIENT] Login successful for ivan
+[11:47:20] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:47:20] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:17:20)
+[11:47:20] [CLIENT] Session set for user ivan (expires: 10:17:20)
+[11:47:20] [CLIENT] Auto-refresh timer started
+[11:47:20] [CLIENT] Session set for user ivan (expires: 10:17:20)
+[11:47:20] [CLIENT] Auto-refresh timer stopped
+[11:47:20] [CLIENT] Auto-refresh timer started
+[11:47:20] [CLIENT] Initializing API services for user: ivan
+[11:47:20] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:47:20] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:47:20] [CLIENT] ContactApiService: Authorization header set
+[11:47:20] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: bc3982c1-0b9d-4846-be47-a6861fbf633f
+[11:47:20] [SERVER] User ivan (ID: 2) connected
+[11:47:20] [SERVER] [ONLINE] User ivan became ONLINE
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:47:20] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:47:20] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:47:20] [CLIENT] [RECONNECTION] State reset
+[11:47:20] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:47:21] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:47:23] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:47:23] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:47:23] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:47:31] [CLIENT] UserSession initialized with system arguments
+[11:47:31] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:47:34] [CLIENT] Attempting login for: ivan
+[11:47:34] [CLIENT] Login successful for ivan
+[11:47:34] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:47:34] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:17:34)
+[11:47:34] [CLIENT] Session set for user ivan (expires: 10:17:34)
+[11:47:34] [CLIENT] Auto-refresh timer started
+[11:47:34] [CLIENT] Session set for user ivan (expires: 10:17:34)
+[11:47:34] [CLIENT] Auto-refresh timer stopped
+[11:47:34] [CLIENT] Auto-refresh timer started
+[11:47:34] [CLIENT] Initializing API services for user: ivan
+[11:47:34] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:47:34] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:47:34] [CLIENT] ContactApiService: Authorization header set
+[11:47:34] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: f8601fb3-1195-4c04-b968-ec8adb3c3b18
+[11:47:34] [SERVER] User ivan (ID: 2) connected
+[11:47:34] [SERVER] [ONLINE] User ivan became ONLINE
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:47:34] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:47:34] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:47:34] [CLIENT] [RECONNECTION] State reset
+[11:47:34] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:47:35] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:47:57] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:47:57] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:48:13] [CLIENT] UserSession initialized with system arguments
+[11:48:13] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:48:16] [CLIENT] Attempting login for: ivan
+[11:48:17] [CLIENT] Login successful for ivan
+[11:48:17] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:48:17] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:18:17)
+[11:48:17] [CLIENT] Session set for user ivan (expires: 10:18:17)
+[11:48:17] [CLIENT] Auto-refresh timer started
+[11:48:17] [CLIENT] Session set for user ivan (expires: 10:18:17)
+[11:48:17] [CLIENT] Auto-refresh timer stopped
+[11:48:17] [CLIENT] Auto-refresh timer started
+[11:48:17] [CLIENT] Initializing API services for user: ivan
+[11:48:17] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:48:17] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:48:17] [CLIENT] ContactApiService: Authorization header set
+[11:48:17] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 9d58bff3-4416-4e9f-8b9e-a34027df08de
+[11:48:17] [SERVER] User ivan (ID: 2) connected
+[11:48:17] [SERVER] [ONLINE] User ivan became ONLINE
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:48:17] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:48:17] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:48:17] [CLIENT] [RECONNECTION] State reset
+[11:48:17] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:48:18] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:48:27] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:48:27] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:49:15] [CLIENT] UserSession initialized with system arguments
+[11:49:15] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:49:18] [CLIENT] Attempting login for: ivan
+[11:49:18] [CLIENT] Login successful for ivan
+[11:49:18] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:49:18] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:19:18)
+[11:49:18] [CLIENT] Session set for user ivan (expires: 10:19:18)
+[11:49:18] [CLIENT] Auto-refresh timer started
+[11:49:18] [CLIENT] Session set for user ivan (expires: 10:19:18)
+[11:49:18] [CLIENT] Auto-refresh timer stopped
+[11:49:18] [CLIENT] Auto-refresh timer started
+[11:49:18] [CLIENT] Initializing API services for user: ivan
+[11:49:18] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:49:18] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:49:18] [CLIENT] ContactApiService: Authorization header set
+[11:49:18] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 503ea6cb-15be-4c40-8838-9accca0d3afe
+[11:49:18] [SERVER] User ivan (ID: 2) connected
+[11:49:18] [SERVER] [ONLINE] User ivan became ONLINE
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:49:18] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:49:18] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:49:18] [CLIENT] [RECONNECTION] State reset
+[11:49:18] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:49:19] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:49:23] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:49:23] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:49:48] [CLIENT] UserSession initialized with system arguments
+[11:49:48] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:49:51] [CLIENT] Attempting login for: ivan
+[11:49:51] [CLIENT] Login successful for ivan
+[11:49:51] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:49:51] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:19:51)
+[11:49:51] [CLIENT] Session set for user ivan (expires: 10:19:51)
+[11:49:51] [CLIENT] Auto-refresh timer started
+[11:49:51] [CLIENT] Session set for user ivan (expires: 10:19:51)
+[11:49:51] [CLIENT] Auto-refresh timer stopped
+[11:49:51] [CLIENT] Auto-refresh timer started
+[11:49:51] [CLIENT] Initializing API services for user: ivan
+[11:49:51] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:49:51] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:49:51] [CLIENT] ContactApiService: Authorization header set
+[11:49:51] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: e4f8b3b2-d64a-4522-8831-084136d47271
+[11:49:51] [SERVER] User ivan (ID: 2) connected
+[11:49:51] [SERVER] [ONLINE] User ivan became ONLINE
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:49:51] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:49:51] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:49:51] [CLIENT] [RECONNECTION] State reset
+[11:49:51] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:49:52] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:49:52] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:50:21] [CLIENT] [HEARTBEAT] Pong received
+[11:50:38] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:50:51] [CLIENT] [HEARTBEAT] Pong received
+[11:50:55] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:51:21] [CLIENT] [HEARTBEAT] Pong received
+[11:51:22] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:51:22] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:51:25] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:51:43] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:51:46] [CLIENT] UserSession initialized with system arguments
+[11:51:46] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:51:50] [CLIENT] Attempting login for: ivan
+[11:51:50] [CLIENT] Login successful for ivan
+[11:51:50] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:51:50] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:21:50)
+[11:51:50] [CLIENT] Session set for user ivan (expires: 10:21:50)
+[11:51:50] [CLIENT] Auto-refresh timer started
+[11:51:50] [CLIENT] Session set for user ivan (expires: 10:21:50)
+[11:51:50] [CLIENT] Auto-refresh timer stopped
+[11:51:50] [CLIENT] Auto-refresh timer started
+[11:51:50] [CLIENT] Initializing API services for user: ivan
+[11:51:50] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:51:50] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:51:50] [CLIENT] ContactApiService: Authorization header set
+[11:51:50] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: d557068f-7e19-42ee-9b17-af0f39f62f3d
+[11:51:50] [SERVER] User ivan (ID: 2) connected
+[11:51:50] [SERVER] [ONLINE] User ivan became ONLINE
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:51:50] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:51:50] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:51:50] [CLIENT] [RECONNECTION] State reset
+[11:51:50] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:51:51] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:51:52] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:51:52] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:51:52] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:51:53] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:51:53] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:52:08] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:52:15] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:52:15] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:52:23] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:52:57] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:53:27] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:54:23] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:54:44] [CLIENT] UserSession initialized with system arguments
+[11:54:44] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:54:47] [CLIENT] Attempting login for: ivan
+[11:54:47] [CLIENT] Login successful for ivan
+[11:54:47] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:54:47] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:24:47)
+[11:54:47] [CLIENT] Session set for user ivan (expires: 10:24:47)
+[11:54:47] [CLIENT] Auto-refresh timer started
+[11:54:47] [CLIENT] Session set for user ivan (expires: 10:24:47)
+[11:54:47] [CLIENT] Auto-refresh timer stopped
+[11:54:47] [CLIENT] Auto-refresh timer started
+[11:54:47] [CLIENT] Initializing API services for user: ivan
+[11:54:47] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:54:47] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:54:47] [CLIENT] ContactApiService: Authorization header set
+[11:54:47] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 91bb5af1-dc4b-4f4f-ac40-20a9c060e559
+[11:54:47] [SERVER] User ivan (ID: 2) connected
+[11:54:47] [SERVER] [ONLINE] User ivan became ONLINE
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:54:47] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:54:47] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:54:47] [CLIENT] [RECONNECTION] State reset
+[11:54:47] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:54:48] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:54:49] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:54:49] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:54:59] [CLIENT] [Chat] Message sent successfully to 21
+[11:55:17] [CLIENT] [HEARTBEAT] Pong received
+[11:55:20] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:55:20] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:56:18] [CLIENT] UserSession initialized with system arguments
+[11:56:18] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:56:21] [CLIENT] Attempting login for: ivan
+[11:56:21] [CLIENT] Login successful for ivan
+[11:56:21] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:56:21] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:26:21)
+[11:56:21] [CLIENT] Session set for user ivan (expires: 10:26:21)
+[11:56:21] [CLIENT] Auto-refresh timer started
+[11:56:21] [CLIENT] Session set for user ivan (expires: 10:26:21)
+[11:56:21] [CLIENT] Auto-refresh timer stopped
+[11:56:21] [CLIENT] Auto-refresh timer started
+[11:56:21] [CLIENT] Initializing API services for user: ivan
+[11:56:21] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:56:21] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:56:21] [CLIENT] ContactApiService: Authorization header set
+[11:56:21] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 96653274-ba83-49e2-9de1-564120d8de57
+[11:56:21] [SERVER] User ivan (ID: 2) connected
+[11:56:21] [SERVER] [ONLINE] User ivan became ONLINE
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:56:21] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:56:21] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:56:21] [CLIENT] [RECONNECTION] State reset
+[11:56:21] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:56:22] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:56:22] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:56:22] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:56:23] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:56:51] [CLIENT] [HEARTBEAT] Pong received
+[11:57:15] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[11:57:21] [CLIENT] [HEARTBEAT] Pong received
+[11:57:27] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:57:30] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:57:30] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:57:33] [CLIENT] UserSession initialized with system arguments
+[11:57:34] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:57:37] [CLIENT] Attempting login for: ivan
+[11:57:37] [CLIENT] Login successful for ivan
+[11:57:37] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:57:37] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:27:37)
+[11:57:37] [CLIENT] Session set for user ivan (expires: 10:27:37)
+[11:57:37] [CLIENT] Auto-refresh timer started
+[11:57:37] [CLIENT] Session set for user ivan (expires: 10:27:37)
+[11:57:37] [CLIENT] Auto-refresh timer stopped
+[11:57:37] [CLIENT] Auto-refresh timer started
+[11:57:37] [CLIENT] Initializing API services for user: ivan
+[11:57:37] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:57:37] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:57:37] [CLIENT] ContactApiService: Authorization header set
+[11:57:37] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 575474b9-9e28-442c-a914-0f513de614cd
+[11:57:37] [SERVER] User ivan (ID: 2) connected
+[11:57:37] [SERVER] [ONLINE] User ivan became ONLINE
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:57:37] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:57:37] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:57:37] [CLIENT] [RECONNECTION] State reset
+[11:57:37] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:57:38] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:57:40] [CLIENT] [Chat] Message sent successfully to 21
+[11:57:42] [CLIENT] [Chat] Message sent successfully to 21
+[11:57:46] [CLIENT] [Chat] Message sent successfully to 21
+[11:58:03] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:58:03] [SERVER] [OFFLINE] User ivan became OFFLINE
+[11:58:49] [CLIENT] UserSession initialized with system arguments
+[11:58:49] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[11:58:52] [CLIENT] Attempting login for: ivan
+[11:58:53] [CLIENT] Login successful for ivan
+[11:58:53] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[11:58:53] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:28:53)
+[11:58:53] [CLIENT] Session set for user ivan (expires: 10:28:53)
+[11:58:53] [CLIENT] Auto-refresh timer started
+[11:58:53] [CLIENT] Session set for user ivan (expires: 10:28:53)
+[11:58:53] [CLIENT] Auto-refresh timer stopped
+[11:58:53] [CLIENT] Auto-refresh timer started
+[11:58:53] [CLIENT] Initializing API services for user: ivan
+[11:58:53] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[11:58:53] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[11:58:53] [CLIENT] ContactApiService: Authorization header set
+[11:58:53] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 88f2f09f-e74a-40da-b179-8bae8f355813
+[11:58:53] [SERVER] User ivan (ID: 2) connected
+[11:58:53] [SERVER] [ONLINE] User ivan became ONLINE
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_22
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_24
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_23
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_19
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_2
+[11:58:53] [SERVER] [Auto-Join] User ivan added to group chat_3
+[11:58:53] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[11:58:53] [CLIENT] [RECONNECTION] State reset
+[11:58:53] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[11:58:54] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[11:58:54] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[11:58:55] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[11:59:04] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[11:59:04] [SERVER] [OFFLINE] User ivan became OFFLINE
+[12:00:20] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[12:00:56] [CLIENT] UserSession initialized with system arguments
+[12:00:56] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:01:01] [CLIENT] Attempting login for: ivan
+[12:01:02] [CLIENT] Login successful for ivan
+[12:01:02] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[12:01:02] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:31:02)
+[12:01:02] [CLIENT] Session set for user ivan (expires: 10:31:02)
+[12:01:02] [CLIENT] Auto-refresh timer started
+[12:01:02] [CLIENT] Session set for user ivan (expires: 10:31:02)
+[12:01:02] [CLIENT] Auto-refresh timer stopped
+[12:01:02] [CLIENT] Auto-refresh timer started
+[12:01:02] [CLIENT] Initializing API services for user: ivan
+[12:01:02] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[12:01:02] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[12:01:02] [CLIENT] ContactApiService: Authorization header set
+[12:01:02] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 19daba80-f11c-42ce-971f-2a516776b7ec
+[12:01:02] [SERVER] User ivan (ID: 2) connected
+[12:01:02] [SERVER] [ONLINE] User ivan became ONLINE
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_22
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_24
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_23
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_19
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_2
+[12:01:02] [SERVER] [Auto-Join] User ivan added to group chat_3
+[12:01:02] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[12:01:02] [CLIENT] [RECONNECTION] State reset
+[12:01:02] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[12:01:02] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[12:01:03] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[12:01:03] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[12:01:21] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[12:01:21] [SERVER] [OFFLINE] User ivan became OFFLINE
+[12:02:30] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[12:02:52] [CLIENT] UserSession initialized with system arguments
+[12:02:52] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:02:55] [CLIENT] Attempting login for: ivan
+[12:02:55] [CLIENT] Login successful for ivan
+[12:02:55] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[12:02:55] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:32:55)
+[12:02:55] [CLIENT] Session set for user ivan (expires: 10:32:55)
+[12:02:55] [CLIENT] Auto-refresh timer started
+[12:02:55] [CLIENT] Session set for user ivan (expires: 10:32:55)
+[12:02:55] [CLIENT] Auto-refresh timer stopped
+[12:02:55] [CLIENT] Auto-refresh timer started
+[12:02:55] [CLIENT] Initializing API services for user: ivan
+[12:02:55] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[12:02:55] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[12:02:55] [CLIENT] ContactApiService: Authorization header set
+[12:02:55] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: 2de6a9a5-a216-48e5-8cd3-4e1b790e9edb
+[12:02:55] [SERVER] User ivan (ID: 2) connected
+[12:02:55] [SERVER] [ONLINE] User ivan became ONLINE
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_22
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_24
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_23
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_19
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_2
+[12:02:55] [SERVER] [Auto-Join] User ivan added to group chat_3
+[12:02:55] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[12:02:55] [CLIENT] [RECONNECTION] State reset
+[12:02:55] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[12:02:56] [SERVER] [JoinChatGroup] ivan joined chat 22 (group: chat_22)
+[12:02:56] [SERVER] [JoinChatGroup] ivan joined chat 23 (group: chat_23)
+[12:02:57] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[12:03:03] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[12:03:22] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[12:03:22] [SERVER] [OFFLINE] User ivan became OFFLINE
+[12:04:04] [SERVER] [RECONNECTION] Cleared reconnection state for user ivan
+[12:04:43] [CLIENT] UserSession initialized with system arguments
+[12:04:43] [CLIENT] === MainWindow loaded, auto-login disabled for testing ===
+[12:04:49] [CLIENT] Attempting login for: ivan
+[12:04:50] [CLIENT] Login successful for ivan
+[12:04:50] [CLIENT] TokenStorage initialized at: C:\Users\ivant\AppData\Local\VadimDataMiner(tokenStorage)\tokens.dat
+[12:04:50] [CLIENT] Tokens saved for user ivan (expires: 2025-12-11 10:34:50)
+[12:04:50] [CLIENT] Session set for user ivan (expires: 10:34:50)
+[12:04:50] [CLIENT] Auto-refresh timer started
+[12:04:50] [CLIENT] Session set for user ivan (expires: 10:34:50)
+[12:04:50] [CLIENT] Auto-refresh timer stopped
+[12:04:50] [CLIENT] Auto-refresh timer started
+[12:04:50] [CLIENT] Initializing API services for user: ivan
+[12:04:50] [CLIENT] Token length: 541, Token preview: eyJhbGciOi...
+[12:04:50] [CLIENT] ContactApiService: Setting auth token (length: 541)
+[12:04:50] [CLIENT] ContactApiService: Authorization header set
+[12:04:50] [CLIENT] [RECONNECTION] State reset
+[12:04:50] [CLIENT] [HEARTBEAT] Service started (interval: 30s)
+[12:04:50] [SERVER] [RECONNECTION] User ivan (ID: 2) connected with sessionId: c9d222db-ed80-4d4e-a53b-3f801a9e9c51
+[12:04:50] [SERVER] User ivan (ID: 2) connected
+[12:04:50] [SERVER] [ONLINE] User ivan became ONLINE
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_22
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_24
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_23
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_19
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_2
+[12:04:50] [SERVER] [Auto-Join] User ivan added to group chat_3
+[12:04:50] [SERVER] [Auto-Join] User ivan joined 6 chat groups
+[12:04:51] [SERVER] [JoinChatGroup] ivan joined chat 21 (group: chat_21)
+[12:05:02] [SERVER] [DISCONNECT] User ivan (ID: 2) disconnected
+[12:05:02] [SERVER] [OFFLINE] User ivan became OFFLINE
