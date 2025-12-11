@@ -1043,7 +1043,6 @@ namespace Uchat
             if (_isLoadingHistory || !_hasMoreMessages)
                 return;
 
-            var scrollViewer = sender as ScrollViewer;
             if (scrollViewer == null)
                 return;
 
