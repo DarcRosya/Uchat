@@ -4,7 +4,7 @@
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		mc:Ignorable="d"
 		x:Class="Uchat.MainWindow"
-		Width="1280" Height="720"
+		Width="800" Height="450"
 		MinWidth="700"
 		MinHeight="400"
 		WindowStartupLocation="CenterScreen"
@@ -19,7 +19,7 @@
 		>
 
 	<Grid>
-		<Grid x:Name="LoginProgram" Width="800" Height="450" Background="Transparent" IsVisible="True">
+		<Grid x:Name="LoginProgram" Background="Transparent" IsVisible="True">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="1.2*"/>
 				<ColumnDefinition Width="1.5*"/>

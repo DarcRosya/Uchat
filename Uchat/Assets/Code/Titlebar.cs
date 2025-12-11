@@ -18,7 +18,6 @@ namespace Uchat
 			NotificationBox.IsVisible = false;
             Process.Start(Assembly.GetEntryAssembly()!.Location);
             Environment.Exit(0);
-
         }
 
         private async void LogoutAsync()
@@ -45,7 +44,6 @@ namespace Uchat
 			MainProgram.IsVisible = false;
 			loginForm.IsVisible = true;
 			
-			// Clear input fields
 			usernameTextBox.Text = string.Empty;
 			passwordTextBox.Text = string.Empty;
         }

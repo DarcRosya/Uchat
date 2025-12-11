@@ -554,7 +554,6 @@ namespace Uchat
 
         private void SwitchToChatView(string username)
         {
-            // Hide login program, show main chat program
             LoginProgram.IsVisible = false;
             MainProgram.IsVisible = true;
             userNameTextBlock.Text = username;
