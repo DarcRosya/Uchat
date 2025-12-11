@@ -55,6 +55,7 @@ namespace Uchat
 
         private SignalRReconnectionHandler? _reconnectionHandler;
         private HeartbeatService? _heartbeatService;
+        private bool _isProgrammaticScroll = false;
 
         private void InitializeChatComponents()
         {
@@ -167,57 +168,61 @@ namespace Uchat
 
             _hubConnection.On<MessageDto>("ReceiveMessage", async (message) =>
             {
-                // Используем Dispatcher, так как работаем с UI
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     bool isCurrentChat = _currentChatId != null && message.ChatRoomId == _currentChatId.Value;
 
-                    // 1. Пытаемся найти чат в локальном кэше (в списке слева)
+                    // 1. Обновляем/создаем контакт в списке (твой код)
                     if (!_chatContacts.TryGetValue(message.ChatRoomId, out var chatItem))
                     {
-                        // 2. Если чата нет локально - возможно, это новый чат или мы его удалили из UI
-                        // Попробуем загрузить список чатов с сервера заново
                         await LoadUserChatsAsync();
-
-                        // 3. Проверяем снова после обновления
-                        if (!_chatContacts.TryGetValue(message.ChatRoomId, out chatItem))
-                        {
-                            // 4. ЕСЛИ ЧАТА ВСЁ РАВНО НЕТ - значит, мы не являемся его участником!
-                            // Это случается, если мы вышли из группы, но SignalR по инерции прислал сообщение.
-                            // ИГНОРИРУЕМ такое сообщение, чтобы не создавать "зомби-чат".
-                            Console.WriteLine($"[Ghost Protocol] Ignored message from non-existent chat: {message.ChatRoomId}");
-                            return;
-                        }
+                        if (!_chatContacts.TryGetValue(message.ChatRoomId, out chatItem)) return;
                     }
 
-                    // 5. Если мы здесь - значит чат существует и мы в нём состоим.
-
-                    // Обновляем превью последнего сообщения и поднимаем чат наверх
                     string preview = message.Content.Length > 30 ? message.Content.Substring(0, 30) + "..." : message.Content;
                     chatItem.UpdateLastMessage(preview);
-
                     UpdateChatListPosition(chatItem);
 
-                    // 6. Если этот чат открыт прямо сейчас - показываем сообщение внутри
                     if (isCurrentChat)
                     {
+                        // Проверяем, находимся ли мы внизу
+                        // (Offset + Viewport) >= Extent - (высота пары сообщений ~100px)
+                        bool isUserAtBottom = ChatScrollViewer.Offset.Y >= (ChatScrollViewer.Extent.Height - ChatScrollViewer.Viewport.Height - 100);
+
+                        // Если сообщение от меня — считаем, что мы всегда внизу
+                        if (message.Sender.Username == _currentUsername) isUserAtBottom = true;
+
                         DisplayMessage(message);
 
-                        // Если это наше сообщение (отправленное с другого устройства), очищаем поле ввода
                         if (message.Sender.Username == _currentUsername)
                         {
                             replyTheMessageBox.IsVisible = false;
                             chatTextBox.Text = string.Empty;
                         }
 
-                        // Прокручиваем вниз
+                        // Ждем отрисовки нового сообщения
                         Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
-                        ChatScrollViewer.ScrollToEnd();
-                        _ = _messageApiService.MarkAsReadUntilAsync(message.ChatRoomId, message.SentAt);
+
+                        if (isUserAtBottom)
+                        {
+                            // Если были внизу — автоскролл
+                            ChatScrollViewer.ScrollToEnd();
+                            
+                            // И помечаем прочитанным
+                            Dispatcher.UIThread.Post(() => CheckVisibilityAndMarkAsRead(), DispatcherPriority.Background);
+                        }
+                        else
+                        {
+                            // [ВАЖНО] Если мы читали историю наверху — увеличиваем счетчик!
+                            // Пользователь НЕ видел это сообщение.
+                            chatItem.IncrementUnread();
+                            
+                            // Тут можно добавить кнопку "Вниз ⬇️"
+                        }
                     }
                     else
                     {
-                        // Если чат не открыт - можно увеличить счетчик непрочитанных (если есть логика)
+                        // Чат закрыт — просто инкремент
                         chatItem.IncrementUnread();
                         chatItem.ShowUnreadMessages();
                     }
@@ -499,8 +504,7 @@ namespace Uchat
                 groupInfoBox.IsVisible = false;
                 backgroundForGroupInfo.IsVisible = false;
             }
-
-            // TODO: add a placeholder "Select chat"
+            
             Logger.Log("Chat area cleared");
         }
 
@@ -561,7 +565,7 @@ namespace Uchat
             {
                 var chats = await _chatApiService.GetUserChatsAsync();
 
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     // 1. Создаем список ID для проверки удаленных чатов
                     var currentChatIds = chats.Select(c => c.Id).ToHashSet();
@@ -609,15 +613,6 @@ namespace Uchat
 
                         if (_chatContacts.TryGetValue(chat.Id, out var existingContact))
                         {
-                            // --- ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕГО ---
-                            // У контакта должны быть публичные методы или свойства для обновления
-                            // Если их нет - придется пересоздать, но лучше добавить методы UpdateData
-
-                            // Пример (предполагая, что у Contact есть методы):
-                            // existingContact.UpdatePreview(previewText);
-                            // existingContact.UpdateUnreadCount(chat.UnreadCount);
-
-                            // Если методов нет, просто пересоздаем (как раньше), но это вызывает мигание.
                             existingContact.SetParticipants(chat.ParticipantIds);
                             existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
                             existingContact.IsGroupChat = isGroup;
@@ -658,6 +653,21 @@ namespace Uchat
                         }
                     }
                     SearchTextBox_TextChanged(null, null);
+
+                    if (_hubConnection.State == HubConnectionState.Connected)
+                    {
+                        foreach (var chat in chats)
+                        {
+                            try
+                            {
+                                await _hubConnection.InvokeAsync("JoinChatGroup", chat.Id);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"Error joining group {chat.Id}: {ex.Message}");
+                            }
+                        }
+                    }
                 });
             }
             finally
@@ -684,9 +694,9 @@ namespace Uchat
                 {
                     chatName = contact.ChatName;
                     isGroup = contact.IsGroupChat;
-                    contact.SetUnreadCount(0);
+                    // contact.SetUnreadCount(0);
                 }
-                else
+                else 
                 {
                     chatName = "Loading...";
                 }
@@ -698,12 +708,12 @@ namespace Uchat
                     _messageCache.Clear();
                     PlaceHolder.IsVisible = false;
 
-                    chatTextBox.IsVisible = true;
+                    chatTextBox.IsVisible = true;   
                     chatTextBox.IsEnabled = true;
 
-                    if (sendButton != null)
-                        sendButton.IsEnabled = true;
-
+                    if (sendButton != null) 
+                        sendButton.IsEnabled = true;  
+            
                     if (BottomContainer != null)
                         BottomContainer.IsVisible = true;
 
@@ -720,7 +730,7 @@ namespace Uchat
                     if (AddPersonToGroup != null) AddPersonToGroup.IsVisible = false;
                     if (LeaveGroupAndConfirm != null) LeaveGroupAndConfirm.IsVisible = false;
                 });
-
+                
                 try
                 {
                     await _hubConnection.InvokeAsync("JoinChatGroup", chatId);
@@ -750,7 +760,7 @@ namespace Uchat
                 }
 
                 _chatContacts.Remove(chatRoomId);
-
+                
                 _messageDrafts.Remove(chatRoomId);
 
                 Logger.Log($"Chat {chatRoomId} removed from UI and Cache");
@@ -764,50 +774,147 @@ namespace Uchat
 
         private async Task LoadChatHistoryAsync(int chatId, int limit = 50)
         {
+            _isProgrammaticScroll = true;
+
             try
             {
                 var result = await _messageApiService.GetMessagesAsync(chatId, limit);
-
                 if (result == null)
                 {
+                    _isProgrammaticScroll = false;
                     return;
                 }
 
                 var historyMessages = result.Messages ?? new List<MessageDto>();
-                var reportTimestamp = historyMessages.Count > 0
-                    ? historyMessages.Max(m => m.SentAt)
-                    : DateTime.UtcNow;
-                //Logger.Log($"[DEBUG] Messages count: {result.Messages?.Count ?? 0}");
-
-                Dispatcher.UIThread.Post(() =>
+                
+                int unreadCount = 0;
+                if (_chatContacts.TryGetValue(chatId, out var contact))
                 {
+                    unreadCount = contact.UnreadCount;
+                }
+
+                // Запускаем обновление UI
+                // Используем 'Loaded', чтобы убедиться, что элементы загружены
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    _isProgrammaticScroll = true; 
+
+                    // Скрываем список на долю секунды
+                    ChatMessagesPanel.Opacity = 0; 
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
 
                     var messages = historyMessages.ToList();
-                    messages.Reverse();
+                    messages.Reverse(); 
 
-                    // Обновляем состояние пагинации
                     _hasMoreMessages = result.Pagination.HasMore;
-                    if (messages.Count > 0)
+                    if (messages.Count > 0) _oldestMessageDate = messages[0].SentAt;
+
+                    int firstUnreadIndex = -1;
+                    if (unreadCount > 0)
                     {
-                        _oldestMessageDate = messages[0].SentAt; // Самое старое сообщение
+                        firstUnreadIndex = messages.Count - unreadCount;
+                        if (firstUnreadIndex < 0) firstUnreadIndex = 0;
                     }
 
-                    foreach (var msg in messages)
+                    for (int i = 0; i < messages.Count; i++)
                     {
+                        if (unreadCount > 5 && i == firstUnreadIndex)
+                        {
+                            ChatMessagesPanel.Children.Add(CreateUnreadSeparator());
+                        }
+
+                        var msg = messages[i];
                         msg.ChatRoomId = chatId;
                         DisplayMessage(msg);
                     }
 
-                    ChatScrollViewer.ScrollToEnd();
-                });
+                    // [ИСПРАВЛЕНИЕ] Используем 'Render' вместо 'Layout'
+                    // Это заставляет Avalonia принудительно пересчитать размеры прямо сейчас
+                    Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
 
-                await _messageApiService.MarkAsReadUntilAsync(chatId, reportTimestamp);
+                    // --- ЛОГИКА ТЕЛЕПОРТА ---
+                    if (unreadCount > 0)
+                    {
+                        // Нам нужно найти визуальный элемент, к которому скроллить.
+                        // Так как мы могли вставить линию, индекс в Children сместился.
+                        // Надежнее всего найти сообщение по Tag (ID), а потом посмотреть, что над ним.
+                        
+                        Control? targetScrollControl = null;
+
+                        if (firstUnreadIndex < messages.Count)
+                        {
+                            string targetMsgId = messages[firstUnreadIndex].Id;
+                            
+                            // Ищем контрол сообщения в панели
+                            Control? msgControl = null;
+                            int msgControlIndex = -1;
+
+                            for(int k=0; k<ChatMessagesPanel.Children.Count; k++)
+                            {
+                                var child = ChatMessagesPanel.Children[k] as Control;
+                                if (child?.Tag is string tagId && tagId == targetMsgId)
+                                {
+                                    msgControl = child;
+                                    msgControlIndex = k;
+                                    break;
+                                }
+                            }
+
+                            if (msgControl != null)
+                            {
+                                // По умолчанию хотим скроллить к сообщению
+                                targetScrollControl = msgControl;
+
+                                // [ПРАВКА] Проверяем, есть ли ПРЯМО НАД ним наша линия?
+                                if (msgControlIndex > 0)
+                                {
+                                    var prevChild = ChatMessagesPanel.Children[msgControlIndex - 1] as Control;
+                                    if (prevChild != null && prevChild.Tag is string tag && tag == "UnreadSeparator")
+                                    {
+                                        // Если есть линия - скроллим К ЛИНИИ. 
+                                        // Так она будет в самом верху экрана.
+                                        targetScrollControl = prevChild;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Выполняем прыжок
+                        if (targetScrollControl != null)
+                        {
+                            // Получаем точный Y (уже с учетом линии, если она есть)
+                            double targetY = targetScrollControl.Bounds.Y;
+                            
+                            // Ставим скролл. 
+                            // Если скроллим к линии - ставим ровно (0). 
+                            // Если к сообщению (линии нет) - чуть отступаем (-10).
+                            double offsetAdjustment = (targetScrollControl.Tag as string == "UnreadSeparator") ? 0 : 10;
+                            
+                            ChatScrollViewer.Offset = new Vector(0, Math.Max(0, targetY - offsetAdjustment));
+                        }
+                    }
+                    else
+                    {
+                        ChatScrollViewer.ScrollToEnd();
+                    }
+
+                    // Ждем стабилизации
+                    await Task.Delay(200); 
+
+                    ChatMessagesPanel.Opacity = 1;
+                    _isProgrammaticScroll = false;
+                    
+                    // Проверяем видимость (это отправит отчет только о том, что ниже линии и влезло в экран)
+                    CheckVisibilityAndMarkAsRead();
+
+                }, DispatcherPriority.Loaded);
             }
             catch (Exception ex)
             {
                 Logger.Log($"[ERROR] LoadChatHistoryAsync failed: {ex}");
+                _isProgrammaticScroll = false;
+                ChatMessagesPanel.Opacity = 1;
             }
         }
 
@@ -859,16 +966,25 @@ namespace Uchat
                         string? replyContent = msg.ReplyTo?.Content;
 
                         var chatMessage = new MainWindow.Chat.Message(
-                            hasReply, msg.Content, timestamp, isGuest, replyContent,
-                            msg.Id, msg.EditedAt.HasValue, msg.ReplyToMessageId,
-                            msg.Sender.DisplayName ?? msg.Sender.Username
+                            isReply: hasReply,
+                            text: msg.Content,
+                            timestamp: timestamp,
+                            type: isGuest,
+                            replyContent: replyContent,
+                            serverId: msg.Id,
+                            isEdited: msg.EditedAt.HasValue,
+                            replyToMessageId: msg.ReplyToMessageId,
+                            username: msg.Sender.DisplayName ?? msg.Sender.Username,
+                            replyToUsername: msg.ReplyTo?.SenderName, 
+                            sentAt: msg.SentAt 
                         );
 
                         _messageCache[msg.Id] = chatMessage;
 
                         var grid = new Grid
                         {
-                            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) }
+                            ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+                            Tag = msg.Id
                         };
 
                         Grid.SetColumn(chatMessage.Bubble, 0);
@@ -908,6 +1024,11 @@ namespace Uchat
 
         public void OnChatScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
+            // Если флаг стоит - мы игнорируем любые изменения скролла.
+            // Это не даст методу прочтения сработать, пока мы грузим чат.
+            if (_isProgrammaticScroll) return;
+            
+            if (sender is not ScrollViewer scrollViewer) return;
             var distanceFromBottom = ChatScrollViewer.Extent.Height - ChatScrollViewer.Viewport.Height - ChatScrollViewer.Offset.Y;
 
             if (distanceFromBottom > 250)
@@ -929,9 +1050,14 @@ namespace Uchat
             if (scrollViewer.Extent.Height <= scrollViewer.Viewport.Height)
                 return;
 
-            if (scrollViewer.Offset.Y < 50)
+            if (!_isLoadingHistory && _hasMoreMessages && scrollViewer.Offset.Y < 50)
             {
                 _ = LoadMoreHistoryAsync();
+            }
+
+            if (e.ExtentDelta.Y != 0 || e.OffsetDelta.Y != 0) 
+            {
+                CheckVisibilityAndMarkAsRead();
             }
         }
 
@@ -1025,23 +1151,25 @@ namespace Uchat
             string? replyContent = message.ReplyTo?.Content;
 
             var chatMessage = new MainWindow.Chat.Message(
-                hasReply,
-                message.Content,
-                timestamp,
-                isGuest,
-                replyContent,
-                message.Id,
-                message.EditedAt.HasValue,
-                message.ReplyToMessageId,
-                message.Sender.DisplayName ?? message.Sender.Username,
-                replyToName
+                isReply: hasReply,
+                text: message.Content,
+                timestamp: timestamp,
+                type: isGuest,               
+                replyContent: replyContent,
+                serverId: message.Id,         
+                isEdited: message.EditedAt.HasValue,
+                replyToMessageId: message.ReplyToMessageId,
+                username: message.Sender.DisplayName ?? message.Sender.Username,
+                replyToUsername: replyToName,
+                sentAt: message.SentAt       
             );
 
             _messageCache[message.Id] = chatMessage;
 
             var grid = new Grid
             {
-                ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) }
+                ColumnDefinitions = { new ColumnDefinition(new GridLength(1, GridUnitType.Star)) },
+                Tag = message.Id
             };
 
             Grid.SetColumn(chatMessage.Bubble, 0);
@@ -1123,7 +1251,6 @@ namespace Uchat
                 // Delete failed
             }
         }
-
 
         private void UpdateConnectionStatus(string text, IBrush color)
         {
@@ -1456,6 +1583,135 @@ namespace Uchat
                 // Возвращаем UI в режим просмотра
                 PanelForGroupNameEdit.IsVisible = false;
                 PanelForGroupName.IsVisible = true;
+            }
+        }
+
+        private async Task ReportReadProgressAsync(int chatId, DateTime messageTimestamp, bool isTotalRead)
+        {
+            if (!_currentChatId.HasValue || _currentChatId.Value != chatId) return;
+
+            var normalized = messageTimestamp.ToUniversalTime();
+
+            // Проверка на дубликаты (чтобы не спамить)
+            if (_lastReadProgressTimestamps.TryGetValue(chatId, out var lastReported) && normalized <= lastReported)
+            {
+                return;
+            }
+
+            _lastReadProgressTimestamps[chatId] = normalized;
+
+            try
+            {
+                if (_hubConnection.State == HubConnectionState.Connected)
+                {
+                    // 1. Отправляем на сервер
+                    await _hubConnection.InvokeAsync("ReportReadProgress", chatId, normalized);
+
+                    // 2. Локально обновляем счетчик
+                    if (_chatContacts.TryGetValue(chatId, out var contact))
+                    {
+                        if (isTotalRead)
+                        {
+                            contact.SetUnreadCount(0);
+                            RemoveUnreadSeparator();
+                        }
+                        else
+                        {
+                            
+                            int realUnreadLocal = 0;
+                            
+                            // Считаем сообщения в кэше, которые новее, чем то, что мы только что прочитали
+                            foreach (var msg in _messageCache.Values)
+                            {
+                                // Важно: сравниваем даты в UTC
+                                if (msg.SentAt.ToUniversalTime() > normalized)
+                                {
+                                    realUnreadLocal++;
+                                }
+                            }
+
+                            // Обновляем счетчик на реальное кол-во оставшихся (из тех, что загружены)
+                            // Это даст эффект "убывания" цифр при скролле
+                            if (realUnreadLocal < contact.UnreadCount)
+                            {
+                                contact.SetUnreadCount(realUnreadLocal);
+                                
+                                if (realUnreadLocal == 0)
+                                {
+                                    RemoveUnreadSeparator();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log($"[ReadProgress] Failed: {ex.Message}");
+                _lastReadProgressTimestamps.Remove(chatId);
+            }
+        }
+
+        private void CheckVisibilityAndMarkAsRead()
+        {
+            // Базовые проверки
+            if (!_currentChatId.HasValue || ChatMessagesPanel.Children.Count == 0) return;
+
+            var scrollViewer = ChatScrollViewer;
+            var viewportTop = scrollViewer.Offset.Y;
+            var viewportBottom = viewportTop + scrollViewer.Viewport.Height;
+
+            DateTime? maxReadTimestamp = null;
+            bool isLastMessageVisible = false; // Флаг: увидели ли мы дно чата
+
+            // Идем с КОНЦА (новые сообщения) ВВЕРХ
+            for (int i = ChatMessagesPanel.Children.Count - 1; i >= 0; i--)
+            {
+                var child = ChatMessagesPanel.Children[i] as Control;
+                // Защита от еще не отрисованных элементов
+                if (child == null || child.Bounds.Height <= 0) continue;
+
+                var bounds = child.Bounds;
+
+                // Строгая проверка: элемент должен пересекаться с экраном
+                bool isVisible = (bounds.Bottom > viewportTop + 5) && (bounds.Top < viewportBottom - 5);
+
+                if (isVisible)
+                {
+                    // Если мы увидели сообщение, проверяем его ID в кэше
+                    if (child.Tag is string msgId && _messageCache.TryGetValue(msgId, out var cachedMsg))
+                    {
+                        maxReadTimestamp = cachedMsg.SentAt;
+                        
+                        // Если индекс элемента равен последнему в списке — значит мы увидели дно
+                        if (i == ChatMessagesPanel.Children.Count - 1)
+                        {
+                            isLastMessageVisible = true;
+                        }
+                    }
+                    
+                    // Мы нашли самое "свежее" (нижнее) сообщение на экране.
+                    // Прерываем цикл, так как всё, что выше него, тоже будет считаться прочитанным по дате.
+                    break; 
+                }
+            }
+
+            // Отправляем на сервер, если нашли дату
+            if (maxReadTimestamp.HasValue)
+            {
+                // Передаем флаг isLastMessageVisible
+                _ = ReportReadProgressAsync(_currentChatId.Value, maxReadTimestamp.Value, isLastMessageVisible);
+            }
+        }
+
+        private void RemoveUnreadSeparator()
+        {
+            var separator = ChatMessagesPanel.Children
+                .FirstOrDefault(c => c is Control ctrl && ctrl.Tag as string == "UnreadSeparator");
+
+            if (separator != null)
+            {
+                ChatMessagesPanel.Children.Remove(separator);
             }
         }
     }

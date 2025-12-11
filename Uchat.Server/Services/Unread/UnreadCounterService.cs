@@ -79,13 +79,16 @@ public sealed class UnreadCounterService : IUnreadCounterService
         return result;
     }
 
-    public Task ResetUnreadAsync(int chatId, int userId)
+    public async Task RecalculateUnreadAsync(int chatId, int userId)
     {
-        if (!_redisService.IsAvailable || chatId <= 0)
-        {
-            return Task.CompletedTask;
-        }
+        long realCount = await _messageRepository.GetUnreadCountAsync(chatId, userId);
 
-        return _redisService.SetStringAsync(RedisCacheKeys.GetChatUnreadKey(chatId, userId), "0", _unreadTtl);
+        if (_redisService.IsAvailable && chatId > 0)
+        {
+            await _redisService.SetStringAsync(
+                RedisCacheKeys.GetChatUnreadKey(chatId, userId), 
+                realCount.ToString(), 
+                _unreadTtl);
+        }
     }
 }

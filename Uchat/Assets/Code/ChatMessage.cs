@@ -32,6 +32,7 @@ namespace Uchat
                 private bool isReply;
                 private string? replyToContent;
                 private string? replyToMessageId; // ID сообщения, на которое отвечают
+                public DateTime SentAt { get; set; }
 
                 private Border messageBorder = new Border();
                 private StackPanel messageStackPanel = new StackPanel();
@@ -47,7 +48,7 @@ namespace Uchat
                 
                 public Border? ReplyPreviewBorder { get; set; }
 
-                public Message(bool isReply, string text, string timestamp, bool type, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null, string? username = null, string? replyToUsername = null)
+                public Message(bool isReply, string text, string timestamp, bool type,  DateTime sentAt, string? replyContent = null, string? serverId = null, bool isEdited = false, string? replyToMessageId = null, string? username = null, string? replyToUsername = null)
                 {
                     this.serverId = serverId;
                     sender = username;
@@ -59,6 +60,7 @@ namespace Uchat
                     this.isReply = isReply;
                     this.replyToContent = replyContent;
                     this.replyToMessageId = replyToMessageId;
+                    this.SentAt = sentAt;
 
                     string messageBorderStyle = (isGuest) ? "guestMessageBorder" : "messageBorder";
                     messageBorder.Classes.Add(messageBorderStyle);
@@ -308,5 +310,40 @@ namespace Uchat
                 }
 			}
 		}
-    }
+
+        public Control CreateUnreadSeparator()
+        {
+            var grid = new Grid
+            {
+                RowDefinitions = RowDefinitions.Parse("Auto,Auto"),
+                Margin = new Thickness(0, 20, 0, 20), // Отступы побольше, чтобы заметно было
+                Tag = "UnreadSeparator" // Тег, чтобы отличать от сообщений
+            };
+
+            var textBlock = new TextBlock
+            {
+                Text = "Unread messages",
+                FontSize = 12,
+                FontWeight = FontWeight.SemiBold,
+                Foreground = Brush.Parse("#c57179"),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                Margin = new Thickness(0,0,0,5)
+            };
+            Grid.SetRow(textBlock, 0);
+
+            var border = new Border
+            {
+                Height = 1, // Тонкая линия
+                Background = Brush.Parse("#c57179"),
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                Opacity = 0.5
+            };
+            Grid.SetRow(border, 1);
+
+            grid.Children.Add(textBlock);
+            grid.Children.Add(border);
+
+            return grid;
+        }
+	}
 }

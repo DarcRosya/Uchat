@@ -14,7 +14,6 @@ namespace Uchat
     {
         private void LogOutButton_Click(object sender, RoutedEventArgs e)
 		{
-			// UNCOMMENT TO ADD LOGOUT BUTTON:
 			LogoutAsync();
 			NotificationBox.IsVisible = false;
             string currentExe = Environment.ProcessPath!;

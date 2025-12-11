@@ -64,7 +64,8 @@ namespace Uchat
 				private Border unreadMessageBorder = new Border();
 				private TextBlock unreadMessageTextBlock = new TextBlock();
                 
-				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, int newChatId = 0, IEnumerable<int>? participants = null)
+				public Contact(string newChatName, string newLastMessage, int newUnreadMessages, MainWindow window, 
+                    int newChatId = 0, IEnumerable<int>? participants = null)
 				{
 					this.mainWindow = window;
                     chatName = newChatName;
@@ -116,7 +117,17 @@ namespace Uchat
 					unreadMessageBorder.Child = unreadMessageTextBlock;
 
 					unreadMessageTextBlock.Classes.Add("unreadMessage");
-					unreadMessageTextBlock.Text = unreadMessages.ToString();
+
+                    if (newUnreadMessages > 9)
+                    {
+                        unreadMessageTextBlock.Text = "9+";
+                    }
+                    else
+                    {
+                        unreadMessageTextBlock.Text = newUnreadMessages.ToString();
+                    }
+
+                    unreadMessageBorder.IsVisible = newUnreadMessages > 0;
 
 					contactStackPanel.Children.Add(contactInfoStackPanel);
 					contactStackPanel.Children.Add(lastMessageTextBlock);
@@ -256,24 +267,72 @@ namespace Uchat
                 {
                     lastMessage = newLastMessage;
                     lastMessageTextBlock.Text = newLastMessage;
-					
+                    
                     if (newUnreadCount.HasValue)
                     {
                         unreadMessages = newUnreadCount.Value;
-                        unreadMessageTextBlock.Text = newUnreadCount.Value.ToString();
+
+                        // [ИЗМЕНЕНИЕ] Логика 9+ при обновлении
+                        if (unreadMessages > 9)
+                        {
+                            unreadMessageTextBlock.Text = "9+";
+                        }
+                        else
+                        {
+                            unreadMessageTextBlock.Text = unreadMessages.ToString();
+                        }
+
+                        // Обязательно управляем видимостью кружка
+                        unreadMessageBorder.IsVisible = unreadMessages > 0;
                     }
                 }
 
-                public void SetUnreadCount(int value)
+                public void SetUnreadCount(int count)
                 {
-                    unreadMessages = Math.Max(0, value);
-                    unreadMessageTextBlock.Text = unreadMessages.ToString();
+                    this.unreadMessages = count; 
+
+                    if (count > 0)
+                    {
+                        unreadMessageBorder.IsVisible = true;
+                        
+                        if (count > 9)
+                        {
+                            unreadMessageTextBlock.Text = "9+"; 
+                        }
+                        else
+                        {
+                            unreadMessageTextBlock.Text = count.ToString(); 
+                        }
+                    }
+                    else
+                    {
+                        unreadMessageBorder.IsVisible = false;
+                        unreadMessageTextBlock.Text = "0"; 
+                    }
                 }
 
                 public void IncrementUnread(int delta = 1)
                 {
                     unreadMessages += delta;
-                    unreadMessageTextBlock.Text = unreadMessages.ToString();
+
+                    if (unreadMessages > 0)
+                    {
+                        unreadMessageBorder.IsVisible = true;
+
+                        if (unreadMessages > 9)
+                        {
+                            unreadMessageTextBlock.Text = "9+";
+                        }
+                        else
+                        {
+                            unreadMessageTextBlock.Text = unreadMessages.ToString();
+                        }
+                    }
+                    else
+                    {
+                        unreadMessageBorder.IsVisible = false;
+                        unreadMessageTextBlock.Text = "0";
+                    }
                 }
 
                 public void ShowUnreadMessages()
