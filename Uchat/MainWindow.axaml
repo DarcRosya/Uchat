@@ -736,12 +736,35 @@
 						</Grid>
 					</StackPanel>
 				</ScrollViewer>
+
+				<Button x:Name="ScrollToBottomButton"
+					Grid.Row="0"
+					HorizontalAlignment="Right"
+					VerticalAlignment="Bottom"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Center"
+					Margin="0 0 12 20"
+					CornerRadius="200"
+					Height="40"
+					Width="40"
+					Background="#80202020"
+					Classes="scrollToBottom"
+					IsVisible="False"
+					Cursor="Hand"
+					Click="ScrollToBottomButton_Click">
+					<Image
+						Height="20"
+						Width="20"
+						Source="avares://Uchat/Assets/Icons/scrollDown.png">
+					</Image>
+				</Button>
+
 			<Border Background="#2a2c31"
 				BorderBrush="#93a6b7"
-				BorderThickness="4,0,0,0"
+				BorderThickness="4 0 0 0"
 				CornerRadius="5"
-				Padding="8, 5, 0, 5"
-				Margin="10,0,10,10"
+				Padding="8 5 0 5"
+				Margin="10 0 10 10"
 				Height="43"
 				IsVisible="False"
 				VerticalAlignment="Bottom"
@@ -792,10 +815,10 @@
 	<Border Background="#2a2c31"
 			BorderBrush="#93a6b7"
 			IsVisible="False"
-			BorderThickness="4,0,0,0"
+			BorderThickness="4 0 0 0"
 			CornerRadius="5"
-			Padding="8, 5, 0, 5"
-			Margin="10,0,10,10"
+			Padding="8 5 0 5"
+			Margin="10 0 10 10"
 			Height="43"
 			VerticalAlignment="Bottom"
 			x:Name="editTheMessageBox">

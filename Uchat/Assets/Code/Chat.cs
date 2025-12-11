@@ -575,6 +575,7 @@ namespace Uchat
                 chatTextBoxForReply.IsVisible = false;
                 isReplied = false;
                 replyToMessageId = "";
+                ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 20);
             }
             catch (Exception)
             {
@@ -601,13 +602,14 @@ namespace Uchat
 			isReplied = false;
 			replyToMessageId = "";
 			chatTextBoxForReply.Text = "";
-		}
+            ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 20);
+        }
 
 
 		private void DontEditTheMessage_Click(object? sender, RoutedEventArgs e)
 		{
 			CloseEditMode();
-		}
+        }
 
 		private async void EditMessageButton_Click(object? sender, RoutedEventArgs e)
 		{
@@ -651,6 +653,7 @@ namespace Uchat
 			editTheMessageButton.IsVisible = false;
 			chatTextBox.Text = tempChatTextBox;
 			chatTextBox.IsVisible = true;
-		}
+            ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 20);
+        }
 	}
 }

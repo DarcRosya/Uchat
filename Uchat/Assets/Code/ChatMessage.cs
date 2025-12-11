@@ -209,8 +209,11 @@ namespace Uchat
                                 Width = 16,
                                 Height = 16
                             },
-                            Header = "Delete",
-                            Foreground = Brush.Parse("#c57179")
+                            Header = new TextBlock
+                            {
+                                Text = "Delete",
+                                Foreground = Brush.Parse("#c57179")
+                            },
                         };
                         menuItemDelete.Click += MenuItemDelete_Click;
 
@@ -228,7 +231,8 @@ namespace Uchat
                     mainWindow.chatTextBoxForReply.IsVisible = true;
                     mainWindow.replyTheMessageBox.IsVisible = true;
                     mainWindow.replyTheMessage.Text = chatMessage.Content;
-                    
+                    mainWindow.ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 60);
+
                     mainWindow.replyToMessageId = chatMessage.ServerId ?? "";
                     mainWindow.replyToMessageContent = chatMessage.Content;
 
@@ -237,14 +241,13 @@ namespace Uchat
 
                     Chat.ReplyToUserName = chatMessage.Sender;
 
-
                     if (!mainWindow.isReplied)
 					{
                         mainWindow.chatTextBoxForReply.Text = mainWindow.chatTextBox.Text;
 					}
 
                     mainWindow.isReplied = true;
-				}
+                }
 
                 private void MenuItemEdit_Click(object sender, RoutedEventArgs e)
                 {
@@ -257,13 +260,16 @@ namespace Uchat
                     mainWindow.editTheMessageBox.IsVisible = true;
                     mainWindow.chatTextBoxForEdit.IsVisible = true;
                     mainWindow.editTheMessageButton.IsVisible = true;
+                    mainWindow.ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 60);
                     // Use current text from ContentTextBlock instead of original Content field
                     mainWindow.editTheMessage.Text = chatMessage.ContentTextBlock.Text ?? chatMessage.Content;
                     mainWindow.chatTextBoxForEdit.Text = chatMessage.ContentTextBlock.Text ?? chatMessage.Content;
 
                     mainWindow.textBlockChange = chatMessage.ContentTextBlock;
                     mainWindow.messageBeingEdited = chatMessage; // Сохраняем ссылку на Message
-                }                private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
+                }
+                
+                private void MenuItemCopy_Click(object sender, RoutedEventArgs e)
                 {
                     mainWindow.Clipboard.SetTextAsync(chatMessage.Content);
                 }
@@ -275,6 +281,7 @@ namespace Uchat
                     mainWindow.editTheMessageButton.IsVisible = false;
                     mainWindow.chatTextBoxForEdit.IsVisible = false;
                     mainWindow.chatTextBoxForReply.IsVisible = false;
+                    mainWindow.ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 20);
 
                     if (!string.IsNullOrEmpty(chatMessage.ServerId))
                     {
@@ -301,5 +308,5 @@ namespace Uchat
                 }
 			}
 		}
-	}
+    }
 }
