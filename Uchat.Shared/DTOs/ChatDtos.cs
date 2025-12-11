@@ -27,7 +27,6 @@ public class CreateChatRequestDto
 
 public class AddMemberRequestDto
 {
-    // Меняем или добавляем поле для имени
     public string Username { get; set; } = string.Empty;
 }
 

@@ -41,29 +41,23 @@ namespace Uchat
 					groupName = newGroupName;
 					mainWindow = window;
 
-					// Настройка Grid
 					friendRequestGrid.Classes.Add("friendRequestBox");
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1, GridUnitType.Star)));
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(55)));
 					friendRequestGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(55)));
 
-					// Настройка текста (показываем разный текст для групп и друзей)
 					infoTextBlock.Classes.Add("friendRequestUsername");
 					
 					if (requestType == "Group")
 					{
-						// Если это группа, пишем название группы и кто пригласил (опционально)
 						infoTextBlock.Text = $"Group: {groupName}";
-						// Можно добавить ToolTip, чтобы видеть кто пригласил: 
 						ToolTip.SetTip(infoTextBlock, $"Invited by: {username}");
 					}
 					else
 					{
-						// Если это друг, просто пишем имя
 						infoTextBlock.Text = username;
 					}
 
-					// Кнопка "Принять"
 					acceptRequestButton.Classes.Add("acceptRequestButton");
 					var iconCheck = new Uri("avares://Uchat/Assets/Icons/check.png");
 					acceptRequestButton.Content = new Image
@@ -72,8 +66,6 @@ namespace Uchat
 						Width = 16, Height = 14
 					};
 					acceptRequestButton.Click += AcceptRequestButton_Click;
-
-					// Кнопка "Отклонить"
 					rejectRequestButton.Classes.Add("rejectRequestButton");
 					var iconCross = new Uri("avares://Uchat/Assets/Icons/cross.png");
 					rejectRequestButton.Content = new Image
@@ -94,34 +86,28 @@ namespace Uchat
 				}
 
 				public Grid Box { get { return friendRequestGrid; } }
-    			public string Username { get { return infoTextBlock.Text; } } // Возвращает то, что написано (имя или группу)
+    			public string Username { get { return infoTextBlock.Text; } }
 
                 private async void AcceptRequestButton_Click(object? sender, RoutedEventArgs e)
 				{
-					acceptRequestButton.IsEnabled = false; // Блокируем кнопку от дабл-клика
+					acceptRequestButton.IsEnabled = false; 
 					try
 					{
 						bool success = false;
 
 						if (requestType == "GroupInvite" || requestType == "Group")
 						{
-							// Логика для ГРУПП (через ChatApiService)
-							// contactId здесь выступает как ChatRoomId
 							success = await mainWindow._chatApiService.AcceptGroupInviteAsync(contactId);
 						}
 						else
 						{
-							// Логика для ДРУЗЕЙ (через ContactApiService)
-							// contactId здесь выступает как UserId друга
 							success = await mainWindow._contactApiService.AcceptFriendRequestAsync(contactId);
 						}
 						
 						if (success)
 						{
-							// Удаляем плашку запроса
 							mainWindow.requestList.Children.Remove(friendRequestGrid);
 							
-							// Обновляем список чатов, чтобы появилась новая группа или чат с другом
 							await mainWindow.LoadUserChatsAsync();
 
 							if (requestType == "GroupInvite" || requestType == "Group")
@@ -164,7 +150,7 @@ namespace Uchat
 
 						if (requestType == "GroupInvite" || requestType == "Group")
 						{
-							// Логика для ГРУПП
+							// Logic for GROUPS
 							success = await mainWindow._chatApiService.RejectGroupInviteAsync(contactId);
 						}
 						else

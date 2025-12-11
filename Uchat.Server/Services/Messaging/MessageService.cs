@@ -20,10 +20,6 @@ using System.Text.Json.Serialization;
 
 namespace Uchat.Server.Services.Messaging;
 
-/// <summary>
-/// Service for managing chat messages across SQLite (metadata) and LiteDB (content).
-/// Ensures transactional consistency between both databases.
-/// </summary>
 public sealed class MessageService : IMessageService
 {
     private readonly UchatDbContext _context;
@@ -121,22 +117,20 @@ public sealed class MessageService : IMessageService
 
             if (!string.IsNullOrEmpty(dto.ReplyToMessageId))
             {
-                // Ищем оригинальное сообщение по ID
                 var originalMessage = await _mongoDbContext.Messages
                     .Find(m => m.Id == dto.ReplyToMessageId)
                     .FirstOrDefaultAsync(cancellationToken);
 
                 if (originalMessage != null)
                 {
-                    // Сохраняем имя того, кому отвечаем
+                    // Save the name of the person we are responding to
                     mongoMessage.ReplyToSenderName = originalMessage.Sender.DisplayName ?? originalMessage.Sender.Username;
                     
-                    // Также полезно явно сохранить текст (если BuildMongoMessage этого не сделал)
+                    // It is also useful to explicitly save the text (if BuildMongoMessage did not do so).
                     mongoMessage.ReplyToContent = originalMessage.Content;
                 }
             }
             
-            // Сохранение в MongoDB
             if (string.IsNullOrEmpty(mongoMessage.Id))
             {
                 mongoMessage.Id = ObjectId.GenerateNewId().ToString();
@@ -196,7 +190,6 @@ public sealed class MessageService : IMessageService
         if (mongoMessage == null)
             return null;
 
-        // Загружаем ReplyTo сообщение, если есть
         MessageReplyDto? replyToDto = null;
         if (!string.IsNullOrEmpty(mongoMessage.ReplyToMessageId))
         {
@@ -242,7 +235,6 @@ public sealed class MessageService : IMessageService
 
         var cachedData = await TryGetCachedLastMessagesAsync(chatsWithClearDates.Keys);
 
-        // 1. Генерируем индивидуальный фильтр для каждого чата
         foreach (var kvp in cachedData)
         {
             int chatId = kvp.Key;
@@ -692,18 +684,15 @@ public sealed class MessageService : IMessageService
                 }
             }
 
-            // Физическое удаление из MongoDB
             var success = await _messageRepository.DeleteMessagePermanentlyAsync(messageId);
             if (!success)
             {
                 return MessagingResult.Failure("Failed to delete message.");
             }
 
-            // Очищаем ReplyToMessageId у сообщений, которые отвечали на удалённое
             var clearedReplies = await _messageRepository.ClearReplyReferencesAsync(messageId);
             _logger.LogInformation("Cleared {Count} reply references to deleted message {MessageId}", clearedReplies.Count, messageId);
 
-            // Получаем чат для обновления статистики
             var chatRoom = await _context.ChatRooms.FindAsync(new object[] { message.ChatId }, cancellationToken: cancellationToken);
             if (chatRoom != null)
             {
@@ -806,7 +795,11 @@ public sealed class MessageService : IMessageService
             var count = await _messageRepository.MarkAsReadUntilAsync(chatId, userId, untilTimestamp);
             
             _logger.LogInformation("{Count} messages marked as read in chat {ChatId} by user {UserId}", count, chatId, userId);
-            await _unreadCounterService.ResetUnreadAsync(chatId, userId);
+            if (count > 0)
+                {
+                    await _unreadCounterService.RecalculateUnreadAsync(chatId, userId);
+                }
+
             return count;
         }
         catch (Exception ex)
@@ -872,9 +865,6 @@ public sealed class MessageService : IMessageService
 
             dict[item.ChatId] = dto;
 
-            // Side-effect: Cache the found message in Redis (from feature-redis)
-            // Note: We cache it even if it was filtered by date for THIS user,
-            // because for another user in the same chat (who didn't clear history), this IS the last message.
             await CacheLastMessageAsync(item.ChatId, msg);
         }
 

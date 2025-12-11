@@ -38,16 +38,11 @@ public class ChatsController : ControllerBase
         _unreadCounterService = unreadCounterService;
     }
 
-    /// <summary>
-    /// Получить список всех чатов текущего пользователя
-    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetUserChats()
     {
         var userId = GetCurrentUserId();
 
-        // Сервис сам сходит в Redis, в БД, смапит DTO и отсортирует
-        // Убедись, что метод в сервисе называется GetUserChatsAsync и возвращает List<ChatRoomDto>
         var chatDtos = await _chatRoomService.GetUserChatsAsync(userId);
 
         return Ok(chatDtos);
@@ -107,16 +102,12 @@ public class ChatsController : ControllerBase
         return CreatedAtAction(nameof(GetChatById), new { id = chatDto.Id }, chatDto);
     }
 
-    /// <summary>
-    /// Добавить участника в чат
-    /// </summary>
     [HttpPost("{chatId}/members")]
     public async Task<IActionResult> AddMember(int chatId, [FromBody] AddMemberRequestDto request)
     {
         if (string.IsNullOrWhiteSpace(request.Username))
             return BadRequest(new { error = "Username is required" });
 
-        // Находим пользователя по имени (предполагаем, что такой метод есть в репозитории)
         var userToAdd = await _userRepository.GetByUsernameAsync(request.Username);
         if (userToAdd == null)
         {
@@ -125,12 +116,10 @@ public class ChatsController : ControllerBase
 
         var currentUserId = GetCurrentUserId();
         
-        // Вызываем сервис уже с ID
         var result = await _chatRoomService.AddMemberAsync(chatId, currentUserId, userToAdd.Id);
 
         if (!result.IsSuccess)
         {
-            // Обработка ошибок (как у тебя было)
              return result.ErrorType switch
             {
                 ChatErrorType.NotFound => NotFound(new { error = "Chat not found" }),
@@ -184,10 +173,8 @@ public class ChatsController : ControllerBase
     [HttpPost("{chatId}/accept")]
     public async Task<IActionResult> AcceptInvite(int chatId)
     {
-        var userId = GetCurrentUserId(); // ID того, кто нажал кнопку
+        var userId = GetCurrentUserId(); 
         
-        // Сервис ищет запись, где ChatId == chatId AND UserId == userId
-        // И меняет IsPending c true на false
         var result = await _chatRoomService.AcceptInviteAsync(chatId, userId);
 
         if (!result.IsSuccess)
@@ -198,9 +185,6 @@ public class ChatsController : ControllerBase
         return Ok(new { message = "Invite accepted", chat = result.ChatRoom!.ToDto() });
     }
 
-    /// <summary>
-    /// Отклонить приглашение в группу
-    /// </summary>
     [HttpPost("{chatId}/reject")]
     public async Task<IActionResult> RejectInvite(int chatId)
     {
@@ -224,8 +208,6 @@ public class ChatsController : ControllerBase
     {
         var userId = GetCurrentUserId();
         
-        // Этот метод нужно реализовать в ChatRoomService
-        // Он должен найти чат по имени, проверить, что Type == Public, и добавить участника
         var result = await _chatRoomService.JoinPublicChatByNameAsync(name, userId);
 
         if (!result.IsSuccess)
@@ -240,9 +222,6 @@ public class ChatsController : ControllerBase
         return Ok(result.ChatRoom!.ToDto());
     }
 
-    /// <summary>
-    /// Удалить участника из чата
-    /// </summary>
     [HttpDelete("{chatId}/members/{memberId}")]
     public async Task<IActionResult> RemoveMember(int chatId, int memberId)
     {

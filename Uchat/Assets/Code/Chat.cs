@@ -21,11 +21,11 @@ namespace Uchat
 	public partial class MainWindow : Window
 	{
 		private TextBlock? textBlockChange = new TextBlock();
-		private Message? messageBeingEdited = null; // Сохраняем ссылку на Message для редактирования
+		private Message? messageBeingEdited = null; // Save the link to Message for editing
 		private bool isReplied = false;
 		private string tempChatTextBox = "";
 		public string replyToMessageContent = "";
-		public string replyToMessageId = ""; // ID сообщения, на которое отвечают
+		public string replyToMessageId = "";
 
 		private async void addFriend_Click(object? sender, RoutedEventArgs e)
 		{
@@ -78,10 +78,8 @@ namespace Uchat
         {
             try
             {
-                // 1. Запускаем обе задачи параллельно (чтобы было быстрее)
                 var friendRequestsTask = _contactApiService.GetPendingRequestsAsync();
                 
-                // Тебе нужно добавить этот метод в ChatApiService, который дергает новый эндпоинт из Шага 1
                 var groupInvitesTask = _chatApiService.GetPendingInvitesAsync(); 
 
                 await Task.WhenAll(friendRequestsTask, groupInvitesTask);
@@ -89,16 +87,12 @@ namespace Uchat
                 var friendRequests = friendRequestsTask.Result ?? new List<ContactDto>();
                 var groupInvites = groupInvitesTask.Result ?? new List<ChatRoomDto>();
 
-                // 2. Обновляем UI
                 Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                 {
-                    // Запоминаем текущее количество элементов, чтобы не мигать зря, если ничего не изменилось
-                    // (опциональная оптимизация, пока оставим просто Clear)
                     requestList.Children.Clear();
 
                     bool hasAnyRequests = false;
 
-                    // --- РИСУЕМ ЗАЯВКИ В ДРУЗЬЯ ---
                     if (friendRequests.Count > 0)
                     {
                         hasAnyRequests = true;
@@ -106,7 +100,7 @@ namespace Uchat
                         {
                             var friendRequestItem = new Chat.FriendRequest(
                                 request.ContactUsername,
-                                request.Id, // Здесь ID юзера
+                                request.Id, 
                                 this,
                                 "DirectMessage"
                             );
@@ -114,13 +108,11 @@ namespace Uchat
                         }
                     }
 
-                    // --- РИСУЕМ ПРИГЛАШЕНИЯ В ГРУППЫ ---
                     if (groupInvites.Count > 0)
                     {
                         hasAnyRequests = true;
                         foreach (var invite in groupInvites)
                         {
-                            // В DTO группы мы положили имя пригласившего в LastMessageContent (см. Шаг 1)
                             string inviterName = invite.LastMessageContent ?? "Someone";
                             
                             var groupRequestItem = new Chat.FriendRequest(
@@ -134,7 +126,6 @@ namespace Uchat
                         }
                     }
 
-                    // --- ОБРАБОТКА ПУСТОГО СПИСКА ---
                     if (!hasAnyRequests)
                     {
                         var noRequestsText = new TextBlock
@@ -155,8 +146,6 @@ namespace Uchat
             }
             catch (Exception ex)
             {
-                // Не спамим в лог ошибками соединения каждую секунду, если сервер упал
-                // Logger.Error("Error loading pending requests", ex); 
                 System.Diagnostics.Debug.WriteLine($"Polling error: {ex.Message}");
             }
         }
@@ -254,8 +243,6 @@ namespace Uchat
 
 			try 
 			{
-				// 1. Вызываем API для добавления пользователя
-				// Предполагается метод AddMemberAsync(int chatId, string username) в _chatApiService
 				var success = await _chatApiService.AddMemberAsync(_currentChatId.Value, username);
 
 				if (!success)
@@ -265,19 +252,16 @@ namespace Uchat
 					return;
 				}
 
-				invalidDataInAddingPersontoGroup.Foreground = Brushes.Green; // (опционально поменять цвет на зеленый)
+				invalidDataInAddingPersontoGroup.Foreground = Brushes.Green; 
                 invalidDataInAddingPersontoGroup.Text = "Invite sent successfully!"; 
                 invalidDataInAddingPersontoGroup.IsVisible = true;
 
-                // Даем пользователю прочитать сообщение пару секунд и закрываем (через Task.Delay, если хочешь)
                 await Task.Delay(1500);
 
-                // 3. Очищаем и закрываем
                 usernameSendInviteTextBox.Text = "";
                 invalidDataInAddingPersontoGroup.IsVisible = false;
                 AddPersonToGroup.IsVisible = false; 
                 
-                // Вернем цвет ошибки обратно на красный для будущих ошибок
                 invalidDataInAddingPersontoGroup.Foreground = Brush.Parse("#F44336");
             }
             catch (Exception ex)
@@ -329,58 +313,42 @@ namespace Uchat
 
 		private async void groupTopBar_PointerPressed(object? sender, PointerPressedEventArgs e)
         {
-            // Берем свойства клика относительно САМОГО ОКНА (this), а не контрола-отправителя.
-            // Это надежнее, так как исключает проблемы с вложенностью элементов.
             var point = e.GetCurrentPoint(this);
 
-            // Если нажата НЕ левая кнопка (например, правая) — выходим
             if (!point.Properties.IsLeftButtonPressed) return;
 
-            // Если чат не выбран — выходим
             if (_currentChatId == null) return;
 
-            // 1. Показываем панели (МГНОВЕННАЯ РЕАКЦИЯ)
             backgroundForGroupInfo.IsVisible = true;
             groupInfoBox.IsVisible = true;
 
-            // 2. Ставим текущее имя из заголовка (чтобы не было пустоты)
             groupInfoName.Text = groupTopBarName.Text;
             
-            // 3. Блокируем дальнейшую обработку клика (чтобы не проваливалось под окно)
             e.Handled = true;
 
-            // 4. Запускаем загрузку данных с сервера
-            // (try/catch внутри LoadGroupInfoAsync сам обработает ошибки)
             await LoadGroupInfoAsync(_currentChatId.Value);
         }
 
-        // 2. ЗАКРЫТИЕ ПАНЕЛИ (Крестик)
         private void ExitInfoAboutGroup_Click(object? sender, RoutedEventArgs e)
         {
-            // Скрываем всё
             groupInfoBox.IsVisible = false;
             backgroundForGroupInfo.IsVisible = false;
 
-            // Сбрасываем панели редактирования имени в исходное состояние
             if (PanelForGroupNameEdit != null) PanelForGroupNameEdit.IsVisible = false;
             if (PanelForGroupName != null) PanelForGroupName.IsVisible = true;
         }
 
-        // 3. ЗАГРУЗКА ДАННЫХ С СЕРВЕРА
         private async Task LoadGroupInfoAsync(int chatId)
         {
-            // Очищаем старый список
             groupInfoMembersStackPanel.Children.Clear();
             groupInfoNumberOfMembers.Text = "Loading...";
 
             try
             {
-                // Запрос к API (метод должен быть в ChatApiService)
                 var details = await _chatApiService.GetChatDetailsAsync(chatId);
 
                 if (details != null)
                 {
-                    // Обновляем имя (вдруг изменилось)
                     groupInfoName.Text = details.Name;
                     if (_currentChatId == chatId)
                     {
@@ -392,11 +360,9 @@ namespace Uchat
                         contactItem.UpdateName(details.Name); 
                     }
                     
-                    // Обновляем счетчик
                     string suffix = details.Members.Count == 1 ? "member" : "members";
                     groupInfoNumberOfMembers.Text = $"{details.Members.Count} {suffix}";
 
-                    // Заполняем список участников
                     foreach (var member in details.Members)
                     {
                         bool isOwner = (member.UserId == details.CreatorId);
@@ -419,13 +385,10 @@ namespace Uchat
             {
                 var contact = kvp.Value;
                 
-                // А. Совпадает ли имя? (или поиск пустой)
                 bool nameMatches = string.IsNullOrEmpty(query) || contact.ChatName.ToLower().Contains(query);
                 
-                // Б. Подходит ли тип чата для текущей вкладки?
                 bool typeMatches = (Chat.GroupsActive && contact.IsGroupChat) || (!Chat.GroupsActive && !contact.IsGroupChat);
 
-                // Показываем элемент, только если совпало И имя, И тип вкладки
                 contact.Box.IsVisible = nameMatches && typeMatches;
             }
         }
@@ -435,30 +398,25 @@ namespace Uchat
             string query = searchTextBox.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(query)) return;
 
-            // А. Локальный поиск (ищем в уже загруженных чатах)
             var existingChat = _chatContacts.Values.FirstOrDefault(c => 
                 c.ChatName.Equals(query, StringComparison.OrdinalIgnoreCase));
 
             if (existingChat != null)
             {
-                // Если чат на другой вкладке — переключаем её
                 if (existingChat.IsGroupChat != Chat.GroupsActive)
                 {
                     if (existingChat.IsGroupChat) SwitchToGroups_Click(null, null);
                     else SwitchToContacts_Click(null, null);
                 }
                 
-                // Сбрасываем фильтр и открываем чат
                 existingChat.Box.IsVisible = true; 
                 searchTextBox.Text = ""; 
                 await OpenChatAsync(existingChat.ChatId);
                 return;
             }
 
-            // Б. Если локально не нашли
             if (Chat.GroupsActive)
             {
-                // Вкладка ГРУППЫ -> Ищем публичную группу на сервере
                 try
                 {
                     UpdateConnectionStatus("Searching public group...", Brushes.Orange);
@@ -484,12 +442,10 @@ namespace Uchat
             }
             else
             {
-                // Вкладка КОНТАКТЫ -> Отправляем заявку в друзья
                 addFriend_Click(null, null);
             }
         }
 
-        // 2. Обработчик ENTER в поле ввода
         private async void SearchTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -498,19 +454,16 @@ namespace Uchat
             }
         }
 
-        // 3. Обработчик КЛИКА ПО ЛУПЕ (Button Click)
         private async void SearchButton_Click(object? sender, RoutedEventArgs e)
         {
             await ExecuteSearchActionAsync();
         }
 
-        // 4. ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (С обновлением фильтра!)
         private void SwitchToGroups_Click(object? sender, RoutedEventArgs e)
         {
             Chat.GroupsActive = true;
             searchTextBox.Watermark = "Find group";
             
-            // Визуальное оформление кнопок
             GroupsButton.Background = Brush.Parse("#5da3a5");
             ContactsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.Normal;
@@ -518,7 +471,6 @@ namespace Uchat
 
             Chat.ShowGroups(true);
             
-            // ВАЖНО: Пересчитываем фильтр поиска для новой вкладки
             SearchTextBox_TextChanged(null, null); 
         }
 
@@ -527,15 +479,13 @@ namespace Uchat
             Chat.GroupsActive = false;
             searchTextBox.Watermark = "Find friend";
             
-            // Визуальное оформление кнопок
             ContactsButton.Background = Brush.Parse("#5e81ac");
             GroupsButton.Background = Brush.Parse("#3e4042");
             ContactsButton.FontWeight = FontWeight.SemiBold;
             GroupsButton.FontWeight = FontWeight.Normal;
 
             Chat.ShowGroups(false);
-            
-            // ВАЖНО: Пересчитываем фильтр поиска для новой вкладки
+
             SearchTextBox_TextChanged(null, null);
         }
 
@@ -564,11 +514,8 @@ namespace Uchat
 
                 replyTheMessageBox.IsVisible = false;
 
-                // Отправляем сообщение на сервер через SignalR
-                // Пока мы тут ждем (await), кнопка выключена, нажать второй раз нельзя
                 await SendMessageToServerAsync(text);
                 
-                // Очищаем поля ТОЛЬКО после успешной отправки
                 chatTextBox.Text = "";
                 chatTextBoxForReply.Text = "";
                 chatTextBox.IsVisible = true;
@@ -578,14 +525,13 @@ namespace Uchat
             }
             catch (Exception)
             {
-                // Если не удалось отправить, оставляем текст в поле
-                // Пользователь сможет нажать кнопку еще раз, так как мы разблокируем её в finally
+                // If sending failed, leave the text in the field.
+                // The user will be able to click the button again, as we will unlock it in finally.
             }
             finally
             {
                 sendButton.IsEnabled = true;
                 
-                // Полезно вернуть фокус в поле ввода, чтобы можно было сразу писать дальше
                 if (chatTextBox.IsVisible)
                 {
                     chatTextBox.Focus();
@@ -624,13 +570,11 @@ namespace Uchat
 			{
 				var newContent = chatTextBoxForEdit.Text;
 				
-				// Отправляем изменения через REST API
 				if (!string.IsNullOrEmpty(messageBeingEdited.ServerId))
 				{
 					try
 					{
 						await EditMessageAsync(messageBeingEdited.ServerId, newContent);
-						// UI обновится через SignalR обработчик MessageEdited
 					}
 					catch
 					{

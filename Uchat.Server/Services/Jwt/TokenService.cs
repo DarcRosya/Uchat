@@ -29,22 +29,22 @@ public class JwtService
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Email, email),
             
-            // JwtRegisteredClaimNames.Jti - уникальный ID токена (для отзыва)
+            // JwtRegisteredClaimNames.Jti  unique token ID (for revocation)
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        // Создать ключ подписи
-        // SymmetricSecurityKey - один ключ для шифрования И расшифровки
+        // Create a signature key
+        // SymmetricSecurityKey - a single key for encryption AND decryption
         var key = new SymmetricSecurityKey(secretKey);
         
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: jwtSettings["Issuer"],                      // Кто выдал токен (ваш сервер)
-            audience: jwtSettings["Audience"],                  // Для кого токен (ваш клиент)
-            claims: claims,                                     // Данные внутри токена
-            expires: DateTime.UtcNow.AddMinutes(expiryMinutes), // Когда истечёт
-            signingCredentials: credentials                     // Подпись
+            issuer: jwtSettings["Issuer"],                      // Who issued the token (your server)
+            audience: jwtSettings["Audience"],                  // Who the token is for (your client)
+            claims: claims,                                     // Data inside the token
+            expires: DateTime.UtcNow.AddMinutes(expiryMinutes), // When it expires
+            signingCredentials: credentials                     // Signature
         );
 
         // Превратить токен в строку

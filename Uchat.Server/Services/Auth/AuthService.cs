@@ -71,67 +71,36 @@ public class AuthService
         {
             RequiresConfirmation = true,
             Message = "Confirmation code sent to email",
-            PendingId = null // ID больше не нужен клиенту, мы работаем по Email
+            PendingId = null 
         };
-    }
-
-    // Вынес логику HTML в отдельный метод для чистоты
-    private string GenerateEmailBody(string username, string code)
-    {
-        var templatePath = Path.Combine(AppContext.BaseDirectory, "Email.html");
-        
-        if (File.Exists(templatePath))
-        {
-            try
-            {
-                var html = File.ReadAllText(templatePath);
-                return html.Replace("{Code}", code) // Используй фигурные скобки в HTML для надежности: {Code}
-                           .Replace("{Username}", username);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"[AuthService] Failed to read email template: {ex.Message}");
-            }
-        }
-
-        // Fallback, если файла нет
-        return $"<h3>Welcome, {username}!</h3><p>Your confirmation code is: <strong>{code}</strong></p>";
     }
 
     public async Task<AuthResponseDto> ConfirmEmailAsync(string email, string code)
     {
-        // 1. Ищем заявку по Email (безопаснее, чем искать просто по коду)
         var pending = await _pendingRepo.GetByEmailAsync(email);
         
         if (pending == null) 
             throw new InvalidOperationException("Registration request not found or expired.");
 
-        // 2. Проверяем код
         if (pending.Code != code) 
             throw new InvalidOperationException("Invalid confirmation code.");
 
-        // 3. Проверяем срок действия
         if (!pending.CodeExpiresAt.HasValue || pending.CodeExpiresAt.Value < DateTime.UtcNow)
             throw new InvalidOperationException("Confirmation code expired.");
 
-        // 4. Финальная проверка перед созданием (Race condition check)
         if (await _userRepository.UsernameExistsAsync(pending.Username))
             throw new InvalidOperationException("Username already taken.");
 
-        // 5. Создаем реального пользователя
         var createdUser = await _userRepository.CreateUserAsync(pending.Username, pending.PasswordHash, pending.Email);
         
-        // Ставим EmailConfirmed = true
         await _userRepository.SetEmailConfirmedAsync(createdUser.Id, true);
 
-        // 6. УДАЛЯЕМ заявку из Pending (вместо MarkAsUsed)
         await _pendingRepo.DeleteAsync(pending.Email);
 
-        // 7. Инициализация чатов
+        // INITIALIZING CHATS
         await CreatePersonalNotesChat(createdUser.Id, createdUser.Username);
         await AddUserToGlobalPublicChat(createdUser.Id, createdUser.Username);
 
-        // 8. Выдаем токены
         var accessToken = _jwtService.GenerateAccessToken(createdUser.Id, createdUser.Username, createdUser.Email);
         var (plainTextToken, tokenHash) = _jwtService.GenerateRefreshTokens();
 
@@ -217,10 +186,8 @@ public class AuthService
         var user = await _userRepository.GetByIdAsync(storedToken.UserId);
         if (user == null) return null;
         
-        // Отзываем старый токен
         await _refreshTokenRepository.RevokeTokenAsync(storedToken.TokenHash);
         
-        // Генерируем новые
         var accessToken = _jwtService.GenerateAccessToken(user.Id, user.Username, user.Email);
         var (newPlainToken, newTokenHash) = _jwtService.GenerateRefreshTokens();
         
@@ -255,16 +222,15 @@ public class AuthService
     {
         var user = await _userRepository.GetByEmailAsync(email);
         
-        // Если юзера нет, мы делаем вид, что все ок (security best practice),
-        // чтобы хакеры не могли перебирать базу email-ов.
+        // If the user does not exist, we pretend that everything is OK (security best practice)
+        // so that hackers cannot search through the email database ( we are cool! )
         if (user == null) return; 
 
-        var code = GenerateNumericCode(6); // Используем твой метод генерации цифр
+        var code = GenerateNumericCode(6); 
         
         user.PasswordResetCode = code;
         user.PasswordResetCodeExpiresAt = DateTime.UtcNow.AddMinutes(15);
         
-        // Используем новый метод UpdateAsync
         await _userRepository.UpdateAsync(user);
 
         string htmlBody = await LoadEmailTemplateAsync("ResetPassword.html", user.Username, code);
@@ -292,23 +258,19 @@ public class AuthService
 
         if (user == null) throw new InvalidOperationException("User not found");
         
-        // Повторная проверка кода (обязательно!)
         if (user.PasswordResetCode != code || 
             user.PasswordResetCodeExpiresAt < DateTime.UtcNow)
         {
              throw new InvalidOperationException("Invalid or expired code");
         }
 
-        // Хешируем новый пароль
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         
-        // Очищаем код, чтобы его нельзя было использовать второй раз
         user.PasswordResetCode = null;
         user.PasswordResetCodeExpiresAt = null;
 
         await _userRepository.UpdateAsync(user);
         
-        // Опционально: можно сбросить все RefreshToken-ы пользователя, чтобы выкинуть его со всех устройств
         await _refreshTokenRepository.RevokeAllUserTokensAsync(user.Id);
     }
 
@@ -320,7 +282,7 @@ public class AuthService
                 creatorId: userId,
                 name: "Notes",
                 type: ChatRoomType.DirectMessage,
-                initialMemberIds: null // Создатель добавляется автоматически
+                initialMemberIds: null // Creator is added automatically
             );
 
             if (!result.IsSuccess)
@@ -339,31 +301,20 @@ public class AuthService
     {
         try
         {
-            // Ищем глобальный чат по имени (создан в DbInitializer при старте сервера)
-            var globalChat = await _chatRoomRepository.GetByNameAsync("Global Chat");
-            
-            if (globalChat == null)
+            var result = await _chatRoomService.JoinPublicChatByNameAsync("Global Chat", userId);
+
+            if (!result.IsSuccess)
             {
-                // Критическая ошибка - глобальный чат должен существовать всегда
-                Console.WriteLine($"[CRITICAL] Global Chat not found during registration of user {username}!");
-                return;
+                Console.WriteLine($"[AuthService] Warning: Could not add user {username} to Global Chat. Reason: {result.ErrorMessage}");
             }
-            
-            // Добавляем нового пользователя в глобальный чат
-            await _chatRoomRepository.AddMemberAsync(new ChatRoomMember
+            else
             {
-                ChatRoomId = globalChat.Id,
-                UserId = userId,
-                JoinedAt = DateTime.UtcNow,
-                IsPending = false, 
-                InvitedById = null
-            });
-            
-            Console.WriteLine($"[AuthService] User {username} added to Global Chat (ID: {globalChat.Id})");
+                Console.WriteLine($"[AuthService] User {username} successfully added to Global Chat (DB + Redis updated).");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[ERROR] Failed to add user {username} to global chat: {ex.Message}");
+            Console.WriteLine($"[AuthService] Error joining Global Chat: {ex.Message}");
         }
     }
 
@@ -379,7 +330,7 @@ public class AuthService
                 var html = await File.ReadAllTextAsync(templatePath);
                 return html.Replace("{Code}", code)
                         .Replace("{Username}", username);
-                        // .Replace("{Greetings}", ...) // Если используешь старый плейсхолдер
+                        // .Replace("{Greetings}", ...) 
             }
             catch (Exception ex)
             {
@@ -391,7 +342,6 @@ public class AuthService
             Console.WriteLine($"[AuthService] Template not found at: {templatePath}");
         }
 
-        // Запасной вариант (Fallback), если файл не найден
         return $"<h3>Hello {username}</h3><p>Your code: <strong>{code}</strong></p>";
     }
 }

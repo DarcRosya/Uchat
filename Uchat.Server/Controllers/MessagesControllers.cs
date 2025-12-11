@@ -67,29 +67,26 @@ public class MessagesController : ControllerBase
         dto.SenderId = userId;
         dto.ChatRoomId = chatId;
 
-        // 1. Проверка прав (быстрая проверка без загрузки всего графа, если есть такой метод)
         var memberCheck = await _chatRoomService.IsUserInChatAsync(userId, chatId);
         if (!memberCheck.IsSuccess) return Forbid();
 
-        // 2. Отправка сообщения (вся логика воскрешения теперь внутри)
+        // Sending a message (all resurrection logic is now inside)
         var result = await _messageService.SendMessageAsync(dto);
         
         if (!result.Success)
             return BadRequest(new { Error = result.FailureReason });
 
-        // 3. SignalR: Уведомление о "Воскрешении"
-        // Сервис вернул ID того, кого вернули в чат. Уведомляем его лично.
+        // SignalR: Notification of “Resurrection”
+        // The service returned the ID of the person who was brought back to the chat. We notify them personally.
         if (result.ResurrectedUserId.HasValue)
         {
             await _hubContext.Clients.User(result.ResurrectedUserId.Value.ToString())
                 .SendAsync("ChatResurrected", new { ChatId = chatId, ResurrectedBy = userId });
         }
 
-        // 4. Получаем полное DTO для ответа
         var message = await _messageService.GetMessageByIdAsync(result.MessageId!);
         if (message == null) return StatusCode(500, new { Error = "Message created but not found" });
 
-        // 5. SignalR: Отправка сообщения в группу
         await _hubContext.Clients.Group($"chat_{chatId}").SendAsync("ReceiveMessage", message);
 
         return CreatedAtAction(nameof(GetMessageById), new { chatId, messageId = message.Id }, message);
@@ -135,7 +132,6 @@ public class MessagesController : ControllerBase
             return BadRequest(new { Error = result.FailureReason });
         }
 
-        // Уведомление через SignalR (1 параметр: messageId)
         _logger.LogInformation("[SignalR] Sending MessageDeleted to chat_{ChatId}: MessageID={MessageId}, ClearedReplies={Count}", 
             chatId, messageId, result.ClearedReplyMessageIds.Count);
         
@@ -143,7 +139,7 @@ public class MessagesController : ControllerBase
             .Group($"chat_{chatId}")
             .SendAsync("MessageDeleted", messageId);
         
-        // Если есть сообщения с очищенными reply, отправляем отдельное уведомление
+        // If there are messages with cleared replies, send a separate notification
         if (result.ClearedReplyMessageIds.Any())
         {
             _logger.LogInformation("[SignalR] Sending RepliesCleared for {Count} messages", result.ClearedReplyMessageIds.Count);
@@ -176,7 +172,6 @@ public class MessagesController : ControllerBase
             return BadRequest(new { Error = result.FailureReason });
         }
 
-        // Уведомление через SignalR (3 параметра: messageId, newContent, editedAt)
         var editedAt = DateTime.UtcNow;
         _logger.LogInformation("[SignalR] Sending MessageEdited to chat_{ChatId}: MessageID={MessageId}, Content={Content}", chatId, messageId, dto.Content.Substring(0, Math.Min(20, dto.Content.Length)));
         
@@ -188,9 +183,6 @@ public class MessagesController : ControllerBase
         return NoContent();
     }
 
-    /// <summary>
-    /// Отметить сообщения как прочитанные до указанного времени
-    /// </summary>
     [HttpPost("mark-read")]
     public async Task<IActionResult> MarkAsRead(
         [FromRoute] int chatId,

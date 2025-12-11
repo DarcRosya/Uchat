@@ -277,10 +277,7 @@ public class ContactsController : ControllerBase
             
         return $"{lastMessage.Sender.DisplayName}: {lastMessage.Content}";
     }
-    
-    /// <summary>
-    /// Hide chat for current user (removes from member list, keeps for other participant)
-    /// </summary>
+
     [HttpDelete("by-chat/{chatRoomId}")]
     public async Task<IActionResult> DeleteContactByChatRoom(int chatRoomId)
     {
