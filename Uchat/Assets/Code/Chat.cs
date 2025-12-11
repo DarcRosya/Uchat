@@ -28,51 +28,50 @@ namespace Uchat
 		public string replyToMessageId = "";
 
 		private async void addFriend_Click(object? sender, RoutedEventArgs e)
-		{
-			if (String.IsNullOrEmpty(searchTextBox.Text)) return;
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(searchTextBox.Text)) return;
+                string input = searchTextBox.Text;
 
-			string input = searchTextBox.Text;
+                if (Chat.GroupsActive)
+                {
+                    // Create a new group
+                    var request = new Shared.DTOs.CreateChatRequestDto
+                    {
+                        Name = input,
+                        Type = "Public"
+                    };
+                    var newChat = await _chatApiService.CreateChatAsync(request);
 
-			if (Chat.GroupsActive)
-			{
-				// Create a new group
-				var request = new Shared.DTOs.CreateChatRequestDto
-				{
-					Name = input,
-					Type = "Public"
-				};
-				var newChat = await _chatApiService.CreateChatAsync(request);
+                    if (newChat != null)
+                    {
+                        await LoadUserChatsAsync();
+                        await OpenChatAsync(newChat.Id);
+                    }
+                }
+                else
+                {
+                    // Send friend request
+                    var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
 
-				if (newChat != null)
-				{
-					// Add group to UI
-					await LoadUserChatsAsync();
+                    if (!success)
+                    {
+                        searchTextBox.Text = string.Empty;
+                        // Можно показать ошибку в UI, но не крашить
+                        return;
+                    }
+                    Chat.requestListener = input;
+                }
 
-					// Open the new chat
-					await OpenChatAsync(newChat.Id);
-				}
-			}
-			else
-			{
-				// Send friend request
-				var (success, errorMessage) = await _contactApiService.SendFriendRequestAsync(input);
-
-				if (!success)
-				{
-                    // Show error message
-                    //AddContactErrorText.Text = errorMessage ?? "Failed to send friend request";
-                    //AddContactErrorText.IsVisible = true;
-                    searchTextBox.Text = string.Empty;
-                    return; // Don't close overlay
-				}
-				Chat.requestListener = input;
-                //// Success - hide error and reload
-                //AddContactErrorText.IsVisible = false;
+                searchTextBox.Text = string.Empty;
             }
-
-			// Clear textbox and hide overlay
-			searchTextBox.Text = string.Empty;
-		}
+            catch (Exception ex)
+            {
+                Logger.Error("Error adding friend/group", ex);
+                searchTextBox.Text = string.Empty;
+            }
+        }
 
         private async Task LoadPendingFriendRequestsAsync()
         {

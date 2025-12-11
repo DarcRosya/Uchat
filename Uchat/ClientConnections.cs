@@ -120,6 +120,40 @@ namespace Uchat
                 .WithAutomaticReconnect()
                 .Build();
 
+            _hubConnection.Reconnected += async (connectionId) =>
+            {
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    Logger.Log("[SIGNALR] Connection restored. Refreshing state...");
+                    UpdateConnectionStatus("● Connected", Brushes.Green);
+
+                    // 1. Refresh Sidebar, Update Last Messages, and Re-Join SignalR Groups
+                    // Your existing LoadUserChatsAsync already contains the logic to 
+                    // loop through chats and call _hubConnection.InvokeAsync("JoinChatGroup", ...)
+                    await LoadUserChatsAsync();
+
+                    // 2. If a chat is currently open, refresh its history to catch up on missed messages
+                    if (_currentChatId.HasValue)
+                    {
+                        // Optionally verify we are still part of this chat
+                        if (_currentChatId.HasValue)
+                        {
+                            Logger.Log($"[SIGNALR] Refreshing active chat {_currentChatId.Value}");
+                            
+                            // На всякий случай явно вступаем в группу текущего чата прямо сейчас
+                            try 
+                            {
+                                await _hubConnection.InvokeAsync("JoinChatGroup", _currentChatId.Value);
+                            }
+                            catch { /* игнорируем, если не вышло */ }
+
+                            // Подгружаем историю (без скролла, просто чтобы заполнить дыры)
+                            await LoadChatHistoryAsync(_currentChatId.Value);
+                        }
+                    }
+                });
+            };
+
             // Setup reconnection handlers
             _reconnectionHandler = new SignalRReconnectionHandler(_hubConnection, UpdateConnectionStatus);
             _reconnectionHandler.SetupReconnectionHandlers();
@@ -790,6 +824,9 @@ namespace Uchat
             try
             {
                 var result = await _messageApiService.GetMessagesAsync(chatId, limit);
+
+                if (_currentChatId != chatId) return;
+
                 if (result == null)
                 {
                     _isProgrammaticScroll = false;
@@ -797,7 +834,6 @@ namespace Uchat
                 }
 
                 var historyMessages = result.Messages ?? new List<MessageDto>();
-                
                 int unreadCount = 0;
                 DateTime? visibleFrom = null;
 
@@ -809,6 +845,7 @@ namespace Uchat
 
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
+                    if (_currentChatId != chatId) return;
                     _isProgrammaticScroll = true; 
 
                     ChatMessagesPanel.Opacity = 0; 
@@ -1205,8 +1242,7 @@ namespace Uchat
 
             if (_chatContacts.TryGetValue(_currentChatId.Value, out var contact))
             {
-                contact.UpdateLastMessage(messageText);
-
+                contact.UpdateLastMessage(messageText); 
                 UpdateChatListPosition(contact);
             }
 
@@ -1221,11 +1257,34 @@ namespace Uchat
                     ReplyToMessageId = isReplied ? replyToMessageId : null
                 };
 
-                var sentMessage = await _messageApiService.SendMessageAsync(_currentChatId.Value, dto);
+                var sentMessageDto = await _messageApiService.SendMessageAsync(_currentChatId.Value, dto);
 
                 replyToMessageContent = "";
                 replyToMessageId = "";
                 isReplied = false;
+
+                if (sentMessageDto != null)
+                {
+                    await Dispatcher.UIThread.InvokeAsync(() => 
+                    {
+                        // Метод DisplayMessage сам проверит _messageCache.ContainsKey
+                        // Так что дублей не будет, даже если SignalR придет позже.
+                        DisplayMessage(sentMessageDto);
+                        
+                        // Скроллим вниз, так как это мое сообщение
+                        ChatScrollViewer.ScrollToEnd();
+                        
+                        // Обновляем сайдбар точными данными с сервера (время и контент)
+                        if (_chatContacts.TryGetValue(_currentChatId.Value, out var c))
+                        {
+                            c.LastMessageAt = sentMessageDto.SentAt;
+                            // Обновим еще раз, вдруг сервер как-то отформатировал текст
+                            string preview = sentMessageDto.Content.Length > 30 ? sentMessageDto.Content.Substring(0, 30) + "..." : sentMessageDto.Content;
+                            c.UpdateLastMessage(preview);
+                            UpdateChatListPosition(c);
+                        }
+                    });
+                }
             }
             catch
             {
