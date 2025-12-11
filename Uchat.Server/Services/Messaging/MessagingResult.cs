@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Uchat.Server.Services.Messaging;
 
@@ -11,6 +12,8 @@ public sealed class MessagingResult
     public string? FailureReason { get; }
     public List<string> ClearedReplyMessageIds { get; }
     public int? ResurrectedUserId { get; private set; }
+    public string? NewLastMessageContent { get; }
+    public DateTime? NewLastMessageTime { get; }
 
     private MessagingResult(
         bool success, 
@@ -19,7 +22,9 @@ public sealed class MessagingResult
         bool needsReconciliation, 
         string? failureReason, 
         int? resurrectedUserId = null, 
-        List<string>? clearedReplyMessageIds = null)
+        List<string>? clearedReplyMessageIds = null,
+        string? newLastMessageContent = null,
+        DateTime? newLastMessageTime = null)
     {
         Success = success;
         MessageId = messageId;
@@ -28,13 +33,17 @@ public sealed class MessagingResult
         NeedsReconciliation = needsReconciliation;
         FailureReason = failureReason;
         ClearedReplyMessageIds = clearedReplyMessageIds ?? new List<string>();
+        NewLastMessageContent = newLastMessageContent;
+        NewLastMessageTime = newLastMessageTime;
     }
 
     public static MessagingResult SuccessResult(
         string messageId, 
         DateTime sentAt, 
         int? resurrectedUserId = null, 
-        List<string>? clearedReplyMessageIds = null)
+        List<string>? clearedReplyMessageIds = null,
+        string? newLastMessageContent = null,
+        DateTime? newLastMessageTime = null)
     {
         return new MessagingResult(
             success: true, 
@@ -43,7 +52,9 @@ public sealed class MessagingResult
             needsReconciliation: false, 
             failureReason: null, 
             resurrectedUserId: resurrectedUserId, 
-            clearedReplyMessageIds: clearedReplyMessageIds);
+            clearedReplyMessageIds: clearedReplyMessageIds,
+            newLastMessageContent: newLastMessageContent,
+            newLastMessageTime: newLastMessageTime);
     }
 
     public static MessagingResult Failure(string reason, bool needsReconciliation = false)

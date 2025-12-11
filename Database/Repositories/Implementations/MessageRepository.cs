@@ -52,12 +52,26 @@ public class MessageRepository : IMessageRepository
     
     public async Task<List<MongoMessage>> GetMessagesByIdsAsync(List<string> messageIds)
     {
-        if (!messageIds.Any())
+        if (messageIds == null || messageIds.Count == 0)
             return new List<MongoMessage>();
-            
+
         var filter = Builders<MongoMessage>.Filter.In(m => m.Id, messageIds);
-        var result = await _messages.Find(filter).ToListAsync();
-        return result;
+
+        var messages = await _messages
+            .Find(filter)
+            .ToListAsync();
+
+        // Сохраняем порядок messageIds
+        var dict = messages.ToDictionary(m => m.Id);
+        var ordered = new List<MongoMessage>();
+
+        foreach (var id in messageIds)
+        {
+            if (dict.TryGetValue(id, out var msg))
+                ordered.Add(msg);
+        }
+
+        return ordered;
     }
     
     public async Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId)
@@ -91,6 +105,23 @@ public class MessageRepository : IMessageRepository
         
         var count = await _messages.CountDocumentsAsync(filter);
         return count;
+    }
+
+    public async Task<MongoMessage?> GetLastMessageAsync(int chatId, string? excludeMessageId = null)
+    {
+        var builder = Builders<MongoMessage>.Filter;
+        
+        var filter = builder.Eq(m => m.ChatId, chatId) & 
+                    builder.Eq(m => m.IsDeleted, false);
+
+        if (!string.IsNullOrEmpty(excludeMessageId))
+        {
+            filter &= builder.Ne(m => m.Id, excludeMessageId);
+        }
+
+        return await _messages.Find(filter)
+            .SortByDescending(m => m.SentAt)
+            .FirstOrDefaultAsync();
     }
 
     public async Task MarkAsDeletedAsync(string messageId)

@@ -6,14 +6,11 @@ using Uchat.Shared;
 
 namespace Uchat.Services;
 
-/// <summary>
-/// Sends periodic heartbeat (ping) to server to detect disconnections early
-/// </summary>
 public class HeartbeatService : IDisposable
 {
     private readonly HubConnection _hubConnection;
     private Timer? _heartbeatTimer;
-    private const int HeartbeatIntervalSeconds = 30; // Ping every 30 seconds
+    private const int HeartbeatIntervalSeconds = 30;
 
     public HeartbeatService(HubConnection hubConnection)
     {

@@ -223,7 +223,23 @@ namespace Uchat
                     await LoadUserChatsAsync();
 
                     await OpenChatAsync(newChat.Id);
-                    
+
+                    if (_chatContacts.TryGetValue(newChat.Id, out var createdContact))
+                    {
+                        var oldSelected = this._chatContacts.Values.FirstOrDefault(c => c.IsSelected); 
+                        if (oldSelected != null)
+                        {
+                            oldSelected.SetSelected(false);
+                        }
+
+                        createdContact.SetSelected(true);
+
+                        this.groupTopBarName.Text = createdContact.ChatName;
+                        this.friendTopBarName.Text = createdContact.ChatName;
+                        this.groupTopBar.IsVisible = createdContact.IsGroupChat;
+                        this.friendTopBar.IsVisible = !createdContact.IsGroupChat;
+                    }
+
                     if (searchTextBox != null) 
                         searchTextBox.Text = string.Empty;
                 }
@@ -598,6 +614,22 @@ namespace Uchat
 			chatTextBox.Text = tempChatTextBox;
 			chatTextBox.IsVisible = true;
             ScrollToBottomButton.Margin = new Thickness(0, 0, 12, 20);
+        }
+
+        private void UpdateChatHeaders(MainWindow.Chat.Contact contact)
+        {
+            if (contact.IsGroupChat)
+            {
+                groupTopBarName.Text = contact.ChatName;
+                groupTopBar.IsVisible = true;
+                friendTopBar.IsVisible = false;
+            }
+            else
+            {
+                friendTopBarName.Text = contact.ChatName;
+                friendTopBar.IsVisible = true;
+                groupTopBar.IsVisible = false;
+            }
         }
 	}
 }

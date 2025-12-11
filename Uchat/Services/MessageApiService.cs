@@ -8,9 +8,6 @@ using Uchat.Shared;
 
 namespace Uchat.Services;
 
-/// <summary>
-/// HTTP клиент для работы с API сообщений
-/// </summary>
 public class MessageApiService
 {
     private readonly HttpClient _httpClient;
@@ -42,7 +39,7 @@ public class MessageApiService
             var url = $"/api/chats/{chatId}/messages?limit={limit}";
             if (before.HasValue)
             {
-                url += $"&before={before.Value:O}"; // ISO 8601 format
+                url += $"&before={before.Value:O}";
             }
 
             var response = await _httpClient.GetAsync(url);
@@ -61,9 +58,6 @@ public class MessageApiService
         }
     }
 
-    /// <summary>
-    /// Получить конкретное сообщение по ID
-    /// </summary>
     public async Task<MessageDto?> GetMessageByIdAsync(int chatId, string messageId)
     {
         try
@@ -81,9 +75,6 @@ public class MessageApiService
         }
     }
 
-    /// <summary>
-    /// Отправить новое сообщение
-    /// </summary>
     public async Task<MessageDto?> SendMessageAsync(int chatId, MessageCreateDto message)
     {
         try
@@ -105,9 +96,6 @@ public class MessageApiService
         }
     }
 
-    /// <summary>
-    /// Редактировать сообщение
-    /// </summary>
     public async Task<bool> EditMessageAsync(int chatId, string messageId, string newContent)
     {
         try
@@ -123,9 +111,6 @@ public class MessageApiService
         }
     }
 
-    /// <summary>
-    /// Удалить сообщение (физически из БД)
-    /// </summary>
     public async Task<bool> DeleteMessageAsync(int chatId, string messageId)
     {
         try
@@ -139,9 +124,6 @@ public class MessageApiService
         }
     }
 
-    /// <summary>
-    /// Отметить сообщения как прочитанные до определённого времени
-    /// </summary>
     public async Task<bool> MarkAsReadUntilAsync(int chatId, DateTime untilTimestamp)
     {
         try

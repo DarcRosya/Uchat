@@ -14,6 +14,8 @@ public interface IMessageRepository
     Task<List<MongoMessage>> GetUnreadMessagesAsync(int chatId, int userId);
     
     Task<long> GetUnreadCountAsync(int chatId, int userId);
+
+    Task<MongoMessage?> GetLastMessageAsync(int chatId, string? excludeMessageId = null);
     
     Task<bool> EditMessageAsync(string messageId, string newContent);
     

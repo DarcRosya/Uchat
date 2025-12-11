@@ -41,27 +41,25 @@ public class AuthApiService
 
             if (!response.IsSuccessStatusCode)
             {
-                Logger.Log($"Registration failed: {response.StatusCode}");
-                try
-                {
-                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
-                    throw new Exception(errorResponse?.Error ?? "Registration failed");
-                }
-                catch (Exception)
-                {
-                    var error = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Registration failed: {error}");
-                }
+                await HandleApiError(response);
+                return null; 
             }
 
             try
             {
                 var result = await response.Content.ReadFromJsonAsync<RegisterResultDto>(_jsonOptions);
+
+                if (result != null && !result.RequiresConfirmation && !string.IsNullOrEmpty(result.Message))
+                {
+                    throw new Exception(result.Message);
+                }
+
                 return result;
             }
-            catch 
+            catch (System.Text.Json.JsonException ex)
             {
-                return new RegisterResultDto { RequiresConfirmation = false };
+                Logger.Error($"Failed to deserialize successful registration response: {ex.Message}");
+                throw new Exception("Registration successful, but received invalid server response.");
             }
         }
         catch (HttpRequestException ex)
@@ -85,16 +83,7 @@ public class AuthApiService
 
             if (!response.IsSuccessStatusCode)
             {
-                try
-                {
-                    var err = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
-                    throw new Exception(err?.Error ?? "Confirmation failed");
-                }
-                catch
-                {
-                    var text = await response.Content.ReadAsStringAsync();
-                    throw new Exception(text);
-                }
+                await HandleApiError(response);
             }
 
             var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
@@ -129,16 +118,7 @@ public class AuthApiService
             
             if (!response.IsSuccessStatusCode)
             {
-                Logger.Log($"Login failed: {response.StatusCode}");
-                try
-                {
-                    var errorResponse = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
-                    throw new Exception(errorResponse?.Error ?? "Invalid credentials");
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Invalid credentials");
-                }
+                await HandleApiError(response);
             }
 
             var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>(_jsonOptions);
@@ -210,7 +190,6 @@ public class AuthApiService
     public async Task ForgotPasswordAsync(string email)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/auth/forgot-password", new { email });
-        // There is no need to check success here, as the server always responds with OK for security reasons.
     }
 
     public async Task VerifyResetCodeAsync(string email, string code)
@@ -231,5 +210,32 @@ public class AuthApiService
             var err = await response.Content.ReadFromJsonAsync<ErrorResponse>(_jsonOptions);
             throw new Exception(err?.Error ?? "Failed to reset password");
         }
+    }
+
+    private async Task HandleApiError(HttpResponseMessage response)
+    {
+        try
+        {
+            var errorJson = await response.Content.ReadAsStringAsync();
+            var errorResponse = System.Text.Json.JsonSerializer.Deserialize<ErrorResponse>(errorJson, _jsonOptions);
+            
+            if (errorResponse?.Error != null)
+            {
+                throw new Exception(errorResponse.Error);
+            }
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            Logger.Error($"API returned non-JSON error: {response.StatusCode}");
+        }
+        
+        string defaultError = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.BadRequest => "Invalid request data.",
+            System.Net.HttpStatusCode.Unauthorized => "Access denied or session expired.",
+            _ => $"Server error ({response.StatusCode})."
+        };
+
+        throw new Exception(defaultError);
     }
 }

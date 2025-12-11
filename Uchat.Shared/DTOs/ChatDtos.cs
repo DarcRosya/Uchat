@@ -51,6 +51,8 @@ public class ChatRoomDto
     public bool IsPinned { get; set; }
     public DateTime? PinnedAt { get; set; }
     public int UnreadCount { get; set; }
+
+    public DateTime? ClearedHistoryAt { get; set; }
 }
 
 public class ChatRoomDetailDto

@@ -114,6 +114,7 @@ public class MessagesController : ControllerBase
     }
 
 
+
     [HttpDelete("{messageId}")]
     public async Task<IActionResult> DeleteMessage(
         [FromRoute] int chatId,
@@ -121,35 +122,42 @@ public class MessagesController : ControllerBase
     {
         var userId = GetCurrentUserId();
         
+        // 1. ИСПРАВЛЕНИЕ: Правильное имя группы
+        var groupName = $"chat_{chatId}"; 
+
         var result = await _messageService.DeleteMessageAsync(messageId, userId);
-        
+
         if (!result.Success)
         {
             if (result.FailureReason?.Contains("not found") == true)
-            {
                 return NotFound(new { Error = result.FailureReason });
-            }
+            
             return BadRequest(new { Error = result.FailureReason });
         }
 
-        _logger.LogInformation("[SignalR] Sending MessageDeleted to chat_{ChatId}: MessageID={MessageId}, ClearedReplies={Count}", 
-            chatId, messageId, result.ClearedReplyMessageIds.Count);
-        
+        // 2. SignalR: Удаляем пузырек
         await _hubContext.Clients
-            .Group($"chat_{chatId}")
+            .Group(groupName)
             .SendAsync("MessageDeleted", messageId);
-        
-        // If there are messages with cleared replies, send a separate notification
-        if (result.ClearedReplyMessageIds.Any())
+
+        // 3. SignalR: Очищаем реплаи
+        if (result.ClearedReplyMessageIds != null && result.ClearedReplyMessageIds.Any())
         {
-            _logger.LogInformation("[SignalR] Sending RepliesCleared for {Count} messages", result.ClearedReplyMessageIds.Count);
-            
             await _hubContext.Clients
-                .Group($"chat_{chatId}")
+                .Group(groupName)
                 .SendAsync("RepliesCleared", result.ClearedReplyMessageIds);
         }
 
-        _logger.LogInformation("Message {MessageId} deleted by user {UserId}", messageId, userId);
+        // 4. SignalR: Обновляем сайдбар
+        // Теперь это сообщение уйдет в правильную группу, и Avalonia его поймает
+        await _hubContext.Clients
+            .Group(groupName)
+            .SendAsync("ChatLastMessageUpdated", 
+                chatId, 
+                result.NewLastMessageContent, 
+                result.NewLastMessageTime     
+            );
+
         return NoContent();
     }
 

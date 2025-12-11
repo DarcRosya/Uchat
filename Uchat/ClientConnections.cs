@@ -272,6 +272,24 @@ namespace Uchat
                 });
             });
 
+            _hubConnection.On<int, string, DateTime>("ChatLastMessageUpdated", (chatId, newContent, newTime) =>
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (_chatContacts.TryGetValue(chatId, out var chatItem))
+                    {
+                        string displayContent = string.IsNullOrEmpty(newContent) ? "" : 
+                                                (newContent.Length > 30 ? newContent.Substring(0, 30) + "..." : newContent);
+                        
+                        chatItem.UpdateLastMessage(displayContent);
+
+                        chatItem.LastMessageAt = newTime;
+
+                        UpdateChatListPosition(chatItem);
+                    }
+                });
+            });
+
             _hubConnection.On<List<string>>("RepliesCleared", (messageIds) =>
             {
                 Dispatcher.UIThread.Post(() =>
@@ -286,14 +304,12 @@ namespace Uchat
                 });
             });
 
-            // Friend request handlers
             _hubConnection.On<Shared.DTOs.ContactDto>("FriendRequestReceived", (contact) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
                     Console.WriteLine($"Friend request received from {contact.ContactUsername}");
 
-                    // FIX: Удаляем placeholder, если он есть
                     var placeholder = requestList.Children.OfType<TextBlock>()
                         .FirstOrDefault(t => t.Text == "No pending requests");
                     if (placeholder != null)
@@ -301,17 +317,14 @@ namespace Uchat
                         requestList.Children.Remove(placeholder);
                     }
 
-                    // Создаем новый UI элемент заявки
                     var requestItem = new MainWindow.Chat.FriendRequest(
                         contact.Nickname ?? contact.ContactUsername,
                         contact.ContactUserId,
                         this
                     );
 
-                    // FIX: Добавляем в начало списка
                     requestList.Children.Insert(0, requestItem.Box);
 
-                    // FIX: Принудительно обновляем layout
                     requestList.InvalidateVisual();
 
                     Logger.Log($"Added friend request from {contact.ContactUsername} to notification panel");
@@ -373,24 +386,19 @@ namespace Uchat
                             return;
                         }
 
-                        // Маппинг полей, если с сервера пришли GroupName/InviterUsername
+                        // Field mapping if GroupName/InviterUsername came from the server
                         if (notif.Type == "GroupInvite")
                         {
-                            // Формируем текст: "(nick) wants to add you in group {group_name}"
-                            // friendUsername (кто пригласил)
-                            // friendDisplayName (название группы)
                             if (!string.IsNullOrEmpty(notif.InviterUsername)) notif.friendUsername = notif.InviterUsername;
                             if (!string.IsNullOrEmpty(notif.GroupName)) notif.friendDisplayName = notif.GroupName;
                         }
 
-                        // Создаем элемент UI
-                        // Используем ChatRoomId как ID запроса (для кнопок Accept/Reject)
                         var requestItem = new Chat.FriendRequest(
-                            notif.friendUsername, // Кто приглашает
-                            notif.chatRoomId,     // ID чата (важно для кнопок!)
+                            notif.friendUsername, // Who is inviting
+                            notif.chatRoomId,     // Chat ID (important for buttons!)
                             this,
-                            notif.Type,           // Передаем тип!
-                            notif.friendDisplayName // Передаем название группы
+                            notif.Type,           // Passing the type!
+                            notif.friendDisplayName // Passing the group name
                         );
 
                         // Удаляем placeholder "No pending requests"
@@ -426,7 +434,6 @@ namespace Uchat
             {
                 Dispatcher.UIThread.Post(() =>
                 {
-                    // Обновляем UI только если открыта инфо об ЭТОЙ группе
                     if (_currentChatId == chatId && groupInfoBox.IsVisible)
                     {
                         RemoveMemberFromUiList(username);
@@ -434,17 +441,14 @@ namespace Uchat
                 });
             });
 
-            // 2. КТО-ТО ПРИСОЕДИНИЛСЯ
             _hubConnection.On<int, string>("MemberJoined", (chatId, username) =>
             {
                 Dispatcher.UIThread.Post(() =>
                 {
                     if (_currentChatId == chatId && groupInfoBox.IsVisible)
                     {
-                        // Добавляем плашку юзера (false = не админ)
                         AddMemberToUiList(username, false);
-
-                        // Обновляем счетчик
+                        
                         UpdateMemberCountText();
                     }
                 });
@@ -481,9 +485,6 @@ namespace Uchat
             });
         }
 
-        /// <summary>
-        /// Clear the right chat panel (when deleting or closing)
-        /// </summary>
         private void ClearChatArea()
         {
             _currentChatId = null;
@@ -581,14 +582,13 @@ namespace Uchat
                         }
                     }
 
-                    // 3. Обновляем или добавляем чаты
-                    // Используем индекс i, чтобы ставить чат в правильную позицию в UI (для сортировки)
+                    // Update or add chats
+                    // Use index i to place the chat in the correct position in the UI (for sorting)
                     for (int i = 0; i < chats.Count; i++)
                     {
                         var chat = chats[i];
                         bool isGroup = chat.Type != "DirectMessage";
 
-                        // Текст превью
                         string previewText;
 
                         if (!string.IsNullOrEmpty(chat.LastMessageContent))
@@ -614,6 +614,18 @@ namespace Uchat
                         if (_chatContacts.TryGetValue(chat.Id, out var existingContact))
                         {
                             existingContact.SetParticipants(chat.ParticipantIds);
+                            
+                            if (chat.ClearedHistoryAt.HasValue)
+                            {
+                                existingContact.ClearedHistoryAt = chat.ClearedHistoryAt;
+                            }
+                            else if (existingContact.ClearedHistoryAt == null)
+                            {
+                                existingContact.ClearedHistoryAt = null; 
+                            }
+
+                            existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
+                            existingContact.ClearedHistoryAt = chat.ClearedHistoryAt;
                             existingContact.UpdateLastMessage(previewText, chat.UnreadCount);
                             existingContact.IsGroupChat = isGroup;
                             RefreshContactPresence(existingContact);
@@ -626,7 +638,6 @@ namespace Uchat
                         }
                         else
                         {
-                            // --- СОЗДАНИЕ НОВОГО ---
                             var newContact = new MainWindow.Chat.Contact(
                                 chat.Name ?? $"Chat {chat.Id}",
                                 previewText,
@@ -635,6 +646,7 @@ namespace Uchat
                                 chat.Id,
                                 chat.ParticipantIds
                             );
+                            newContact.ClearedHistoryAt = chat.ClearedHistoryAt;
 
                             newContact.IsGroupChat = isGroup;
                             newContact.IsPinned = chat.IsPinned;
@@ -701,7 +713,6 @@ namespace Uchat
                     chatName = "Loading...";
                 }
 
-                // Clear current messages
                 Dispatcher.UIThread.Post(() =>
                 {
                     ChatMessagesPanel.Children.Clear();
@@ -788,24 +799,37 @@ namespace Uchat
                 var historyMessages = result.Messages ?? new List<MessageDto>();
                 
                 int unreadCount = 0;
+                DateTime? visibleFrom = null;
+
                 if (_chatContacts.TryGetValue(chatId, out var contact))
                 {
                     unreadCount = contact.UnreadCount;
+                    visibleFrom = contact.ClearedHistoryAt; // Берем дату очистки/входа
                 }
 
-                // Запускаем обновление UI
-                // Используем 'Loaded', чтобы убедиться, что элементы загружены
                 await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
                     _isProgrammaticScroll = true; 
 
-                    // Скрываем список на долю секунды
                     ChatMessagesPanel.Opacity = 0; 
                     ChatMessagesPanel.Children.Clear();
                     _messageCache.Clear();
 
                     var messages = historyMessages.ToList();
-                    messages.Reverse(); 
+                    if (visibleFrom.HasValue)
+                    {
+                        // Используем ToUniversalTime для надежного сравнения
+                        var cutOffDate = visibleFrom.Value.ToUniversalTime();
+                        messages = messages.Where(m => m.SentAt.ToUniversalTime() >= cutOffDate).ToList();
+                    } 
+
+                    if (messages.Count == 0 && unreadCount > 0 && contact != null)
+                    {
+                        contact.SetUnreadCount(0);
+                        unreadCount = 0; // Сбрасываем локальную переменную тоже
+                    }
+
+                    messages.Reverse();
 
                     _hasMoreMessages = result.Pagination.HasMore;
                     if (messages.Count > 0) _oldestMessageDate = messages[0].SentAt;
@@ -829,24 +853,16 @@ namespace Uchat
                         DisplayMessage(msg);
                     }
 
-                    // [ИСПРАВЛЕНИЕ] Используем 'Render' вместо 'Layout'
-                    // Это заставляет Avalonia принудительно пересчитать размеры прямо сейчас
                     Dispatcher.UIThread.RunJobs(DispatcherPriority.Render);
 
-                    // --- ЛОГИКА ТЕЛЕПОРТА ---
                     if (unreadCount > 0)
                     {
-                        // Нам нужно найти визуальный элемент, к которому скроллить.
-                        // Так как мы могли вставить линию, индекс в Children сместился.
-                        // Надежнее всего найти сообщение по Tag (ID), а потом посмотреть, что над ним.
-                        
                         Control? targetScrollControl = null;
 
                         if (firstUnreadIndex < messages.Count)
                         {
                             string targetMsgId = messages[firstUnreadIndex].Id;
                             
-                            // Ищем контрол сообщения в панели
                             Control? msgControl = null;
                             int msgControlIndex = -1;
 
@@ -863,32 +879,32 @@ namespace Uchat
 
                             if (msgControl != null)
                             {
-                                // По умолчанию хотим скроллить к сообщению
+                                // By default, we want to scroll to the message
                                 targetScrollControl = msgControl;
 
-                                // [ПРАВКА] Проверяем, есть ли ПРЯМО НАД ним наша линия?
+                                // Check if our line is DIRECTLY ABOVE it?
                                 if (msgControlIndex > 0)
                                 {
                                     var prevChild = ChatMessagesPanel.Children[msgControlIndex - 1] as Control;
                                     if (prevChild != null && prevChild.Tag is string tag && tag == "UnreadSeparator")
                                     {
-                                        // Если есть линия - скроллим К ЛИНИИ. 
-                                        // Так она будет в самом верху экрана.
+                                        // If there is a line, scroll to the LINE. 
+                                        // This will place it at the top of the screen.
                                         targetScrollControl = prevChild;
                                     }
                                 }
                             }
                         }
 
-                        // Выполняем прыжок
+                        // Perform a jump
                         if (targetScrollControl != null)
                         {
-                            // Получаем точный Y (уже с учетом линии, если она есть)
+                            // We obtain the exact Y (already taking into account the line, if there is one)
                             double targetY = targetScrollControl.Bounds.Y;
                             
-                            // Ставим скролл. 
-                            // Если скроллим к линии - ставим ровно (0). 
-                            // Если к сообщению (линии нет) - чуть отступаем (-10).
+                            // Set the scroll. 
+                            // If scrolling to a line, set it exactly (0). 
+                            // If scrolling to a message (no line), indent slightly (-10).
                             double offsetAdjustment = (targetScrollControl.Tag as string == "UnreadSeparator") ? 0 : 10;
                             
                             ChatScrollViewer.Offset = new Vector(0, Math.Max(0, targetY - offsetAdjustment));
@@ -899,13 +915,12 @@ namespace Uchat
                         ChatScrollViewer.ScrollToEnd();
                     }
 
-                    // Ждем стабилизации
                     await Task.Delay(200); 
 
                     ChatMessagesPanel.Opacity = 1;
                     _isProgrammaticScroll = false;
                     
-                    // Проверяем видимость (это отправит отчет только о том, что ниже линии и влезло в экран)
+                    // Check visibility (this will only send a report about what is below the line and fits on the screen)
                     CheckVisibilityAndMarkAsRead();
 
                 }, DispatcherPriority.Loaded);
@@ -1024,8 +1039,8 @@ namespace Uchat
 
         public void OnChatScrollChanged(object? sender, ScrollChangedEventArgs e)
         {
-            // Если флаг стоит - мы игнорируем любые изменения скролла.
-            // Это не даст методу прочтения сработать, пока мы грузим чат.
+            // If the flag is set, we ignore any scroll changes
+            // This will prevent the read method from working while we are loading the chat
             if (_isProgrammaticScroll) return;
             
             if (sender is not ScrollViewer scrollViewer) return;
@@ -1101,10 +1116,10 @@ namespace Uchat
                                 notification.chatRoomId
                             );
 
+                            contact.ClearedHistoryAt = DateTime.UtcNow;
+
                             contact.IsGroupChat = isGroup;
-
                             contact.IsVisible = (Chat.GroupsActive == isGroup);
-
                             contact.UpdatePresence(true);
 
                             _chatContacts[notification.chatRoomId] = contact;
@@ -1114,8 +1129,9 @@ namespace Uchat
                         {
                             contact.UpdateLastMessage(initMsg);
                             contact.IsGroupChat = isGroup;
-
                             contact.IsVisible = (Chat.GroupsActive == isGroup);
+
+                            contact.ClearedHistoryAt = DateTime.UtcNow;
 
                             contactsStackPanel.Children.Remove(contact.Box);
                             contactsStackPanel.Children.Insert(0, contact.Box);
@@ -1234,20 +1250,25 @@ namespace Uchat
             }
         }
 
-        public async Task DeleteMessageAsync(string messageId)
+       public async Task DeleteMessageAsync(string messageId)
         {
-            if (!_currentChatId.HasValue)
+            if (!_currentChatId.HasValue) return;
+
+            if (_messageCache.TryGetValue(messageId, out var cachedMsg))
             {
-                return;
+                RemoveMessageFromUI(cachedMsg);
+                _messageCache.Remove(messageId);
+                
+                CleanupReplyReferences(messageId);
             }
 
-            try
+            // 2. Отправляем запрос на API
+            bool success = await _messageApiService.DeleteMessageAsync(_currentChatId.Value, messageId);
+
+            if (!success)
             {
-                await _messageApiService.DeleteMessageAsync(_currentChatId.Value, messageId);
-            }
-            catch
-            {
-                // Delete failed
+                Console.WriteLine($"Failed to delete message {messageId} on server.");
+                return;
             }
         }
 
@@ -1299,21 +1320,17 @@ namespace Uchat
         {
             Chat.ChatsList.Sort((a, b) =>
             {
-                // 1. Сначала по статусу закрепа (Pinned = true выше)
                 int pinComparison = b.IsPinned.CompareTo(a.IsPinned);
                 if (pinComparison != 0) return pinComparison;
 
-                // 2. Если оба закреплены -> Кто позже закреплен, тот выше
                 if (a.IsPinned)
                 {
                     return b.PinnedAt.CompareTo(a.PinnedAt);
                 }
 
-                // 3. Если оба НЕ закреплены -> Кто написал последним, тот выше
                 return b.LastMessageAt.CompareTo(a.LastMessageAt);
             });
 
-            // Перерисовка
             contactsStackPanel.Children.Clear();
             foreach (var contact in Chat.ChatsList)
             {
@@ -1337,24 +1354,23 @@ namespace Uchat
             int pinnedCount = 0;
             foreach (var child in contactsStackPanel.Children)
             {
-                // Проверяем, является ли элемент закрепленным контактом
+                // Check whether the element is a pinned contact
                 if (child is Grid grid && grid.DataContext is MainWindow.Chat.Contact c && c.IsPinned)
                 {
                     pinnedCount++;
                 }
-                // Если мы наткнулись на первый НЕ закрепленный, можно останавливать счет, 
-                // но надежнее пройтись по списку ChatsList
+                // If we encounter the first unpinned one, we can stop counting, 
+                // but it is safer to go through the ChatsList
             }
 
-            // Более надежный способ подсчета индекса для вставки:
-            // Считаем все закрепленные, которые сейчас должны быть видны
+            // A more reliable way to calculate the index for insertion:
+            // We count all pinned items that should currently be visible
             int insertIndex = Chat.ChatsList.Count(c => c.IsPinned && c.IsVisible);
 
             // Защита: индекс не может быть больше реального кол-ва детей
             if (insertIndex > contactsStackPanel.Children.Count)
                 insertIndex = contactsStackPanel.Children.Count;
 
-            // 3. Вставляем сразу под закрепленными
             contactsStackPanel.Children.Insert(insertIndex, contact.Box);
         }
 
@@ -1483,13 +1499,10 @@ namespace Uchat
 
             try
             {
-                // 1. Удаляем из БД (API)
                 bool success = await _chatApiService.LeaveChatAsync(chatIdToLeave);
 
                 if (success)
                 {
-                    // 2. !!! ВАЖНО: Отписываемся от SignalR рассылки !!!
-                    // Убедись, что на сервере в ChatHub есть метод LeaveChatGroup (обычно он стандартный)
                     try
                     {
                         await _hubConnection.InvokeAsync("LeaveChatGroup", chatIdToLeave);
@@ -1499,9 +1512,8 @@ namespace Uchat
                         Logger.Error("Failed to leave SignalR group", hubEx);
                     }
 
-                    // 3. UI Обновления
                     groupInfoBox.IsVisible = false;
-                    backgroundForGroupInfo.IsVisible = false; // Убираем затемнение
+                    backgroundForGroupInfo.IsVisible = false;
                     RemoveChatFromUI(chatIdToLeave);
                     ClearChatArea();
 
@@ -1547,7 +1559,6 @@ namespace Uchat
 
             if (string.IsNullOrEmpty(newNameForGroup) || _currentChatId == null)
             {
-                // Возвращаем старое состояние, если имя пустое
                 PanelForGroupNameEdit.IsVisible = false;
                 PanelForGroupName.IsVisible = true;
                 return;
@@ -1579,7 +1590,6 @@ namespace Uchat
             {
                 PanelForGroupNameEdit.IsEnabled = true;
 
-                // Возвращаем UI в режим просмотра
                 PanelForGroupNameEdit.IsVisible = false;
                 PanelForGroupName.IsVisible = true;
             }
@@ -1591,7 +1601,6 @@ namespace Uchat
 
             var normalized = messageTimestamp.ToUniversalTime();
 
-            // Проверка на дубликаты (чтобы не спамить)
             if (_lastReadProgressTimestamps.TryGetValue(chatId, out var lastReported) && normalized <= lastReported)
             {
                 return;
@@ -1603,12 +1612,12 @@ namespace Uchat
             {
                 if (_hubConnection.State == HubConnectionState.Connected)
                 {
-                    // 1. Отправляем на сервер
                     await _hubConnection.InvokeAsync("ReportReadProgress", chatId, normalized);
 
-                    // 2. Локально обновляем счетчик
                     if (_chatContacts.TryGetValue(chatId, out var contact))
                     {
+                        DateTime minVisibleDateUtc = contact.ClearedHistoryAt?.ToUniversalTime() ?? DateTime.MinValue;
+
                         if (isTotalRead)
                         {
                             contact.SetUnreadCount(0);
@@ -1616,29 +1625,32 @@ namespace Uchat
                         }
                         else
                         {
-                            
                             int realUnreadLocal = 0;
                             
-                            // Считаем сообщения в кэше, которые новее, чем то, что мы только что прочитали
+                            // Count the messages in the cache that are newer than the one we just read
                             foreach (var msg in _messageCache.Values)
                             {
-                                // Важно: сравниваем даты в UTC
-                                if (msg.SentAt.ToUniversalTime() > normalized)
+                                var msgSentUtc = msg.SentAt.ToUniversalTime();
+
+                                bool newerThanRead = msgSentUtc > normalized;
+                                bool newerThanClear = msgSentUtc >= minVisibleDateUtc;
+                                bool isNotMyMessage = msg.Sender != _currentUsername; 
+
+                                if (newerThanRead && newerThanClear && isNotMyMessage)
                                 {
                                     realUnreadLocal++;
                                 }
                             }
 
-                            // Обновляем счетчик на реальное кол-во оставшихся (из тех, что загружены)
-                            // Это даст эффект "убывания" цифр при скролле
-                            if (realUnreadLocal < contact.UnreadCount)
+                            // Update the counter to the actual number remaining (of those that have been loaded)
+                            // This will give the effect of “decreasing” numbers when scrolling ( cool!! )
+                            int displayCount = Math.Min(realUnreadLocal, contact.UnreadCount);
+                            
+                            contact.SetUnreadCount(displayCount);
+
+                            if (displayCount == 0)
                             {
-                                contact.SetUnreadCount(realUnreadLocal);
-                                
-                                if (realUnreadLocal == 0)
-                                {
-                                    RemoveUnreadSeparator();
-                                }
+                                RemoveUnreadSeparator();
                             }
                         }
                     }
@@ -1653,7 +1665,6 @@ namespace Uchat
 
         private void CheckVisibilityAndMarkAsRead()
         {
-            // Базовые проверки
             if (!_currentChatId.HasValue || ChatMessagesPanel.Children.Count == 0) return;
 
             var scrollViewer = ChatScrollViewer;
@@ -1661,44 +1672,36 @@ namespace Uchat
             var viewportBottom = viewportTop + scrollViewer.Viewport.Height;
 
             DateTime? maxReadTimestamp = null;
-            bool isLastMessageVisible = false; // Флаг: увидели ли мы дно чата
+            bool isLastMessageVisible = false; 
 
-            // Идем с КОНЦА (новые сообщения) ВВЕРХ
+            // Let's start from the END (new messages) UP
             for (int i = ChatMessagesPanel.Children.Count - 1; i >= 0; i--)
             {
                 var child = ChatMessagesPanel.Children[i] as Control;
-                // Защита от еще не отрисованных элементов
                 if (child == null || child.Bounds.Height <= 0) continue;
 
                 var bounds = child.Bounds;
 
-                // Строгая проверка: элемент должен пересекаться с экраном
                 bool isVisible = (bounds.Bottom > viewportTop + 5) && (bounds.Top < viewportBottom - 5);
 
                 if (isVisible)
                 {
-                    // Если мы увидели сообщение, проверяем его ID в кэше
                     if (child.Tag is string msgId && _messageCache.TryGetValue(msgId, out var cachedMsg))
                     {
                         maxReadTimestamp = cachedMsg.SentAt;
                         
-                        // Если индекс элемента равен последнему в списке — значит мы увидели дно
                         if (i == ChatMessagesPanel.Children.Count - 1)
                         {
                             isLastMessageVisible = true;
                         }
                     }
                     
-                    // Мы нашли самое "свежее" (нижнее) сообщение на экране.
-                    // Прерываем цикл, так как всё, что выше него, тоже будет считаться прочитанным по дате.
                     break; 
                 }
             }
 
-            // Отправляем на сервер, если нашли дату
             if (maxReadTimestamp.HasValue)
             {
-                // Передаем флаг isLastMessageVisible
                 _ = ReportReadProgressAsync(_currentChatId.Value, maxReadTimestamp.Value, isLastMessageVisible);
             }
         }

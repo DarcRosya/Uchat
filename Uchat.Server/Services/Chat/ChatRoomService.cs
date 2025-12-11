@@ -68,7 +68,6 @@ public sealed class ChatRoomService : IChatRoomService
                 if (memberLookup.TryGetValue(id, out var member)) members.Add(member);
             }
         }
-        // СЦЕНАРИЙ Б: КЭША НЕТ (Redis пуст или упал)
         else
         {
             members = await _chatRoomRepository.GetUserChatMembershipsAsync(userId);
@@ -77,24 +76,17 @@ public sealed class ChatRoomService : IChatRoomService
 
         if (!members.Any()) return new List<ChatRoomDto>();
 
-        // ---------------------------------------------------------
-        // 2. ПАРАЛЛЕЛЬНАЯ ЗАГРУЗКА ДАННЫХ
-        // ---------------------------------------------------------
-        
-        // А) Словари для MessageService
         var clearDatesDict = members.ToDictionary(m => m.ChatRoomId, m => m.ClearedHistoryAt);
         var allChatIds = members.Select(m => m.ChatRoomId).ToList();
 
-        // Б) Собираем ID собеседников для личных чатов, чтобы узнать их Имена/Аватарки
         var partnerIds = members
             .Where(m => m.ChatRoom.Type == ChatRoomType.DirectMessage)
-            .SelectMany(m => m.ChatRoom.Members) // Берем всех участников чата
-            .Where(m => m.UserId != userId)      // Исключаем себя
+            .SelectMany(m => m.ChatRoom.Members) 
+            .Where(m => m.UserId != userId)      
             .Select(m => m.UserId)
             .Distinct()
             .ToList();
 
-        // В) Запускаем задачи параллельно
         var messagesTask = _messageService.GetLastMessagesForChatsBatch(clearDatesDict);
         var unreadTask = _unreadCounterService.GetUnreadCountsAsync(userId, allChatIds);
         var usersTask = _userRepository.GetUsersByIdsAsync(partnerIds);
@@ -103,21 +95,16 @@ public sealed class ChatRoomService : IChatRoomService
 
         var lastMessages = messagesTask.Result;
         var unreadCounts = unreadTask.Result;
-        var usersDict = usersTask.Result.ToDictionary(u => u.Id); // Dictionary<int, User>
+        var usersDict = usersTask.Result.ToDictionary(u => u.Id);
 
-        // ---------------------------------------------------------
-        // 3. СБОРКА DTO
-        // ---------------------------------------------------------
         var result = members.Select(m => 
         {
             var chat = m.ChatRoom;
             
-            // --- 3.1. Данные собеседника ---
             string chatName = chat.Name ?? "Unknown";
 
             if (chat.Type == ChatRoomType.DirectMessage)
             {
-                // Находим ID партнера в списке участников чата
                 var partnerId = chat.Members.FirstOrDefault(x => x.UserId != userId)?.UserId;
                 
                 if (partnerId.HasValue && usersDict.TryGetValue(partnerId.Value, out var partnerUser))
@@ -126,7 +113,6 @@ public sealed class ChatRoomService : IChatRoomService
                 }
             }
 
-            // --- 3.2. Последнее сообщение ---
             string lastContent = "";
             DateTime? lastDate = chat.LastActivityAt ?? chat.CreatedAt;
 
@@ -136,7 +122,6 @@ public sealed class ChatRoomService : IChatRoomService
                 lastDate = msgDto.SentAt;
             }
 
-            // --- 3.3. Непрочитанные ---
             int unread = unreadCounts.TryGetValue(chat.Id, out var count) ? count : 0;
 
             return new ChatRoomDto
@@ -144,7 +129,7 @@ public sealed class ChatRoomService : IChatRoomService
                 Id = chat.Id,
                 Type = chat.Type.ToString(),
                 Name = chatName,
-                UnreadCount = unread, // Заполнили реальный счетчик
+                UnreadCount = unread, 
                 LastMessageContent = lastContent,
                 LastMessageAt = lastDate,
                 CreatedAt = chat.CreatedAt,
@@ -176,7 +161,6 @@ public sealed class ChatRoomService : IChatRoomService
         if (chat == null) 
             return ChatResult.NotFound();
 
-        // Проверка доступа
         bool isMember = chat.Members.Any(crm => crm.UserId == userId && !crm.IsDeleted && !crm.IsPending);
         if (!isMember && chat.Type != ChatRoomType.Public)
         {
@@ -196,7 +180,6 @@ public sealed class ChatRoomService : IChatRoomService
         ChatRoomType type, 
         IEnumerable<int>? initialMemberIds)
     {
-        // Валидация
         if (type != ChatRoomType.DirectMessage && string.IsNullOrWhiteSpace(name))
             return ChatResult.Failure("Chat name is required.");
 
@@ -204,7 +187,6 @@ public sealed class ChatRoomService : IChatRoomService
         if (creator == null) 
             return ChatResult.Failure("Creator not found.");
 
-        // Создаём чат
         var chatRoom = new ChatRoom
         {
             CreatorId = creatorId,
@@ -217,15 +199,14 @@ public sealed class ChatRoomService : IChatRoomService
         {
             var created = await _chatRoomRepository.CreateAsync(chatRoom);
             
-            // Добавляем создателя
             await _chatRoomRepository.AddMemberAsync(new ChatRoomMember 
             { 
                 ChatRoomId = created.Id, 
                 UserId = creatorId,
-                JoinedAt = DateTime.UtcNow
+                JoinedAt = DateTime.UtcNow,
+                ClearedHistoryAt = DateTime.UtcNow
             });
 
-            // Добавляем остальных участников
             if (initialMemberIds != null)
             {
                 foreach(var memberId in initialMemberIds.Where(id => id != creatorId))
@@ -235,7 +216,8 @@ public sealed class ChatRoomService : IChatRoomService
                         ChatRoomId = created.Id, 
                         UserId = memberId,
                         JoinedAt = DateTime.UtcNow,
-                        InvitedById = creatorId
+                        InvitedById = creatorId,
+                        ClearedHistoryAt = DateTime.UtcNow
                     });
                 }
             }
@@ -245,15 +227,13 @@ public sealed class ChatRoomService : IChatRoomService
                 var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(creatorId);
                 var score = new DateTimeOffset(created.CreatedAt).ToUnixTimeSeconds();
                 
-                // Добавляем ID нового чата в список чатов пользователя в Redis
                 await _redisService.UpdateSortedSetAsync(
                     sortedKey, 
                     created.Id.ToString(), 
                     score, 
-                    TimeSpan.FromHours(24) // Ваш TTL
+                    TimeSpan.FromHours(24)
                 );
             }
-            // =========================================================
 
             var fullChat = await _chatRoomRepository.GetByIdAsync(created.Id);
             return ChatResult.Success(fullChat!);
@@ -267,18 +247,18 @@ public sealed class ChatRoomService : IChatRoomService
 
     public async Task<ChatResult> AcceptInviteAsync(int chatId, int userId)
     {
-        // Используем репозиторий для поиска
         var member = await _chatRoomRepository.GetMemberAsync(chatId, userId);
 
-        // Проверяем существование и статус
         if (member == null || !member.IsPending) 
             return ChatResult.NotFound();
 
-        member.IsPending = false; // Становится полноценным участником
+        member.IsPending = false; 
         member.JoinedAt = DateTime.UtcNow;
-        
-        // Сохраняем через репозиторий
+        member.ClearedHistoryAt = DateTime.UtcNow;
+
         await _chatRoomRepository.UpdateMemberAsync(member);
+
+        await _messageService.MarkMessagesAsReadUntilAsync(chatId, userId, DateTime.UtcNow);
 
         if (_redisService.IsAvailable)
         {
@@ -296,7 +276,7 @@ public sealed class ChatRoomService : IChatRoomService
 
         var user = await _userRepository.GetByIdAsync(userId);
         await _hubContext.Clients.Group(chatId.ToString())
-            .SendAsync("MemberJoined", chatId, user.Username); // Отправляем ChatId и Имя
+            .SendAsync("MemberJoined", chatId, user.Username); 
 
         var chat = await _chatRoomRepository.GetByIdAsync(chatId);
         return ChatResult.Success(chat!);
@@ -304,13 +284,11 @@ public sealed class ChatRoomService : IChatRoomService
 
     public async Task<ChatResult> RejectInviteAsync(int chatId, int userId)
     {
-        // Используем репозиторий для поиска
         var member = await _chatRoomRepository.GetMemberAsync(chatId, userId);
 
         if (member == null || !member.IsPending) 
             return ChatResult.NotFound();
 
-        // Удаляем заявку через репозиторий
         await _chatRoomRepository.RemoveMemberEntityAsync(member);
 
         return ChatResult.Success(null);
@@ -318,49 +296,43 @@ public sealed class ChatRoomService : IChatRoomService
 
     public async Task<ChatResult> JoinPublicChatByNameAsync(string chatName, int userId)
     {
-        // 1. Ищем чат по имени (Точное совпадение, без учета регистра)
-        // Важно: Убедись, что в репозитории есть метод GetByNameAsync или используй логику ниже
         var chat = await _chatRoomRepository.GetByNameAsync(chatName);
 
         if (chat == null)
         {
-            return ChatResult.NotFound(); // Группа не найдена
+            return ChatResult.NotFound(); 
         }
 
-        // 2. Проверяем тип чата
         if (chat.Type != ChatRoomType.Public)
         {
-            // Нельзя просто так вступить в приватную группу по имени
             return ChatResult.Forbidden(); 
         }
 
-        // 3. Проверяем, может пользователь уже внутри?
         bool isAlreadyMember = chat.Members.Any(m => m.UserId == userId && !m.IsDeleted);
         if (isAlreadyMember)
         {
-            // Если уже участник - просто возвращаем чат как успех
             return ChatResult.Success(chat);
         }
 
         try
         {
-            // 4. Добавляем пользователя
             var newMember = new ChatRoomMember
             {
                 ChatRoomId = chat.Id,
                 UserId = userId,
                 JoinedAt = DateTime.UtcNow,
-                IsPending = false, // В публичную группу вступаем сразу, без приглашения
-                InvitedById = null // Зашел сам
+                IsPending = false, 
+                InvitedById = null,
+                ClearedHistoryAt = DateTime.UtcNow
             };
 
             await _chatRoomRepository.AddMemberAsync(newMember);
 
-            // 5. Обновляем Redis (КЭШ), чтобы чат появился у пользователя в списке GetUserChats
+            await _messageService.MarkMessagesAsReadUntilAsync(chat.Id, userId, DateTime.UtcNow);
+
             if (_redisService.IsAvailable)
             {
                 var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
-                // Ставим текущее время как время активности, чтобы чат был сверху
                 var score = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
                 
                 await _redisService.UpdateSortedSetAsync(
@@ -371,8 +343,6 @@ public sealed class ChatRoomService : IChatRoomService
                 );
             }
 
-            // Возвращаем обновленный объект чата
-            // (лучше дернуть GetById, чтобы подтянулись все свежие данные включая нового мембера)
             var updatedChat = await _chatRoomRepository.GetByIdAsync(chat.Id);
             return ChatResult.Success(updatedChat!);
         }
@@ -468,7 +438,7 @@ public sealed class ChatRoomService : IChatRoomService
                 }
             }
 
-            await _hubContext.Clients.Group(chatId.ToString())
+            await _hubContext.Clients.Group($"chat_{chatId}")
                 .SendAsync("ChatNameUpdated", chatId, chat.Name);
 
             return ChatResult.Success(chat);
@@ -486,7 +456,6 @@ public sealed class ChatRoomService : IChatRoomService
         if (chat == null) 
             return ChatResult.NotFound();
 
-        // Проверяем, что актёр - участник чата
         bool isActorMember = chat.Members.Any(m => m.UserId == actorUserId);
         if (!isActorMember)
             return ChatResult.Forbidden();
@@ -503,7 +472,6 @@ public sealed class ChatRoomService : IChatRoomService
                     return ChatResult.Failure("User is already a member");
                 }
 
-                // Он удален -> ВОСКРЕШАЕМ (Update)
                 existingMember.IsDeleted = false;      
                 existingMember.IsPending = true;       
                 existingMember.InvitedById = actorUserId; 
@@ -522,7 +490,8 @@ public sealed class ChatRoomService : IChatRoomService
                     JoinedAt = DateTime.UtcNow,
                     InvitedById = actorUserId,
                     IsPending = true,
-                    IsDeleted = false
+                    IsDeleted = false,
+                    ClearedHistoryAt = DateTime.UtcNow
                 });
             }
 
@@ -553,14 +522,12 @@ public sealed class ChatRoomService : IChatRoomService
 
     public async Task<List<ChatRoomDto>> GetPendingGroupInvitesAsync(int userId)
     {
-        // Ищем записи, где пользователь добавлен, но IsPending == true
         var pendingMembers = await _chatRoomRepository.GetPendingMembershipsAsync(userId);
         var result = pendingMembers.Select(m => new ChatRoomDto
         {
             Id = m.ChatRoomId,
             Name = m.ChatRoom.Name,
             Type = m.ChatRoom.Type.ToString(),
-            // Используем поле LastMessageContent, чтобы передать имя пригласившего (хак, но удобно для DTO)
             LastMessageContent = m.InvitedBy?.Username ?? "Unknown" 
         }).ToList();
 
@@ -628,18 +595,16 @@ public sealed class ChatRoomService : IChatRoomService
 
         var sortedKey = RedisCacheKeys.GetUserChatSortedSetKey(userId);
         
-        // Берем дату активности из самого чата
         var tasks = members.Select(member =>
         {
             var chat = member.ChatRoom;
-            // Если LastActivityAt null, берем CreatedAt
             var score = new DateTimeOffset(chat.LastActivityAt ?? chat.CreatedAt).ToUnixTimeSeconds();
             
             return _redisService.UpdateSortedSetAsync(
                 sortedKey, 
                 chat.Id.ToString(), 
                 score, 
-                RedisCacheKeys.ChatListSortedSetTtl // Используем константу TTL
+                RedisCacheKeys.ChatListSortedSetTtl 
             );
         });
 

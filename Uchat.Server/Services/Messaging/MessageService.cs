@@ -17,6 +17,8 @@ using Uchat.Shared.DTOs;
 using SQLitePCL;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.SignalR;
+using Uchat.Server.Hubs;
 
 namespace Uchat.Server.Services.Messaging;
 
@@ -29,6 +31,7 @@ public sealed class MessageService : IMessageService
     private readonly ILogger<MessageService> _logger;
     private readonly IMongoCollection<MongoMessage> _messages;
     private readonly IUnreadCounterService _unreadCounterService;
+    private readonly IHubContext<ChatHub> _hubContext;
 
     private const int MaxMessageLength = 1500;
     private static readonly JsonSerializerOptions CachedMessageSerializerOptions = new()
@@ -45,6 +48,7 @@ public sealed class MessageService : IMessageService
         IMessageRepository messageRepository,
         IRedisService redisService,
         IUnreadCounterService unreadCounterService,
+        IHubContext<ChatHub> hubContext,
         ILogger<MessageService> logger)
     {
         _context = context;
@@ -52,6 +56,7 @@ public sealed class MessageService : IMessageService
         _messageRepository = messageRepository;
         _redisService = redisService;
         _unreadCounterService = unreadCounterService;
+        _hubContext = hubContext;
         _logger = logger;
         _messages = mongoDbContext.Messages;
     }
@@ -270,30 +275,32 @@ public sealed class MessageService : IMessageService
     {
         var member = await _context.ChatRoomMembers
             .AsNoTracking()
-            .FirstOrDefaultAsync(m => m.ChatRoomId == chatId && m.UserId == userId);
+            .FirstOrDefaultAsync(m => 
+            m.ChatRoomId == chatId && 
+            m.UserId == userId && 
+            !m.IsDeleted &&         
+            !m.IsPending,         
+            cancellationToken: CancellationToken.None 
+        );
 
         if (member == null) return new PaginatedMessagesDto();
 
         DateTime? minDate = member.ClearedHistoryAt;
 
-        // Получаем сообщения из MongoDB (limit + 1 для определения HasMore)
         var mongoMessages = await _messageRepository.GetChatMessagesAsync(chatId, minDate, limit + 1, before);
         
-        // Проверяем, есть ли ещё сообщения
         bool hasMore = mongoMessages.Count > limit;
         if (hasMore)
         {
             mongoMessages.RemoveAt(mongoMessages.Count - 1);
         }
 
-        // Собираем все ReplyToMessageId для загрузки
         var replyToIds = mongoMessages
             .Where(m => !string.IsNullOrEmpty(m.ReplyToMessageId))
             .Select(m => m.ReplyToMessageId!)
             .Distinct()
             .ToList();
 
-        // Загружаем все referenced сообщения одним запросом
         var replyToMessages = new Dictionary<string, MessageReplyDto>();
         if (replyToIds.Any())
         {
@@ -304,12 +311,11 @@ public sealed class MessageService : IMessageService
                 {
                     Id = replyMsg.Id,
                     Content = replyMsg.Content,
-                    SenderName = replyMsg.Sender.Username
+                    SenderName = replyMsg.Sender.Username   
                 };
             }
         }
 
-        // Маппинг MongoMessage → MessageDto
         var messageDtos = mongoMessages.Select(m => new MessageDto
         {
             Id = m.Id,
@@ -332,7 +338,6 @@ public sealed class MessageService : IMessageService
                 : null
         }).ToList();
 
-        // Cursor для следующей страницы
         DateTime? nextCursor = hasMore && messageDtos.Any()
             ? messageDtos.Last().SentAt
             : null;
@@ -662,12 +667,10 @@ public sealed class MessageService : IMessageService
                 return MessagingResult.Failure("Message is already deleted.");
             }
 
-            // Check if user is the message author
             var isAuthor = message.Sender.UserId == userId;
 
             if (!isAuthor)
             {
-                // Check if user has permission to delete messages in this chat
                 var chat = await _context.ChatRooms
                     .Include(cr => cr.Members)
                     .FirstOrDefaultAsync(cr => cr.Id == message.ChatId, cancellationToken);
@@ -685,26 +688,66 @@ public sealed class MessageService : IMessageService
             }
 
             var success = await _messageRepository.DeleteMessagePermanentlyAsync(messageId);
-            if (!success)
-            {
-                return MessagingResult.Failure("Failed to delete message.");
-            }
+            if (!success) return MessagingResult.Failure("Failed to delete message.");
 
             var clearedReplies = await _messageRepository.ClearReplyReferencesAsync(messageId);
-            _logger.LogInformation("Cleared {Count} reply references to deleted message {MessageId}", clearedReplies.Count, messageId);
+    
 
-            var chatRoom = await _context.ChatRooms.FindAsync(new object[] { message.ChatId }, cancellationToken: cancellationToken);
+            var chatRoom = await _context.ChatRooms.FindAsync(new object[] { message.ChatId }, cancellationToken);
+            string newPreviewContent = "";
+            DateTime newTime = DateTime.UtcNow;
+
             if (chatRoom != null)
             {
+                var newLastMessage = await _messageRepository.GetLastMessageAsync(message.ChatId, excludeMessageId: messageId);
+
+                if (newLastMessage != null)
+                {
+                    // Сообщение найдено
+                    newPreviewContent = newLastMessage.Content;
+                    if (!string.IsNullOrEmpty(newPreviewContent) && newPreviewContent.Length > 30) 
+                        newPreviewContent = newPreviewContent.Substring(0, 30) + "...";
+                    
+                    newTime = newLastMessage.SentAt;
+                }
+                else
+                {
+                    newPreviewContent = "";
+                    
+                    newTime = chatRoom.CreatedAt; 
+                }
+
+                chatRoom.LastMessageContent = newPreviewContent;
+                chatRoom.LastMessageAt = newTime;
+
                 await _context.SaveChangesAsync(cancellationToken);
-                await RefreshChatLastMessageCacheAsync(message.ChatId);
+
+                try 
+                {
+                    await _redisService.HashDeleteAsync(RedisCacheKeys.ChatLastMessagesKey, message.ChatId.ToString());
+                    double newScore = newTime.Ticks; 
+                    
+                    foreach(var member in chatRoom.Members)
+                    {
+                        await _redisService.KeyDeleteAsync($"user:{member.UserId}:chats");
+                        
+                        var sortedSetKey = RedisCacheKeys.GetUserChatSortedSetKey(member.UserId);
+                        await _redisService.UpdateSortedSetAsync(sortedSetKey, message.ChatId.ToString(), newScore);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Redis cleanup failed: {ex.Message}");
+                }
             }
 
-            _logger.LogInformation("Message {MessageId} deleted by user {UserId}", messageId, userId);
             return MessagingResult.SuccessResult(
-                messageId, 
-                DateTime.UtcNow, 
-                clearedReplyMessageIds: clearedReplies 
+                messageId: messageId, 
+                sentAt: DateTime.UtcNow, 
+                resurrectedUserId: null, 
+                clearedReplyMessageIds: clearedReplies,
+                newLastMessageContent: newPreviewContent,
+                newLastMessageTime: newTime
             );
         }
         catch (Exception ex)

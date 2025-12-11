@@ -3,10 +3,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Uchat.Shared.DTOs;
 
-// ========================================================================
-// REQUEST DTOs
-// ========================================================================
-
 public class RegisterDto
 {
     [Required]
@@ -26,7 +22,7 @@ public class RegisterDto
 public class LoginDto
 {
     [Required]
-    public string Identifier { get; set; } = string.Empty; // Username или Email
+    public string Identifier { get; set; } = string.Empty; // Username 
 
     [Required]
     public string Password { get; set; } = string.Empty;
@@ -43,10 +39,6 @@ public class ConfirmEmailDto
     public required string Email { get; set; }
     public required string Code { get; set; }
 }
-
-// ========================================================================
-// RESPONSE DTOs
-// ========================================================================
 
 public class AuthResponseDto
 {
@@ -67,7 +59,8 @@ public class RegisterResultDto
 
 public class ErrorResponse
 {
-    public string Error { get; set; } = string.Empty;
+    public string? Error { get; set; }
+    public int StatusCode { get; set; }
 }
 
 

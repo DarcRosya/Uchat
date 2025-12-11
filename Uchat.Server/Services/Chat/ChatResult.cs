@@ -10,6 +10,7 @@ public sealed class ChatResult
     public string? ErrorMessage { get; }
     public ChatRoom? ChatRoom { get; }
     public ChatErrorType ErrorType { get; }
+    public ChatRoom? Data => ChatRoom;
 
     private ChatResult(bool success, ChatRoom? room, string? error, ChatErrorType type)
     {

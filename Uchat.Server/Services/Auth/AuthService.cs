@@ -43,11 +43,19 @@ public class AuthService
     {
         var existingUser = await _userRepository.GetByUsernameAsync(dto.Username);
         if (existingUser != null)
-            throw new InvalidOperationException("Username already taken");
+        return new RegisterResultDto 
+        {
+            RequiresConfirmation = false,
+            Message = "Username already taken" 
+        };
 
         var existingEmail = await _userRepository.GetByEmailAsync(dto.Email);
         if (existingEmail != null)
-            throw new InvalidOperationException("Email already registered");
+        return new RegisterResultDto
+        {
+            RequiresConfirmation = false, 
+            Message = "Email already registered" 
+        };
 
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
         var code = GenerateNumericCode(6);

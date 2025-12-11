@@ -6,10 +6,6 @@ using Uchat.Shared;
 
 namespace Uchat.Services;
 
-/// <summary>
-/// Singleton для хранения данных текущего пользователя и JWT токенов
-/// Автоматически обновляет токены за 5 минут до истечения
-/// </summary>
 public class UserSession
 {
     private static UserSession? _instance;
@@ -46,9 +42,6 @@ public class UserSession
     
     public bool NeedsRefresh => DateTime.UtcNow >= TokenExpiresAt.AddMinutes(-5);
 
-    /// <summary>
-    /// Initialize the session with system arguments (call this once at startup)
-    /// </summary>
     public void Initialize(string[] systemArgs)
     {
         _systemArgs = systemArgs;
@@ -86,7 +79,7 @@ public class UserSession
         
         _authService = new AuthApiService(_systemArgs);
         
-        // Проверяем каждые 60 секунд
+        // Check every 60 seconds
         _refreshTimer = new Timer(async _ => await TryAutoRefresh(), null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(60));
         
         Logger.Log("Auto-refresh timer started");
@@ -124,7 +117,7 @@ public class UserSession
             if (result != null)
             {
                 Logger.Log("Auto-refresh successful!");
-                // Токены уже сохранены в AuthApiService.RefreshTokenAsync
+                // Tokens are already stored in AuthApiService.RefreshTokenAsync
             }
             else
             {
@@ -163,10 +156,7 @@ public class UserSession
         
         Logger.Log("Session cleared");
     }
-    
-    /// <summary>
-    /// Пытается восстановить сессию из сохраненных токенов
-    /// </summary>
+
     public async Task<bool> TryRestoreSessionAsync()
     {
         var savedTokens = TokenStorage.LoadTokens();
@@ -183,17 +173,17 @@ public class UserSession
             return false;
         }
 
-        // Проверяем не истек ли access token
+        // Check if the access token has expired
         if (savedTokens.ExpiresAt > DateTime.UtcNow.AddMinutes(5))
         {
-            // Access token еще валиден
+            // Access token is still valid
             Logger.Log("Restoring session from saved tokens");
             SetSession(savedTokens.AccessToken, savedTokens.RefreshToken, savedTokens.UserId, savedTokens.Username);
             TokenExpiresAt = savedTokens.ExpiresAt;
             return true;
         }
 
-        // Access token истек, пробуем refresh
+        // Access token has expired, trying to refresh
         Logger.Log("Saved access token expired, attempting refresh");
         
         _authService = new AuthApiService(_systemArgs);

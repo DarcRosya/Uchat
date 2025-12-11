@@ -10,6 +10,8 @@ using Uchat.Shared.DTOs;
 using MongoDB.Driver;
 using Uchat.Server.Services.Messaging;
 using Uchat.Server.Services.Unread;
+using Microsoft.AspNetCore.SignalR;
+using Uchat.Server.Hubs;
 
 namespace Uchat.Server.Controllers;
 
@@ -23,19 +25,22 @@ public class ChatsController : ControllerBase
     private readonly MongoDbContext _mongoContext;
     private readonly IUnreadCounterService _unreadCounterService;
     private readonly IMessageService _messageService;
+    private readonly IHubContext<ChatHub> _hubContext;
 
     public ChatsController(
         IChatRoomService chatRoomService,
         IUserRepository userRepository,
         MongoDbContext mongoContext,
         IMessageService messageService,
-        IUnreadCounterService unreadCounterService)
+        IUnreadCounterService unreadCounterService,
+        IHubContext<ChatHub> hubContext)
     {
         _chatRoomService = chatRoomService;
         _userRepository = userRepository;
         _mongoContext = mongoContext;
         _messageService = messageService;
         _unreadCounterService = unreadCounterService;
+        _hubContext = hubContext;
     }
 
     [HttpGet]
@@ -166,6 +171,9 @@ public class ChatsController : ControllerBase
         var result = await _chatRoomService.UpdateChatNameAsync(chatId, userId, request.Name);
 
         if (!result.IsSuccess) return BadRequest(new { error = result.ErrorMessage });
+
+        await _hubContext.Clients.Group($"chat_{chatId}") 
+            .SendAsync("ChatNameUpdated", chatId, request.Name);
 
         return Ok(new { message = "Chat updated" });
     }
