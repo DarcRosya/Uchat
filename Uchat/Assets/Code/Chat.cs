@@ -145,11 +145,11 @@ namespace Uchat
                             Margin = new Thickness(0, 20, 0, 0)
                         };
                         requestList.Children.Add(noRequestsText);
-                        notificationButton.Background = Brushes.Transparent;
+                        BellIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/bell.png")));
                     }
                     else
                     {
-                        notificationButton.Background = Brush.Parse("#4da64d");
+                        BellIcon.Source = new Bitmap(AssetLoader.Open(new Uri("avares://Uchat/Assets/Icons/activated_bell.png")));
                     }
                 });
             }
@@ -651,26 +651,6 @@ namespace Uchat
 			editTheMessageButton.IsVisible = false;
 			chatTextBox.Text = tempChatTextBox;
 			chatTextBox.IsVisible = true;
-		}
-
-		private void answerTheMessage_ActualThemeVariantChanged(object? sender, System.EventArgs e)
-		{
-		}
-
-		private void answerTheMessage_ActualThemeVariantChanged_1(object? sender, System.EventArgs e)
-		{
-		}
-
-		private void EditMessageButton_ActualThemeVariantChanged(object? sender, System.EventArgs e)
-		{
-		}
-
-		private void editTheMessageBox_ActualThemeVariantChanged(object? sender, System.EventArgs e)
-		{
-		}
-
-		private void TextBlock_ActualThemeVariantChanged(object? sender, EventArgs e)
-		{
 		}
 	}
 }

@@ -33,9 +33,8 @@ namespace Uchat
 			{
                 private List<string> membersList = new List<string>();
 
-                private static readonly IBrush OnlineBrush = Brush.Parse("#4cd964");
-                // private static readonly IBrush OfflineBrush = Brush.Parse("#5c5c70");
-				private static readonly IBrush OfflineBrush = Brush.Parse("#171a20");
+                private static readonly IBrush OnlineBrush = Brush.Parse("#4da64d");
+				private static readonly IBrush OfflineBrush = Brush.Parse("#c57179");
                 private readonly List<int> participantIds = new();
                 private bool allowPresence = true;
 
@@ -72,8 +71,8 @@ namespace Uchat
 					unreadMessages = newUnreadMessages;
                     chatId = newChatId;
                     allowPresence = !string.Equals(chatName, "Notes", StringComparison.OrdinalIgnoreCase);
-                    contactStatusBorder.Background = OfflineBrush;
-                    contactStatusBorder.BorderBrush = OfflineBrush;
+                    //contactStatusBorder.Background = OfflineBrush;
+                    //contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
                     contactStatusBorder.IsVisible = false;
                     SetParticipants(participants);
 
@@ -192,7 +191,7 @@ namespace Uchat
                 }
                 public int ChatId { get { return chatId; } set { chatId = value; } }
                 public string ChatName { get { return chatName; } }
-                public int UnreadCount => unreadMessages;
+                public int UnreadCount { get { return unreadMessages; } }
                 public IReadOnlyList<int> ParticipantIds => participantIds;
 				public void AddMember(string name)
 				{
@@ -211,18 +210,18 @@ namespace Uchat
                     participantIds.AddRange(ids.Where(id => id > 0));
                 }
 
-                public void UpdatePresence(bool isOnline, bool showIndicator)
+                public void UpdatePresence(bool isOnline)
                 {
-                    if (!allowPresence || !showIndicator)
+                    if (!allowPresence)
                     {
                         contactStatusBorder.IsVisible = false;
                         return;
                     }
 
-                    contactStatusBorder.IsVisible = true;
+                    contactStatusBorder.IsVisible = !isGroupChat;
                     var brush = isOnline ? OnlineBrush : OfflineBrush;
                     contactStatusBorder.Background = brush;
-                    //contactStatusBorder.BorderBrush = brush;
+                    contactStatusBorder.BorderBrush = Brush.Parse("#171a20");
                 }
 
                 private void UpdateIcon()
@@ -230,6 +229,11 @@ namespace Uchat
                     var uriString = isGroupChat 
                         ? "avares://Uchat/Assets/Icons/group.png" 
                         : "avares://Uchat/Assets/Icons/avatar.png";
+                    string loweredName = chatName.ToLower();
+                    if (loweredName.Contains("notes"))
+                    {
+                        uriString = "avares://Uchat/Assets/Icons/notes.png";
+                    }
 
                     avatarIcon.Source = new Bitmap(AssetLoader.Open(new Uri(uriString)));
                 }
@@ -270,7 +274,12 @@ namespace Uchat
                     unreadMessages += delta;
                     unreadMessageTextBlock.Text = unreadMessages.ToString();
                 }
-				
+
+                public void ShowUnreadMessages()
+                {
+                    unreadMessageBorder.IsVisible = unreadMessages > 0;
+                }
+
                 private void ContactGridClicked(object sender, Avalonia.Input.PointerPressedEventArgs e)
 				{
 					if (!e.GetCurrentPoint(sender as Control).Properties.IsLeftButtonPressed)

@@ -1,6 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Microsoft.AspNetCore.SignalR.Client;
 using System;
@@ -10,8 +12,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Uchat.Services;
-using Uchat.Shared.DTOs;
 using Uchat.Shared;
+using Uchat.Shared.DTOs;
 
 namespace Uchat
 {
@@ -217,6 +219,7 @@ namespace Uchat
                     {
                         // Если чат не открыт - можно увеличить счетчик непрочитанных (если есть логика)
                         chatItem.IncrementUnread();
+                        chatItem.ShowUnreadMessages();
                     }
                 });
             });
@@ -390,7 +393,6 @@ namespace Uchat
                         if (placeholder != null) requestList.Children.Remove(placeholder);
 
                         requestList.Children.Insert(0, requestItem.Box);
-                        notificationButton.Background = Brush.Parse("#4da64d");
                     }
                     catch (Exception ex) { Console.WriteLine("Group invite error: " + ex); }
                 });
@@ -484,13 +486,14 @@ namespace Uchat
             _messageCache.Clear();
             chatTextBox.Text = string.Empty;
             chatTextBox.IsVisible = false;
-            replyTheMessageBox.IsVisible = false; // Hide the response panel
+            replyTheMessageBox.IsVisible = false;
+            BottomContainer.IsVisible = false;
+            PlaceHolder.IsVisible = true;
 
-            if (groupTopBar != null) 
-            {
-                groupTopBar.IsVisible = false; 
-            }
-            
+            groupTopBar.IsVisible = false;
+            friendTopBar.IsVisible = true;
+            friendTopBarName.Text = "";
+
             if (groupInfoBox != null)
             {
                 groupInfoBox.IsVisible = false;
@@ -518,7 +521,7 @@ namespace Uchat
 
             if (string.Equals(contact.ChatName, "Notes", StringComparison.OrdinalIgnoreCase))
             {
-                contact.UpdatePresence(false, false);
+                contact.UpdatePresence(false);
                 return;
             }
 
@@ -530,20 +533,12 @@ namespace Uchat
 
             if (!others.Any())
             {
-                contact.UpdatePresence(false, false);
+                contact.UpdatePresence(false);
                 return;
             }
 
             var someoneElseOnline = others.Any(IsUserOnline);
-
-            if (contact.IsGroupChat)
-            {
-                contact.UpdatePresence(someoneElseOnline, someoneElseOnline);
-            }
-            else
-            {
-                contact.UpdatePresence(someoneElseOnline, true);
-            }
+            contact.UpdatePresence(someoneElseOnline);
         }
 
         private void RefreshContactsForUser(int userId)
@@ -969,7 +964,7 @@ namespace Uchat
 
                             contact.IsVisible = (Chat.GroupsActive == isGroup);
 
-                            contact.UpdatePresence(true, true);
+                            contact.UpdatePresence(true);
 
                             _chatContacts[notification.chatRoomId] = contact;
                             contactsStackPanel.Children.Insert(0, contact.Box);
@@ -1129,19 +1124,21 @@ namespace Uchat
 
         private void SetProfileOnlineState(bool isOnline)
         {
-            var activeBrush = isOnline ? Brushes.Green : Brushes.Gray;
+            var activeBrush = isOnline ? Brush.Parse("#4da64d") : Brush.Parse("#c57179");
 
             if (_userStatusLabel != null)
             {
                 _userStatusLabel.Text = isOnline ? "Online" : "Offline";
                 _userStatusLabel.Foreground = activeBrush;
+                userStatusDot.Background = activeBrush;
+
             }
 
-            if (_userStatusDot != null)
-            {
-                _userStatusDot.Background = activeBrush;
-                _userStatusDot.BorderBrush = activeBrush;
-            }
+            //if (_userStatusDot != null)
+            //{
+            //    _userStatusDot.Background = activeBrush;
+            //    _userStatusDot.BorderBrush = activeBrush;
+            //}
         }
 
         private string GetConnectionErrorMessage(Exception ex)

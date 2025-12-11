@@ -51,6 +51,10 @@ namespace Uchat
         private void ChatTicks()
         {
             LoadPendingFriendRequestsAsync();
+            foreach (var contact in Chat.ChatsList)
+            {
+                contact.ShowUnreadMessages();
+            }
         }
 
         private async void MainWindow_Loaded(object? sender, RoutedEventArgs e)

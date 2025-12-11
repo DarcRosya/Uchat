@@ -14,6 +14,8 @@
 		Background="Transparent"
 		KeyDown="MainWindow_KeyDown"
 		PointerPressed="Window_PointerPressed"
+		Icon="avares://Uchat/Assets/Icons/Uchat.png"
+		Title="Uchat"
 		>
 
 	<Grid>
@@ -698,7 +700,7 @@
 									HorizontalAlignment="Right" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
 									Click="NotificationButton_Click"
 									ToolTip.Tip="Friend Requests">
-							    <Image Margin="7" Source="avares://Uchat/Assets/Icons/bell.png"></Image>
+							    <Image Name="BellIcon" Margin="7" Source="avares://Uchat/Assets/Icons/bell.png"></Image>
 							</Button>
 							<Button Grid.Column="3" Background="Transparent" Padding="10"
 									VerticalContentAlignment="Center" VerticalAlignment="Center"
@@ -727,7 +729,12 @@
 				</TextBlock>
 
 				<ScrollViewer Grid.Row="0" Name="ChatScrollViewer" VerticalScrollBarVisibility="Auto" ScrollChanged="OnChatScrollChanged">
-					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5"/>
+					<StackPanel Name="ChatMessagesPanel" Margin="5" Spacing="5">
+						<Grid Name="UnreadMessageLine" RowDefinitions="Auto,Auto" IsVisible="False">
+							<TextBlock Grid.Row="0" Text="Unread messages" FontSize="12" FontWeight="SemiBold" Foreground="#c57179" HorizontalAlignment="Center"/>
+							<Border Grid.Row="1" Height="2" Background="#c57179" HorizontalAlignment="Stretch" Margin="0,0,0,10"/>
+						</Grid>
+					</StackPanel>
 				</ScrollViewer>
 			<Border Background="#2a2c31"
 				BorderBrush="#93a6b7"

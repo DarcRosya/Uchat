@@ -1,7 +1,11 @@
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using System;
+using System.Diagnostics;
+using System.Reflection;
+using Uchat;
 using Uchat.Shared;
 
 namespace Uchat
@@ -13,9 +17,12 @@ namespace Uchat
 			// UNCOMMENT TO ADD LOGOUT BUTTON:
 			LogoutAsync();
 			NotificationBox.IsVisible = false;
-			LoginProgram.IsVisible = true;
+            string currentExe = Environment.ProcessPath!;
+            Process.Start(currentExe);
+            Environment.Exit(0);
+
         }
-        
+
         private async void LogoutAsync()
         {
 			try
@@ -78,5 +85,5 @@ namespace Uchat
 				BeginMoveDrag(e);
 			}
 		}
-	}
+    }
 }
